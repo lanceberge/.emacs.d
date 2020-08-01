@@ -25,7 +25,6 @@
 (menu-bar-display-line-numbers-mode 'visual) ;; relative line numbers
 (global-display-line-numbers-mode 1) ;; always show line numbers
 
-
 ;; Keybindings
 (use-package which-key :ensure t
   :config
@@ -69,14 +68,10 @@
     "]b" '(evil-next-buffer :which-key "next buffer")
     "[b" '(evil-prev-buffer :which-key "previous buffer"))
   (my-leader-def
+    "h" (general-simulate-key "C-h")
     ;; Windows
     "w" '(:ignore t :which-key "Windows")
-    "wq" '(evil-save-modified-and-close :which-key "save and close window")
-    "wd" '(evil-quit :which-key "delete window")
-    "wh" '(evil-window-left :which-key "naigate left")
-    "wj" '(evil-window-down :which-key "navigate down")
-    "wk" '(evil-window-up :which-key "navigate up")
-    "wl" '(evil-window-right :which-key "navigate right")
+    "w" (general-simulate-key "C-w")
     ;; Buffers
     "b" '(:ignore t :which-key "Buffers")
     "bs" '(evil-write :which-key "write file")
@@ -84,46 +79,48 @@
     "bl" '(evil-switch-to-windows-last-buffer :which-key "switch to last buffer")
     "bS" '(evil-write-all :which-key "write all buffers"))
   :config
-  (evil-mode 1)
+  (define-key evil-window-map "d" 'evil-quit)
+  (define-key evil-window-map "q" 'evil-save-modified-and-close)
+  (evil-mode 1))
 
-  ;; Evil everywhere
-  (use-package evil-collection :ensure t
-    :config
-    (evil-collection-init))
+;; 2 character searches with s (ala vim-sneak)
+(use-package evil-snipe :ensure t
+  :init
+  (setq evil-snipe-smart-case t)
+  :config
+  (evil-snipe-mode +1))
 
-  ;; s as an operator for surrounding
-  (use-package evil-surround :ensure t
-    :config
-    (global-evil-surround-mode 1))
+;; Evil everywhere
+(use-package evil-collection :ensure t
+  :config
+  (evil-collection-init))
 
-  ;; gc as an operator to comment
-  (use-package evil-commentary :ensure t
-    :config
-    (evil-commentary-mode))
+;; s as an operator for surrounding
+(use-package evil-surround :ensure t
+  :config
+  (global-evil-surround-mode 1))
 
-  ;; jk to leave insert mode
-  (use-package evil-escape :ensure t
-    :config
-    (evil-escape-mode)
-    (setq evil-escape-key-sequence "jk"
-	  evil-escape-delay 0.25))
+;; gc as an operator to comment
+(use-package evil-commentary :ensure t
+  :config
+  (evil-commentary-mode))
 
-  ;; gl as an operator to left-align, gL to right-align
-  (use-package evil-lion :ensure t
-    :config
-    (evil-lion-mode))
+;; jk to leave insert mode
+(use-package evil-escape :ensure t
+  :config
+  (evil-escape-mode)
+  (setq evil-escape-key-sequence "jk"
+	evil-escape-delay 0.25))
 
-  ;; z - prefixed folding options like vim
-  (use-package evil-vimish-fold :ensure t
-    :config
-    (add-hook 'prog-mode-hook 'evil-vimish-fold-mode))
+;; gl as an operator to left-align, gL to right-align
+(use-package evil-lion :ensure t
+  :config
+  (evil-lion-mode))
 
-  ;; 2 character searches with s (ala vim-sneak)
-  (use-package evil-snipe :ensure t
-    :init
-    (setq evil-snipe-smart-case t)
-    :config
-    (evil-snipe-mode +1)))
+;; z - prefixed folding options like vim
+(use-package evil-vimish-fold :ensure t
+  :config
+  (add-hook 'prog-mode-hook 'evil-vimish-fold-mode))
 
 (use-package ivy :ensure t
   :config
@@ -185,7 +182,31 @@
   (setq restart-emacs-restore-frames t))
 
 ;; Magit
-(use-package evil-magit :ensure t)
+(use-package evil-magit :ensure t
+  :general
+  (my-leader-def
+    "g" '(:ignore t :which-key "Magit")
+    "gs" '(magit-status :which-key "status")
+    "gb" '(magit-branch-checkout :which-key "checkout branch")
+    "gB" '(magit-blame-addition :which-key "blame")
+    "gc" '(magit-clone :which-key "clone")
+    "gd" '(magit-file-delete :which-key "delete file")
+    "gF" '(magit-fetch :which-key "fetch")
+    "gG" '(magit-status-here :which-key "status here")
+    "gl" '(magit-log :which-key "log")
+    "gS" '(magit-stage-file :which-key "stage file")
+    "gU" '(magit-unstage-file :which-key "unstage file")
+    "gn" '(:ignore t :which-key "New")
+    "gnb" '(magit-branch-and-checkout :which-key "branch")
+    "gnc" '(magit-commit-create :which-key "commit")
+    "gnf" '(magit-commit-fixup :which-key "fixup commit")
+    "gnd" '(magit-init :which-key "init")
+    "gf" '(:ignore t :which-key "Find")
+    "gfc" '(magit-show-commit :which-key "show commit")
+    "gff" '(magit-find-file :which-key "file")
+    "gfg" '(magit-find-git-config-file :which-key "git config file")
+    "gfr" '(magit-list-repositories :which-key "repository")
+    "gfs" '(magit-list-submodules)) :which-key "submodule")
 
 ;; Projectile
 (use-package projectile :ensure t
