@@ -1,8 +1,10 @@
-(setq package-archives '(("org" . "http://orgmode.org/elpa/")
+(setq package-archives '(("melpa-stable" . "http://stable.melpa.org/packages/")
 			 ("melpa" . "http://melpa.org/packages/")
-			 ("melpa-stable" . "http://stable.melpa.org/packages/"))
+			 ("elpa" . "https://elpa.gnu.org/packages/")
+			 ("org" . "http://orgmode.org/elpa/"))
       package-enable-at-startup nil)
 (package-initialize)
+
 
 ;; make sure use-package is installed
 (unless (package-installed-p 'use-package)
@@ -17,13 +19,13 @@
       user-mail-address "bergeron.lance6@gmail.com"
       inhibit-startup-screen t)
 
-(menu-bar-mode -1) ;; no menu bar
-(toggle-scroll-bar -1) ;; no scroll bar
-(tool-bar-mode -1) ;; no tool bar
-(set-frame-font "DejaVu Sans Mono") ;; font
-(set-face-attribute 'default nil :height 110) ;; font size
-(menu-bar-display-line-numbers-mode 'visual) ;; relative line numbers
-(global-display-line-numbers-mode 1) ;; always show line numbers
+(menu-bar-mode -1) ; no menu bar
+(toggle-scroll-bar -1) ; no scroll bar
+(tool-bar-mode -1) ; no tool bar
+(set-frame-font "DejaVu Sans Mono") ; font
+(set-face-attribute 'default nil :height 110) ; font size
+(menu-bar-display-line-numbers-mode 'visual) ; relative line numbers
+(global-display-line-numbers-mode 1) ; always show line numbers
 
 ;; Keybindings
 (use-package which-key :ensure t
@@ -39,9 +41,9 @@
 
   (general-evil-setup)
   (my-leader-def
-    "f" '(:ignore t :which-key "Find")
+    "f"  '(:ignore t :which-key "Find")
     "fm" '(general-describe-keybindings :which-key "list keybindings")
-    "q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs")
+    "q"  '(save-buffers-kill-emacs :which-key "save buffers & quit emacs")
     "f." '(dired-jump :which-key "open dired")
     "fd" '(dired :which-key "navigate to a directory")))
 
@@ -56,24 +58,25 @@
 	evil-want-keybinding nil)
   :general
   (evil-ex-completion-map ";" 'exit-minibuffer)
+  ('(normal visual motion)
+   ";" 'evil-ex
+   ":" 'evil-repeat-find-char
+   "H" "^"
+   "L" "$")
   (general-nmap
     ;; Vim-like Macros
     "SPC =" "mzgg=G`z"
     ;; Remaps
     "gm" 'evil-execute-macro
-    ";" 'evil-ex
-    ":" 'evil-repeat-find-char
-    "H" "^"
-    "L" "$"
     "]b" '(evil-next-buffer :which-key "next buffer")
     "[b" '(evil-prev-buffer :which-key "previous buffer"))
   (my-leader-def
     "h" (general-simulate-key "C-h")
     ;; Windows
-    "w" '(:ignore t :which-key "Windows")
+    "w"  '(:ignore t :which-key "Windows")
     "w" (general-simulate-key "C-w")
     ;; Buffers
-    "b" '(:ignore t :which-key "Buffers")
+    "b"  '(:ignore t :which-key "Buffers")
     "bs" '(evil-write :which-key "write file")
     "bd" '(evil-delete-buffer :which-key "delete buffer")
     "bl" '(evil-switch-to-windows-last-buffer :which-key "switch to last buffer")
@@ -117,6 +120,13 @@
   :config
   (evil-lion-mode))
 
+;; Persistent Undos
+(use-package undo-tree :ensure t
+  :init
+  (setq undo-limit 10000
+	undo-tree-auto-save-history t)
+  :hook (prog-mode . undo-tree-mode))
+
 ;; z - prefixed folding options like vim
 (use-package evil-vimish-fold :ensure t
   :config
@@ -128,10 +138,10 @@
   (use-package counsel :ensure t
     :general
     (my-leader-def
-      "." '(counsel-find-file :which-key "find file")
-      "fb" '(ivy-switch-buffer :which-key "switch buffer")
-      "fr" '(counsel-recentf :which-key "find recent files")
-      "fl" '(counsel-grep-or-swiper :which-key "find line"))
+      "."   '(counsel-find-file :which-key "find file")
+      "fb"  '(ivy-switch-buffer :which-key "switch buffer")
+      "fr"  '(counsel-recentf :which-key "find recent files")
+      "fl"  '(counsel-grep-or-swiper :which-key "find line"))
     ;; "ff" '(counsel-locate) :which-key)
 
     :config
@@ -149,70 +159,72 @@
 (use-package vterm :ensure t
   :general
   (my-leader-def
-    "o" '(:ignore t :which-key "Open")
-    "ot" '(vterm :which-key "open vterm")
+    "o"   '(:ignore t :which-key "Open")
+    "ot"  '(vterm :which-key "open vterm")
     "ovt" '(vterm-other-window) :which-key "open vterm in vsplit")
   :config
   (setq vterm-kill-buffer-on-exit t))
 
 ;; Snippets
 (use-package yasnippet :ensure t
+  :hook (prog-mode . yas-minor-mode)
   :config
-  (yas-global-mode 1)
+					; (yas-global-mode 1)
   (use-package yasnippet-snippets :ensure t))
 
 ;; Color parentheses
 (use-package rainbow-delimiters :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Autopair parentheses
-(use-package autopair :ensure t
-  :config
-  (autopair-global-mode))
+;; (use-package autopair :ensure t
+;;   :config
+;;   (autopair-global-mode))
+
+(use-package smartparens :ensure t
+  :hook (prog-mode . smartparens-mode))
 
 ;; Provides the restart-emacs function
 (use-package restart-emacs :ensure t
   :general
   (my-leader-def
-    "e" '(:ignore t :which-key "Emacs Commands")
+    "e"  '(:ignore t :which-key "Emacs Commands")
     "er" '(restart-emacs :which-key "restart emacs"))
   :config
-  ;; Restore frames on restart
-  (setq restart-emacs-restore-frames t))
+  (setq restart-emacs-restore-frames t)) ;; Restore frames on restart
 
 ;; Magit
 (use-package evil-magit :ensure t
   :general
   (my-leader-def
-    "g" '(:ignore t :which-key "Magit")
-    "gs" '(magit-status :which-key "status")
-    "gb" '(magit-branch-checkout :which-key "checkout branch")
-    "gB" '(magit-blame-addition :which-key "blame")
-    "gc" '(magit-clone :which-key "clone")
-    "gd" '(magit-file-delete :which-key "delete file")
-    "gF" '(magit-fetch :which-key "fetch")
-    "gG" '(magit-status-here :which-key "status here")
-    "gl" '(magit-log :which-key "log")
-    "gS" '(magit-stage-file :which-key "stage file")
-    "gU" '(magit-unstage-file :which-key "unstage file")
-    "gn" '(:ignore t :which-key "New")
+    "g"   '(:ignore t :which-key "Magit")
+    "gs"  '(magit-status :which-key "status")
+    "gb"  '(magit-branch-checkout :which-key "checkout branch")
+    "gB"  '(magit-blame-addition :which-key "blame")
+    "gc"  '(magit-clone :which-key "clone")
+    "gd"  '(magit-file-delete :which-key "delete file")
+    "gF"  '(magit-fetch :which-key "fetch")
+    "gG"  '(magit-status-here :which-key "status here")
+    "gl"  '(magit-log :which-key "log")
+    "gS"  '(magit-stage-file :which-key "stage file")
+    "gU"  '(magit-unstage-file :which-key "unstage file")
+    "gn"  '(:ignore t :which-key "New")
     "gnb" '(magit-branch-and-checkout :which-key "branch")
     "gnc" '(magit-commit-create :which-key "commit")
     "gnf" '(magit-commit-fixup :which-key "fixup commit")
     "gnd" '(magit-init :which-key "init")
-    "gf" '(:ignore t :which-key "Find")
+    "gf"  '(:ignore t :which-key "Find")
     "gfc" '(magit-show-commit :which-key "show commit")
     "gff" '(magit-find-file :which-key "file")
     "gfg" '(magit-find-git-config-file :which-key "git config file")
     "gfr" '(magit-list-repositories :which-key "repository")
-    "gfs" '(magit-list-submodules)) :which-key "submodule")
+    "gfs" '(magit-list-submodules) :which-key "submodule"))
 
 ;; Projectile
 (use-package projectile :ensure t
   :general
   (my-leader-def
-    "p" '(:ignore t :which-key "Projects")
+    "p"  '(:ignore t :which-key "Projects")
     "pf" '(projectile-find-file :which-key "find file")
     "pF" '(projectile-find-other-file :which-key "find other file")
     "pd" '(projectile-remove-known-project :which-key "remove project")
@@ -224,8 +236,31 @@
   :config
   (projectile-mode +1))
 
-(use-package company :ensure t)
+(use-package avy :ensure t
+  :general
+  (my-leader-def
+    "s" '(:ignore t :which-key "Search")
+    "sf" '(avy-goto-char :which-key "char")
+    "ss" '(avy-goto-char-2 :which-key "2-chars")
+    "sl" '(avy-goto-line :which-key "line")
+    "sw" '(avy-goto-word-1 :which-key "start of word")
+    "so" '(avy-goto-heading-timer :which-key "org-heading")))
+;; "sc" ('avy-org-refile-as-child :which-key "refile as child")))
 
+(use-package company :ensure t
+  :hook (prog-mode . company-mode)
+  :general
+  (company-active-map "C-w" nil) ;; don't override evil C-w
+  (general-imap
+    "C-n" 'company-complete)) ;; manual completion only with C-n
+
+(use-package lsp-mode :ensure t
+  :hook (prog-mode . lsp-mode))
+
+(use-package flycheck :ensure t
+  :hook (prog-mode . flycheck-mode)
+  :config
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -234,11 +269,10 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (counsel-projectile yasnippet-snippets vterm use-package restart-emacs rainbow-delimiters projectile popup gruvbox-theme general evil-visual-mark-mode evil-vimish-fold evil-surround evil-snipe evil-magit evil-lion evil-escape evil-commentary evil-collection counsel autopair))))
+    (lsp-mode counsel-projectile yasnippet-snippets vterm use-package restart-emacs rainbow-delimiters projectile popup gruvbox-theme general evil-visual-mark-mode evil-vimish-fold evil-surround evil-snipe evil-magit evil-lion evil-escape evil-commentary evil-collection counsel autopair))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
-
+)
