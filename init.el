@@ -88,10 +88,9 @@
 
 ;; 2 character searches with s (ala vim-sneak)
 (use-package evil-snipe :ensure t
+  :hook ((prog-mode text-mode) . evil-snipe-local-mode)
   :init
-  (setq evil-snipe-smart-case t)
-  :config
-  (evil-snipe-mode +1))
+  (setq evil-snipe-smart-case t))
 
 ;; Evil everywhere
 (use-package evil-collection :ensure t
@@ -100,40 +99,37 @@
 
 ;; s as an operator for surrounding
 (use-package evil-surround :ensure t
-  :config
-  (global-evil-surround-mode 1))
+  :hook ((prog-mode text-mode) . evil-surround-mode))
 
 ;; gc as an operator to comment
 (use-package evil-commentary :ensure t
-  :config
-  (evil-commentary-mode))
+  :hook (prog-mode . evil-commentary-mode))
 
 ;; jk to leave insert mode
 (use-package evil-escape :ensure t
+  :hook ((prog-mode text-mode) . evil-escape-mode)
   :config
-  (evil-escape-mode)
   (setq evil-escape-key-sequence "jk"
 	evil-escape-delay 0.25))
 
 ;; gl as an operator to left-align, gL to right-align
 (use-package evil-lion :ensure t
-  :config
-  (evil-lion-mode))
+  :hook ((prog-mode text-mode) . evil-lion-mode))
 
 ;; Persistent Undos
 (use-package undo-tree :ensure t
+  :hook ((prog-mode text-mode) . undo-tree-mode)
   :init
   (setq undo-limit 10000
-	undo-tree-auto-save-history t)
-  :hook (prog-mode . undo-tree-mode))
+	undo-tree-auto-save-history t))
 
 ;; z - prefixed folding options like vim
 (use-package evil-vimish-fold :ensure t
-  :config
-  (add-hook 'prog-mode-hook 'evil-vimish-fold-mode))
+  :hook ((prog-mode text-mode) . evil-vimish-fold-mode))
 
 (use-package ivy :ensure t
   :config
+  (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
   (ivy-mode)
   (use-package counsel :ensure t
     :general
@@ -150,7 +146,8 @@
     :general
     (my-leader-def
       "pp" '(counsel-projectile-switch-project :which-key "switch project")
-      "pb" '(counsel-projectile-switch-to-buffer :which-key "switch buffer"))))
+      "pb" '(counsel-projectile-switch-to-buffer :which-key "switch buffer")))
+  (use-package flx :ensure t))
 
 ;; Theme
 (use-package gruvbox-theme :ensure t)
@@ -168,8 +165,10 @@
 ;; Snippets
 (use-package yasnippet :ensure t
   :hook (prog-mode . yas-minor-mode)
+  :general
+  (my-leader-def
+    "fs" 'yas-describe-tables)
   :config
-					; (yas-global-mode 1)
   (use-package yasnippet-snippets :ensure t))
 
 ;; Color parentheses
@@ -252,7 +251,7 @@
   :general
   (company-active-map "C-w" nil) ;; don't override evil C-w
   (general-imap
-    "C-n" 'company-complete)) ;; manual completion only with C-n
+    "C-n" 'company-complete)) ;; manual completion with C-n
 
 (use-package lsp-mode :ensure t
   :hook (prog-mode . lsp-mode))
@@ -261,6 +260,9 @@
   :hook (prog-mode . flycheck-mode)
   :config
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+(use-package org-bullets :ensure t
+  :hook (org-mode . org-bullets-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -275,4 +277,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-)
+ )
