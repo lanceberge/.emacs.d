@@ -1,13 +1,12 @@
 * Basic Settings
   #+BEGIN_SRC emacs-lisp
-    ;; Initial Settings
     (setq user-full-name "Lance Bergeron"
 	  user-mail-address "bergeron.lance6@gmail.com")
 
     (setq inhibit-startup-screen t
 	  backup-directory-alist '(("." . "~/.emacs.d/backups"))) ; dedicated backup directory
 
-    (fset 'yes-or-no-p 'y-or-n-p)                                 ; y or n, not yes or no
+    (fset 'yes-or-no-p 'y-or-n-p)                                 ; y or n prompt, not yes or no
 
     (menu-bar-mode -1)                                            ; no menu bar
     (toggle-scroll-bar -1)                                        ; no scroll bar
@@ -20,14 +19,13 @@
   #+END_SRC
 * Keymap Management
   #+BEGIN_SRC emacs-lisp
-    ;; Keybindings
-    (use-package which-key
+    (use-package which-key                ; show keybindings following when a prefix is pressed
     :config
     (which-key-mode))
 
-    (use-package general
+    (use-package general                  ; unified way to map keybindings; works with :general in use-package
     :config
-    (general-create-definer my-leader-def
+    (general-create-definer my-leader-def ; prefix key with SPC or C-SPC
 	:states '(normal visual insert emacs)
 	:prefix "SPC"
 	:non-normal-prefix "C-SPC")
@@ -42,7 +40,6 @@
   #+END_SRC
 * Evil Mode
   #+BEGIN_SRC emacs-lisp
-    ;; Evil
     (use-package evil
     :init
     (setq evil-want-C-u-scroll t
@@ -52,9 +49,9 @@
 	    evil-search-wrap t
 	    evil-want-keybinding nil)
     :general
-    (evil-ex-completion-map ";" 'exit-minibuffer)
+    (evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
     ('(normal visual motion)
-    ";" 'evil-ex
+    ";" 'evil-ex ; switch ; and :
     ":" 'evil-repeat-find-char
     "H" "^"
     "L" "$")
@@ -62,14 +59,14 @@
 	;; Vim-like Macros
 	"SPC =" "mzgg=G`z"
 	;; Remaps
-	"gm" 'evil-execute-macro
+	"gm" 'evil-execute-macro ; run vim macros
 	"]b" '(evil-next-buffer :which-key "next buffer")
 	"[b" '(evil-prev-buffer :which-key "previous buffer"))
     (my-leader-def
 	"h" (general-simulate-key "C-h")
 	;; Windows
 	"w"  '(:ignore t :which-key "Windows")
-	"w" (general-simulate-key "C-w")
+	"w" (general-simulate-key "C-w") ; window command
 	;; Buffers
 	"b"  '(:ignore t :which-key "Buffers")
 	"bs" '(evil-write :which-key "write file")
@@ -77,8 +74,8 @@
 	"bl" '(evil-switch-to-windows-last-buffer :which-key "switch to last buffer")
 	"bS" '(evil-write-all :which-key "write all buffers"))
     :config
-    (define-key evil-window-map "d" 'evil-quit)
-    (define-key evil-window-map "q" 'evil-save-modified-and-close)
+    (define-key evil-window-map "d" 'evil-quit) ; delete window
+    (define-key evil-window-map "q" 'evil-save-modified-and-close) ; quit and save window
     (evil-mode 1))
   #+END_SRC
 * Evil-Related
@@ -107,7 +104,10 @@
       :hook ((prog-mode text-mode) . evil-escape-mode)
       :config
       (setq evil-escape-key-sequence "jk"
-	    evil-escape-delay 0.25))
+	    evil-escape-delay 0.25)
+      (setq evil-escape-excluded-major-modes '(evil-magit-mode))
+      (push 'normal evil-escape-excluded-states)
+      (push 'visual evil-escape-excluded-states))
 
     ;; gl as an operator to left-align, gL to right-align
     (use-package evil-lion
@@ -125,15 +125,12 @@
     ;; z - prefixed folding options like vim
     (use-package vimish-fold
       :hook ((prog-mode text-mode) . vimish-fold-mode))
-      ;; :config
-      ;; (use-package evil-vimish-fold
-      ;; :hook ((prog-mode text-mode) . vimish-fold-mode)))
   #+END_SRC
 * Ivy
   #+BEGIN_SRC emacs-lisp
     (use-package ivy
     :config
-    (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+    (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ; TODO fuzzy searches w/ ivy
     (ivy-mode)
     (use-package counsel
 	:general
@@ -154,7 +151,6 @@
   #+END_SRC
 * Vterm
   #+BEGIN_SRC emacs-lisp
-    ;; Terminal Emulator
     (use-package vterm
     :general
     (my-leader-def
@@ -164,21 +160,19 @@
     :config
     (setq vterm-kill-buffer-on-exit t))
   #+END_SRC
-* Yasnippet
+* Yasnippets
   #+BEGIN_SRC emacs-lisp
-    ;; Snippets
     (use-package yasnippet
     :hook ((prog-mode text-mode) . yas-minor-mode)
     :general
     (my-leader-def
-	"fs" 'yas-describe-tables)
+	"fs" 'yas-describe-tables) ; list all snippets
     :config
     (use-package yasnippet-snippets))
 
   #+END_SRC
 * Magit
   #+BEGIN_SRC emacs-lisp
-    ;; Magit
     (use-package evil-magit
     :init
     (evil-magit-init)
@@ -207,11 +201,11 @@
 	"gfr" '(magit-list-repositories :which-key "repository")
 	"gfs" '(magit-list-submodules) :which-key "submodule")
     :config
-    (setq evil-magit-state 'normal))
+    (setq evil-magit-state 'normal
+	  magit-save-repository-buffers nil)) ; don't prompt to save buffers on magit-status
   #+END_SRC
 * Projectile
   #+BEGIN_SRC emacs-lisp
-    ;; Projectile
     (use-package projectile
     :general
     (my-leader-def
@@ -238,38 +232,34 @@
 	"sl" '(avy-goto-line :which-key "line")
 	"sw" '(avy-goto-word-1 :which-key "start of word")
 	"so" '(avy-goto-heading-timer :which-key "org-heading")))
-    ;; "sc" ('avy-org-refile-as-child :which-key "refile as child")))
   #+END_SRC
 * IDE Features
   #+BEGIN_SRC emacs-lisp
     ;; Autocomplete
     (use-package company
-    :hook (prog-mode . company-mode)
-    :general
-    (company-active-map "C-w" nil) ; don't override evil C-w
-    (general-imap
+      :hook (prog-mode . company-mode)
+      :general
+      (company-active-map "C-w" nil) ; don't override evil C-w
+      (general-imap
 	"C-n" 'company-complete))  ; manual completion with C-n
 
-    ;; Lsp
+    ;; LSP
     (use-package lsp-mode
-    :general
-    (general-nmap "gr" 'lsp-rename)
-    :hook (prog-mode . lsp-mode))
+      :general
+      (general-nmap "gr" 'lsp-rename)
+      :hook (prog-mode . lsp-mode))
 
-
+    ;; Linting
     (use-package flycheck
-    :hook (prog-mode . flycheck-mode)
-    :general
-    (my-leader-def
+      :hook (prog-mode . flycheck-mode)
+      :general
+      (my-leader-def
 	"fe" '(flycheck-list-errors :which-key "list errors"))
-    :config
-    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+      :config
+      (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
   #+END_SRC
 * UI
   #+BEGIN_SRC emacs-lisp
-    (use-package org-bullets
-    :hook (org-mode . org-bullets-mode))
-
     ;; Color parentheses
     (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
@@ -289,7 +279,6 @@
     :config
     (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)) ; don't pair ' in elisp mode
 
-    ;; Provides the restart-emacs function
     (use-package restart-emacs
     :general
     (my-leader-def
@@ -315,6 +304,9 @@
       (org-babel-do-load-languages
        'org-babel-load-languages
        '((shell     . t)
-	(emacs-lisp . t)
-	(haskell    . t))))
+	 (emacs-lisp . t)
+	 (haskell    . t))))
+
+    (use-package org-bullets
+      :hook (org-mode . org-bullets-mode))
   #+END_SRC

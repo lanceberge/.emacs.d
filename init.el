@@ -18,3 +18,5 @@
 
 (org-babel-load-file (expand-file-name "config.org" user-emacs-directory))
 (garbage-collect)
+(put 'evil-escape 'disabled t)
+(put 'evil-escape-mode 'disabled nil)
