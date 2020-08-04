@@ -1,22 +1,17 @@
-(require 'package)
-(setq package-archives '(("org" . "http://orgmode.org/elpa/")
-			 ("melpa" . "http://melpa.org/packages/")
-			 ("melpa-stable" . "http://stable.melpa.org/packages/"))
-      package-enable-at-startup nil
-      load-prefer-newer t)
-(package-initialize)
+;;; -*- lexical-binding: t -*-
+(setq gc-cons-threshold most-positive-fixnum)
+      ;; gc-cons-percentage 0.6)
 
-;; make sure use-package is installed
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(setq load-prefer-newer noninteractive)
 
-(setq-default use-package-always-ensure t)
+(defvar default-file-name-handler-alist file-name-handler-alist)
 
-(eval-when-compile
-  (require 'use-package))
+(setq file-name-handler-alist nil)
+
+(add-hook 'emacs-startup-hook
+	  (lambda ()
+	    (setq gc-cons-threshold 16777216
+		  gc-cons-percentage 0.1
+		  file-name-handler-alist default-file-name-handler-alist)))
 
 (org-babel-load-file (expand-file-name "config.org" user-emacs-directory))
-(garbage-collect)
-(put 'evil-escape 'disabled t)
-(put 'evil-escape-mode 'disabled nil)

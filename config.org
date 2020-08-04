@@ -1,28 +1,46 @@
 * Basic Settings
   #+BEGIN_SRC emacs-lisp
+    ;;; -*- lexical-binding: t; -*-
     (setq user-full-name "Lance Bergeron"
 	  user-mail-address "bergeron.lance6@gmail.com")
 
     (setq inhibit-startup-screen t
+	  inhibit-startup-message t
+	  inhibit-startup-echo-area-message user-login-name
+	  inhibit-default-init t
+	  initial-scratch-message nil
+	  initial-major-mode 'fundamental-mode
 	  backup-directory-alist '(("." . "~/.emacs.d/backups"))) ; dedicated backup directory
 
     (fset 'yes-or-no-p 'y-or-n-p)                                 ; y or n prompt, not yes or no
 
-    (menu-bar-mode -1)                                            ; no menu bar
-    (toggle-scroll-bar -1)                                        ; no scroll bar
-    (tool-bar-mode -1)                                            ; no tool bar
-    (set-frame-font "DejaVu Sans Mono")                           ; font
-    (set-face-attribute 'default nil :height 110)                 ; font size
+    ;; (menu-bar-mode -1)                                            ; no menu bar
+    ;; (toggle-scroll-bar -1)                                        ; no scroll bar
+    ;; (tool-bar-mode -1)                                            ; no tool bar
+    ;; (set-frame-font "DejaVu Sans Mono")                           ; font
+    ;; (set-face-attribute 'default nil :height 110)                 ; font size
     (menu-bar-display-line-numbers-mode 'visual)                  ; relative line numbers
     (global-display-line-numbers-mode 1)                          ; always show line numbers
-    (toggle-frame-fullscreen)
+    ;; (toggle-frame-fullscreen)
+
+    ;; Optimizations
+    (setq idle-update-delay 1
+	  auto-mode-case-fold nil)
+
+    (setq bidi-inhibit-bpa t)
+
+    (setq-default bidi-display-reordering 'left-to-right
+		  bidi-paragraph-direction 'left-to-right
+		  cursor-in-non-selected-windows nil)
+
+    (setq fast-but-imprecise-scrolling t
+	  frame-inhibit-implied-resize t
+	  inhibit-compacting-font-caches t
+	  highlight-nonselected-windows nil
+	  ffap-machine-p-known 'reject)
   #+END_SRC
 * Keymap Management
   #+BEGIN_SRC emacs-lisp
-    (use-package which-key                ; show keybindings following when a prefix is pressed
-      :config
-      (which-key-mode))
-
     (use-package general                  ; unified way to map keybindings; works with :general in use-package
       :config
       (general-create-definer my-leader-def ; prefix key with SPC or C-SPC
@@ -37,10 +55,17 @@
 	"q"  '(save-buffers-kill-emacs :which-key "save buffers & quit emacs")
 	"," '(dired-jump :which-key "open dired")
 	"fd" '(dired :which-key "navigate to a directory")))
+
+    (use-package which-key                ; show keybindings following when a prefix is pressed
+      :defer 0.1
+      :config
+      (which-key-mode))
   #+END_SRC
 * Evil Mode
   #+BEGIN_SRC emacs-lisp
     (use-package evil
+      :demand t
+      :hook (after-init . evil-mode)
       :init
       (setq evil-want-C-u-scroll t
 	    evil-want-Y-yank-to-eol t
@@ -75,21 +100,22 @@
 	"bS" '(evil-write-all :which-key "write all buffers"))
       :config
       (define-key evil-window-map "d" 'evil-quit) ; delete window
-      (define-key evil-window-map "q" 'evil-save-modified-and-close) ; quit and save window
-      (evil-mode 1))
+      (define-key evil-window-map "q" 'evil-save-modified-and-close)) ; quit and save window
   #+END_SRC
 * Evil-Related
   #+BEGIN_SRC emacs-lisp
+    ;; Evil everywhere
+    (use-package evil-collection
+      :preface
+      ;; (setq evil-want-keybinding nil)
+      :config
+      (evil-collection-init))
+
     ;; 2 character searches with s (ala vim-sneak)
     (use-package evil-snipe
       :hook ((prog-mode text-mode) . evil-snipe-local-mode)
       :init
       (setq evil-snipe-smart-case t))
-
-    ;; Evil everywhere
-    (use-package evil-collection
-      :config
-      (evil-collection-init))
 
     ;; s as an operator for surrounding
     (use-package evil-surround
@@ -129,24 +155,29 @@
 * Ivy
   #+BEGIN_SRC emacs-lisp
     (use-package ivy
+      :defer 0.1
       :config
       (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ; TODO fuzzy searches w/ ivy
-      (ivy-mode)
-      (use-package counsel
-	:general
-	(my-leader-def
-	  "."   '(counsel-find-file :which-key "find file")
-	  "SPC"  '(ivy-switch-buffer :which-key "switch buffer")
-	  "fr"  '(counsel-recentf :which-key "find recent files")
-	  "fl"  '(counsel-grep-or-swiper :which-key "find line")
-	  "ff"  '(counsel-rg))
-	:config
-	(counsel-mode)
-	(use-package counsel-projectile
-	  :general
-	  (my-leader-def
-	    "pp" '(counsel-projectile-switch-project :which-key "switch project")
-	    "pb" '(counsel-projectile-switch-to-buffer :which-key "switch buffer")))))
+      (ivy-mode))
+
+    (use-package counsel
+      :after ivy
+      :general
+      (my-leader-def
+	"."   '(counsel-find-file :which-key "find file")
+	"SPC"  '(ivy-switch-buffer :which-key "switch buffer")
+	"fr"  '(counsel-recentf :which-key "find recent files")
+	"fl"  '(counsel-grep-or-swiper :which-key "find line")
+	"ff"  '(counsel-rg))
+      :config
+      (counsel-mode))
+
+    (use-package counsel-projectile
+      :defer 0.1
+      :general
+      (my-leader-def
+	"pp" '(counsel-projectile-switch-project :which-key "switch project")
+	"pb" '(counsel-projectile-switch-to-buffer :which-key "switch buffer")))
     ;; (use-package flx :ensure t))
   #+END_SRC
 * Vterm
@@ -173,9 +204,7 @@
   #+END_SRC
 * Magit
   #+BEGIN_SRC emacs-lisp
-    (use-package evil-magit
-      :init
-      (evil-magit-init)
+    (use-package magit
       :general
       (my-leader-def
 	"g"   '(:ignore t :which-key "Magit")
@@ -201,12 +230,13 @@
 	"gfr" '(magit-list-repositories :which-key "repository")
 	"gfs" '(magit-list-submodules) :which-key "submodule")
       :config
-      (setq evil-magit-state 'normal
-	    magit-save-repository-buffers nil)) ; don't prompt to save buffers on magit-status
+      ;; (setq evil-magit-state 'normal
+      (setq magit-save-repository-buffers nil)) ; don't prompt to save buffers on magit-status
   #+END_SRC
 * Projectile
   #+BEGIN_SRC emacs-lisp
     (use-package projectile
+      :defer 0.1
       :general
       (my-leader-def
 	"p"  '(:ignore t :which-key "Projects")
@@ -245,13 +275,13 @@
 
     ;; LSP
     (use-package lsp-mode
+      :hook (prog-mode . lsp-mode)
       :general
-      (general-nmap "gr" 'lsp-rename)
-      :hook (prog-mode . lsp-mode))
+      (general-nmap "gr" 'lsp-rename))
 
     ;; Linting
     (use-package flycheck
-      :hook (prog-mode . flycheck-mode)
+      :hook (lsp-mode . flycheck-mode)
       :general
       (my-leader-def
 	"fe" '(flycheck-list-errors :which-key "list errors"))
@@ -263,9 +293,6 @@
     ;; Color parentheses
     (use-package rainbow-delimiters
       :hook (prog-mode . rainbow-delimiters-mode))
-
-    ;; Theme
-    (use-package gruvbox-theme :ensure t)
   #+END_SRC
 * Custom
   #+BEGIN_SRC emacs-lisp
