@@ -5,3 +5,9 @@ init.el~
 projectile-bookmarks.eld
 themes
 transient
+undos/
+backups
+custom.el
+recentf
+url
+config.el
