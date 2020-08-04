@@ -10,18 +10,12 @@
 	  inhibit-default-init t
 	  initial-scratch-message nil
 	  initial-major-mode 'fundamental-mode
-	  backup-directory-alist '(("." . "~/.emacs.d/backups"))) ; dedicated backup directory
+	  kill-buffer-query-functions nil)
 
     (fset 'yes-or-no-p 'y-or-n-p)                                 ; y or n prompt, not yes or no
 
-    ;; (menu-bar-mode -1)                                            ; no menu bar
-    ;; (toggle-scroll-bar -1)                                        ; no scroll bar
-    ;; (tool-bar-mode -1)                                            ; no tool bar
-    ;; (set-frame-font "DejaVu Sans Mono")                           ; font
-    ;; (set-face-attribute 'default nil :height 110)                 ; font size
     (menu-bar-display-line-numbers-mode 'visual)                  ; relative line numbers
     (global-display-line-numbers-mode 1)                          ; always show line numbers
-    ;; (toggle-frame-fullscreen)
 
     ;; Optimizations
     (setq idle-update-delay 1
@@ -38,6 +32,18 @@
 	  inhibit-compacting-font-caches t
 	  highlight-nonselected-windows nil
 	  ffap-machine-p-known 'reject)
+
+    (defconst emacs-dir
+        (expand-file-name (file-name-as-directory user-emacs-directory)))
+
+    (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
+	  custom-file (expand-file-name "custom.el" user-emacs-directory))
+    ;; (toggle-frame-fullscreen)
+    ;; (menu-bar-mode -1)                                            ; no menu bar
+    ;; (toggle-scroll-bar -1)                                        ; no scroll bar
+    ;; (tool-bar-mode -1)                                            ; no tool bar
+    ;; (set-frame-font "DejaVu Sans Mono")                           ; font
+    ;; (set-face-attribute 'default nil :height 110)                 ; font size
   #+END_SRC
 * Keymap Management
   #+BEGIN_SRC emacs-lisp
@@ -59,6 +65,10 @@
     (use-package which-key                ; show keybindings following when a prefix is pressed
       :defer 0.1
       :config
+      (setq which-key-sort-order #'which-key-prefix-then-key-order
+	    which-key-min-display-lines 6
+	    which-key-add-column-padding 1
+	    which-key-sort-uppercase-first nil)
       (which-key-mode))
   #+END_SRC
 * Evil Mode
@@ -88,7 +98,7 @@
 	"]b" '(evil-next-buffer :which-key "next buffer")
 	"[b" '(evil-prev-buffer :which-key "previous buffer"))
       (my-leader-def
-	"h" (general-simulate-key "C-h")
+	"h" (general-simulate-key "C-h" :which-key "Help")
 	;; Windows
 	"w"  '(:ignore t :which-key "Windows")
 	"w" (general-simulate-key "C-w") ; window command
@@ -106,8 +116,6 @@
   #+BEGIN_SRC emacs-lisp
     ;; Evil everywhere
     (use-package evil-collection
-      :preface
-      ;; (setq evil-want-keybinding nil)
       :config
       (evil-collection-init))
 
@@ -144,13 +152,23 @@
       :hook ((prog-mode text-mode) . undo-tree-mode)
       :init
       (setq undo-limit 10000
-	    undo-tree-auto-save-history t))
+	    undo-tree-auto-save-history t)
     :config
-    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
     ;; z - prefixed folding options like vim
     (use-package vimish-fold
       :hook ((prog-mode text-mode) . vimish-fold-mode))
+
+    (use-package evil-numbers
+      :general
+      (my-leader-def
+	"en" '(:ignore t :which-key "Evil-Numbers")
+	"enu" '(evil-numbers/inc-at-pt :which-key "increment")
+	"end" '(evil-numbers/dec-at-pt :which-key "decrement")))
+
+    (use-package evil-exchange
+      :hook ((prog-mode text-mode) . evil-exchange-install))
   #+END_SRC
 * Ivy
   #+BEGIN_SRC emacs-lisp
@@ -205,6 +223,8 @@
 * Magit
   #+BEGIN_SRC emacs-lisp
     (use-package magit
+      :init
+      (setq magit-auto-revert-mode nil)
       :general
       (my-leader-def
 	"g"   '(:ignore t :which-key "Magit")
@@ -230,8 +250,13 @@
 	"gfr" '(magit-list-repositories :which-key "repository")
 	"gfs" '(magit-list-submodules) :which-key "submodule")
       :config
-      ;; (setq evil-magit-state 'normal
-      (setq magit-save-repository-buffers nil)) ; don't prompt to save buffers on magit-status
+	(setq magit-save-repository-buffers nil)) ; don't prompt to save buffers on magit-status
+
+    (use-package evil-magit
+      :after magit
+      :init
+      (setq evil-magit-state 'normal
+	    evil-magit-use-z-for-folds t))
   #+END_SRC
 * Projectile
   #+BEGIN_SRC emacs-lisp
@@ -293,11 +318,6 @@
     ;; Color parentheses
     (use-package rainbow-delimiters
       :hook (prog-mode . rainbow-delimiters-mode))
-  #+END_SRC
-* Custom
-  #+BEGIN_SRC emacs-lisp
-    (setq-default custom-file (expand-file-name "custom.el" user-emacs-directory))
-    (load custom-file)
   #+END_SRC
 * Miscellaneous
   #+BEGIN_SRC emacs-lisp
