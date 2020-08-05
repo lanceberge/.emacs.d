@@ -33,17 +33,13 @@
 	  highlight-nonselected-windows nil
 	  ffap-machine-p-known 'reject)
 
-    (defconst emacs-dir
-        (expand-file-name (file-name-as-directory user-emacs-directory)))
-
+    ;; Keeping ~/.emacs.d organized
     (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
 	  custom-file (expand-file-name "custom.el" user-emacs-directory))
     ;; (toggle-frame-fullscreen)
     ;; (menu-bar-mode -1)                                            ; no menu bar
     ;; (toggle-scroll-bar -1)                                        ; no scroll bar
     ;; (tool-bar-mode -1)                                            ; no tool bar
-    ;; (set-frame-font "DejaVu Sans Mono")                           ; font
-    ;; (set-face-attribute 'default nil :height 110)                 ; font size
   #+END_SRC
 * Keymap Management
   #+BEGIN_SRC emacs-lisp
@@ -70,6 +66,8 @@
 	    which-key-add-column-padding 1
 	    which-key-sort-uppercase-first nil)
       (which-key-mode))
+
+    (use-package hydra)
   #+END_SRC
 * Evil Mode
   #+BEGIN_SRC emacs-lisp
@@ -102,7 +100,7 @@
 	;; Windows
 	"w"  '(:ignore t :which-key "Windows")
 	"w" (general-simulate-key "C-w") ; window command
-	;; Buffers
+	;; Buffers TODO make hydra
 	"b"  '(:ignore t :which-key "Buffers")
 	"bs" '(evil-write :which-key "write file")
 	"bd" '(evil-delete-buffer :which-key "delete buffer")
@@ -147,15 +145,6 @@
     (use-package evil-lion
       :hook ((prog-mode text-mode) . evil-lion-mode))
 
-    ;; Persistent Undos
-    (use-package undo-tree
-      :hook ((prog-mode text-mode) . undo-tree-mode)
-      :init
-      (setq undo-limit 10000
-	    undo-tree-auto-save-history t)
-    :config
-    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
-
     ;; z - prefixed folding options like vim
     (use-package vimish-fold
       :hook ((prog-mode text-mode) . vimish-fold-mode))
@@ -172,21 +161,26 @@
   #+END_SRC
 * Ivy
   #+BEGIN_SRC emacs-lisp
+    (use-package flx)
+
     (use-package ivy
       :defer 0.1
       :config
-      (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ; TODO fuzzy searches w/ ivy
-      (ivy-mode))
+      (ivy-mode)
+      ;; (setq ivy-initial-inputs-alist nil)
+      (setq ivy-re-builders-alist
+	    '((t . ivy--regex-fuzzy))))
 
     (use-package counsel
       :after ivy
       :general
       (my-leader-def
 	"."   '(counsel-find-file :which-key "find file")
-	"SPC"  '(ivy-switch-buffer :which-key "switch buffer")
+	"SPC" '(ivy-switch-buffer :which-key "switch buffer")
 	"fr"  '(counsel-recentf :which-key "find recent files")
-	"fl"  '(counsel-grep-or-swiper :which-key "find line")
-	"ff"  '(counsel-rg))
+	"fl"  '(counsel-grep-or-swiper :which-key "swiper")
+	"fg"  '(counsel-git-grep :which-key "git files")
+	"ff"  '(counsel-rg :which-key "ripgrep"))
       :config
       (counsel-mode))
 
@@ -196,11 +190,10 @@
       (my-leader-def
 	"pp" '(counsel-projectile-switch-project :which-key "switch project")
 	"pb" '(counsel-projectile-switch-to-buffer :which-key "switch buffer")))
-    ;; (use-package flx :ensure t))
   #+END_SRC
 * Vterm
   #+BEGIN_SRC emacs-lisp
-    (use-package vterm
+    (use-package vterm ;; TODO switch to term
       :general
       (my-leader-def
 	"o"   '(:ignore t :which-key "Open")
@@ -215,10 +208,17 @@
       :hook ((prog-mode text-mode) . yas-minor-mode)
       :general
       (my-leader-def
-	"fs" 'yas-describe-tables) ; list all snippets
+	"y"  '(:ignore t :which-key "Yasnippet")
+	"yi" '(yas-insert-snippet :which-key "insert snippet")
+	"yl" '(yas-describe-tables :which-key "list snippets"))
       :config
       (use-package yasnippet-snippets))
 
+    (use-package auto-yasnippet
+      :general
+      (my-leader-def
+	"yc" '(aya-create :which-key "create aya snippet")
+	"ye" '(aya-expand :which-key "expand aya snippet")))
   #+END_SRC
 * Magit
   #+BEGIN_SRC emacs-lisp
@@ -281,12 +281,9 @@
     (use-package avy
       :general
       (my-leader-def
-	"s" '(:ignore t :which-key "Search")
-	"sf" '(avy-goto-char :which-key "char")
-	"ss" '(avy-goto-char-2 :which-key "2-chars")
-	"sl" '(avy-goto-line :which-key "line")
-	"sw" '(avy-goto-word-1 :which-key "start of word")
-	"so" '(avy-goto-heading-timer :which-key "org-heading")))
+	"fc" '(avy-goto-char :which-key "char")
+	"fC" '(avy-goto-char-2 :which-key "2-chars")
+	"fL" '(avy-goto-line :which-key "line")))
   #+END_SRC
 * IDE Features
   #+BEGIN_SRC emacs-lisp
@@ -319,20 +316,47 @@
     (use-package rainbow-delimiters
       :hook (prog-mode . rainbow-delimiters-mode))
   #+END_SRC
-* Miscellaneous
+* Smartparens
   #+BEGIN_SRC emacs-lisp
     (use-package smartparens
       :hook (prog-mode . smartparens-mode)
+      ;;   "m" '(:ignore t :which-key "Move")
+      ;;   "mp" '(:ignore t :which-key "Pair")
+      ;;   "mpl" '(sp-forward-slurp-sexp :which-key "forward slurp")
+      ;;   "mph" '(sp-backward-slurp-sexp :which-key "backward slurp")
+      ;;   "mpL" '(sp-forward-barf-sexp :which-key "forward barf")
+      ;;   "mpH" '(sp-backward-barf-sexp :which-key "backward barf")
+      ;;   "mps" '(sp-split-sexp "split pair")
+      ;;   "mpj" '(sp-join-sexp "join pair")
+      ;;   "mpa" '(:ignore t :which-key "Add")
+      ;;   "mpah" '(sp-add-to-previous-sexp "to previous pair")
+      ;;   "mpal" '(sp-add-to-next-sexp "to next pair"))
+      ;; "mpd" '(sp-kill-whole-line :which-key "delete line"))
       :config
-      (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)) ; don't pair ' in elisp mode
+      (defhydra hydra-smartparens ()
+	;; Movement
+	;; ("q" nil)
+	("l" sp-next-sexp "next pair")
+	("h" sp-backward-sexp "previous pair")
+	("j" sp-down-sexp "down")
+	("k" sp-backward-up-sexp "up")
 
-    (use-package restart-emacs
+	("H" sp-beginning-of-sexp "beginning")
+	("L" sp-end-of-sexp "end")
+	("d" sp-delete-sexp "delete")
+
+	("s" sp-forward-slurp-sexp "slurp")
+	("S" sp-backward-slurp-sexp "backward slurp")
+	("b" sp-forward-barf-sexp "barf")
+	("B" sp-backward-barf-sexp "backward barf"))
+      (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) ; don't pair ' in elisp mode
       :general
       (my-leader-def
-	"e"  '(:ignore t :which-key "Emacs Commands")
-	"er" '(restart-emacs :which-key "restart emacs"))
-      :config
-      (setq restart-emacs-restore-frames t)) ; Restore frames on restart
+	"s" '(hydra-smartparens/body :which-key "Smartparens")))
+
+    ;;   ;; Make vim change, delete, etc. commands preserve balance of parentheses
+    (use-package evil-smartparens
+      :hook ((smartparens-mode) . evil-smartparens-mode))
   #+END_SRC
 * Org
   #+BEGIN_SRC emacs-lisp
@@ -356,4 +380,24 @@
 
     (use-package org-bullets
       :hook (org-mode . org-bullets-mode))
+  #+END_SRC
+* Miscellaneous
+  #+BEGIN_SRC emacs-lisp
+    (use-package restart-emacs
+      :general
+      (my-leader-def
+	"e"  '(:ignore t :which-key "Emacs Commands")
+	"er" '(restart-emacs :which-key "restart emacs"))
+      :config
+      (setq restart-emacs-restore-frames t)) ; Restore frames on restart
+
+    ;; Persistent Undos
+    (use-package undo-tree
+      :hook ((prog-mode text-mode) . undo-tree-mode)
+      :init
+      (setq undo-limit 10000
+	    undo-tree-auto-save-history t)
+      :config
+      (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
+
   #+END_SRC
