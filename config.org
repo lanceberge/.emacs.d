@@ -1,5 +1,5 @@
 * Basic Settings
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     ;;; -*- lexical-binding: t; -*-
     (setq user-full-name "Lance Bergeron"
 	  user-mail-address "bergeron.lance6@gmail.com")
@@ -42,7 +42,7 @@
     ;; (tool-bar-mode -1)                                            ; no tool bar
   #+END_SRC
 * Keymap Management
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     (use-package general                  ; unified way to map keybindings; works with :general in use-package
       :config
       (general-create-definer my-leader-def ; prefix key with SPC or C-SPC
@@ -70,7 +70,7 @@
     (use-package hydra)
   #+END_SRC
 * Evil Mode
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     (use-package evil
       :demand t
       :hook (after-init . evil-mode)
@@ -98,6 +98,7 @@
       (my-leader-def
 	"h" (general-simulate-key "C-h" :which-key "Help")
 	;; Windows
+	";"  '(shell-command :which-key "shell command")
 	"w"  '(:ignore t :which-key "Windows")
 	"w" (general-simulate-key "C-w") ; window command
 	;; Buffers TODO make hydra
@@ -111,7 +112,7 @@
       (define-key evil-window-map "q" 'evil-save-modified-and-close)) ; quit and save window
   #+END_SRC
 * Evil-Related
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     ;; Evil everywhere
     (use-package evil-collection
       :config
@@ -160,7 +161,7 @@
       :hook ((prog-mode text-mode) . evil-exchange-install))
   #+END_SRC
 * Ivy
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     (use-package flx)
 
     (use-package ivy
@@ -192,7 +193,7 @@
 	"pb" '(counsel-projectile-switch-to-buffer :which-key "switch buffer")))
   #+END_SRC
 * Vterm
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     (use-package vterm ;; TODO switch to term
       :general
       (my-leader-def
@@ -203,7 +204,7 @@
       (setq vterm-kill-buffer-on-exit t))
   #+END_SRC
 * Yasnippets
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     (use-package yasnippet
       :hook ((prog-mode text-mode) . yas-minor-mode)
       :general
@@ -221,7 +222,7 @@
 	"ye" '(aya-expand :which-key "expand aya snippet")))
   #+END_SRC
 * Magit
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     (use-package magit
       :init
       (setq magit-auto-revert-mode nil)
@@ -259,7 +260,7 @@
 	    evil-magit-use-z-for-folds t))
   #+END_SRC
 * Projectile
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     (use-package projectile
       :defer 0.1
       :general
@@ -277,7 +278,7 @@
       (projectile-mode +1))
   #+END_SRC
 * Avy
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     (use-package avy
       :general
       (my-leader-def
@@ -286,7 +287,7 @@
 	"fL" '(avy-goto-line :which-key "line")))
   #+END_SRC
 * IDE Features
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     ;; Autocomplete
     (use-package company
       :hook (prog-mode . company-mode)
@@ -311,13 +312,13 @@
       (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
   #+END_SRC
 * UI
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     ;; Color parentheses
     (use-package rainbow-delimiters
       :hook (prog-mode . rainbow-delimiters-mode))
   #+END_SRC
 * Smartparens
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     (use-package smartparens
       :hook (prog-mode . smartparens-mode)
       ;;   "m" '(:ignore t :which-key "Move")
@@ -359,7 +360,7 @@
       :hook ((smartparens-mode) . evil-smartparens-mode))
   #+END_SRC
 * Org
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     (use-package org
       :general
       (my-leader-def
@@ -369,9 +370,12 @@
 	"nli" '(org-insert-link :which-key "insert link")
 	"nlg" '(org-open-at-point :which-key "visit link")
 	"nt"  '(org-todo :which-key "toggle TODO state")
+	"ne"  '(org-ctrl-c-ctrl-c :which-key "evaluate src block")
+	"n'"  "C-c '"
 	"ns"  '(org-schedule :which-key "org schedule"))
       :config
-      (setq org-agenda-files '("~/org"))
+      (setq org-agenda-files '("~/org")
+	    org-confirm-babel-evaluate nil)
       (org-babel-do-load-languages
        'org-babel-load-languages
        '((shell     . t)
@@ -382,7 +386,7 @@
       :hook (org-mode . org-bullets-mode))
   #+END_SRC
 * Miscellaneous
-  #+BEGIN_SRC emacs-lisp
+  #+BEGIN_SRC emacs-lisp results: none
     (use-package restart-emacs
       :general
       (my-leader-def
@@ -399,5 +403,5 @@
 	    undo-tree-auto-save-history t)
       :config
       (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
-
   #+END_SRC
+  
