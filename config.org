@@ -403,8 +403,8 @@
     :config
     (org-babel-do-load-languages
      'org-babel-load-languages
-     '((shell     . t)
-       (haskell    . t))))
+     '((shell   . t)
+       (haskell . t))))
 
   (use-package org-bullets
     :after org

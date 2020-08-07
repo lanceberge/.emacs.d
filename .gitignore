@@ -2,7 +2,6 @@ auto-save-list
 backups
 config.el
 custom.el
-elpa
 eshell
 projectile-bookmarks.eld
 recentf
@@ -10,3 +9,4 @@ themes
 transient
 undo
 url
+straight
