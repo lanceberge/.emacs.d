@@ -16,27 +16,7 @@
 
 (setq frame-inhibit-implied-resize t)
 
-;; (eval-when-compile
-;;   (require 'package))
-
-;; (setq package-archives '(("org" . "http://orgmode.org/elpa/")
-;; 			 ("melpa" . "http://melpa.org/packages/")
-;; 			 ("melpa-stable" . "http://stable.melpa.org/packages/"))
-;;       load-prefer-newer t)
-;; (package-initialize)
-
-;; make sure use-package is installed
-;; (unless (package-installed-p 'use-package)
-;;   (package-refresh-contents)
-;;   (package-install 'use-package))
-
-;; (setq-default use-package-always-ensure t)
-
-;; (eval-when-compile
-;(defvar bootstrap-version)
-;   (require 'use-package))
-
-;; Bootstrap straight.el
+;; Boostrap straight.el
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
@@ -49,6 +29,7 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;; use-package uses straight.el
 (setq straight-use-package-by-default t)
 
 (straight-use-package 'use-package)
