@@ -68,10 +68,6 @@
     (which-key-add-column-padding 1)
     (which-key-sort-uppercase-first nil)
     :config
-    ;; (setq which-key-sort-order #'which-key-prefix-then-key-order
-    ;; 	which-key-min-display-lines 6
-    ;; 	which-key-add-column-padding 1
-    ;; 	which-key-sort-uppercase-first nil)
     (which-key-mode))
 
 (use-package hydra
@@ -86,13 +82,6 @@
     :demand t
     :diminish
     :hook (after-init . evil-mode)
-    ;; :init ; TODO move to :custom /:config
-    ;; (setq evil-want-C-u-scroll t
-    ;; 	evil-want-Y-yank-to-eol t
-    ;; 	evil-split-window-below t
-    ;; 	evil-vsplit-window-right t
-    ;; 	evil-search-wrap t
-    ;; 	evil-want-keybinding nil)
     :custom
     (evil-want-C-u-scroll t)
     (evil-want-Y-yank-to-eol t)
@@ -108,8 +97,6 @@
     "H" "^"
     "L" "$")
     (general-nmap
-    ;; Vim-like Macros
-    ;; "SPC =" "mzgg=G`z"
     ;; Remaps
     "gm" 'evil-execute-macro ; run vim macros
     "]b" '(evil-next-buffer :which-key "next buffer")
@@ -173,12 +160,6 @@
     (evil-escape-delay 0.25)
     (evil-escape-excluded-major-modes '(evil-magit-mode))
     (evil-escape-excluded-states '(normal visual)))
-    ;; :config
-    ;; (setq evil-escape-key-sequence "jk"
-    ;; 	evil-escape-delay 0.25)
-    ;; (setq evil-escape-excluded-major-modes '(evil-magit-mode))
-    ;; (push 'normal evil-escape-excluded-states)
-    ;; (push 'visual evil-escape-excluded-states))
 
 ;; gl as an operator to left-align, gL to right-align
 (use-package evil-lion
@@ -215,9 +196,6 @@
     (ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
     :config
     (ivy-mode))
-    ;; (setq ivy-initial-inputs-alist nil)
-    ;; (setq ivy-re-builders-alist
-    ;; 	'((t . ivy--regex-fuzzy))))
 
 (use-package counsel
     :after ivy
@@ -242,7 +220,7 @@
 #+END_SRC
 * Vterm
 #+BEGIN_SRC emacs-lisp :results none
-(use-package vterm ;; TODO switch to term
+(use-package vterm
     :general
     (my-leader-def
     "o"   '(:ignore t :which-key "Open")
@@ -371,12 +349,6 @@
 (use-package smartparens
     :diminish
     :hook (prog-mode . smartparens-mode)
-    ;;   "m" '(:ignore t :which-key "Move")
-    ;;   "mp" '(:ignore t :which-key "Pair")
-    ;;   "mpl" '(sp-forward-slurp-sexp :which-key "forward slurp")
-    ;;   "mph" '(sp-backward-slurp-sexp :which-key "backward slurp")
-    ;;   "mpL" '(sp-forward-barf-sexp :which-key "forward barf")
-    ;;   "mpH" '(sp-backward-barf-sexp :which-key "backward barf")
     ;;   "mps" '(sp-split-sexp "split pair")
     ;;   "mpj" '(sp-join-sexp "join pair")
     ;;   "mpa" '(:ignore t :which-key "Add")
@@ -412,50 +384,49 @@
 #+END_SRC
 * Org
 #+BEGIN_SRC emacs-lisp :results none
-(use-package org
+  (use-package org
     :general
     (my-leader-def
-    "oa"  '(org-agenda :which-key "org agenda")
-    "n"   '(:ignore t :which-key "Notes")
-    "nls" '(org-store-link :which-key "store link")
-    "nli" '(org-insert-link :which-key "insert link")
-    "nlg" '(org-open-at-point :which-key "visit link")
-    "nt"  '(org-todo :which-key "toggle TODO state")
-    "ne"  '(org-ctrl-c-ctrl-c :which-key "evaluate src block")
-    "n'"  "C-c '"
-    "ns"  '(org-sort :which-key "org schedule")
-    "nS"  '(org-schedule :which-key "org schedule"))
+      "oa"  '(org-agenda :which-key "org agenda")
+      "n"   '(:ignore t :which-key "Notes")
+      "nls" '(org-store-link :which-key "store link")
+      "nli" '(org-insert-link :which-key "insert link")
+      "nlg" '(org-open-at-point :which-key "visit link")
+      "nt"  '(org-todo :which-key "toggle TODO state")
+      "ne"  '(org-ctrl-c-ctrl-c :which-key "evaluate src block")
+      "n'"  "C-c '"
+      "ns"  '(org-sort :which-key "org schedule")
+      "nS"  '(org-schedule :which-key "org schedule"))
     :custom
     (org-agenda-files '("~/org"))
     (org-confirm-babel-evaluate nil)
     :config
     (org-babel-do-load-languages
-    'org-babel-load-languages
-    '((shell     . t)
-	;; (emacs-lisp . t)
-	(haskell    . t))))
+     'org-babel-load-languages
+     '((shell     . t)
+       (haskell    . t))))
 
-(use-package org-bullets
+  (use-package org-bullets
     :after org
     :hook (org-mode . org-bullets-mode))
 
-(use-package evil-org
+  (use-package evil-org
     :after org
     :diminish
     :hook (org-mode . evil-org-mode))
 #+END_SRC
 * Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
-(use-package restart-emacs
+  (use-package restart-emacs
     :general
     (my-leader-def
-    "e"  '(:ignore t :which-key "Emacs Commands")
-    "er" '(restart-emacs :which-key "restart emacs"))
+      "e"  '(:ignore t :which-key "Emacs Commands")
+      "er" '(restart-emacs :which-key "restart emacs"))
     :custom
     (restart-emacs-restore-frames t)) ; Restore frames on restart
 
-;; Persistent Undos
-(use-package undo-tree
+  ;; Persistent Undos
+  (use-package undo-tree
     :hook ((prog-mode text-mode) . undo-tree-mode)
     :diminish
     :custom
@@ -463,12 +434,12 @@
     (undo-tree-auto-save-history t)
     (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
-(use-package evil-mc
+  (use-package evil-mc
     :diminish
     :hook ((prog-mode text-mode) . evil-mc-mode))
 
-(use-package format-all
+  (use-package format-all
     :general
     (my-leader-def
-    "=" '(format-all-buffer :which-key "format")))
+      "=" '(format-all-buffer :which-key "format")))
 #+END_SRC
