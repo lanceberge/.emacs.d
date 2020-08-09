@@ -36,6 +36,14 @@
   ;; Keeping ~/.emacs.d organized
   (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
 	custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+  (setq delete-old-version t)
+
+  (setq-default indent-tabs-mode nil)
+
+  (setq show-trailing-whitespace t)
+
+  ;; (load custom-file t)
 #+END_SRC
 * Keymap Management
 #+BEGIN_SRC emacs-lisp :results none
@@ -92,6 +100,9 @@
     (evil-want-keybinding nil)
     :general
     (evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
+    (general-nmap
+      "zR" 'evil-open-folds
+      "zM" 'evil-close-folds)
     ('(normal visual motion)
      ";" 'evil-ex ; switch ; and :
      "M-;" 'evil-repeat-find-char
@@ -173,13 +184,13 @@
   (use-package origami
     :after evil
     :diminish
-    :hook (prog-mode . origami-mode)
+    :hook ((prog-mode text mode) . origami-mode)
     :general
     (general-nmap
       "zm" 'origami-close-node-recursively
       "zr" 'origami-open-node-recursively
-      "zM" 'origami-close-all-nodes
-      "zR" 'origami-open-all-nodes
+      ;; "zM" 'origami-close-all-nodes
+      ;; "zR" 'origami-open-all-nodes
       "zj" 'origami-next-fold
       "zk" 'origami-previous-fold))
 
@@ -197,7 +208,7 @@
     :diminish
     :hook ((prog-mode text-mode) . evil-mc-mode))
 
-  ;; exchange text selected with omap gx
+  ;; exchange text selected with gx
   (use-package evil-exchange
     :after evil
     :hook ((prog-mode text-mode) . evil-exchange-install))
@@ -205,7 +216,15 @@
   ;; navigate matching blocks of code with %
   (use-package evil-matchit
     :after evil
+    :diminish
     :hook ((prog-mode text-mode) . evil-matchit-mode))
+
+  ;; evil port of targets.vim
+  (use-package targets
+    :straight (targets :type git :host github :repo "noctuid/targets.el")
+    :after evil
+    :config
+    (targets-setup t))
 #+END_SRC
 * Ivy
 #+BEGIN_SRC emacs-lisp :results none
@@ -347,7 +366,9 @@
     (general-nmap "gr" 'lsp-rename))
 
   (use-package lsp-ui
-    :disabled t) ; TODO
+    :hook (lsp-mode . lsp-ui-mode))
+    
+  (use-package lsp-ivy)
 
   ;; linting
   (use-package flycheck
