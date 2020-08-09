@@ -12,10 +12,10 @@
 	initial-major-mode 'fundamental-mode
 	kill-buffer-query-functions nil)
 
-  (fset 'yes-or-no-p 'y-or-n-p)                                 ; y or n prompt, not yes or no
+  (fset 'yes-or-no-p 'y-or-n-p)                ; y or n prompt, not yes or no
 
-  (menu-bar-display-line-numbers-mode 'visual)                  ; relative line numbers
-  (global-display-line-numbers-mode 1)                          ; always show line numbers
+  (menu-bar-display-line-numbers-mode 'visual) ; relative line numbers
+  (global-display-line-numbers-mode 1)         ; always show line numbers
 
   ;; Optimizations
   (setq idle-update-delay 1
@@ -27,8 +27,8 @@
 		bidi-paragraph-direction 'left-to-right
 		cursor-in-non-selected-windows nil)
 
-  (setq fast-but-imprecise-scrolling t
-	frame-inhibit-implied-resize t
+  ;; (setq fast-but-imprecise-scrolling t
+  (setq frame-inhibit-implied-resize t
 	inhibit-compacting-font-caches t
 	highlight-nonselected-windows nil
 	ffap-machine-p-known 'reject)
@@ -36,28 +36,29 @@
   ;; Keeping ~/.emacs.d organized
   (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
 	custom-file (expand-file-name "custom.el" user-emacs-directory))
-  ;; (toggle-frame-fullscreen)
-  ;; (menu-bar-mode -1)                                            ; no menu bar
-  ;; (toggle-scroll-bar -1)                                        ; no scroll bar
-  ;; (tool-bar-mode -1)                                            ; no tool bar
 #+END_SRC
 * Keymap Management
 #+BEGIN_SRC emacs-lisp :results none
   (use-package general                  ; unified way to map keybindings; works with :general in use-package
     :demand t
     :config
-    (general-create-definer my-leader-def ; prefix key with SPC or C-SPC
+    (general-create-definer my-leader-def
       :states '(normal visual insert emacs)
       :prefix "SPC"
-      :non-normal-prefix "C-SPC")
+      :non-normal-prefix "M-SPC")
+
+    (general-create-definer my-localleader-def
+      :states '(normal visual insert emacs)
+      :prefix ","
+      :non-normal-prefix "M-,")
 
     (general-evil-setup)
     (my-leader-def
-      "f"  '(:ignore t :which-key "Find")
+      "f"  '(:ignore t                    :which-key "Find")
       "fm" '(general-describe-keybindings :which-key "list keybindings")
-      "q"  '(save-buffers-kill-emacs :which-key "save buffers & quit emacs")
-      ","  '(dired-jump :which-key "open dired")
-      "fd" '(dired :which-key "navigate to a directory")))
+      "q"  '(save-buffers-kill-emacs      :which-key "save buffers & quit emacs")
+      ","  '(dired-jump                   :which-key "open dired")
+      "fd" '(dired                        :which-key "navigate to a directory")))
 
   (use-package which-key                ; show keybindings following when a prefix is pressed
     :diminish
@@ -93,7 +94,8 @@
     (evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
     ('(normal visual motion)
      ";" 'evil-ex ; switch ; and :
-     ":" 'evil-repeat-find-char
+     "M-;" 'evil-repeat-find-char
+     "M-," 'evil-repeat-find-char-reverse
      "H" "^"
      "L" "$")
     (general-nmap
@@ -103,21 +105,21 @@
       "[b" '(evil-prev-buffer :which-key "previous buffer"))
     (my-leader-def
       ;; avy
-      "fc" '(evil-avy-goto-char :which-key "char")
-      "fC" '(evil-avy-goto-char-2 :which-key "2-chars")
-      "fL" '(evil-avy-goto-line :which-key "line")
+      "fc" '(evil-avy-goto-char                 :which-key "char")
+      "fC" '(evil-avy-goto-char-2               :which-key "2-chars")
+      "fL" '(evil-avy-goto-line                 :which-key "line")
 
-      "h" (general-simulate-key "C-h" :which-key "Help")
+      "h" (general-simulate-key "C-h"           :which-key "Help")
       ;; Windows
-      ";"  '(shell-command :which-key "shell command")
-      "w"  '(:ignore t :which-key "Windows")
+      ";"  '(shell-command                      :which-key "shell command")
+      "w"  '(:ignore t                          :which-key "Windows")
       "w"   (general-simulate-key "C-w") ; window command
       ;; Buffers TODO make hydra
-      "b"  '(:ignore t :which-key "Buffers")
-      "bs" '(evil-write :which-key "write file")
-      "bd" '(evil-delete-buffer :which-key "delete buffer")
+      "b"  '(:ignore t                          :which-key "Buffers")
+      "bs" '(evil-write                         :which-key "write file")
+      "bd" '(evil-delete-buffer                 :which-key "delete buffer")
       "bl" '(evil-switch-to-windows-last-buffer :which-key "switch to last buffer")
-      "bS" '(evil-write-all :which-key "write all buffers"))
+      "bS" '(evil-write-all                     :which-key "write all buffers"))
     :config
     (define-key evil-window-map "d" 'evil-quit) ; delete window
     (define-key evil-window-map "q" 'evil-save-modified-and-close)) ; quit and save window
@@ -145,7 +147,7 @@
     :hook ((prog-mode text-mode) . evil-surround-mode))
 
   ;; gc as an operator to comment
-  (use-package evil-commentary ; TODO switch to evil-nerd-commentary
+  (use-package evil-commentary
     :after evil
     :diminish
     :hook (prog-mode . evil-commentary-mode))
@@ -167,27 +169,47 @@
     :diminish
     :hook ((prog-mode text-mode) . evil-lion-mode))
 
-  ;; z - prefixed folding options like vim
-  (use-package vimish-fold
+  ;; code folding
+  (use-package origami
     :after evil
     :diminish
-    :hook ((prog-mode text-mode) . vimish-fold-mode))
+    :hook (prog-mode . origami-mode)
+    :general
+    (general-nmap
+      "zm" 'origami-close-node-recursively
+      "zr" 'origami-open-node-recursively
+      "zM" 'origami-close-all-nodes
+      "zR" 'origami-open-all-nodes
+      "zj" 'origami-next-fold
+      "zk" 'origami-previous-fold))
 
+  ;; increment/decrement numbers
   (use-package evil-numbers
     :after evil
     :general
-    (my-leader-def
-      "en" '(:ignore t :which-key "Evil-Numbers")
-      "enu" '(evil-numbers/inc-at-pt :which-key "increment")
-      "end" '(evil-numbers/dec-at-pt :which-key "decrement")))
+    (my-localleader-def
+      "n"  '(:ignore t              :which-key "Evil-Numbers")
+      "nu" '(evil-numbers/inc-at-pt :which-key "increment")
+      "nd" '(evil-numbers/dec-at-pt :which-key "decrement")))
 
+  ;; multiple cursors
+  (use-package evil-mc
+    :diminish
+    :hook ((prog-mode text-mode) . evil-mc-mode))
+
+  ;; exchange text selected with omap gx
   (use-package evil-exchange
     :after evil
     :hook ((prog-mode text-mode) . evil-exchange-install))
+
+  ;; navigate matching blocks of code with %
+  (use-package evil-matchit
+    :after evil
+    :hook ((prog-mode text-mode) . evil-matchit-mode))
 #+END_SRC
 * Ivy
 #+BEGIN_SRC emacs-lisp :results none
-  (use-package flx)
+  (use-package flx) ; fuzzy sorting for ivy
 
   (use-package ivy
     :diminish
@@ -202,29 +224,24 @@
     :diminish
     :general
     (my-leader-def
-      "."   '(counsel-find-file :which-key "find file")
-      "SPC" '(ivy-switch-buffer :which-key "switch buffer")
-      "fr"  '(counsel-recentf :which-key "find recent files")
+      "."   '(counsel-find-file      :which-key "find file")
+      "SPC" '(ivy-switch-buffer      :which-key "switch buffer")
+      "fr"  '(counsel-recentf        :which-key "find recent files")
       "fl"  '(counsel-grep-or-swiper :which-key "swiper")
-      "fg"  '(counsel-git-grep :which-key "git files")
-      "ff"  '(counsel-rg :which-key "ripgrep"))
+      "i"   '(counsel-imenu          :which-key "imenu")
+      "fg"  '(counsel-git            :which-key "git files")
+      "fG"  '(counsel-git-grep       :which-key "git grep")
+      "ff"  '(counsel-rg             :which-key "ripgrep"))
     :config
     (counsel-mode))
-
-  (use-package counsel-projectile
-    :after (counsel projectile)
-    :general
-    (my-leader-def
-      "pp" '(counsel-projectile-switch-project :which-key "switch project")
-      "pb" '(counsel-projectile-switch-to-buffer :which-key "switch buffer")))
 #+END_SRC
 * Vterm
 #+BEGIN_SRC emacs-lisp :results none
   (use-package vterm
     :general
     (my-leader-def
-      "o"   '(:ignore t :which-key "Open")
-      "ot"  '(vterm :which-key "open vterm")
+      "o"   '(:ignore t          :which-key "Open")
+      "ot"  '(vterm              :which-key "open vterm")
       "ovt" '(vterm-other-window :which-key "open vterm in vsplit"))
     :custom
     (vterm-kill-buffer-on-exit t))
@@ -235,9 +252,9 @@
     :diminish yas-minor-mode
     :hook ((prog-mode text-mode) . yas-minor-mode)
     :general
-    (my-leader-def
-      "y"  '(:ignore t :which-key "Yasnippet")
-      "yi" '(yas-insert-snippet :which-key "insert snippet")
+    (my-localleader-def
+      "y"  '(:ignore t           :which-key "Yasnippet")
+      "yi" '(yas-insert-snippet  :which-key "insert snippet")
       "yl" '(yas-describe-tables :which-key "list snippets"))
     :config
     (use-package yasnippet-snippets))
@@ -245,7 +262,7 @@
   (use-package auto-yasnippet
     :after yasnippet
     :general
-    (my-leader-def
+    (my-localleader-def
       "yc" '(aya-create :which-key "create aya snippet")
       "ye" '(aya-expand :which-key "expand aya snippet")))
 #+END_SRC
@@ -256,31 +273,29 @@
     (magit-auto-revert-mode nil)
     (magit-save-repository-buffers nil)
     :general
-    (my-leader-def
-      "g"   '(:ignore t :which-key "Magit")
-      "gs"  '(magit-status :which-key "status")
-      "gb"  '(magit-branch-checkout :which-key "checkout branch")
-      "gB"  '(magit-blame-addition :which-key "blame")
-      "gc"  '(magit-clone :which-key "clone")
-      "gd"  '(magit-file-delete :which-key "delete file")
-      "gF"  '(magit-fetch :which-key "fetch")
-      "gG"  '(magit-status-here :which-key "status here")
-      "gl"  '(magit-log :which-key "log")
-      "gS"  '(magit-stage-file :which-key "stage file")
-      "gU"  '(magit-unstage-file :which-key "unstage file")
-      "gn"  '(:ignore t :which-key "New")
-      "gnb" '(magit-branch-and-checkout :which-key "branch")
-      "gnc" '(magit-commit-create :which-key "commit")
-      "gnf" '(magit-commit-fixup :which-key "fixup commit")
-      "gnd" '(magit-init :which-key "init")
-      "gf"  '(:ignore t :which-key "Find")
-      "gfc" '(magit-show-commit :which-key "show commit")
-      "gff" '(magit-find-file :which-key "file")
+    (my-leader-def ;; TODO unmap some of these
+      "g"   '(:ignore t                  :which-key "Git")
+      "gs"  '(magit-status               :which-key "status")
+      "gb"  '(magit-branch-checkout      :which-key "checkout branch")
+      "gB"  '(magit-blame-addition       :which-key "blame")
+      "gc"  '(magit-clone                :which-key "clone")
+      "gd"  '(magit-file-delete          :which-key "delete file")
+      "gF"  '(magit-fetch                :which-key "fetch")
+      "gG"  '(magit-status-here          :which-key "status here")
+      "gl"  '(magit-log                  :which-key "log")
+      "gS"  '(magit-stage-file           :which-key "stage file")
+      "gU"  '(magit-unstage-file         :which-key "unstage file")
+      "gn"  '(:ignore t                  :which-key "New")
+      "gnb" '(magit-branch-and-checkout  :which-key "branch")
+      "gnc" '(magit-commit-create        :which-key "commit")
+      "gnf" '(magit-commit-fixup         :which-key "fixup commit")
+      "gnd" '(magit-init                 :which-key "init")
+      "gf"  '(:ignore t                  :which-key "Find")
+      "gfc" '(magit-show-commit          :which-key "show commit")
+      "gff" '(magit-find-file            :which-key "file")
       "gfg" '(magit-find-git-config-file :which-key "git config file")
-      "gfr" '(magit-list-repositories :which-key "repository")
-      "gfs" '(magit-list-submodules) :which-key "submodule"))
-  ;; :config
-  ;;   (setq magit-save-repository-buffers nil)) ; don't prompt to save buffers on magit-status
+      "gfr" '(magit-list-repositories    :which-key "repository")
+      "gfs" '(magit-list-submodules)     :which-key "submodule"))
 
   (use-package evil-magit
     :after magit
@@ -293,26 +308,32 @@
   (use-package projectile
     :defer 0.1
     :diminish
+    :custom
+    (projectile-project-search-path '("~/code/" "~/.emacs.d/"))
     :general
     (my-leader-def
-      "p"  '(:ignore t :which-key "Projects")
-      "pf" '(projectile-find-file :which-key "find file")
-      "pF" '(projectile-find-other-file :which-key "find other file")
-      "pd" '(projectile-remove-known-project :which-key "remove project")
-      "pa" '(projectile-add-known-project :which-key "add project")
-      "pc" '(projectile-compile-project :which-key "compile project")
-      "pk" '(projectile-kill-buffers :which-key "kill project buffers")
-      "pr" '(projectile-recentf :which-key "find recent project")
-      "ps" '(projectile-save-project-buffers :which-key "save project buffer"))
+      "p" '(projectile-command-map :which-key "Projectile"))
+  :config
+  (projectile-mode +1))
+
+  (use-package counsel-projectile
+    :after (counsel projectile)
+    :diminish
     :config
-    (projectile-mode +1))
+    (counsel-projectile-mode))
 #+END_SRC
 * IDE Features
 #+BEGIN_SRC emacs-lisp :results none
-  ;; Autocomplete
-  (use-package company
+  ;; autocomplete
+  (use-package company ; TODO manual completion only
     :diminish
     :hook (prog-mode . company-mode)
+    :custom
+    (company-show-numbers t)
+    (company-backends '(company-capf
+			company-files
+			company-keywords
+			company-yasnippet))
     :general
     (company-active-map "C-w" nil) ; don't override evil C-w
     (general-imap
@@ -321,11 +342,14 @@
   ;; LSP
   (use-package lsp-mode
     :diminish
-    :hook prog-mode)
-  ;; :general)
-  ;; (general-nmap "gr" 'lsp-rename))
+    :hook prog-mode
+    :general
+    (general-nmap "gr" 'lsp-rename))
 
-  ;; Linting
+  (use-package lsp-ui
+    :disabled t) ; TODO
+
+  ;; linting
   (use-package flycheck
     :diminish
     :hook (lsp-mode . flycheck-mode)
@@ -334,9 +358,6 @@
       "fe" '(flycheck-list-errors :which-key "list errors"))
     :config
     (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
-
-  (use-package company-lsp ; TODO configure
-    :after (lsp-mode company))
 #+END_SRC
 * UI
 #+BEGIN_SRC emacs-lisp :results none
@@ -349,16 +370,9 @@
   (use-package smartparens
     :diminish
     :hook (prog-mode . smartparens-mode)
-    ;;   "mps" '(sp-split-sexp "split pair")
-    ;;   "mpj" '(sp-join-sexp "join pair")
-    ;;   "mpa" '(:ignore t :which-key "Add")
-    ;;   "mpah" '(sp-add-to-previous-sexp "to previous pair")
-    ;;   "mpal" '(sp-add-to-next-sexp "to next pair"))
-    ;; "mpd" '(sp-kill-whole-line :which-key "delete line"))
     :config
     (defhydra hydra-smartparens ()
       ;; Movement
-      ;; ("q" nil)
       ("l" sp-next-sexp "next pair")
       ("h" sp-backward-sexp "previous pair")
       ("j" sp-down-sexp "down")
@@ -367,36 +381,43 @@
       ("H" sp-beginning-of-sexp "beginning")
       ("L" sp-end-of-sexp "end")
       ("d" sp-delete-sexp "delete")
+      ("D" sp-kill-whole-line "delete line")
 
       ("s" sp-forward-slurp-sexp "slurp")
       ("S" sp-backward-slurp-sexp "backward slurp")
       ("b" sp-forward-barf-sexp "barf")
-      ("B" sp-backward-barf-sexp "backward barf"))
+      ("B" sp-backward-barf-sexp "backward barf")
+
+      ("v" sp-split-sexp "split pair")
+      ("u" sp-join-sexp "join pair")
+
+      ("p" sp-add-to-previous-sexp "add to previous pair")
+      ("n" sp-add-to-next-sexp "add to next pair"))
     (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) ; don't pair ' in elisp mode
     :general
-    (my-leader-def
+    (my-localleader-def
       "s" '(hydra-smartparens/body :which-key "Smartparens")))
 
   ;;   ;; Make vim change, delete, etc. commands preserve balance of parentheses
   (use-package evil-smartparens
     :diminish
-    :hook ((smartparens-mode) . evil-smartparens-mode))
+    :hook ((emacs-lisp-mode) . evil-smartparens-mode))
 #+END_SRC
 * Org
 #+BEGIN_SRC emacs-lisp :results none
   (use-package org
     :general
     (my-leader-def
-      "oa"  '(org-agenda :which-key "org agenda")
-      "n"   '(:ignore t :which-key "Notes")
-      "nls" '(org-store-link :which-key "store link")
-      "nli" '(org-insert-link :which-key "insert link")
+      "oa"  '(org-agenda        :which-key "org agenda")
+      "n"   '(:ignore t         :which-key "Notes")
+      "nls" '(org-store-link    :which-key "store link")
+      "nli" '(org-insert-link   :which-key "insert link")
       "nlg" '(org-open-at-point :which-key "visit link")
-      "nt"  '(org-todo :which-key "toggle TODO state")
+      "nt"  '(org-todo          :which-key "toggle TODO state")
       "ne"  '(org-ctrl-c-ctrl-c :which-key "evaluate src block")
       "n'"  "C-c '"
-      "ns"  '(org-sort :which-key "org schedule")
-      "nS"  '(org-schedule :which-key "org schedule"))
+      "ns"  '(org-sort          :which-key "org schedule")
+      "nS"  '(org-schedule      :which-key "org schedule"))
     :custom
     (org-agenda-files '("~/org"))
     (org-confirm-babel-evaluate nil)
@@ -415,12 +436,26 @@
     :diminish
     :hook (org-mode . evil-org-mode))
 #+END_SRC
+* Windows
+#+BEGIN_SRC emacs-lisp :results none
+  ;; easily navigate windows with prefix M-o
+  (use-package ace-window
+    :general
+    ("M-o" 'ace-window))
+
+  (use-package golden-ratio
+    :diminish
+    :custom
+    (golden-ratio-auto-scale t)
+    :config
+    (golden-ratio-mode))
+#+END_SRC
 * Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
   (use-package restart-emacs
     :general
     (my-leader-def
-      "e"  '(:ignore t :which-key "Emacs Commands")
+      "e"  '(:ignore t     :which-key "Emacs Commands")
       "er" '(restart-emacs :which-key "restart emacs"))
     :custom
     (restart-emacs-restore-frames t)) ; Restore frames on restart
@@ -434,12 +469,10 @@
     (undo-tree-auto-save-history t)
     (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
-  (use-package evil-mc
-    :diminish
-    :hook ((prog-mode text-mode) . evil-mc-mode))
-
   (use-package format-all
     :general
     (my-leader-def
       "=" '(format-all-buffer :which-key "format")))
+
+  (use-package smex)
 #+END_SRC
