@@ -1,5 +1,4 @@
-;;; early-init.el -*- lexical-binding: t; -*-
-
+;;; -*- lexical-binding: t; -*-
 (setq gc-cons-threshold most-positive-fixnum)
 
 (setq package-enable-at-startup nil)
@@ -9,10 +8,10 @@
 (push '(vertical-scroll-bars) default-frame-alist)
 
 (set-face-attribute 'default nil
-		    :family "DejaVu Sans Mono"
-		    :height 110
-		    :weight 'normal
- 		    :width 'normal)
+                    :family "DejaVu Sans Mono"
+                    :height 110
+                    :weight 'normal
+                    :width 'normal)
 
 (setq frame-inhibit-implied-resize t)
 
