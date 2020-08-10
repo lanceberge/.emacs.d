@@ -83,7 +83,9 @@
     :defer t)
 
   (use-package diminish
-    :demand t)
+    :demand t
+    :config
+    (diminish 'eldoc-mode))
 #+END_SRC
 * Evil Mode
 #+BEGIN_SRC emacs-lisp :results none
@@ -442,7 +444,20 @@
     :custom
     (org-agenda-files '("~/org"))
     (org-confirm-babel-evaluate nil)
+    (org-src-block-faces nil)
     :config
+    ;; No highlighting behind src blocks
+    (dolist (face '(org-block
+                    org-block-begin-line
+                    org-block-end-line
+                    org-level-1
+                    org-quote))
+      (set-face-attribute face nil :background
+                          (color-darken-name
+                           (face-attribute 'default :background) 0)))
+    ;; (set-face-attribute 'org-block nil :background
+    ;;                     (color-darken-name
+    ;;                      (face-attribute 'default :background) 0))
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((shell   . t)

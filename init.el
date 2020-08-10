@@ -1,6 +1,5 @@
 ;;; -*- lexical-binding: t -*-
 (setq gc-cons-threshold most-positive-fixnum)
-      ;; gc-cons-percentage 0.6)
 
 (setq load-prefer-newer noninteractive)
 
