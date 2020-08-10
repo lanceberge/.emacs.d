@@ -7,6 +7,8 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
+(setq emacs-load-start-time (current-time))
+
 (set-face-attribute 'default nil
                     :family "DejaVu Sans Mono"
                     :height 110

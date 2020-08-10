@@ -9,6 +9,8 @@
   (push '(tool-bar-lines . 0) default-frame-alist)
   (push '(vertical-scroll-bars) default-frame-alist)
 
+  (setq emacs-load-start-time (current-time))
+
   (set-face-attribute 'default nil
                       :family "DejaVu Sans Mono"
                       :height 110
@@ -40,22 +42,8 @@
     (load-theme 'gruvbox t))
 #+END_SRC
 * Init
-#+BEGIN_SRC emacs-lisp :results none :tangle init.el
+#+BEGIN_SRC emacs-lisp :tangle init.el :results none
   ;;; -*- lexical-binding: t -*-
-  (setq gc-cons-threshold most-positive-fixnum)
-
-  (setq load-prefer-newer noninteractive)
-
-  (defvar default-file-name-handler-alist file-name-handler-alist)
-
-  (setq file-name-handler-alist nil)
-
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (setq gc-cons-threshold 16777216
-                    gc-cons-percentage 0.1
-                    file-name-handler-alist default-file-name-handler-alist)))
-
   (defconst config-org (expand-file-name "README.org" user-emacs-directory))
   (defconst config-el  (expand-file-name "config.el" user-emacs-directory))
 
@@ -64,6 +52,10 @@
     (org-babel-tangle-file config-org config-el))
 
   (load-file config-el)
+
+  (when (require 'time-date nil t)
+      (message "Emacs startup time: %.2f seconds."
+		 (time-to-seconds (time-since emacs-load-start-time))))
 #+END_SRC
 * Auto-Tangle
 Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
@@ -73,63 +65,79 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   asynchronously."
     (interactive)
     (let* ((tangle-config (format "(org-babel-tangle nil \"%s\")" config-el))
-           (process (start-process
-                     "tangle-config" nil
-                     "emacs" config-org "--batch" "--eval" tangle-config))
-           (filter (defun echo-process-output (process output)
-                     "Echo process output."
-                     (message (s-trim output)))))
+	   (process (start-process
+		     "tangle-config" nil
+		     "emacs" config-org "--batch" "--eval" tangle-config))
+	   (filter (defun echo-process-output (process output)
+		     "Echo process output."
+		     (message (s-trim output)))))
       (set-process-filter process filter)))
 
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (if (equal (buffer-file-name) config-org)
-                  (add-hook 'after-save-hook 'tangle-config))))
-#+END_SRC
-* Basic Settings
-#+BEGIN_SRC emacs-lisp :results none
-  ;;; -*- lexical-binding: t; -*-
-  (setq user-full-name "Lance Bergeron"
-	user-mail-address "bergeron.lance6@gmail.com")
+  ;; (defun tangle-config ()
+  ;;   (interactive)
+  ;;   (when (equal (buffer-file-name)
+  ;;                (expand-file-name config-org))
+  ;;     (let ((prog-mode-hook nil))
+  ;;       (org-babel-tangle))))
+	;; (byte-compile-file config-el))))
 
+  (defun add-local-hook (hook function)
+    (add-hook hook function nil t))
+
+  (add-hook 'org-mode-hook
+	    (lambda ()
+	      (if (equal (buffer-file-name) config-org)
+		  (add-local-hook 'after-save-hook 'tangle-config))))
+#+END_SRC
+* Initial Settings
+#+BEGIN_SRC emacs-lisp :results none
+    ;;; -*- lexical-binding: t; -*-
   (setq inhibit-startup-screen t
 	inhibit-startup-message t
 	inhibit-startup-echo-area-message user-login-name
 	inhibit-default-init t
 	initial-scratch-message nil
 	initial-major-mode 'fundamental-mode
-	kill-buffer-query-functions nil)
+	kill-buffer-query-functions nil
+	idle-update-delay 1
+	auto-mode-case-fold nil
+	load-prefer-newer noninteractive
+	frame-inhibit-implied-resize t
+	inhibit-compacting-font-caches t
+	highlight-nonselected-windows nil
+	ffap-machine-p-known 'reject
+	bidi-inhibit-bpa t
+	fast-but-imprecise-scrolling t
+	;; User Settings
+	user-full-name "Lance Bergeron"
+	user-mail-address "bergeron.lance6@gmail.com"
+	;; General
+	delete-old-versions t
+	indent-tabs-mode nil
+	show-trailing-whitespace t)
 
   (fset 'yes-or-no-p 'y-or-n-p)                ; y or n prompt, not yes or no
 
   (menu-bar-display-line-numbers-mode 'visual) ; relative line numbers
   (global-display-line-numbers-mode 1)         ; always show line numbers
 
-  ;; Optimizations
-  (setq idle-update-delay 1
-	auto-mode-case-fold nil)
+  (defvar default-file-name-handler-alist file-name-handler-alist)
+  (setq file-name-handler-alist nil)
 
-  (setq bidi-inhibit-bpa t)
+  (add-hook 'emacs-startup-hook
+	    (lambda ()
+	      (setq gc-cons-threshold 16777216
+		    gc-cons-percentage 0.1
+		    file-name-handler-alist default-file-name-handler-alist)))
 
   (setq-default bidi-display-reordering 'left-to-right
 		bidi-paragraph-direction 'left-to-right
-		cursor-in-non-selected-windows nil)
-
-  ;; (setq fast-but-imprecise-scrolling t
-  (setq frame-inhibit-implied-resize t
-	inhibit-compacting-font-caches t
-	highlight-nonselected-windows nil
-	ffap-machine-p-known 'reject)
+		cursor-in-non-selected-windows nil
+		bidi-inhibit-bpa t)
 
   ;; Keeping ~/.emacs.d organized
   (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
 	custom-file (expand-file-name "custom.el" user-emacs-directory))
-
-  (setq delete-old-version t)
-
-  (setq-default indent-tabs-mode nil)
-
-  (setq show-trailing-whitespace t)
 
   ;; (load custom-file t)
 #+END_SRC
@@ -517,35 +525,41 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 * Org
 #+BEGIN_SRC emacs-lisp :results none
   (use-package org
+    :straight (:type built-in)
     :general
+    ;; (general-nmap
+    ;;   "RET" 'org-open-at-point)
+    ('(normal visual insert)
+     "C-c l" '(org-store-link :which-key "store link")
+     "C-c c" '(org-capture    :which-key "capture"))
+    (general-imap
+      "M-h" 'org-metaleft
+      "M-l" 'org-metaright)
     (my-leader-def
-      "oa"  '(org-agenda        :which-key "org agenda")
-      "n"   '(:ignore t         :which-key "Notes")
-      "nls" '(org-store-link    :which-key "store link")
-      "nli" '(org-insert-link   :which-key "insert link")
-      "nlg" '(org-open-at-point :which-key "visit link")
-      "nt"  '(org-todo          :which-key "toggle TODO state")
-      "ne"  '(org-ctrl-c-ctrl-c :which-key "evaluate src block")
+      "oa"    '(org-agenda        :which-key "org agenda")
+      "n"     '(:ignore t         :which-key "Notes")
+      "nli"   '(org-insert-link   :which-key "insert link")
+      "nlg"   '(org-open-at-point :which-key "visit link")
+      "nt"    '(org-todo          :which-key "toggle TODO state")
+      "ne"    '(org-ctrl-c-ctrl-c :which-key "evaluate src block")
       "n'"  "C-c '"
-      "ns"  '(org-sort          :which-key "org schedule")
-      "nS"  '(org-schedule      :which-key "org schedule"))
+      "ns"    '(org-sort          :which-key "org schedule")
+      "nS"    '(org-schedule      :which-key "org schedule"))
     :custom
     (org-agenda-files '("~/org"))
     (org-confirm-babel-evaluate nil)
     (org-src-block-faces nil)
+    (org-startup-folded t)
     :config
     ;; No highlighting behind src blocks
     (dolist (face '(org-block
-                    org-block-begin-line
-                    org-block-end-line
-                    org-level-1
-                    org-quote))
+		    org-block-begin-line
+		    org-block-end-line
+		    org-level-1
+		    org-quote))
       (set-face-attribute face nil :background
-                          (color-darken-name
-                           (face-attribute 'default :background) 0)))
-    ;; (set-face-attribute 'org-block nil :background
-    ;;                     (color-darken-name
-    ;;                      (face-attribute 'default :background) 0))
+			  (color-darken-name
+			   (face-attribute 'default :background) 0)))
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((shell   . t)
