@@ -4,6 +4,7 @@
   (setq gc-cons-threshold most-positive-fixnum)
 
   (setq package-enable-at-startup nil)
+  (advice-add #'package--ensure-init-file :override #'ignore)
 
   (push '(menu-bar-lines . 0) default-frame-alist)
   (push '(tool-bar-lines . 0) default-frame-alist)
@@ -12,24 +13,25 @@
   (setq emacs-load-start-time (current-time))
 
   (set-face-attribute 'default nil
-                      :family "DejaVu Sans Mono"
-                      :height 110
-                      :weight 'normal
-                      :width 'normal)
+		      :family "DejaVu Sans Mono"
+		      :height 110
+		      :weight 'normal
+		      :width 'normal)
 
   (setq frame-inhibit-implied-resize t)
+  (advice-add #'x-apply-session-resources :override #'ignore)
 
   ;; Boostrap straight.el
   (let ((bootstrap-file
-         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 5))
+	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	(bootstrap-version 5))
     (unless (file-exists-p bootstrap-file)
       (with-current-buffer
-          (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-           'silent 'inhibit-cookies)
-        (goto-char (point-max))
-        (eval-print-last-sexp)))
+	  (url-retrieve-synchronously
+	   "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+	   'silent 'inhibit-cookies)
+	(goto-char (point-max))
+	(eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 
   ;; use-package uses straight.el
@@ -44,6 +46,9 @@
 * Init
 #+BEGIN_SRC emacs-lisp :tangle init.el :results none
   ;;; -*- lexical-binding: t -*-
+  (setq gc-cons-threshold most-positive-fixnum
+	gc-cons-percentage 0.6)
+
   (defconst config-org (expand-file-name "README.org" user-emacs-directory))
   (defconst config-el  (expand-file-name "config.el" user-emacs-directory))
 
@@ -90,56 +95,81 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 		  (add-local-hook 'after-save-hook 'tangle-config))))
 #+END_SRC
 * Initial Settings
+  
+Mostly taken from Doom Emacs
+
 #+BEGIN_SRC emacs-lisp :results none
-  ;;; -*- lexical-binding: t; -*-
-  (setq inhibit-startup-screen t
-	inhibit-startup-message t
-	inhibit-startup-echo-area-message user-login-name
-	inhibit-default-init t
-	initial-scratch-message nil
-	initial-major-mode 'fundamental-mode
-	kill-buffer-query-functions nil
-	idle-update-delay 1
-	auto-mode-case-fold nil
-	load-prefer-newer noninteractive
-	frame-inhibit-implied-resize t
-	inhibit-compacting-font-caches t
-	highlight-nonselected-windows nil
-	ffap-machine-p-known 'reject
-	bidi-inhibit-bpa t
-	fast-but-imprecise-scrolling t
-	;; User Settings
-	user-full-name "Lance Bergeron"
-	user-mail-address "bergeron.lance6@gmail.com"
-	;; General
-	delete-old-versions t
-	indent-tabs-mode nil
-	show-trailing-whitespace t)
+      ;;; -*- lexical-binding: t; -*-
+    (setq load-prefer-newer noninteractive
 
-  (fset 'yes-or-no-p 'y-or-n-p)                ; y or n prompt, not yes or no
+	  ;; Cleaner startup
+	  inhibit-startup-screen t
+	  inhibit-startup-message t
+	  inhibit-startup-echo-area-message user-login-name
+	  inhibit-default-init t
+	  initial-scratch-message nil
+	  initial-major-mode 'fundamental-mode ; start in an empty mode
 
-  (menu-bar-display-line-numbers-mode 'visual) ; relative line numbers
-  (global-display-line-numbers-mode 1)         ; always show line numbers
+	  locale-coding-system 'utf-8;
+	  ad-redefinition-action 'accept ; disable warnings from legacy advice system
+	  message-log-max 5000 ; longer number of max messages
+	  help-window-select t ; bring point to help menus when you open them
+	  command-line-x-option-alist nil ; less command line options to process on startup
+	  ring-bell-function 'ignore
 
-  (defvar default-file-name-handler-alist file-name-handler-alist)
-  (setq file-name-handler-alist nil)
+	  kill-buffer-query-functions nil
+	  idle-update-delay 1.0 ; slow down how often emacs updates its ui
+	  auto-mode-case-fold nil
+	  frame-inhibit-implied-resize t ; faster startup with fonts that would resize the frame
+	  inhibit-compacting-font-caches t ; inhibit font compacting
+	  highlight-nonselected-windows nil
+	  ffap-machine-p-known 'reject ; don't ping things that look like domain names
+	  bidi-inhibit-bpa t
+	  fast-but-imprecise-scrolling t ; faster scrolling over unfontified regions
 
-  (add-hook 'emacs-startup-hook
-	    (lambda ()
-	      (setq gc-cons-threshold 16777216
-		    gc-cons-percentage 0.1
-		    file-name-handler-alist default-file-name-handler-alist)))
+	  ;; User Settings
+	  user-full-name "Lance Bergeron"
+	  user-mail-address "bergeron.lance6@gmail.com"
 
-  (setq-default bidi-display-reordering 'left-to-right
-		bidi-paragraph-direction 'left-to-right
-		cursor-in-non-selected-windows nil
-		bidi-inhibit-bpa t)
+	  ;; General
+	  delete-old-versions t
+	  indent-tabs-mode nil
+	  show-trailing-whitespace t
+	  apropos-do-all t ; more extensive apropos searches
+	  make-backup-files nil
+	  auto-save-default nil)
 
-  ;; Keeping ~/.emacs.d organized
-  (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
-	custom-file (expand-file-name "custom.el" user-emacs-directory))
+	  ;; garbage collection - wait until idle time to collect
+	  ;; gcmh-idle-delay 5
+	  ;; gcmh-high-cons-threshold (* 16 1024 1025)) 
 
-  ;; (load custom-file t)
+    (advice-add #'tty-run-terminal-initialization :override #'ignore)
+
+    (fset 'yes-or-no-p 'y-or-n-p)                ; y or n prompt, not yes or no
+
+    (menu-bar-display-line-numbers-mode 'visual) ; relative line numbers
+    (global-display-line-numbers-mode 1)         ; always show line numbers
+
+    (defvar default-file-name-handler-alist file-name-handler-alist)
+    (setq file-name-handler-alist nil)
+
+    (add-hook 'emacs-startup-hook
+	      (lambda ()
+		(setq gc-cons-threshold 16777216
+		      gc-cons-percentage 0.1
+		      file-name-handler-alist default-file-name-handler-alist
+		      gcmh-idle-delay 5)))
+
+    ;; Disable bidirectional text rendering for performance
+    (setq-default bidi-display-reordering 'left-to-right
+		  bidi-paragraph-direction 'left-to-right
+		  cursor-in-non-selected-windows nil)
+
+    ;; Keeping ~/.emacs.d organized
+    (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
+	  custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+    ;; (load custom-file t)
 #+END_SRC
 * Keymap Management
 #+BEGIN_SRC emacs-lisp :results none
@@ -241,6 +271,15 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :custom
     (evil-collection-calendar-want-org-bindings t)
     (evil-collection-setup-minibuffer t)
+    (evil-collection-mode-list
+     '(calendar
+       minibuffer
+       ivy
+       company
+       apropos
+       vterm
+       dired
+       eshell))
     :config
     (evil-collection-init))
 
@@ -555,6 +594,8 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     (org-startup-folded t)
     (org-log-done 'time)
     (org-tag-alist '(("@school" . ?s) ("@personal" . ?p)))
+    (org-src-tab-acts-natively t)
+    (org-src-window-setup 'current-window)
     :config
     ;; No highlighting behind src blocks
     (dolist (face '(org-block
