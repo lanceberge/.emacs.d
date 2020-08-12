@@ -91,7 +91,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 #+END_SRC
 * Initial Settings
 #+BEGIN_SRC emacs-lisp :results none
-    ;;; -*- lexical-binding: t; -*-
+  ;;; -*- lexical-binding: t; -*-
   (setq inhibit-startup-screen t
 	inhibit-startup-message t
 	inhibit-startup-echo-area-message user-login-name
@@ -238,6 +238,9 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   ;; Evil everywhere
   (use-package evil-collection
     :after evil
+    :custom
+    (evil-collection-calendar-want-org-bindings t)
+    (evil-collection-setup-minibuffer t)
     :config
     (evil-collection-init))
 
@@ -259,7 +262,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   (use-package evil-commentary
     :after evil
     :diminish
-    :hook (prog-mode . evil-commentary-mode))
+    :hook ((prog-mode org-mode) . evil-commentary-mode))
 
   ;; jk to leave insert mode
   (use-package evil-escape
@@ -269,8 +272,8 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :custom
     (evil-escape-key-sequence "jk")
     (evil-escape-delay 0.25)
-    (evil-escape-excluded-major-modes '(evil-magit-mode))
-    (evil-escape-excluded-states '(normal visual)))
+    (evil-escape-excluded-major-modes '(evil-magit-mode org-agenda-mode))
+    (evil-escape-excluded-states '(normal visual emacs)))
 
   ;; gl as an operator to left-align, gL to right-align
   (use-package evil-lion
@@ -527,8 +530,6 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   (use-package org
     :straight (:type built-in)
     :general
-    ;; (general-nmap
-    ;;   "RET" 'org-open-at-point)
     ('(normal visual insert)
      "C-c l" '(org-store-link :which-key "store link")
      "C-c c" '(org-capture    :which-key "capture"))
@@ -547,9 +548,13 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
       "nS"    '(org-schedule      :which-key "org schedule"))
     :custom
     (org-agenda-files '("~/org"))
+    (org-directory "~/org")
+    (org-default-notes-file (concat org-directory "/notes.org"))
     (org-confirm-babel-evaluate nil)
     (org-src-block-faces nil)
     (org-startup-folded t)
+    (org-log-done 'time)
+    (org-tag-alist '(("@school" . ?s) ("@personal" . ?p)))
     :config
     ;; No highlighting behind src blocks
     (dolist (face '(org-block
@@ -572,7 +577,11 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   (use-package evil-org
     :after org
     :diminish
-    :hook (org-mode . evil-org-mode))
+    :hook (org-mode . evil-org-mode)
+    :config
+    (evil-org-set-key-theme)
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
 #+END_SRC
 * Windows
 #+BEGIN_SRC emacs-lisp :results none
