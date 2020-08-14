@@ -270,6 +270,7 @@ Mostly taken from Doom Emacs
     :after evil
     :custom
     (evil-collection-calendar-want-org-bindings t)
+    ;; (evil-collection-want-unimpaired-p t)
     (evil-collection-setup-minibuffer t)
     (evil-collection-mode-list
      '(calendar
@@ -405,7 +406,7 @@ Mostly taken from Doom Emacs
     :custom
     (vterm-kill-buffer-on-exit t))
 #+END_SRC
-* Yasnippets
+* Yasnippet
 #+BEGIN_SRC emacs-lisp :results none
   (use-package yasnippet
     :diminish yas-minor-mode
@@ -414,6 +415,7 @@ Mostly taken from Doom Emacs
     (my-localleader-def
       "y"  '(:ignore t           :which-key "Yasnippet")
       "yi" '(yas-insert-snippet  :which-key "insert snippet")
+      "yn" '(yas-new-snippet     :which-key "new snippet")
       "yl" '(yas-describe-tables :which-key "list snippets"))
     :config
     (use-package yasnippet-snippets))
@@ -530,19 +532,24 @@ Mostly taken from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
   (use-package smartparens
     :diminish
-    :hook (prog-mode . smartparens-mode)
+    :hook (prog-mode . smartparens-strict-mode)
     :config
     (defhydra hydra-smartparens ()
       ;; Movement
-      ("l" sp-next-sexp "next pair")
+      ("l" sp-forward-sexp "next pair")
       ("h" sp-backward-sexp "previous pair")
       ("j" sp-down-sexp "down")
-      ("k" sp-backward-up-sexp "up")
+      ("J" sp-backward-down-sexp "backward down")
+      ("k" sp-up-sexp "up")
+      ("K" sp-backward-up-sexp "up")
+      ("n" sp-next-sexp "next")
+      ("p" sp-previous-sexp "previous")
 
       ("H" sp-beginning-of-sexp "beginning")
       ("L" sp-end-of-sexp "end")
       ("d" sp-delete-sexp "delete")
       ("D" sp-kill-whole-line "delete line")
+      ("t" sp-transpose-sexp "transpose")
 
       ("s" sp-forward-slurp-sexp "slurp")
       ("S" sp-backward-slurp-sexp "backward slurp")
@@ -572,17 +579,12 @@ Mostly taken from Doom Emacs
     ('(normal visual insert)
      "C-c l" '(org-store-link :which-key "store link")
      "C-c c" '(org-capture    :which-key "capture"))
-    (general-imap
-      "M-h" 'org-metaleft
-      "M-l" 'org-metaright)
     (my-leader-def
       "oa"    '(org-agenda        :which-key "org agenda")
       "n"     '(:ignore t         :which-key "Notes")
       "nli"   '(org-insert-link   :which-key "insert link")
       "nlg"   '(org-open-at-point :which-key "visit link")
       "nt"    '(org-todo          :which-key "toggle TODO state")
-      "ne"    '(org-ctrl-c-ctrl-c :which-key "evaluate src block")
-      "n'"  "C-c '"
       "ns"    '(org-sort          :which-key "org schedule")
       "nS"    '(org-schedule      :which-key "org schedule"))
     :custom
@@ -592,9 +594,10 @@ Mostly taken from Doom Emacs
     (org-confirm-babel-evaluate nil)
     (org-src-block-faces nil)
     (org-startup-folded t)
-    (org-log-done 'time)
+    (org-M-RET-may-split-line nil)
+    ;; (org-log-done 'time)
     (org-tag-alist '(("@school" . ?s) ("@personal" . ?p)))
-    (org-src-tab-acts-natively t)
+    ;; (org-src-tab-acts-natively t)
     (org-src-window-setup 'current-window)
     :config
     ;; No highlighting behind src blocks
@@ -611,21 +614,41 @@ Mostly taken from Doom Emacs
      '((shell   . t)
        (haskell . t))))
 
-  (use-package org-bullets
-    :after org
-    :hook (org-mode . org-bullets-mode))
-
   (use-package evil-org
     :after org
     :diminish
     :hook (org-mode . evil-org-mode)
+    :general
+    ('(insert evil-org-mode-map)
+     "M-h"     'org-metaleft
+     "M-l"     'org-metaright)
+    ('org-read-date-minibuffer-local-map
+     "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
+     "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
+     "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
+     "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
+     "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
+     "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1)))
+     "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
+     "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
     :config
     (evil-org-set-key-theme)
+    (general-define-key
+     :states '(normal insert)
+     :keymaps 'evil-org-mode-map
+     "C-S-l" 'org-shiftright
+     "C-S-h" 'org-shiftleft
+     "C-S-j" 'org-shiftdown
+     "C-S-k" 'org-shiftup) ;; TODO make this work in normal mode
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
+
+  (use-package org-bullets
+    :after org
+    :hook (org-mode . org-bullets-mode))
 #+END_SRC
 * Windows
-#+BEGIN_SRC emacs-lisp :results none
+#+begin_SRC emacs-lisp :results none
   ;; easily navigate windows with prefix M-o
   (use-package ace-window
     :general
