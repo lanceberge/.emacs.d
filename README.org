@@ -622,6 +622,7 @@ Mostly taken from Doom Emacs
     ('(insert evil-org-mode-map)
      "M-h"     'org-metaleft
      "M-l"     'org-metaright)
+     
     ('org-read-date-minibuffer-local-map
      "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
      "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
@@ -633,13 +634,34 @@ Mostly taken from Doom Emacs
      "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
     :config
     (evil-org-set-key-theme)
+    (defun +org-insert-subheading ()
+      (interactive)
+      (evil-append-line 1)
+      (org-insert-subheading 1))
+
+    (defun +org-insert-heading-above ()
+      (interactive)
+      (evil-append-line 1)
+      (move-beginning-of-line nil)
+      (org-insert-heading))
+
+    (defun +org-insert-todo-above ()
+      (interactive)
+      (evil-append-line 1)
+      (move-beginning-of-line nil)
+      (org-insert-todo-heading 1))
+
     (general-define-key
      :states '(normal insert)
      :keymaps 'evil-org-mode-map
      "C-S-l" 'org-shiftright
      "C-S-h" 'org-shiftleft
      "C-S-j" 'org-shiftdown
-     "C-S-k" 'org-shiftup) ;; TODO make this work in normal mode
+     "C-S-k" 'org-shiftup
+     [C-M-return] '+org-insert-subheading
+     [C-S-return] '+org-insert-heading-above
+     [M-return] 'evil-org-org-insert-todo-heading-respect-content-below
+     [M-S-return] '+org-insert-todo-above)
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
 
