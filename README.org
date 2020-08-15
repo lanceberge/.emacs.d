@@ -230,6 +230,9 @@ Mostly taken from Doom Emacs
     :demand t
     :diminish
     :hook (after-init . evil-mode)
+    :commands
+    (evil-quit
+     evil-save-modified-and-close)
     :custom
     (evil-want-C-u-scroll t)
     (evil-want-Y-yank-to-eol t)
@@ -255,7 +258,6 @@ Mostly taken from Doom Emacs
      "gm" 'evil-execute-macro) ; run vim macros)
 
     (my-leader-def
-      ;; avy
       "fc" '(evil-avy-goto-char                 :which-key "char")
       "fC" '(evil-avy-goto-char-2               :which-key "2-chars")
       "fL" '(evil-avy-goto-line                 :which-key "line")
@@ -273,6 +275,7 @@ Mostly taken from Doom Emacs
   ;; Evil everywhere
   (use-package evil-collection
     :after evil
+    :demand t
     :custom
     (evil-collection-calendar-want-org-bindings t)
     (evil-collection-want-unimpaired-p t)
@@ -291,26 +294,22 @@ Mostly taken from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
   ;; 2 character searches with s (ala vim-sneak)
   (use-package evil-snipe
-    :after evil
     :diminish evil-snipe-local-mode
     :hook ((prog-mode text-mode) . evil-snipe-mode)
     :custom (evil-snipe-smart-case t))
 
   ;; s as an operator for surrounding
   (use-package evil-surround
-    :after evil
     :diminish
     :hook ((prog-mode text-mode) . evil-surround-mode))
 
   ;; gc as an operator to comment
   (use-package evil-commentary
-    :after evil
     :diminish
     :hook ((prog-mode org-mode) . evil-commentary-mode))
 
   ;; increment/decrement numbers
   (use-package evil-numbers
-    :after evil
     :general
     (my-localleader-def
       "n"  '(:ignore t              :which-key "Evil-Numbers")
@@ -319,26 +318,22 @@ Mostly taken from Doom Emacs
 
   ;; gl as an operator to left-align, gL to right-align
   (use-package evil-lion
-    :after evil
     :diminish
     :hook ((prog-mode text-mode) . evil-lion-mode))
 
   ;; navigate matching blocks of code with %
   (use-package evil-matchit
-    :after evil
     :diminish
     :hook ((prog-mode text-mode) . evil-matchit-mode))
 
   ;; exchange text selected with gx
   (use-package evil-exchange
-    :after evil
     :hook ((prog-mode text-mode) . evil-exchange-install))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
   ;; jk to leave insert mode
   (use-package evil-escape
-    :after evil
     :diminish
     :hook ((prog-mode text-mode) . evil-escape-mode)
     :custom
@@ -349,7 +344,6 @@ Mostly taken from Doom Emacs
 
   ;; code folding
   (use-package origami
-    :after evil
     :diminish
     :hook ((prog-mode text mode) . origami-mode)
     :general
@@ -369,7 +363,7 @@ Mostly taken from Doom Emacs
   ;; evil port of targets.vim
   (use-package targets
     :straight (targets :type git :host github :repo "noctuid/targets.el")
-    :after evil
+    :defer t
     :config
     (targets-setup t))
 #+END_SRC
@@ -416,33 +410,32 @@ Mostly taken from Doom Emacs
 * Vterm
 #+BEGIN_SRC emacs-lisp :results none
   (use-package vterm
+    :custom
+    (vterm-kill-buffer-on-exit t)
     :general
     (my-leader-def
       "o"   '(:ignore t          :which-key "Open")
       "ot"  '(vterm              :which-key "open vterm")
-      "ovt" '(vterm-other-window :which-key "open vterm in vsplit"))
-    :custom
-    (vterm-kill-buffer-on-exit t))
+      "ovt" '(vterm-other-window :which-key "open vterm in vsplit")))
 #+END_SRC
 * Yasnippet
 #+BEGIN_SRC emacs-lisp :results none
   (use-package yasnippet
     :diminish yas-minor-mode
+    :hook (after-init . yas-global-mode)
     :custom (yas-snippet-dirs '("~/.emacs.d/snippets"))
     :general
     (my-localleader-def
       "y"  '(:ignore t           :which-key "Yasnippet")
       "yi" '(yas-insert-snippet  :which-key "insert snippet")
       "yn" '(yas-new-snippet     :which-key "new snippet")
-      "yl" '(yas-describe-tables :which-key "list snippets"))
-    :config
-    (yas-global-mode 1))
+      "yl" '(yas-describe-tables :which-key "list snippets")))
 
   (use-package yasnippet-snippets
+    :defer t
     :after yasnippet)
 
   (use-package auto-yasnippet
-    :after yasnippet
     :general
     (my-localleader-def
       "yc" '(aya-create :which-key "create aya snippet")
@@ -495,9 +488,9 @@ Mostly taken from Doom Emacs
     (projectile-project-search-path '("~/code/" "~/.emacs.d/"))
     :general
     (my-leader-def
-      "p" '(projectile-command-map :which-key "Projectile"))
-  :config
-  (projectile-mode +1))
+      "p" '(projectile-command-map :which-key "Projectile")))
+  ;; :config
+  ;; (projectile-mode +1))
 
   (use-package counsel-projectile
     :after (counsel projectile)
@@ -510,8 +503,7 @@ Mostly taken from Doom Emacs
   ;; autocomplete
   (use-package company ; TODO manual completion only
     :diminish
-    ;; :hook (prog-mode . company-mode)
-    :defer 0.1
+    :hook (prog-mode . company-mode)
     :custom
     (company-show-numbers t)
     (company-backends '(company-capf
@@ -521,9 +513,9 @@ Mostly taken from Doom Emacs
     :general
     ('company-active-map "C-w" nil) ; don't override evil C-w
     ('insert
-     "C-n" 'company-complete) ; manual completion with C-n
-    :config
-    (global-company-mode 1))
+     "C-n" 'company-complete)) ; manual completion with C-n
+    ;; :config
+    ;; (global-company-mode 1))
 
   ;; LSP
   (use-package lsp-mode
@@ -537,7 +529,8 @@ Mostly taken from Doom Emacs
     :hook (lsp-mode . lsp-ui-mode)
     :custom (lsp-ui-doc-position 'bottom))
 
-  (use-package lsp-ivy)
+  (use-package lsp-ivy
+    :after (lsp-mode ivy))
 
   ;; linting
   (use-package flycheck
@@ -553,7 +546,7 @@ Mostly taken from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
   (use-package rainbow-delimiters
     :diminish
-    :hook (prog-mode . rainbow-delimiters-mode))
+    :hook ((prog-mode) . rainbow-delimiters-mode))
 
   (use-package highlight-numbers
     :hook ((prog-mode text-mode) . highlight-numbers-mode))
@@ -593,7 +586,7 @@ Mostly taken from Doom Emacs
     (sp-max-prefix-length 25)
     (sp-max-pair-length 4)
     :hook
-    (after-init . smartparens-global-mode)
+    (text-mode . smartparens-mode)
     (prog-mode . smartparens-strict-mode)
     :config
     (defhydra hydra-smartparens ()
@@ -630,8 +623,8 @@ Mostly taken from Doom Emacs
 
   ;;   ;; Make vim change, delete, etc. commands preserve balance of parentheses
   (use-package evil-smartparens
-    :diminish
-    :hook ((emacs-lisp-mode) . evil-smartparens-mode))
+    :after (evil smartparens)
+    :diminish)
 #+END_SRC
 * Org
 ** Org
@@ -723,14 +716,13 @@ Mostly taken from Doom Emacs
   ;; easily navigate windows with prefix M-o
   (use-package ace-window
     :general
-    ("M-w" 'ace-window))
+    ("M-o" 'ace-window))
 
   (use-package golden-ratio
     :diminish
+    :hook (after-init . golden-ratio-mode)
     :custom
-    (golden-ratio-auto-scale t)
-    :config
-    (golden-ratio-mode))
+    (golden-ratio-auto-scale t))
 #+END_SRC
 * Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -744,7 +736,7 @@ Mostly taken from Doom Emacs
 
   ;; Persistent Undos
   (use-package undo-tree
-    :hook ((prog-mode text-mode) . undo-tree-mode)
+    :defer t
     :diminish
     :custom
     (undo-limit 10000)
@@ -756,7 +748,9 @@ Mostly taken from Doom Emacs
     (my-leader-def
       "=" '(format-all-buffer :which-key "format")))
 
-  (use-package smex)
+  (use-package smex
+    :after ivy
+    :defer t)
 
   (use-package helpful
     :general
@@ -844,7 +838,7 @@ Mostly taken from Doom Emacs
     (save-buffer)
     (kill-this-buffer))
 #+END_SRC
-* Keybdindings
+* Keybindings
 #+BEGIN_SRC emacs-lisp :results none
   (general-def 'evil-window-map
     "Q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
