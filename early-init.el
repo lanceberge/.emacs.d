@@ -11,10 +11,10 @@
 (setq emacs-load-start-time (current-time))
 
 (set-face-attribute 'default nil
-		    :family "DejaVu Sans Mono"
-		    :height 110
-		    :weight 'normal
-		    :width 'normal)
+                    :family "DejaVu Sans Mono"
+                    :height 110
+                    :weight 'normal
+                    :width 'normal)
 
 (setq frame-inhibit-implied-resize t)
 (advice-add #'x-apply-session-resources :override #'ignore)
@@ -25,15 +25,19 @@
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
-	(url-retrieve-synchronously
-	 "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-	 'silent 'inhibit-cookies)
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
 ;; use-package uses straight.el
-(setq straight-use-package-by-default t)
+(setq straight-use-package-by-default t
+      straight-repository-branch "develop"
+      straight-check-for-modifications nil
+      straight-vc-git-default-clone-depth 1
+      straight-fix-org nil)
 
 (straight-use-package 'use-package)
 

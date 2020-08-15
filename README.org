@@ -13,29 +13,33 @@
   (setq emacs-load-start-time (current-time))
 
   (set-face-attribute 'default nil
-		      :family "DejaVu Sans Mono"
-		      :height 110
-		      :weight 'normal
-		      :width 'normal)
+                      :family "DejaVu Sans Mono"
+                      :height 110
+                      :weight 'normal
+                      :width 'normal)
 
   (setq frame-inhibit-implied-resize t)
   (advice-add #'x-apply-session-resources :override #'ignore)
 
   ;; Boostrap straight.el
   (let ((bootstrap-file
-	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	(bootstrap-version 5))
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
     (unless (file-exists-p bootstrap-file)
       (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 
   ;; use-package uses straight.el
-  (setq straight-use-package-by-default t)
+  (setq straight-use-package-by-default t
+        straight-repository-branch "develop"
+        straight-check-for-modifications nil
+        straight-vc-git-default-clone-depth 1
+        straight-fix-org nil)
 
   (straight-use-package 'use-package)
 
@@ -99,77 +103,82 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
-      ;;; -*- lexical-binding: t; -*-
-    (setq load-prefer-newer noninteractive
+	;;; -*- lexical-binding: t; -*-
+  (setq load-prefer-newer noninteractive
 
-	  ;; Cleaner startup
-	  inhibit-startup-screen t
-	  inhibit-startup-message t
-	  inhibit-startup-echo-area-message user-login-name
-	  inhibit-default-init t
-	  initial-scratch-message nil
-	  initial-major-mode 'fundamental-mode ; start in an empty mode
+	;; Cleaner startup
+	inhibit-startup-screen t
+	inhibit-startup-message t
+	inhibit-startup-echo-area-message user-login-name
+	inhibit-default-init t
+	initial-scratch-message nil
+	initial-major-mode 'fundamental-mode ; start in an empty mode
+        menu-bar-mode nil
+        tool-bar-mode nil
+        scroll-bar-mode nil
 
-	  locale-coding-system 'utf-8;
-	  ad-redefinition-action 'accept ; disable warnings from legacy advice system
-	  message-log-max 5000 ; longer number of max messages
-	  help-window-select t ; bring point to help menus when you open them
-	  command-line-x-option-alist nil ; less command line options to process on startup
-	  ring-bell-function 'ignore
+	locale-coding-system 'utf-8;
+	ad-redefinition-action 'accept ; disable warnings from legacy advice system
+	message-log-max 5000 ; longer number of max messages
+	help-window-select t ; bring point to help menus when you open them
+	command-line-x-option-alist nil ; less command line options to process on startup
+	ring-bell-function 'ignore
 
-	  kill-buffer-query-functions nil
-	  idle-update-delay 1.0 ; slow down how often emacs updates its ui
-	  auto-mode-case-fold nil
-	  frame-inhibit-implied-resize t ; faster startup with fonts that would resize the frame
-	  inhibit-compacting-font-caches t ; inhibit font compacting
-	  highlight-nonselected-windows nil
-	  ffap-machine-p-known 'reject ; don't ping things that look like domain names
-	  bidi-inhibit-bpa t
-	  fast-but-imprecise-scrolling t ; faster scrolling over unfontified regions
+	kill-buffer-query-functions nil
+	idle-update-delay 1.0 ; slow down how often emacs updates its ui
+	auto-mode-case-fold nil
+	frame-inhibit-implied-resize t ; faster startup with fonts that would resize the frame
+	inhibit-compacting-font-caches t ; inhibit font compacting
+	highlight-nonselected-windows nil
+	ffap-machine-p-known 'reject ; don't ping things that look like domain names
+	bidi-inhibit-bpa t
+	fast-but-imprecise-scrolling t ; faster scrolling over unfontified regions
 
-	  ;; User Settings
-	  user-full-name "Lance Bergeron"
-	  user-mail-address "bergeron.lance6@gmail.com"
+	;; User Settings
+	user-full-name "Lance Bergeron"
+	user-mail-address "bergeron.lance6@gmail.com"
 
-	  ;; General
-	  delete-old-versions t
-	  indent-tabs-mode nil
-	  show-trailing-whitespace t
-	  apropos-do-all t ; more extensive apropos searches
-	  make-backup-files nil
-	  auto-save-default nil)
+	;; General
+	delete-old-versions t
+	indent-tabs-mode nil
+	show-trailing-whitespace t
+	apropos-do-all t ; more extensive apropos searches
+	make-backup-files nil
+	auto-save-default nil
+        kill-do-not-save-duplicates t) ; no duplicates in kill ring
 
-	  ;; garbage collection - wait until idle time to collect
-	  ;; gcmh-idle-delay 5
-	  ;; gcmh-high-cons-threshold (* 16 1024 1025)) 
+  ;; garbage collection - wait until idle time to collect
+  ;; gcmh-idle-delay 5
+  ;; gcmh-high-cons-threshold (* 16 1024 1025))
 
-    (advice-add #'tty-run-terminal-initialization :override #'ignore)
+  (advice-add #'tty-run-terminal-initialization :override #'ignore)
 
-    (fset 'yes-or-no-p 'y-or-n-p)                ; y or n prompt, not yes or no
+  (fset 'yes-or-no-p 'y-or-n-p)                ; y or n prompt, not yes or no
 
-    (menu-bar-display-line-numbers-mode 'visual) ; relative line numbers
-    (global-display-line-numbers-mode 1)         ; always show line numbers
+  (menu-bar-display-line-numbers-mode 'visual) ; relative line numbers
+  (global-display-line-numbers-mode 1)         ; always show line numbers
 
-    (defvar default-file-name-handler-alist file-name-handler-alist)
-    (setq file-name-handler-alist nil)
+  (defvar default-file-name-handler-alist file-name-handler-alist)
+  (setq file-name-handler-alist nil)
 
-    (add-hook 'emacs-startup-hook
-	      (lambda ()
-		(setq gc-cons-threshold 16777216
-		      gc-cons-percentage 0.1
-		      file-name-handler-alist default-file-name-handler-alist
-		      gcmh-idle-delay 5)))
+  (add-hook 'emacs-startup-hook
+	    (lambda ()
+	      (setq gc-cons-threshold 16777216
+		    gc-cons-percentage 0.1
+		    file-name-handler-alist default-file-name-handler-alist
+		    gcmh-idle-delay 5)))
 
-    ;; Disable bidirectional text rendering for performance
-    (setq-default bidi-display-reordering 'left-to-right
-		  bidi-paragraph-direction 'left-to-right
-		  cursor-in-non-selected-windows nil)
+  ;; Disable bidirectional text rendering for performance
+  (setq-default bidi-display-reordering 'left-to-right
+		bidi-paragraph-direction 'left-to-right
+		cursor-in-non-selected-windows nil
+		indent-tabs-mode nil)
 
-    ;; Keeping ~/.emacs.d organized
-    (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
-	  custom-file (expand-file-name "custom.el" user-emacs-directory))
+  ;; Keeping ~/.emacs.d organized
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+	;; backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
-    ;; (load custom-file t)
+  ;; (load custom-file t)
 #+END_SRC
 * Keymap Management
 #+BEGIN_SRC emacs-lisp :results none
@@ -270,7 +279,7 @@ Mostly taken from Doom Emacs
     :after evil
     :custom
     (evil-collection-calendar-want-org-bindings t)
-    ;; (evil-collection-want-unimpaired-p t)
+    (evil-collection-want-unimpaired-p t)
     (evil-collection-setup-minibuffer t)
     (evil-collection-mode-list
      '(calendar
@@ -382,6 +391,9 @@ Mostly taken from Doom Emacs
   (use-package counsel
     :after ivy
     :diminish
+    :custom
+    (counsel-describe-function-function #'helpful-callable)
+    (counsel-describe-variable-function #'helpful-variable)
     :general
     (my-leader-def
       "."   '(counsel-find-file      :which-key "find file")
@@ -470,6 +482,7 @@ Mostly taken from Doom Emacs
     :defer 0.1
     :diminish
     :custom
+    (projectile-auto-discover nil)
     (projectile-project-search-path '("~/code/" "~/.emacs.d/"))
     :general
     (my-leader-def
@@ -532,7 +545,15 @@ Mostly taken from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
   (use-package smartparens
     :diminish
-    :hook (prog-mode . smartparens-strict-mode)
+    :custom
+    (sp-highlight-pair-overlay nil)
+    (sp-highlight-wrap-overlay nil)
+    (sp-highlight-wrap-tag-overlay nil)
+    (sp-max-prefix-length 25)
+    (sp-max-pair-length 4)
+    :hook
+    (after-init . smartparens-global-mode)
+    (prog-mode . smartparens-strict-mode)
     :config
     (defhydra hydra-smartparens ()
       ;; Movement
@@ -609,6 +630,10 @@ Mostly taken from Doom Emacs
       (set-face-attribute face nil :background
 			  (color-darken-name
 			   (face-attribute 'default :background) 0)))
+    (custom-set-faces '(org-headline-done ((t (:foreground "dim gray" :strike-through t)))))
+		      ;; '(org-done ((t (:foreground "dim gray" :strike-through t)))))
+    ;; (set-face-attribute 'org-done nil :strike-through t :foreground "light gray")
+    ;; (set-face-attribute 'org-headline-done nil :strike-through t :foreground "light gray")
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((shell   . t)
@@ -622,7 +647,7 @@ Mostly taken from Doom Emacs
     ('(insert evil-org-mode-map)
      "M-h"     'org-metaleft
      "M-l"     'org-metaright)
-     
+
     ('org-read-date-minibuffer-local-map
      "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
      "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
@@ -685,27 +710,35 @@ Mostly taken from Doom Emacs
 #+END_SRC
 * Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
-  (use-package restart-emacs
-    :general
-    (my-leader-def
-      "e"  '(:ignore t     :which-key "Emacs Commands")
-      "er" '(restart-emacs :which-key "restart emacs"))
-    :custom
-    (restart-emacs-restore-frames t)) ; Restore frames on restart
+    (use-package restart-emacs
+      :general
+      (my-leader-def
+        "e"  '(:ignore t     :which-key "Emacs Commands")
+        "er" '(restart-emacs :which-key "restart emacs"))
+      :custom
+      (restart-emacs-restore-frames t)) ; Restore frames on restart
 
-  ;; Persistent Undos
-  (use-package undo-tree
-    :hook ((prog-mode text-mode) . undo-tree-mode)
-    :diminish
-    :custom
-    (undo-limit 10000)
-    (undo-tree-auto-save-history t)
-    (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
+    ;; Persistent Undos
+    (use-package undo-tree
+      :hook ((prog-mode text-mode) . undo-tree-mode)
+      :diminish
+      :custom
+      (undo-limit 10000)
+      (undo-tree-auto-save-history t)
+      (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
-  (use-package format-all
-    :general
-    (my-leader-def
-      "=" '(format-all-buffer :which-key "format")))
+    (use-package format-all
+      :general
+      (my-leader-def
+        "=" '(format-all-buffer :which-key "format")))
 
-  (use-package smex)
+    (use-package smex)
+
+    (use-package helpful
+      :general
+      ('normal
+        "gh" 'helpful-at-point)
+      ([remap describe-command] 'helpful-command
+      [remap describe-key] 'helpful-key
+      [remap describe-symbol] 'helpful-symbol))
 #+END_SRC
