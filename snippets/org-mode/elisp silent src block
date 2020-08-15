@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: elisp silent src block
+# key: <seln
+# --
+#+BEGIN_SRC emacs-lisp :results none
+$0
+#+END_SRC
