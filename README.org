@@ -19,6 +19,7 @@
                       :width 'normal)
 
   (setq frame-inhibit-implied-resize t)
+
   (advice-add #'x-apply-session-resources :override #'ignore)
 
   ;; Boostrap straight.el
@@ -82,14 +83,6 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 		     (message (s-trim output)))))
       (set-process-filter process filter)))
 
-  ;; (defun tangle-config ()
-  ;;   (interactive)
-  ;;   (when (equal (buffer-file-name)
-  ;;                (expand-file-name config-org))
-  ;;     (let ((prog-mode-hook nil))
-  ;;       (org-babel-tangle))))
-	;; (byte-compile-file config-el))))
-
   (defun add-local-hook (hook function)
     (add-hook hook function nil t))
 
@@ -103,53 +96,53 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
-	;;; -*- lexical-binding: t; -*-
+        ;;; -*- lexical-binding: t; -*-
   (setq load-prefer-newer noninteractive
 
-	;; Cleaner startup
-	inhibit-startup-screen t
-	inhibit-startup-message t
-	inhibit-startup-echo-area-message user-login-name
-	inhibit-default-init t
-	initial-scratch-message nil
-	initial-major-mode 'fundamental-mode ; start in an empty mode
+        ;; Cleaner startup
+        inhibit-startup-screen t
+        inhibit-startup-message t
+        inhibit-startup-echo-area-message user-login-name
+        inhibit-default-init t
+        initial-scratch-message nil
+        initial-major-mode 'fundamental-mode ; start in an empty mode
         menu-bar-mode nil
         tool-bar-mode nil
         scroll-bar-mode nil
 
-	locale-coding-system 'utf-8;
-	ad-redefinition-action 'accept ; disable warnings from legacy advice system
-	message-log-max 5000 ; longer number of max messages
-	help-window-select t ; bring point to help menus when you open them
-	command-line-x-option-alist nil ; less command line options to process on startup
-	ring-bell-function 'ignore
+        locale-coding-system 'utf-8;
+        ad-redefinition-action 'accept ; disable warnings from legacy advice system
+        message-log-max 5000 ; longer number of max messages
+        help-window-select t ; bring point to help menus when you open them
+        command-line-x-option-alist nil ; less command line options to process on startup
+        ring-bell-function 'ignore
 
-	kill-buffer-query-functions nil
-	idle-update-delay 1.0 ; slow down how often emacs updates its ui
-	auto-mode-case-fold nil
-	frame-inhibit-implied-resize t ; faster startup with fonts that would resize the frame
-	inhibit-compacting-font-caches t ; inhibit font compacting
-	highlight-nonselected-windows nil
-	ffap-machine-p-known 'reject ; don't ping things that look like domain names
-	bidi-inhibit-bpa t
-	fast-but-imprecise-scrolling t ; faster scrolling over unfontified regions
+        kill-buffer-query-functions nil
+        idle-update-delay 1.0 ; slow down how often emacs updates its ui
+        auto-mode-case-fold nil
+        inhibit-compacting-font-caches t ; inhibit font compacting
+        highlight-nonselected-windows nil
+        ffap-machine-p-known 'reject ; don't ping things that look like domain names
+        bidi-inhibit-bpa t
+        fast-but-imprecise-scrolling t ; faster scrolling over unfontified regions
 
-	;; User Settings
-	user-full-name "Lance Bergeron"
-	user-mail-address "bergeron.lance6@gmail.com"
+        ;; User Settings
+        user-full-name "Lance Bergeron"
+        user-mail-address "bergeron.lance6@gmail.com"
 
-	;; General
-	delete-old-versions t
-	indent-tabs-mode nil
-	show-trailing-whitespace t
-	apropos-do-all t ; more extensive apropos searches
-	make-backup-files nil
-	auto-save-default nil
+        ;; Scrolling
+        scroll-conservatively 1000
+        scroll-margin 4
+        scroll-step 1
+
+        ;; General
+        delete-old-versions t
+        indent-tabs-mode nil
+        show-trailing-whitespace t
+        apropos-do-all t ; more extensive apropos searches
+        make-backup-files nil
+        auto-save-default nil
         kill-do-not-save-duplicates t) ; no duplicates in kill ring
-
-  ;; garbage collection - wait until idle time to collect
-  ;; gcmh-idle-delay 5
-  ;; gcmh-high-cons-threshold (* 16 1024 1025))
 
   (advice-add #'tty-run-terminal-initialization :override #'ignore)
 
@@ -162,23 +155,20 @@ Mostly taken from Doom Emacs
   (setq file-name-handler-alist nil)
 
   (add-hook 'emacs-startup-hook
-	    (lambda ()
-	      (setq gc-cons-threshold 16777216
-		    gc-cons-percentage 0.1
-		    file-name-handler-alist default-file-name-handler-alist
-		    gcmh-idle-delay 5)))
+            (lambda ()
+              (setq gc-cons-threshold 16777216
+                    gc-cons-percentage 0.1
+                    file-name-handler-alist default-file-name-handler-alist)))
+                    ;; gcmh-idle-delay 5)))
 
   ;; Disable bidirectional text rendering for performance
   (setq-default bidi-display-reordering 'left-to-right
-		bidi-paragraph-direction 'left-to-right
-		cursor-in-non-selected-windows nil
-		indent-tabs-mode nil)
+                bidi-paragraph-direction 'left-to-right
+                cursor-in-non-selected-windows nil
+                indent-tabs-mode nil)
 
   ;; Keeping ~/.emacs.d organized
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-	;; backup-directory-alist '(("." . "~/.emacs.d/backups")))
-
-  ;; (load custom-file t)
 #+END_SRC
 * Keymap Management
 #+BEGIN_SRC emacs-lisp :results none
@@ -193,15 +183,11 @@ Mostly taken from Doom Emacs
     (general-create-definer my-localleader-def
       :states '(normal visual insert emacs)
       :prefix ","
-      :non-normal-prefix "M-,")
+      :non-normal-prefix "C-,")
 
-    (general-evil-setup)
     (my-leader-def
       "f"  '(:ignore t                    :which-key "Find")
-      "fm" '(general-describe-keybindings :which-key "list keybindings")
-      "q"  '(save-buffers-kill-emacs      :which-key "save buffers & quit emacs")
-      ","  '(dired-jump                   :which-key "open dired")
-      "fd" '(dired                        :which-key "navigate to a directory")))
+      "fm" '(general-describe-keybindings :which-key "list keybindings")))
 
   (use-package which-key ; show keybindings following when a prefix is pressed
     :diminish
@@ -222,10 +208,26 @@ Mostly taken from Doom Emacs
     :config
     (diminish 'eldoc-mode))
 #+END_SRC
+* Built-in Packages
+#+BEGIN_SRC emacs-lisp :results none
+  (use-package paren
+    :straight (:type built-in)
+    :hook (prog-mode . show-paren-mode)
+    :custom
+    (show-paren-when-point-inside-paren t))
+
+  (use-package dired
+    :straight (:type built-in)
+    :general
+    (my-leader-def
+      ","  '(dired-jump :which-key "open dired")
+      "fd" '(dired      :which-key "navigate to a directory")))
+#+END_SRC
 * Evil Mode
 #+BEGIN_SRC emacs-lisp :results none
   (use-package evil
     :after general
+    :demand t
     :diminish
     :hook (after-init . evil-mode)
     :custom
@@ -236,43 +238,37 @@ Mostly taken from Doom Emacs
     (evil-search-wrap t)
     (evil-want-keybinding nil)
     :general
-    (evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
-    (general-nmap
-      "zR" 'evil-open-folds
-      "zM" 'evil-close-folds)
+    ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
+
+    ('normal
+     "zR" 'evil-open-folds
+     "zM" 'evil-close-folds)
+
     ('(normal visual motion)
      ";" 'evil-ex ; switch ; and :
      "M-;" 'evil-repeat-find-char
      "M-," 'evil-repeat-find-char-reverse
-     "H" "^"
-     "L" "$")
-    (general-nmap
-      ;; Remaps
-      "gm" 'evil-execute-macro ; run vim macros
-      "]b" '(evil-next-buffer :which-key "next buffer")
-      "[b" '(evil-prev-buffer :which-key "previous buffer"))
+     "H" 'evil-first-non-blank
+     "L" 'evil-end-of-line)
+
+    ('normal
+     "gm" 'evil-execute-macro) ; run vim macros)
+
     (my-leader-def
       ;; avy
       "fc" '(evil-avy-goto-char                 :which-key "char")
       "fC" '(evil-avy-goto-char-2               :which-key "2-chars")
       "fL" '(evil-avy-goto-line                 :which-key "line")
-
-      "h" (general-simulate-key "C-h"           :which-key "Help")
-      ;; Windows
-      ";"  '(shell-command                      :which-key "shell command")
-      "w"  '(:ignore t                          :which-key "Windows")
-      "w"   (general-simulate-key "C-w") ; window command
-      ;; Buffers TODO make hydra
-      "b"  '(:ignore t                          :which-key "Buffers")
-      "bs" '(evil-write                         :which-key "write file")
-      "bd" '(evil-delete-buffer                 :which-key "delete buffer")
       "bl" '(evil-switch-to-windows-last-buffer :which-key "switch to last buffer")
       "bS" '(evil-write-all                     :which-key "write all buffers"))
+
     :config
-    (define-key evil-window-map "d" 'evil-quit) ; delete window
-    (define-key evil-window-map "q" 'evil-save-modified-and-close)) ; quit and save window
+    (general-def 'evil-window-map
+      "d" 'evil-quit ; delete window
+      "q" 'evil-save-modified-and-close)) ; quit and save window
 #+END_SRC
 * Evil-Related
+** Evil-Collection
 #+BEGIN_SRC emacs-lisp :results none
   ;; Evil everywhere
   (use-package evil-collection
@@ -282,24 +278,23 @@ Mostly taken from Doom Emacs
     (evil-collection-want-unimpaired-p t)
     (evil-collection-setup-minibuffer t)
     (evil-collection-mode-list
-     '(calendar
-       minibuffer
+     '(minibuffer
        ivy
        company
-       apropos
        vterm
        dired
        eshell))
     :config
     (evil-collection-init))
-
+#+END_SRC
+** Extra operators/motions
+#+BEGIN_SRC emacs-lisp :results none
   ;; 2 character searches with s (ala vim-sneak)
   (use-package evil-snipe
     :after evil
     :diminish evil-snipe-local-mode
     :hook ((prog-mode text-mode) . evil-snipe-mode)
-    :custom
-    (evil-snipe-smart-case t))
+    :custom (evil-snipe-smart-case t))
 
   ;; s as an operator for surrounding
   (use-package evil-surround
@@ -313,6 +308,34 @@ Mostly taken from Doom Emacs
     :diminish
     :hook ((prog-mode org-mode) . evil-commentary-mode))
 
+  ;; increment/decrement numbers
+  (use-package evil-numbers
+    :after evil
+    :general
+    (my-localleader-def
+      "n"  '(:ignore t              :which-key "Evil-Numbers")
+      "nu" '(evil-numbers/inc-at-pt :which-key "increment")
+      "nd" '(evil-numbers/dec-at-pt :which-key "decrement")))
+
+  ;; gl as an operator to left-align, gL to right-align
+  (use-package evil-lion
+    :after evil
+    :diminish
+    :hook ((prog-mode text-mode) . evil-lion-mode))
+
+  ;; navigate matching blocks of code with %
+  (use-package evil-matchit
+    :after evil
+    :diminish
+    :hook ((prog-mode text-mode) . evil-matchit-mode))
+
+  ;; exchange text selected with gx
+  (use-package evil-exchange
+    :after evil
+    :hook ((prog-mode text-mode) . evil-exchange-install))
+#+END_SRC
+** Miscellaneous
+#+BEGIN_SRC emacs-lisp :results none
   ;; jk to leave insert mode
   (use-package evil-escape
     :after evil
@@ -324,50 +347,24 @@ Mostly taken from Doom Emacs
     (evil-escape-excluded-major-modes '(evil-magit-mode org-agenda-mode))
     (evil-escape-excluded-states '(normal visual emacs)))
 
-  ;; gl as an operator to left-align, gL to right-align
-  (use-package evil-lion
-    :after evil
-    :diminish
-    :hook ((prog-mode text-mode) . evil-lion-mode))
-
   ;; code folding
   (use-package origami
     :after evil
     :diminish
     :hook ((prog-mode text mode) . origami-mode)
     :general
-    (general-nmap
-      "zm" 'origami-close-node-recursively
-      "zr" 'origami-open-node-recursively
-      ;; "zM" 'origami-close-all-nodes
-      ;; "zR" 'origami-open-all-nodes
-      "zj" 'origami-next-fold
-      "zk" 'origami-previous-fold))
-
-  ;; increment/decrement numbers
-  (use-package evil-numbers
-    :after evil
-    :general
-    (my-localleader-def
-      "n"  '(:ignore t              :which-key "Evil-Numbers")
-      "nu" '(evil-numbers/inc-at-pt :which-key "increment")
-      "nd" '(evil-numbers/dec-at-pt :which-key "decrement")))
+    ('normal
+     "zm" 'origami-close-node-recursively
+     "zr" 'origami-open-node-recursively
+     ;; "zM" 'origami-close-all-nodes
+     ;; "zR" 'origami-open-all-nodes
+     "zj" 'origami-next-fold
+     "zk" 'origami-previous-fold))
 
   ;; multiple cursors
   (use-package evil-mc
     :diminish
     :hook ((prog-mode text-mode) . evil-mc-mode))
-
-  ;; exchange text selected with gx
-  (use-package evil-exchange
-    :after evil
-    :hook ((prog-mode text-mode) . evil-exchange-install))
-
-  ;; navigate matching blocks of code with %
-  (use-package evil-matchit
-    :after evil
-    :diminish
-    :hook ((prog-mode text-mode) . evil-matchit-mode))
 
   ;; evil port of targets.vim
   (use-package targets
@@ -378,7 +375,8 @@ Mostly taken from Doom Emacs
 #+END_SRC
 * Ivy
 #+BEGIN_SRC emacs-lisp :results none
-  (use-package flx) ; fuzzy sorting for ivy
+  (use-package flx
+    :after ivy) ; fuzzy sorting for ivy
 
   (use-package ivy
     :diminish
@@ -399,13 +397,21 @@ Mostly taken from Doom Emacs
       "."   '(counsel-find-file      :which-key "find file")
       "SPC" '(ivy-switch-buffer      :which-key "switch buffer")
       "fr"  '(counsel-recentf        :which-key "find recent files")
-      "fl"  '(counsel-grep-or-swiper :which-key "swiper")
       "i"   '(counsel-imenu          :which-key "imenu")
       "fg"  '(counsel-git            :which-key "git files")
       "fG"  '(counsel-git-grep       :which-key "git grep")
       "ff"  '(counsel-rg             :which-key "ripgrep"))
     :config
     (counsel-mode))
+
+  (use-package swiper
+    :general
+    ('normal
+     [remap evil-search-forward]  'swiper
+     [remap evil-search-backward] 'swiper-backward)
+    (my-leader-def
+      "fb" '(swiper-multi :which-key "swiper in buffer")
+      "fB" '(swiper-all   :which-key "swiper in all buffers")))
 #+END_SRC
 * Vterm
 #+BEGIN_SRC emacs-lisp :results none
@@ -422,7 +428,7 @@ Mostly taken from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
   (use-package yasnippet
     :diminish yas-minor-mode
-    :hook ((prog-mode text-mode) . yas-minor-mode)
+    :custom (yas-snippet-dirs '("~/.emacs.d/snippets"))
     :general
     (my-localleader-def
       "y"  '(:ignore t           :which-key "Yasnippet")
@@ -430,7 +436,10 @@ Mostly taken from Doom Emacs
       "yn" '(yas-new-snippet     :which-key "new snippet")
       "yl" '(yas-describe-tables :which-key "list snippets"))
     :config
-    (use-package yasnippet-snippets))
+    (yas-global-mode 1))
+
+  (use-package yasnippet-snippets
+    :after yasnippet)
 
   (use-package auto-yasnippet
     :after yasnippet
@@ -448,27 +457,27 @@ Mostly taken from Doom Emacs
     :general
     (my-leader-def ;; TODO unmap some of these
       "g"   '(:ignore t                  :which-key "Git")
-      "gs"  '(magit-status               :which-key "status")
-      "gb"  '(magit-branch-checkout      :which-key "checkout branch")
-      "gB"  '(magit-blame-addition       :which-key "blame")
-      "gc"  '(magit-clone                :which-key "clone")
-      "gd"  '(magit-file-delete          :which-key "delete file")
-      "gF"  '(magit-fetch                :which-key "fetch")
-      "gG"  '(magit-status-here          :which-key "status here")
-      "gl"  '(magit-log                  :which-key "log")
-      "gS"  '(magit-stage-file           :which-key "stage file")
-      "gU"  '(magit-unstage-file         :which-key "unstage file")
-      "gn"  '(:ignore t                  :which-key "New")
-      "gnb" '(magit-branch-and-checkout  :which-key "branch")
-      "gnc" '(magit-commit-create        :which-key "commit")
-      "gnf" '(magit-commit-fixup         :which-key "fixup commit")
-      "gnd" '(magit-init                 :which-key "init")
-      "gf"  '(:ignore t                  :which-key "Find")
-      "gfc" '(magit-show-commit          :which-key "show commit")
-      "gff" '(magit-find-file            :which-key "file")
-      "gfg" '(magit-find-git-config-file :which-key "git config file")
-      "gfr" '(magit-list-repositories    :which-key "repository")
-      "gfs" '(magit-list-submodules)     :which-key "submodule"))
+      "gs"  '(magit-status               :which-key "status")))
+      ;; "gb"  '(magit-branch-checkout      :which-key "checkout branch")
+      ;; "gB"  '(magit-blame-addition       :which-key "blame")
+      ;; "gc"  '(magit-clone                :which-key "clone")
+      ;; "gd"  '(magit-file-delete          :which-key "delete file")
+      ;; "gF"  '(magit-fetch                :which-key "fetch")
+      ;; "gG"  '(magit-status-here          :which-key "status here")
+      ;; "gl"  '(magit-log                  :which-key "log")
+      ;; "gS"  '(magit-stage-file           :which-key "stage file")
+      ;; "gU"  '(magit-unstage-file         :which-key "unstage file")
+      ;; "gn"  '(:ignore t                  :which-key "New")
+      ;; "gnb" '(magit-branch-and-checkout  :which-key "branch")
+      ;; "gnc" '(magit-commit-create        :which-key "commit")
+      ;; "gnf" '(magit-commit-fixup         :which-key "fixup commit")
+      ;; "gnd" '(magit-init                 :which-key "init")
+      ;; "gf"  '(:ignore t                  :which-key "Find")
+      ;; "gfc" '(magit-show-commit          :which-key "show commit")
+      ;; "gff" '(magit-find-file            :which-key "file")
+      ;; "gfg" '(magit-find-git-config-file :which-key "git config file")
+      ;; "gfr" '(magit-list-repositories    :which-key "repository")
+      ;; "gfs" '(magit-list-submodules)     :which-key "submodule"))
 
   (use-package evil-magit
     :after magit
@@ -496,33 +505,38 @@ Mostly taken from Doom Emacs
     :config
     (counsel-projectile-mode))
 #+END_SRC
-* IDE Features
+* LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
   ;; autocomplete
   (use-package company ; TODO manual completion only
     :diminish
-    :hook (prog-mode . company-mode)
+    ;; :hook (prog-mode . company-mode)
+    :defer 0.1
     :custom
     (company-show-numbers t)
     (company-backends '(company-capf
-			company-files
-			company-keywords
-			company-yasnippet))
+                        company-files
+                        company-keywords
+                        company-yasnippet))
     :general
-    (company-active-map "C-w" nil) ; don't override evil C-w
-    (general-imap
-      "C-n" 'company-complete))  ; manual completion with C-n
+    ('company-active-map "C-w" nil) ; don't override evil C-w
+    ('insert
+     "C-n" 'company-complete) ; manual completion with C-n
+    :config
+    (global-company-mode 1))
 
   ;; LSP
   (use-package lsp-mode
     :diminish
     :hook prog-mode
     :general
-    (general-nmap "gr" 'lsp-rename))
+    (my-localleader-def
+      "gr" 'lsp-rename))
 
   (use-package lsp-ui
-    :hook (lsp-mode . lsp-ui-mode))
-    
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom (lsp-ui-doc-position 'bottom))
+
   (use-package lsp-ivy)
 
   ;; linting
@@ -540,11 +554,38 @@ Mostly taken from Doom Emacs
   (use-package rainbow-delimiters
     :diminish
     :hook (prog-mode . rainbow-delimiters-mode))
+
+  (use-package highlight-numbers
+    :hook ((prog-mode text-mode) . highlight-numbers-mode))
 #+END_SRC
 * Smartparens
 #+BEGIN_SRC emacs-lisp :results none
   (use-package smartparens
     :diminish
+    :commands
+    (sp-forward-sexp
+     sp-backward-sexp
+     sp-down-sexp
+     sp-backward-down-sexp
+     sp-up-sexp
+     sp-backward-up-sexp
+     sp-next-sexp
+     sp-previous-sexp
+     sp-beginning-of-sexp
+     sp-end-of-sexp
+     sp-delete-sexp
+     sp-kill-whole-line
+     sp-transpose-sexp
+     sp-forward-slurp-sexp
+     sp-backward-slurp-sexp
+     sp-backward-barf-sexp
+     sp-forward-slurp-sexp
+     sp-fowrard-barf-sexp
+     sp-backward-barf-sexp
+     sp-split-sexp
+     sp-join-sexp
+     sp-add-to-previous-sexp
+     sp-add-to-next-sexp)
     :custom
     (sp-highlight-pair-overlay nil)
     (sp-highlight-wrap-overlay nil)
@@ -582,7 +623,7 @@ Mostly taken from Doom Emacs
 
       ("p" sp-add-to-previous-sexp "add to previous pair")
       ("n" sp-add-to-next-sexp "add to next pair"))
-    (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) ; don't pair ' in elisp mode
+    (sp-local-pair '(org-mode emacs-lisp-mode) "'" nil :actions nil) ; don't pair ' in elisp mode
     :general
     (my-localleader-def
       "s" '(hydra-smartparens/body :which-key "Smartparens")))
@@ -593,6 +634,7 @@ Mostly taken from Doom Emacs
     :hook ((emacs-lisp-mode) . evil-smartparens-mode))
 #+END_SRC
 * Org
+** Org
 #+BEGIN_SRC emacs-lisp :results none
   (use-package org
     :straight (:type built-in)
@@ -616,22 +658,22 @@ Mostly taken from Doom Emacs
     (org-src-block-faces nil)
     (org-startup-folded t)
     (org-M-RET-may-split-line nil)
-    ;; (org-log-done 'time)
+    (org-log-done 'time)
     (org-tag-alist '(("@school" . ?s) ("@personal" . ?p)))
-    ;; (org-src-tab-acts-natively t)
     (org-src-window-setup 'current-window)
+    (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
     :config
     ;; No highlighting behind src blocks
     (dolist (face '(org-block
-		    org-block-begin-line
-		    org-block-end-line
-		    org-level-1
-		    org-quote))
+                    org-block-begin-line
+                    org-block-end-line
+                    org-level-1
+                    org-quote))
       (set-face-attribute face nil :background
-			  (color-darken-name
-			   (face-attribute 'default :background) 0)))
-    (custom-set-faces '(org-headline-done ((t (:foreground "dim gray" :strike-through t)))))
-		      ;; '(org-done ((t (:foreground "dim gray" :strike-through t)))))
+                          (color-darken-name
+                           (face-attribute 'default :background) 0)))
+    ;; (custom-set-faces '(org-headline-done ((t (:foreground "dim gray" :strike-through t)))))
+    ;; '(org-done ((t (:foreground "dim gray" :strike-through t)))))
     ;; (set-face-attribute 'org-done nil :strike-through t :foreground "light gray")
     ;; (set-face-attribute 'org-headline-done nil :strike-through t :foreground "light gray")
     (org-babel-do-load-languages
@@ -639,15 +681,17 @@ Mostly taken from Doom Emacs
      '((shell   . t)
        (haskell . t))))
 
+  (use-package org-bullets
+    :after org
+    :hook (org-mode . org-bullets-mode))
+#+END_SRC
+** Evil-Org
+#+BEGIN_SRC emacs-lisp :results none
   (use-package evil-org
     :after org
     :diminish
     :hook (org-mode . evil-org-mode)
     :general
-    ('(insert evil-org-mode-map)
-     "M-h"     'org-metaleft
-     "M-l"     'org-metaright)
-
     ('org-read-date-minibuffer-local-map
      "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
      "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
@@ -659,47 +703,27 @@ Mostly taken from Doom Emacs
      "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
     :config
     (evil-org-set-key-theme)
-    (defun +org-insert-subheading ()
-      (interactive)
-      (evil-append-line 1)
-      (org-insert-subheading 1))
-
-    (defun +org-insert-heading-above ()
-      (interactive)
-      (evil-append-line 1)
-      (move-beginning-of-line nil)
-      (org-insert-heading))
-
-    (defun +org-insert-todo-above ()
-      (interactive)
-      (evil-append-line 1)
-      (move-beginning-of-line nil)
-      (org-insert-todo-heading 1))
-
-    (general-define-key
-     :states '(normal insert)
-     :keymaps 'evil-org-mode-map
-     "C-S-l" 'org-shiftright
-     "C-S-h" 'org-shiftleft
-     "C-S-j" 'org-shiftdown
-     "C-S-k" 'org-shiftup
-     [C-M-return] '+org-insert-subheading
-     [C-S-return] '+org-insert-heading-above
-     [M-return] 'evil-org-org-insert-todo-heading-respect-content-below
-     [M-S-return] '+org-insert-todo-above)
-    (require 'evil-org-agenda)
+    (general-def '(normal insert) evil-org-mode-map
+      "M-h" 'org-metaleft
+      "M-l" 'org-metaright
+      "M-L" 'org-shiftright
+      "M-H" 'org-shiftleft
+      "M-J" 'org-shiftdown
+      "M-K" 'org-shiftup
+      "C-O" 'my/org-insert-subheading
+      "C-o" (lambda () (interactive) (evil-org-org-insert-heading-respect-content-below))
+      "C-M-o" 'my/org-insert-heading-above
+      "M-o" 'evil-org-org-insert-todo-heading-respect-content-below
+      "M-O" 'my/org-insert-todo-above)
+    (require 'evil-org-agenda) ;; TODO add org agenda hook
     (evil-org-agenda-set-keys))
-
-  (use-package org-bullets
-    :after org
-    :hook (org-mode . org-bullets-mode))
 #+END_SRC
 * Windows
 #+begin_SRC emacs-lisp :results none
   ;; easily navigate windows with prefix M-o
   (use-package ace-window
     :general
-    ("M-o" 'ace-window))
+    ("M-w" 'ace-window))
 
   (use-package golden-ratio
     :diminish
@@ -710,35 +734,139 @@ Mostly taken from Doom Emacs
 #+END_SRC
 * Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
-    (use-package restart-emacs
-      :general
-      (my-leader-def
-        "e"  '(:ignore t     :which-key "Emacs Commands")
-        "er" '(restart-emacs :which-key "restart emacs"))
-      :custom
-      (restart-emacs-restore-frames t)) ; Restore frames on restart
+  (use-package restart-emacs
+    :general
+    (my-leader-def
+      "e"  '(:ignore t     :which-key "Emacs Commands")
+      "er" '(restart-emacs :which-key "restart emacs"))
+    :custom
+    (restart-emacs-restore-frames t)) ; Restore frames on restart
 
-    ;; Persistent Undos
-    (use-package undo-tree
-      :hook ((prog-mode text-mode) . undo-tree-mode)
-      :diminish
-      :custom
-      (undo-limit 10000)
-      (undo-tree-auto-save-history t)
-      (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
+  ;; Persistent Undos
+  (use-package undo-tree
+    :hook ((prog-mode text-mode) . undo-tree-mode)
+    :diminish
+    :custom
+    (undo-limit 10000)
+    (undo-tree-auto-save-history t)
+    (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
-    (use-package format-all
-      :general
-      (my-leader-def
-        "=" '(format-all-buffer :which-key "format")))
+  (use-package format-all
+    :general
+    (my-leader-def
+      "=" '(format-all-buffer :which-key "format")))
 
-    (use-package smex)
+  (use-package smex)
 
-    (use-package helpful
-      :general
-      ('normal
-        "gh" 'helpful-at-point)
-      ([remap describe-command] 'helpful-command
-      [remap describe-key] 'helpful-key
-      [remap describe-symbol] 'helpful-symbol))
+  (use-package helpful
+    :general
+    ('normal
+     "gh" 'helpful-at-point)
+    ('normal helpful-mode-map
+      "q" 'quit-window)
+    ([remap describe-command] 'helpful-command
+     [remap describe-key] 'helpful-key
+     [remap describe-symbol] 'helpful-symbol)
+    :config
+    (evil-collection-inhibit-insert-state 'helpful-mode-map))
+
+  ;; Garbage collect in idle time
+  (use-package gcmh
+    :hook (after-init . gcmh-mode)
+    :commands gcmh-idle-garbage-collect
+    :diminish
+    :custom
+    (gcmh-idle-delay 10)
+    (gcmh-high-cons-threshold 16777216)
+    :config
+    (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
+#+END_SRC
+* Functions
+#+BEGIN_SRC emacs-lisp :results none
+  ;;;###autoload
+  (defun my/comment-until-end-of-line () ;; TOOD fix
+    (interactive)
+    (newline)
+    (evil-commentary-line 1)
+    (evil-previous-line 2)
+    (join-line 1))
+
+  ;;;###autoload
+  (defun my/org-insert-subheading ()
+    (interactive)
+    (evil-append-line 1)
+    (org-insert-subheading 1))
+
+  ;;;###autoload
+  (defun my/org-insert-heading-above ()
+    (interactive)
+    (evil-append-line 1)
+    (move-beginning-of-line nil)
+    (org-insert-heading))
+
+  ;;;###autoload
+  (defun my/org-insert-todo-above ()
+    (interactive)
+    (evil-append-line 1)
+    (move-beginning-of-line nil)
+    (org-insert-todo-heading 1))
+
+  ;;;###autoload
+  (defun my/move-line-up ()
+    "Move up the current line."
+    (interactive)
+    (transpose-lines 1)
+    (forward-line -2)
+    (indent-according-to-mode))
+
+  ;;;###autoload
+  (defun my/move-line-up-prefixed (count)
+    (interactive "p")
+    (save-excursion (dotimes (_ count) (my/move-line-up))))
+
+  ;;;###autoload
+  (defun my/move-line-down ()
+    "Move down the current line."
+    (interactive)
+    (forward-line 1)
+    (transpose-lines 1)
+    (forward-line -1)
+    (indent-according-to-mode))
+
+  ;;;###autoload
+  (defun my/move-line-down-prefixed (count)
+    (interactive "p")
+    (save-excursion (dotimes (_ count) (my/move-line-down))))
+
+  ;;;###autoload
+  (defun my/save-and-kill-buffer ()
+    (interactive)
+    (save-buffer)
+    (kill-this-buffer))
+#+END_SRC
+* Keybdindings
+#+BEGIN_SRC emacs-lisp :results none
+  (general-def 'evil-window-map
+    "Q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
+
+  (my-leader-def
+    "h" (general-simulate-key "C-h" :which-key "Help")
+    ;; Windows
+    ";"  '(shell-command            :which-key "shell command")
+    "w"  '(:ignore t                :which-key "Windows")
+    "w"   (general-simulate-key "C-w") ; window command
+    ;; Buffers TODO make hydra
+    "b"  '(:ignore t                :which-key "Buffers")
+    "bs" '(save-buffer              :which-key "write file")
+    "bd" '(kill-this-buffer         :which-key "delete buffer")
+    "bq" 'save-and-kill-buffer)
+
+  (general-def 'normal
+    "[e" 'my/move-line-up-prefixed
+    "]e" 'my/move-line-down-prefixed
+    "gs" 'my/split-line
+    "gS" (lambda () (interactive) (split-line) (move-line-down)) ;; split line above
+    "gC" 'my/comment-until-end-of-line
+    "]b" '(next-buffer     :which-key "next buffer")
+    "[b" '(previous-buffer :which-key "previous buffer"))
 #+END_SRC

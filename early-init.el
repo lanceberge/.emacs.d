@@ -17,6 +17,7 @@
                     :width 'normal)
 
 (setq frame-inhibit-implied-resize t)
+
 (advice-add #'x-apply-session-resources :override #'ignore)
 
 ;; Boostrap straight.el
