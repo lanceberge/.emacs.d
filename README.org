@@ -804,14 +804,13 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
   ;; Garbage collect in idle time
   (use-package gcmh
-    ;; :hook (after-init . gcmh-mode)
+    :hook (after-init . gcmh-mode)
     :commands gcmh-idle-garbage-collect
     :diminish
     :custom
     (gcmh-idle-delay 10)
     (gcmh-high-cons-threshold 16777216)
     :config
-    (gcmh-mode)
     (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
   (use-package keyfreq
