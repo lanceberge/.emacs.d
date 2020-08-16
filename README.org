@@ -509,7 +509,7 @@ Mostly taken from Doom Emacs
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
   ;; autocomplete
-  (use-package company ; TODO manual completion only
+  (use-package company
     :diminish
     :hook (prog-mode . company-mode)
     :custom
@@ -522,6 +522,10 @@ Mostly taken from Doom Emacs
     ('company-active-map "C-w" nil) ; don't override evil C-w
     ('insert
      "C-n" 'company-complete)) ; manual completion with C-n
+
+  (use-package company-flx
+    :after company
+    :hook (company-mode . company-flx-mode))
 
   ;; LSP
   (use-package lsp-mode
