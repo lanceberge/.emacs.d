@@ -249,8 +249,8 @@ Mostly taken from Doom Emacs
 
     ('(normal visual motion)
      ";" 'evil-ex ; switch ; and :
-     "M-;" 'evil-repeat-find-char
-     "M-," 'evil-repeat-find-char-reverse
+     ;; "M-;" 'evil-repeat-find-char
+     ;; "M-," 'evil-repeat-find-char-reverse
      "H" 'evil-first-non-blank
      "L" 'evil-end-of-line)
 
@@ -295,8 +295,15 @@ Mostly taken from Doom Emacs
   ;; 2 character searches with s (ala vim-sneak)
   (use-package evil-snipe
     :diminish evil-snipe-local-mode
-    :hook ((prog-mode text-mode) . evil-snipe-mode)
-    :custom (evil-snipe-smart-case t))
+    :hook ((prog-mode text-mode) . evil-snipe-override-local-mode)
+    :custom
+    (evil-snipe-show-prompt nil)
+    (evil-snipe-skip-leading-whitespace nil)
+    :config
+    (evil-snipe-local-mode)
+    (general-def 'motion
+      "M-;" 'evil-snipe-repeat
+      "M-," 'evil-snipe-repeat-reverse))
 
   ;; s as an operator for surrounding
   (use-package evil-surround
@@ -345,7 +352,7 @@ Mostly taken from Doom Emacs
   ;; code folding
   (use-package origami
     :diminish
-    :hook ((prog-mode text mode) . origami-mode)
+    :hook ((prog-mode text-mode) . origami-mode)
     :general
     ('normal
      "zm" 'origami-close-node-recursively
@@ -514,8 +521,6 @@ Mostly taken from Doom Emacs
     ('company-active-map "C-w" nil) ; don't override evil C-w
     ('insert
      "C-n" 'company-complete)) ; manual completion with C-n
-    ;; :config
-    ;; (global-company-mode 1))
 
   ;; LSP
   (use-package lsp-mode
@@ -742,8 +747,7 @@ Mostly taken from Doom Emacs
       "=" '(format-all-buffer :which-key "format")))
 
   (use-package smex
-    :after ivy
-    :defer t)
+    :after ivy)
 
   (use-package helpful
     :general
@@ -771,14 +775,6 @@ Mostly taken from Doom Emacs
 * Functions
 #+BEGIN_SRC emacs-lisp :results none
   ;;;###autoload
-  (defun my/comment-until-end-of-line () ;; TOOD fix
-    (interactive)
-    (newline)
-    (evil-commentary-line 1)
-    (evil-previous-line 2)
-    (join-line 1))
-
-  ;;;###autoload
   (defun my/org-insert-subheading ()
     (interactive)
     (evil-append-line 1)
@@ -797,6 +793,7 @@ Mostly taken from Doom Emacs
     (evil-append-line 1)
     (move-beginning-of-line nil)
     (org-insert-todo-heading 1))
+
 
   ;;;###autoload
   (defun my/move-line-up ()
@@ -830,6 +827,21 @@ Mostly taken from Doom Emacs
     (interactive)
     (save-buffer)
     (kill-this-buffer))
+    
+  ;;;###autoload
+  (defun my/split-line ()
+    (interactive)
+    (newline)
+    (indent-according-to-mode))
+
+  ;;;###autoload
+  (defun my/comment-until-end-of-line () ;; TOOD fix
+    (interactive)
+    (my/split-line)
+    (evil-commentary-line)
+    (evil-previous-line 2)
+    (join-line))
+
 #+END_SRC
 * Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -852,7 +864,7 @@ Mostly taken from Doom Emacs
     "[e" 'my/move-line-up-prefixed
     "]e" 'my/move-line-down-prefixed
     "gs" 'my/split-line
-    "gS" (lambda () (interactive) (split-line) (move-line-down)) ;; split line above
+    "gS" (lambda () (interactive) (my/split-line) (my/move-line-up)) ;; split line above
     "gC" 'my/comment-until-end-of-line
     "]b" '(next-buffer     :which-key "next buffer")
     "[b" '(previous-buffer :which-key "previous buffer"))
