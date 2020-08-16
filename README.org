@@ -632,17 +632,12 @@ Mostly taken from Doom Emacs
   (use-package org
     :straight (:type built-in)
     :general
-    ('(normal visual insert)
-     "C-c l" '(org-store-link :which-key "store link")
-     "C-c c" '(org-capture    :which-key "capture"))
+    ("C-c l" '(org-store-link :which-key "store link")
+     "C-c c" '(org-capture    :which-key "capture")
+     "C-c s" '(org-sort       :which-key "sort")
+     "C-c a" '(org-agenda     :which-key "org agenda"))
     (my-leader-def
-      "oa"    '(org-agenda        :which-key "org agenda")
-      "n"     '(:ignore t         :which-key "Notes")
-      "nli"   '(org-insert-link   :which-key "insert link")
-      "nlg"   '(org-open-at-point :which-key "visit link")
-      "nt"    '(org-todo          :which-key "toggle TODO state")
-      "ns"    '(org-sort          :which-key "org schedule")
-      "nS"    '(org-schedule      :which-key "org schedule"))
+      "oa"    '(org-agenda :which-key "org agenda"))
     :custom
     (org-agenda-files '("~/org"))
     (org-directory "~/org")
@@ -656,6 +651,7 @@ Mostly taken from Doom Emacs
     (org-src-window-setup 'current-window)
     (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
     :config
+    (setq org-fontify-done-headline t)
     ;; No highlighting behind src blocks
     (dolist (face '(org-block
                     org-block-begin-line
@@ -665,23 +661,20 @@ Mostly taken from Doom Emacs
       (set-face-attribute face nil :background
                           (color-darken-name
                            (face-attribute 'default :background) 0)))
-    ;; (custom-set-faces '(org-headline-done ((t (:foreground "dim gray" :strike-through t)))))
-    ;; '(org-done ((t (:foreground "dim gray" :strike-through t)))))
-    ;; (set-face-attribute 'org-done nil :strike-through t :foreground "light gray")
-    ;; (set-face-attribute 'org-headline-done nil :strike-through t :foreground "light gray")
+
+    (set-face-attribute 'org-headline-done nil :strike-through t :foreground "#7c6f64")
+    (set-face-attribute 'org-done nil :foreground "#7c6f64")
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((shell   . t)
        (haskell . t))))
 
   (use-package org-bullets
-    :after org
     :hook (org-mode . org-bullets-mode))
 #+END_SRC
 ** Evil-Org
 #+BEGIN_SRC emacs-lisp :results none
   (use-package evil-org
-    :after org
     :diminish
     :hook (org-mode . evil-org-mode)
     :general
@@ -716,7 +709,7 @@ Mostly taken from Doom Emacs
   ;; easily navigate windows with prefix M-o
   (use-package ace-window
     :general
-    ("M-o" 'ace-window))
+    ("M-i" 'ace-window))
 
   (use-package golden-ratio
     :diminish
