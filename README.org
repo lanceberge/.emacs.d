@@ -1,53 +1,53 @@
 * Early-Init
-#+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
-  ;;; -*- lexical-binding: t; -*-
-  (setq gc-cons-threshold most-positive-fixnum)
+ #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
+   ;;; -*- lexical-binding: t; -*-
+   (setq gc-cons-threshold most-positive-fixnum)
 
-  (setq package-enable-at-startup nil)
-  (advice-add #'package--ensure-init-file :override #'ignore)
+   (setq package-enable-at-startup nil)
+   (advice-add #'package--ensure-init-file :override #'ignore)
 
-  (push '(menu-bar-lines . 0) default-frame-alist)
-  (push '(tool-bar-lines . 0) default-frame-alist)
-  (push '(vertical-scroll-bars) default-frame-alist)
+   (push '(menu-bar-lines . 0) default-frame-alist)
+   (push '(tool-bar-lines . 0) default-frame-alist)
+   (push '(vertical-scroll-bars) default-frame-alist)
 
-  (setq emacs-load-start-time (current-time))
+   (setq emacs-load-start-time (current-time))
 
-  (set-face-attribute 'default nil
-                      :family "DejaVu Sans Mono"
-                      :height 110
-                      :weight 'normal
-                      :width 'normal)
+   (set-face-attribute 'default nil
+                       :family "DejaVu Sans Mono"
+                       :height 110
+                       :weight 'normal
+                       :width 'normal)
 
-  (setq frame-inhibit-implied-resize t)
+   (setq frame-inhibit-implied-resize t)
 
-  (advice-add #'x-apply-session-resources :override #'ignore)
+   (advice-add #'x-apply-session-resources :override #'ignore)
 
-  ;; Boostrap straight.el
-  (let ((bootstrap-file
-         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 5))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-          (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-           'silent 'inhibit-cookies)
-        (goto-char (point-max))
-        (eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
+   ;; Boostrap straight.el
+   (let ((bootstrap-file
+          (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+         (bootstrap-version 5))
+     (unless (file-exists-p bootstrap-file)
+       (with-current-buffer
+           (url-retrieve-synchronously
+            "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+            'silent 'inhibit-cookies)
+         (goto-char (point-max))
+         (eval-print-last-sexp)))
+     (load bootstrap-file nil 'nomessage))
 
-  ;; use-package uses straight.el
-  (setq straight-use-package-by-default t
-        straight-repository-branch "develop"
-        straight-check-for-modifications nil
-        straight-vc-git-default-clone-depth 1
-        straight-fix-org nil)
+   ;; use-package uses straight.el
+   (setq straight-use-package-by-default t
+         straight-repository-branch "develop"
+         straight-check-for-modifications nil
+         straight-vc-git-default-clone-depth 1
+         straight-fix-org nil)
 
-  (straight-use-package 'use-package)
+   (straight-use-package 'use-package)
 
-  (use-package gruvbox-theme
-    :config
-    (load-theme 'gruvbox t))
-#+END_SRC
+   (use-package gruvbox-theme
+     :config
+     (load-theme 'gruvbox t))
+ #+END_SRC
 * Init
 #+BEGIN_SRC emacs-lisp :tangle init.el :results none
   ;;; -*- lexical-binding: t -*-
@@ -220,7 +220,7 @@ Mostly taken from Doom Emacs
     :straight (:type built-in)
     :general
     (my-leader-def
-      ","  '(dired-jump :which-key "open dired")
+      "-"  '(dired-jump :which-key "open dired")
       "fd" '(dired      :which-key "navigate to a directory")))
 #+END_SRC
 * Evil Mode
@@ -244,6 +244,7 @@ Mostly taken from Doom Emacs
     ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
     ('normal
+     "gm" 'evil-execute-macro ; run vim macros)
      "zR" 'evil-open-folds
      "zM" 'evil-close-folds)
 
@@ -254,13 +255,13 @@ Mostly taken from Doom Emacs
      "H" 'evil-first-non-blank
      "L" 'evil-end-of-line)
 
-    ('normal
-     "gm" 'evil-execute-macro) ; run vim macros)
+    ;; Evil-avy
+    ('normal :prefix "g"
+     "o" '(evil-avy-goto-char-2     :which-key "2-chars")
+     "O" '(evil-avy-goto-char-timer :which-key "timer"))
 
     (my-leader-def
-      "fc" '(evil-avy-goto-char                 :which-key "char")
-      "fC" '(evil-avy-goto-char-2               :which-key "2-chars")
-      "fL" '(evil-avy-goto-line                 :which-key "line")
+      "ft" '(evil-avy-goto-char-timer           :which-key "avy timer")
       "bl" '(evil-switch-to-windows-last-buffer :which-key "switch to last buffer")
       "bS" '(evil-write-all                     :which-key "write all buffers"))
 
@@ -383,7 +384,7 @@ Mostly taken from Doom Emacs
     :diminish
     :defer 0.1
     :custom
-    (ivy-re-builders-alist '((t . ivy--regex-fuzzy)))
+    (ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; TODO configure counsel-rg, swiper, counsel-projectile-rg
     :config
     (ivy-mode))
 
@@ -398,7 +399,7 @@ Mostly taken from Doom Emacs
       "."   '(counsel-find-file      :which-key "find file")
       "SPC" '(ivy-switch-buffer      :which-key "switch buffer")
       "fr"  '(counsel-recentf        :which-key "find recent files")
-      "i"   '(counsel-imenu          :which-key "imenu")
+      "fi"   '(counsel-imenu          :which-key "imenu")
       "fg"  '(counsel-git            :which-key "git files")
       "fG"  '(counsel-git-grep       :which-key "git grep")
       "ff"  '(counsel-rg             :which-key "ripgrep"))
@@ -457,25 +458,25 @@ Mostly taken from Doom Emacs
     :general
     (my-leader-def ;; TODO unmap some of these
       "g"   '(:ignore t                  :which-key "Git")
-      "gs"  '(magit-status               :which-key "status")))
-      ;; "gb"  '(magit-branch-checkout      :which-key "checkout branch")
+      "gs"  '(magit-status               :which-key "status")
+      "gb"  '(magit-branch-checkout      :which-key "checkout branch")
       ;; "gB"  '(magit-blame-addition       :which-key "blame")
       ;; "gc"  '(magit-clone                :which-key "clone")
       ;; "gd"  '(magit-file-delete          :which-key "delete file")
       ;; "gF"  '(magit-fetch                :which-key "fetch")
       ;; "gG"  '(magit-status-here          :which-key "status here")
-      ;; "gl"  '(magit-log                  :which-key "log")
-      ;; "gS"  '(magit-stage-file           :which-key "stage file")
-      ;; "gU"  '(magit-unstage-file         :which-key "unstage file")
-      ;; "gn"  '(:ignore t                  :which-key "New")
-      ;; "gnb" '(magit-branch-and-checkout  :which-key "branch")
-      ;; "gnc" '(magit-commit-create        :which-key "commit")
-      ;; "gnf" '(magit-commit-fixup         :which-key "fixup commit")
+      "gl"  '(magit-log                  :which-key "log")
+      "gS"  '(magit-stage-file           :which-key "stage file")
+      "gU"  '(magit-unstage-file         :which-key "unstage file")
+      "gn"  '(:ignore t                  :which-key "New")
+      "gnb" '(magit-branch-and-checkout  :which-key "branch")
+      "gnc" '(magit-commit-create        :which-key "commit")
+      "gnf" '(magit-commit-fixup         :which-key "fixup commit")
       ;; "gnd" '(magit-init                 :which-key "init")
-      ;; "gf"  '(:ignore t                  :which-key "Find")
-      ;; "gfc" '(magit-show-commit          :which-key "show commit")
-      ;; "gff" '(magit-find-file            :which-key "file")
-      ;; "gfg" '(magit-find-git-config-file :which-key "git config file")
+      "gf"  '(:ignore t                  :which-key "Find")
+      "gfc" '(magit-show-commit          :which-key "show commit")
+      "gff" '(magit-find-file            :which-key "file")
+      "gfg" '(magit-find-git-config-file :which-key "git config file")))
       ;; "gfr" '(magit-list-repositories    :which-key "repository")
       ;; "gfs" '(magit-list-submodules)     :which-key "submodule"))
 
@@ -542,6 +543,9 @@ Mostly taken from Doom Emacs
     :diminish
     :hook (lsp-mode . flycheck-mode)
     :general
+    ('normal
+     "[q" 'flycheck-previous-error
+     "]q" 'flycheck-next-error)
     (my-leader-def
       "fe" '(flycheck-list-errors :which-key "list errors"))
     :config
@@ -555,6 +559,9 @@ Mostly taken from Doom Emacs
 
   (use-package highlight-numbers
     :hook ((prog-mode text-mode) . highlight-numbers-mode))
+    
+  (use-package hl-todo
+    :hook (prog-mode . hl-todo-mode))
 #+END_SRC
 * Smartparens
 #+BEGIN_SRC emacs-lisp :results none
@@ -591,9 +598,14 @@ Mostly taken from Doom Emacs
     (sp-max-prefix-length 25)
     (sp-max-pair-length 4)
     :hook
-    (text-mode . smartparens-mode)
+    (after-init . smartparens-global-mode)
     (prog-mode . smartparens-strict-mode)
+    :general
+    (my-localleader-def
+      "s" '(hydra-smartparens/body :which-key "Smartparens"))
     :config
+    (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) ; don't pair ' in elisp mode
+
     (defhydra hydra-smartparens ()
       ;; Movement
       ("l" sp-forward-sexp "next pair")
@@ -620,16 +632,22 @@ Mostly taken from Doom Emacs
       ("u" sp-join-sexp "join pair")
 
       ("p" sp-add-to-previous-sexp "add to previous pair")
-      ("n" sp-add-to-next-sexp "add to next pair"))
-    (sp-local-pair '(org-mode emacs-lisp-mode) "'" nil :actions nil) ; don't pair ' in elisp mode
-    :general
-    (my-localleader-def
-      "s" '(hydra-smartparens/body :which-key "Smartparens")))
+      ("n" sp-add-to-next-sexp "add to next pair")))
+
+
 
   ;;   ;; Make vim change, delete, etc. commands preserve balance of parentheses
   (use-package evil-smartparens
-    :after (evil smartparens)
-    :diminish)
+    :hook (smartparens-strict-mode . evil-smartparens-mode)
+    :diminish
+    :general
+    ('normal
+     ">" (general-key-dispatch 'evil-shift-right
+           ")" 'sp-forward-slurp-sexp
+           "(" 'sp-backward-barf-sexp)
+     "<" (general-key-dispatch 'evil-shift-left
+           ")" 'sp-forward-barf-sexp
+           "(" 'sp-backward-barf-sexp)))
 #+END_SRC
 * Org
 ** Org
@@ -637,7 +655,7 @@ Mostly taken from Doom Emacs
   (use-package org
     :straight (:type built-in)
     :general
-    ("C-c l" '(org-store-link :which-key "store link")
+    ("C-c l" '(org-store-link :which-key "store link") ;; TODO vimify mappings
      "C-c c" '(org-capture    :which-key "capture")
      "C-c s" '(org-sort       :which-key "sort")
      "C-c a" '(org-agenda     :which-key "org agenda"))
@@ -711,7 +729,7 @@ Mostly taken from Doom Emacs
 #+END_SRC
 * Windows
 #+begin_SRC emacs-lisp :results none
-  ;; easily navigate windows with prefix M-o
+  ;; easily navigate windows with prefix M-i
   (use-package ace-window
     :general
     ("M-i" 'ace-window))
@@ -723,15 +741,8 @@ Mostly taken from Doom Emacs
     (golden-ratio-auto-scale t))
 #+END_SRC
 * Miscellaneous
+** Editing
 #+BEGIN_SRC emacs-lisp :results none
-  (use-package restart-emacs
-    :general
-    (my-leader-def
-      "e"  '(:ignore t     :which-key "Emacs Commands")
-      "er" '(restart-emacs :which-key "restart emacs"))
-    :custom
-    (restart-emacs-restore-frames t)) ; Restore frames on restart
-
   ;; Persistent Undos
   (use-package undo-tree
     :defer t
@@ -746,6 +757,26 @@ Mostly taken from Doom Emacs
     (my-leader-def
       "=" '(format-all-buffer :which-key "format")))
 
+  (use-package expand-region
+    :general
+    ("M--" 'er/expand-region))
+
+  (use-package move-text
+    :general
+    ('normal
+     "]e" 'move-text-down
+     "[e" 'move-text-up))
+#+END_SRC
+** System
+#+BEGIN_SRC emacs-lisp :results none
+  (use-package restart-emacs
+    :general
+    (my-leader-def
+      "e"  '(:ignore t     :which-key "Emacs Commands")
+      "er" '(restart-emacs :which-key "restart emacs"))
+    :custom
+    (restart-emacs-restore-frames t)) ; Restore frames on restart
+
   (use-package smex
     :after ivy)
 
@@ -754,7 +785,7 @@ Mostly taken from Doom Emacs
     ('normal
      "gh" 'helpful-at-point)
     ('normal helpful-mode-map
-      "q" 'quit-window)
+             "q" 'quit-window)
     ([remap describe-command] 'helpful-command
      [remap describe-key] 'helpful-key
      [remap describe-symbol] 'helpful-symbol)
@@ -771,6 +802,22 @@ Mostly taken from Doom Emacs
     (gcmh-high-cons-threshold 16777216)
     :config
     (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
+
+  (use-package keyfreq
+    :defer t
+    :custom
+    (keyfreq-excluded-commands
+     '(org-self-insert-command
+       self-insert-command
+       evil-next-line
+       evil-previous-line
+       execute-extended-command))
+    :general
+    (my-leader-def
+      "fc" '(keyfreq-show :which-key "show command frequency"))
+    :config
+    (keyfreq-mode 1)
+    (keyfreq-autosave-mode 1))
 #+END_SRC
 * Functions
 #+BEGIN_SRC emacs-lisp :results none
@@ -794,34 +841,6 @@ Mostly taken from Doom Emacs
     (move-beginning-of-line nil)
     (org-insert-todo-heading 1))
 
-
-  ;;;###autoload
-  (defun my/move-line-up ()
-    "Move up the current line."
-    (interactive)
-    (transpose-lines 1)
-    (forward-line -2)
-    (indent-according-to-mode))
-
-  ;;;###autoload
-  (defun my/move-line-up-prefixed (count)
-    (interactive "p")
-    (save-excursion (dotimes (_ count) (my/move-line-up))))
-
-  ;;;###autoload
-  (defun my/move-line-down ()
-    "Move down the current line."
-    (interactive)
-    (forward-line 1)
-    (transpose-lines 1)
-    (forward-line -1)
-    (indent-according-to-mode))
-
-  ;;;###autoload
-  (defun my/move-line-down-prefixed (count)
-    (interactive "p")
-    (save-excursion (dotimes (_ count) (my/move-line-down))))
-
   ;;;###autoload
   (defun my/save-and-kill-buffer ()
     (interactive)
@@ -841,7 +860,6 @@ Mostly taken from Doom Emacs
     (evil-commentary-line)
     (evil-previous-line 2)
     (join-line))
-
 #+END_SRC
 * Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -861,10 +879,8 @@ Mostly taken from Doom Emacs
     "bq" 'save-and-kill-buffer)
 
   (general-def 'normal
-    "[e" 'my/move-line-up-prefixed
-    "]e" 'my/move-line-down-prefixed
     "gs" 'my/split-line
-    "gS" (lambda () (interactive) (my/split-line) (my/move-line-up)) ;; split line above
+    "gS" (lambda () (interactive) (my/split-line) (move-text-up)) ;; split line above
     "gC" 'my/comment-until-end-of-line
     "]b" '(next-buffer     :which-key "next buffer")
     "[b" '(previous-buffer :which-key "previous buffer"))
