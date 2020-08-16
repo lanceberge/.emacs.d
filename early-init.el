@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: t; -*-
+;;; -*- lexical-binding: t -*-
 (setq gc-cons-threshold most-positive-fixnum)
 
 (setq package-enable-at-startup nil)
@@ -8,7 +8,11 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
-(setq emacs-load-start-time (current-time))
+(setq emacs-load-start-time (current-time)
+      menu-bar-mode nil
+      tool-bar-mode nil
+      scroll-bar-mode nil
+      frame-inhibit-implied-resize t)
 
 (set-face-attribute 'default nil
                     :family "DejaVu Sans Mono"
@@ -16,7 +20,6 @@
                     :weight 'normal
                     :width 'normal)
 
-(setq frame-inhibit-implied-resize t)
 
 (advice-add #'x-apply-session-resources :override #'ignore)
 

@@ -1,6 +1,6 @@
 * Early-Init
  #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
-   ;;; -*- lexical-binding: t; -*-
+      ;;; -*- lexical-binding: t -*-
    (setq gc-cons-threshold most-positive-fixnum)
 
    (setq package-enable-at-startup nil)
@@ -10,7 +10,11 @@
    (push '(tool-bar-lines . 0) default-frame-alist)
    (push '(vertical-scroll-bars) default-frame-alist)
 
-   (setq emacs-load-start-time (current-time))
+   (setq emacs-load-start-time (current-time)
+         menu-bar-mode nil
+         tool-bar-mode nil
+         scroll-bar-mode nil
+         frame-inhibit-implied-resize t)
 
    (set-face-attribute 'default nil
                        :family "DejaVu Sans Mono"
@@ -18,7 +22,6 @@
                        :weight 'normal
                        :width 'normal)
 
-   (setq frame-inhibit-implied-resize t)
 
    (advice-add #'x-apply-session-resources :override #'ignore)
 
@@ -51,9 +54,6 @@
 * Init
 #+BEGIN_SRC emacs-lisp :tangle init.el :results none
   ;;; -*- lexical-binding: t -*-
-  (setq gc-cons-threshold most-positive-fixnum
-	gc-cons-percentage 0.6)
-
   (defconst config-org (expand-file-name "README.org" user-emacs-directory))
   (defconst config-el  (expand-file-name "config.el" user-emacs-directory))
 
@@ -65,38 +65,41 @@
 
   (when (require 'time-date nil t)
       (message "Emacs startup time: %.2f seconds."
-		 (time-to-seconds (time-since emacs-load-start-time))))
+                 (time-to-seconds (time-since emacs-load-start-time))))
 #+END_SRC
 * Auto-Tangle
 Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 #+BEGIN_SRC emacs-lisp :results none
+  ;;; -*- lexical-binding: t -*-
   (defun tangle-config ()
     "Export code blocks from the literate config file
-  asynchronously."
+    asynchronously."
     (interactive)
     (let* ((tangle-config (format "(org-babel-tangle nil \"%s\")" config-el))
-	   (process (start-process
-		     "tangle-config" nil
-		     "emacs" config-org "--batch" "--eval" tangle-config))
-	   (filter (defun echo-process-output (process output)
-		     "Echo process output."
-		     (message (s-trim output)))))
+           (process (start-process
+                     "tangle-config" nil
+                     "emacs" config-org "--batch" "--eval" tangle-config))
+           (filter (defun echo-process-output (process output)
+                     "Echo process output."
+                     (message (s-trim output)))))
       (set-process-filter process filter)))
 
   (defun add-local-hook (hook function)
     (add-hook hook function nil t))
 
   (add-hook 'org-mode-hook
-	    (lambda ()
-	      (if (equal (buffer-file-name) config-org)
-		  (add-local-hook 'after-save-hook 'tangle-config))))
+            (lambda ()
+              (if (equal (buffer-file-name) config-org)
+                  (add-local-hook 'after-save-hook 'tangle-config))))
 #+END_SRC
 * Initial Settings
   
 Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
-        ;;; -*- lexical-binding: t; -*-
+  (setq gc-cons-threshold most-positive-fixnum
+        gc-cons-percentage 0.6)
+
   (setq load-prefer-newer noninteractive
 
         ;; Cleaner startup
@@ -106,9 +109,6 @@ Mostly taken from Doom Emacs
         inhibit-default-init t
         initial-scratch-message nil
         initial-major-mode 'fundamental-mode ; start in an empty mode
-        menu-bar-mode nil
-        tool-bar-mode nil
-        scroll-bar-mode nil
 
         locale-coding-system 'utf-8;
         ad-redefinition-action 'accept ; disable warnings from legacy advice system
@@ -142,6 +142,7 @@ Mostly taken from Doom Emacs
         apropos-do-all t ; more extensive apropos searches
         make-backup-files nil
         auto-save-default nil
+        create-lockfiles nil
         kill-do-not-save-duplicates t) ; no duplicates in kill ring
 
   (advice-add #'tty-run-terminal-initialization :override #'ignore)
@@ -244,7 +245,6 @@ Mostly taken from Doom Emacs
     ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
     ('normal
-     "gm" 'evil-execute-macro ; run vim macros)
      "zR" 'evil-open-folds
      "zM" 'evil-close-folds)
 
@@ -262,7 +262,7 @@ Mostly taken from Doom Emacs
 
     (my-leader-def
       "ft" '(evil-avy-goto-char-timer           :which-key "avy timer")
-      "bl" '(evil-switch-to-windows-last-buffer :which-key "switch to last buffer")
+      ;; "bl" '(evil-switch-to-windows-last-buffer :which-key "switch to last buffer")
       "bS" '(evil-write-all                     :which-key "write all buffers"))
 
     :config
@@ -399,7 +399,7 @@ Mostly taken from Doom Emacs
       "."   '(counsel-find-file      :which-key "find file")
       "SPC" '(ivy-switch-buffer      :which-key "switch buffer")
       "fr"  '(counsel-recentf        :which-key "find recent files")
-      "fi"   '(counsel-imenu          :which-key "imenu")
+      "fi"  '(counsel-imenu          :which-key "imenu")
       "fg"  '(counsel-git            :which-key "git files")
       "fG"  '(counsel-git-grep       :which-key "git grep")
       "ff"  '(counsel-rg             :which-key "ripgrep"))
@@ -563,9 +563,13 @@ Mostly taken from Doom Emacs
 
   (use-package highlight-numbers
     :hook ((prog-mode text-mode) . highlight-numbers-mode))
-    
+
   (use-package hl-todo
     :hook (prog-mode . hl-todo-mode))
+
+  ;; highlight the symbol under point
+  (use-package highlight-symbol
+    :hook (prog-mode . highlight-symbol-mode))
 #+END_SRC
 * Smartparens
 #+BEGIN_SRC emacs-lisp :results none
@@ -659,12 +663,12 @@ Mostly taken from Doom Emacs
   (use-package org
     :straight (:type built-in)
     :general
+    (my-leader-def
+      "c" (general-simulate-key "C-c"))
     ("C-c l" '(org-store-link :which-key "store link") ;; TODO vimify mappings
      "C-c c" '(org-capture    :which-key "capture")
      "C-c s" '(org-sort       :which-key "sort")
      "C-c a" '(org-agenda     :which-key "org agenda"))
-    (my-leader-def
-      "oa"    '(org-agenda :which-key "org agenda"))
     :custom
     (org-agenda-files '("~/org"))
     (org-directory "~/org")
@@ -723,9 +727,9 @@ Mostly taken from Doom Emacs
       "M-H" 'org-shiftleft
       "M-J" 'org-shiftdown
       "M-K" 'org-shiftup
-      "C-O" 'my/org-insert-subheading
+      "C-M-o" 'my/org-insert-subheading
       "C-o" (lambda () (interactive) (evil-org-org-insert-heading-respect-content-below))
-      "C-M-o" 'my/org-insert-heading-above
+      "C-O" 'my/org-insert-heading-above
       "M-o" 'evil-org-org-insert-todo-heading-respect-content-below
       "M-O" 'my/org-insert-todo-above)
     (require 'evil-org-agenda) ;; TODO add org agenda hook
@@ -754,7 +758,10 @@ Mostly taken from Doom Emacs
     :custom
     (undo-limit 10000)
     (undo-tree-auto-save-history t)
-    (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
+    (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+    :general
+    (my-leader-def
+      "fu" 'undo-tree-visualize))
 
   (use-package format-all
     :general
@@ -809,13 +816,10 @@ Mostly taken from Doom Emacs
 
   (use-package keyfreq
     :defer t
-    :custom
-    (keyfreq-excluded-commands
-     '(org-self-insert-command
-       self-insert-command
-       evil-next-line
-       evil-previous-line
-       execute-extended-command))
+    ;; :custom
+    ;; (keyfreq-excluded-commands
+    ;;  '(org-self-insert-command
+    ;;    self-insert-command))
     :general
     (my-leader-def
       "fc" '(keyfreq-show :which-key "show command frequency"))
@@ -880,7 +884,8 @@ Mostly taken from Doom Emacs
     "b"  '(:ignore t                :which-key "Buffers")
     "bs" '(save-buffer              :which-key "write file")
     "bd" '(kill-this-buffer         :which-key "delete buffer")
-    "bq" 'save-and-kill-buffer)
+    "bq" 'save-and-kill-buffer
+    "bl" 'switch-to-prev-buffer)
 
   (general-def 'normal
     "gs" 'my/split-line
