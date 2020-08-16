@@ -1,6 +1,6 @@
 * Early-Init
  #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
-      ;;; -*- lexical-binding: t -*-
+   ;;; -*- lexical-binding: t -*-
    (setq gc-cons-threshold most-positive-fixnum)
 
    (setq package-enable-at-startup nil)
@@ -67,36 +67,12 @@
       (message "Emacs startup time: %.2f seconds."
                  (time-to-seconds (time-since emacs-load-start-time))))
 #+END_SRC
-* Auto-Tangle
-Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
-#+BEGIN_SRC emacs-lisp :results none
-  ;;; -*- lexical-binding: t -*-
-  (defun tangle-config ()
-    "Export code blocks from the literate config file
-    asynchronously."
-    (interactive)
-    (let* ((tangle-config (format "(org-babel-tangle nil \"%s\")" config-el))
-           (process (start-process
-                     "tangle-config" nil
-                     "emacs" config-org "--batch" "--eval" tangle-config))
-           (filter (defun echo-process-output (process output)
-                     "Echo process output."
-                     (message (s-trim output)))))
-      (set-process-filter process filter)))
-
-  (defun add-local-hook (hook function)
-    (add-hook hook function nil t))
-
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (if (equal (buffer-file-name) config-org)
-                  (add-local-hook 'after-save-hook 'tangle-config))))
-#+END_SRC
 * Initial Settings
   
 Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
+  ;;; -*- lexical-binding: t -*-
   (setq gc-cons-threshold most-positive-fixnum
         gc-cons-percentage 0.6)
 
@@ -160,7 +136,6 @@ Mostly taken from Doom Emacs
               (setq gc-cons-threshold 16777216
                     gc-cons-percentage 0.1
                     file-name-handler-alist default-file-name-handler-alist)))
-                    ;; gcmh-idle-delay 5)))
 
   ;; Disable bidirectional text rendering for performance
   (setq-default bidi-display-reordering 'left-to-right
@@ -170,6 +145,30 @@ Mostly taken from Doom Emacs
 
   ;; Keeping ~/.emacs.d organized
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+#+END_SRC
+* Auto-Tangle
+Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
+#+BEGIN_SRC emacs-lisp :results none
+  (defun tangle-config ()
+    "Export code blocks from the literate config file
+    asynchronously."
+    (interactive)
+    (let* ((tangle-config (format "(org-babel-tangle nil \"%s\")" config-el))
+           (process (start-process
+                     "tangle-config" nil
+                     "emacs" config-org "--batch" "--eval" tangle-config))
+           (filter (defun echo-process-output (process output)
+                     "Echo process output."
+                     (message (s-trim output)))))
+      (set-process-filter process filter)))
+
+  (defun add-local-hook (hook function)
+    (add-hook hook function nil t))
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (if (equal (buffer-file-name) config-org)
+                  (add-local-hook 'after-save-hook 'tangle-config))))
 #+END_SRC
 * Keymap Management
 #+BEGIN_SRC emacs-lisp :results none
@@ -805,13 +804,14 @@ Mostly taken from Doom Emacs
 
   ;; Garbage collect in idle time
   (use-package gcmh
-    :hook (after-init . gcmh-mode)
+    ;; :hook (after-init . gcmh-mode)
     :commands gcmh-idle-garbage-collect
     :diminish
     :custom
     (gcmh-idle-delay 10)
     (gcmh-high-cons-threshold 16777216)
     :config
+    (gcmh-mode)
     (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
   (use-package keyfreq
