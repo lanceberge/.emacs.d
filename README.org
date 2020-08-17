@@ -68,34 +68,32 @@
                  (time-to-seconds (time-since emacs-load-start-time))))
 #+END_SRC
 * Initial Settings
-  
+
 Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
   ;;; -*- lexical-binding: t -*-
+
+
   (setq gc-cons-threshold most-positive-fixnum
-        gc-cons-percentage 0.6)
+        gc-cons-percentage 0.6
 
-  (setq load-prefer-newer noninteractive
+        load-prefer-newer noninteractive
+        locale-coding-system 'utf-8;
+        message-log-max 5000 ; longer number of max messages
+        ring-bell-function 'ignore
 
-        ;; Cleaner startup
+        ;; startup.el settings
         inhibit-startup-screen t
         inhibit-startup-message t
         inhibit-startup-echo-area-message user-login-name
         inhibit-default-init t
         initial-scratch-message nil
         initial-major-mode 'fundamental-mode ; start in an empty mode
-
-        locale-coding-system 'utf-8;
-        ad-redefinition-action 'accept ; disable warnings from legacy advice system
-        message-log-max 5000 ; longer number of max messages
-        help-window-select t ; bring point to help menus when you open them
         command-line-x-option-alist nil ; less command line options to process on startup
-        ring-bell-function 'ignore
+        user-mail-address "bergeron.lance6@gmail.com"
 
         kill-buffer-query-functions nil
-        idle-update-delay 1.0 ; slow down how often emacs updates its ui
-        auto-mode-case-fold nil
         inhibit-compacting-font-caches t ; inhibit font compacting
         highlight-nonselected-windows nil
         ffap-machine-p-known 'reject ; don't ping things that look like domain names
@@ -104,7 +102,6 @@ Mostly taken from Doom Emacs
 
         ;; User Settings
         user-full-name "Lance Bergeron"
-        user-mail-address "bergeron.lance6@gmail.com"
 
         ;; Scrolling
         scroll-conservatively 1000
@@ -112,21 +109,12 @@ Mostly taken from Doom Emacs
         scroll-step 1
 
         ;; General
-        delete-old-versions t
         indent-tabs-mode nil
-        show-trailing-whitespace t
-        apropos-do-all t ; more extensive apropos searches
-        make-backup-files nil
-        auto-save-default nil
-        create-lockfiles nil
-        kill-do-not-save-duplicates t) ; no duplicates in kill ring
+        apropos-do-all t) ; more extensive apropos searches
 
   (advice-add #'tty-run-terminal-initialization :override #'ignore)
 
-  (fset 'yes-or-no-p 'y-or-n-p)                ; y or n prompt, not yes or no
-
-  (menu-bar-display-line-numbers-mode 'visual) ; relative line numbers
-  (global-display-line-numbers-mode 1)         ; always show line numbers
+  (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
 
   (defvar default-file-name-handler-alist file-name-handler-alist)
   (setq file-name-handler-alist nil)
@@ -147,7 +135,9 @@ Mostly taken from Doom Emacs
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 #+END_SRC
 * Auto-Tangle
+
 Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
+
 #+BEGIN_SRC emacs-lisp :results none
   (defun tangle-config ()
     "Export code blocks from the literate config file
@@ -204,12 +194,29 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :defer t)
 
   (use-package diminish
-    :demand t
-    :config
-    (diminish 'eldoc-mode))
+    :demand t)
 #+END_SRC
 * Built-in Packages
 #+BEGIN_SRC emacs-lisp :results none
+  (use-package simple
+    :straight (:type built-in)
+    :custom
+    (idle-update-delay 1.0) ; slow down how often emacs updates its ui
+    (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
+
+  (use-package advice
+    :straight (:type built-in)
+    :custom (ad-redefinition-action 'accept)) ; disable warnings from legacy advice system
+
+  (use-package files
+    :straight (:type built-in)
+    :custom
+    (make-backup-files nil)
+    (create-lockfiles nil)
+    (auto-mode-case-fold nil)
+    (delete-old-versions t)
+    (auto-save-default nil))
+
   (use-package paren
     :straight (:type built-in)
     :hook (prog-mode . show-paren-mode)
@@ -222,6 +229,24 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     (my-leader-def
       "-"  '(dired-jump :which-key "open dired")
       "fd" '(dired      :which-key "navigate to a directory")))
+
+  (use-package saveplace
+    :straight (:type built-in)
+    :hook (after-init . save-place-mode))
+
+  (use-package display-line-numbers
+    :straight (:type built-in)
+    :hook (after-init . global-display-line-numbers-mode)
+    :config
+    (menu-bar-display-line-numbers-mode 'visual)) ; relative line numbers
+
+  (use-package whitespace
+    :straight (:type built-in)
+    :hook (before-save . whitespace-cleanup))
+
+  (use-package eldoc
+    :straight (:type built-in)
+    :diminish)
 #+END_SRC
 * Evil Mode
 #+BEGIN_SRC emacs-lisp :results none
@@ -249,8 +274,6 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
     ('(normal visual motion)
      ";" 'evil-ex ; switch ; and :
-     ;; "M-;" 'evil-repeat-find-char
-     ;; "M-," 'evil-repeat-find-char-reverse
      "H" 'evil-first-non-blank
      "L" 'evil-end-of-line)
 
@@ -261,7 +284,6 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
     (my-leader-def
       "ft" '(evil-avy-goto-char-timer           :which-key "avy timer")
-      ;; "bl" '(evil-switch-to-windows-last-buffer :which-key "switch to last buffer")
       "bS" '(evil-write-all                     :which-key "write all buffers"))
 
     :config
@@ -336,6 +358,31 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   ;; exchange text selected with gx
   (use-package evil-exchange
     :hook ((prog-mode text-mode) . evil-exchange-install))
+
+  (use-package evil-anzu
+    :after evil)
+
+  (use-package evil-owl
+    :after evil
+    :diminish
+    :config
+    (evil-owl-mode))
+
+  (use-package evil-textobj-anyblock
+    :general
+    ('evil-inner-text-objects-map "c" 'evil-textobj-anyblock-inner-block)
+    ('evil-outer-text-objects-map "c" 'evil-textobj-anyblock-a-block))
+
+  (use-package evil-args
+    :after evil
+    :general
+    ('evil-inner-text-objects-map "a" 'evil-inner-arg)
+    ('evil-outer-text-objects-map "a" 'evil-outer-arg))
+
+  (use-package evil-indent-plus
+    :after evil
+    :config
+    (evil-indent-plus-default-bindings))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -496,8 +543,6 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :general
     (my-leader-def
       "p" '(projectile-command-map :which-key "Projectile")))
-  ;; :config
-  ;; (projectile-mode +1))
 
   (use-package counsel-projectile
     :after (counsel projectile)
@@ -568,6 +613,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
   ;; highlight the symbol under point
   (use-package highlight-symbol
+    :diminish
     :hook (prog-mode . highlight-symbol-mode))
 #+END_SRC
 * Smartparens
@@ -673,12 +719,12 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     (org-directory "~/org")
     (org-default-notes-file (concat org-directory "/notes.org"))
     (org-confirm-babel-evaluate nil)
-    (org-src-block-faces nil)
     (org-startup-folded t)
     (org-M-RET-may-split-line nil)
     (org-log-done 'time)
     (org-tag-alist '(("@school" . ?s) ("@personal" . ?p)))
-    (org-src-window-setup 'current-window)
+    ;; (org-src-window-setup 'current-window)
+    ;; (org-src-block-faces nil)
     (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
     :config
     (setq org-fontify-done-headline t)
@@ -698,6 +744,13 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
      'org-babel-load-languages
      '((shell   . t)
        (haskell . t))))
+
+  (use-package org-src
+    :straight (:type built-in)
+    :diminish
+    :custom
+    (org-src-window-setup 'current-window)
+    (org-src-block-faces nil))
 
   (use-package org-bullets
     :hook (org-mode . org-bullets-mode))
@@ -853,7 +906,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     (interactive)
     (save-buffer)
     (kill-this-buffer))
-    
+
   ;;;###autoload
   (defun my/split-line ()
     (interactive)
@@ -883,7 +936,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     "b"  '(:ignore t                :which-key "Buffers")
     "bs" '(save-buffer              :which-key "write file")
     "bd" '(kill-this-buffer         :which-key "delete buffer")
-    "bq" 'save-and-kill-buffer
+    "bq" 'my/save-and-kill-buffer
     "bl" 'switch-to-prev-buffer)
 
   (general-def 'normal
