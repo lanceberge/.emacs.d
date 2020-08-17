@@ -200,21 +200,23 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 #+BEGIN_SRC emacs-lisp :results none
   (use-package simple
     :straight (:type built-in)
+    :defer t
     :custom
     (idle-update-delay 1.0) ; slow down how often emacs updates its ui
     (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
 
   (use-package advice
     :straight (:type built-in)
+    :defer t
     :custom (ad-redefinition-action 'accept)) ; disable warnings from legacy advice system
 
   (use-package files
     :straight (:type built-in)
+    :defer t
     :custom
     (make-backup-files nil)
     (create-lockfiles nil)
     (auto-mode-case-fold nil)
-    (delete-old-versions t)
     (auto-save-default nil))
 
   (use-package paren
@@ -227,7 +229,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :straight (:type built-in)
     :general
     (my-leader-def
-      "-"  '(dired-jump :which-key "open dired")
+      ","  '(dired-jump :which-key "open dired")
       "fd" '(dired      :which-key "navigate to a directory")))
 
   (use-package saveplace
@@ -246,6 +248,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
   (use-package eldoc
     :straight (:type built-in)
+    :defer t
     :diminish)
 #+END_SRC
 * Evil Mode
@@ -284,7 +287,8 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
     (my-leader-def
       "ft" '(evil-avy-goto-char-timer           :which-key "avy timer")
-      "bS" '(evil-write-all                     :which-key "write all buffers"))
+      "bS" '(evil-write-all                     :which-key "write all buffers")
+      "bl" '(evil-switch-to-windows-last-buffer :which-key "last buffer"))
 
     :config
     (general-def 'evil-window-map
@@ -360,11 +364,13 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :hook ((prog-mode text-mode) . evil-exchange-install))
 
   (use-package evil-anzu
+    :defer t
     :after evil)
 
   (use-package evil-owl
     :after evil
     :diminish
+    :defer t
     :config
     (evil-owl-mode))
 
@@ -381,6 +387,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
   (use-package evil-indent-plus
     :after evil
+    :defer t
     :config
     (evil-indent-plus-default-bindings))
 #+END_SRC
@@ -546,6 +553,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
   (use-package counsel-projectile
     :after (counsel projectile)
+    :defer t
     :diminish
     :config
     (counsel-projectile-mode))
@@ -708,9 +716,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   (use-package org
     :straight (:type built-in)
     :general
-    (my-leader-def
-      "c" (general-simulate-key "C-c"))
-    ("C-c l" '(org-store-link :which-key "store link") ;; TODO vimify mappings
+    ("C-c l" '(org-store-link :which-key "store link")
      "C-c c" '(org-capture    :which-key "capture")
      "C-c s" '(org-sort       :which-key "sort")
      "C-c a" '(org-agenda     :which-key "org agenda"))
@@ -747,6 +753,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
   (use-package org-src
     :straight (:type built-in)
+    :defer t
     :diminish
     :custom
     (org-src-window-setup 'current-window)
@@ -761,6 +768,16 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :diminish
     :hook (org-mode . evil-org-mode)
     :general
+    (my-localleader-def
+      "c"   '(:ignore t :which-key "org")
+      "co"   (general-simulate-key "C-c '" :which-key "edit src block in its major mode")
+      "cl"  '(org-store-link :which-key "store link") ;; TODO vimify mappings
+      "c,l" '(org-insert-link :which-key "insert link")
+      "cc"  '(org-capture    :which-key "capture")
+      "cs"  '(org-sort       :which-key "sort")
+      "c,s" '(org-schedule :which-key "schedule")
+      "ca"  '(org-agenda     :which-key "org agenda")
+      "ce"  '(org-ctrl-c-ctrl-c :which-key "execute"))
     ('org-read-date-minibuffer-local-map
      "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
      "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
@@ -773,17 +790,17 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :config
     (evil-org-set-key-theme)
     (general-def '(normal insert) evil-org-mode-map
-      "M-h" 'org-metaleft
-      "M-l" 'org-metaright
-      "M-L" 'org-shiftright
-      "M-H" 'org-shiftleft
-      "M-J" 'org-shiftdown
-      "M-K" 'org-shiftup
+      "M-h"   'org-metaleft
+      "M-l"   'org-metaright
+      "M-L"   'org-shiftright
+      "M-H"   'org-shiftleft
+      "M-J"   'org-shiftdown
+      "M-K"   'org-shiftup
       "C-M-o" 'my/org-insert-subheading
-      "C-o" (lambda () (interactive) (evil-org-org-insert-heading-respect-content-below))
-      "C-O" 'my/org-insert-heading-above
-      "M-o" 'evil-org-org-insert-todo-heading-respect-content-below
-      "M-O" 'my/org-insert-todo-above)
+      "C-S-o" 'my/org-insert-heading-above
+      "C-o"   'evil-org-org-insert-heading-respect-content-below
+      "M-o"   'evil-org-org-insert-todo-heading-respect-content-below
+      "M-O"   'my/org-insert-todo-above)
     (require 'evil-org-agenda) ;; TODO add org agenda hook
     (evil-org-agenda-set-keys))
 #+END_SRC
@@ -792,7 +809,8 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   ;; easily navigate windows with prefix M-i
   (use-package ace-window
     :general
-    ("M-i" 'ace-window))
+    (my-localleader-def "w" 'ace-window))
+    ;; ("M-i" 'ace-window))
 
   (use-package golden-ratio
     :diminish
@@ -841,6 +859,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     (restart-emacs-restore-frames t)) ; Restore frames on restart
 
   (use-package smex
+    :defer t
     :after ivy)
 
   (use-package helpful
@@ -936,8 +955,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     "b"  '(:ignore t                :which-key "Buffers")
     "bs" '(save-buffer              :which-key "write file")
     "bd" '(kill-this-buffer         :which-key "delete buffer")
-    "bq" 'my/save-and-kill-buffer
-    "bl" 'switch-to-prev-buffer)
+    "bq" 'my/save-and-kill-buffer)
 
   (general-def 'normal
     "gs" 'my/split-line
