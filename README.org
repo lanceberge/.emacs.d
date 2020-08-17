@@ -14,7 +14,9 @@
          menu-bar-mode nil
          tool-bar-mode nil
          scroll-bar-mode nil
-         frame-inhibit-implied-resize t)
+         frame-inhibit-implied-resize t
+         inhibit-default-init t
+         site-run-file nil)
 
    (set-face-attribute 'default nil
                        :family "DejaVu Sans Mono"
@@ -73,9 +75,10 @@ Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
   ;;; -*- lexical-binding: t -*-
+  (defvar default-file-name-handler-alist file-name-handler-alist)
 
-
-  (setq gc-cons-threshold most-positive-fixnum
+  (setq file-name-handler-alist nil
+        gc-cons-threshold most-positive-fixnum
         gc-cons-percentage 0.6
 
         load-prefer-newer noninteractive
@@ -87,7 +90,7 @@ Mostly taken from Doom Emacs
         inhibit-startup-screen t
         inhibit-startup-message t
         inhibit-startup-echo-area-message user-login-name
-        inhibit-default-init t
+        ;; inhibit-default-init t
         initial-scratch-message nil
         initial-major-mode 'fundamental-mode ; start in an empty mode
         command-line-x-option-alist nil ; less command line options to process on startup
@@ -116,8 +119,6 @@ Mostly taken from Doom Emacs
 
   (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
 
-  (defvar default-file-name-handler-alist file-name-handler-alist)
-  (setq file-name-handler-alist nil)
 
   (add-hook 'emacs-startup-hook
             (lambda ()
@@ -177,7 +178,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
     (my-leader-def
       "f"  '(:ignore t                    :which-key "Find")
-      "fm" '(general-describe-keybindings :which-key "list keybindings")))
+      "fm" #'(general-describe-keybindings :which-key "list keybindings")))
 
   (use-package which-key ; show keybindings following when a prefix is pressed
     :diminish
@@ -228,9 +229,10 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   (use-package dired
     :straight (:type built-in)
     :general
+    ('normal
+     "-"  #'(dired-jump :which-key "open dired"))
     (my-leader-def
-      ","  '(dired-jump :which-key "open dired")
-      "fd" '(dired      :which-key "navigate to a directory")))
+      "fd" #'(dired      :which-key "navigate to a directory")))
 
   (use-package saveplace
     :straight (:type built-in)
@@ -257,7 +259,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :after general
     :demand t
     :diminish
-    :hook (after-init . evil-mode)
+    ;; :hook (after-init . evil-mode)
     :commands
     (evil-quit
      evil-save-modified-and-close)
@@ -272,28 +274,29 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
     ('normal
-     "zR" 'evil-open-folds
-     "zM" 'evil-close-folds)
+     "zR" #'evil-open-folds
+     "zM" #'evil-close-folds)
 
     ('(normal visual motion)
-     ";" 'evil-ex ; switch ; and :
-     "H" 'evil-first-non-blank
-     "L" 'evil-end-of-line)
+     ";" #'evil-ex ; switch ; and :
+     "H" #'evil-first-non-blank
+     "L" #'evil-end-of-line)
 
     ;; Evil-avy
     ('normal :prefix "g"
-     "o" '(evil-avy-goto-char-2     :which-key "2-chars")
-     "O" '(evil-avy-goto-char-timer :which-key "timer"))
+     "o" #'(evil-avy-goto-char-2     :which-key "2-chars")
+     "O" #'(evil-avy-goto-char-timer :which-key "timer"))
 
     (my-leader-def
-      "ft" '(evil-avy-goto-char-timer           :which-key "avy timer")
-      "bS" '(evil-write-all                     :which-key "write all buffers")
-      "bl" '(evil-switch-to-windows-last-buffer :which-key "last buffer"))
+      "ft" #'(evil-avy-goto-char-timer           :which-key "avy timer")
+      "bS" #'(evil-write-all                     :which-key "write all buffers")
+      "bl" #'(evil-switch-to-windows-last-buffer :which-key "last buffer"))
 
     :config
+    (evil-mode)
     (general-def 'evil-window-map
-      "d" 'evil-quit ; delete window
-      "q" 'evil-save-modified-and-close)) ; quit and save window
+      "d" #'evil-quit ; delete window
+      "q" #'evil-save-modified-and-close)) ; quit and save window
 #+END_SRC
 * Evil-Related
 ** Evil-Collection
@@ -328,8 +331,8 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :config
     (evil-snipe-local-mode)
     (general-def 'motion
-      "M-;" 'evil-snipe-repeat
-      "M-," 'evil-snipe-repeat-reverse))
+      "M-;" #'evil-snipe-repeat
+      "M-," #'evil-snipe-repeat-reverse))
 
   ;; s as an operator for surrounding
   (use-package evil-surround
@@ -346,8 +349,8 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :general
     (my-localleader-def
       "n"  '(:ignore t              :which-key "Evil-Numbers")
-      "nu" '(evil-numbers/inc-at-pt :which-key "increment")
-      "nd" '(evil-numbers/dec-at-pt :which-key "decrement")))
+      "nu" #'(evil-numbers/inc-at-pt :which-key "increment")
+      "nd" #'(evil-numbers/dec-at-pt :which-key "decrement")))
 
   ;; gl as an operator to left-align, gL to right-align
   (use-package evil-lion
@@ -361,7 +364,8 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
   ;; exchange text selected with gx
   (use-package evil-exchange
-    :hook ((prog-mode text-mode) . evil-exchange-install))
+    :after evil
+    :config (evil-exchange-install))
 
   (use-package evil-anzu
     :defer t
@@ -376,18 +380,17 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
   (use-package evil-textobj-anyblock
     :general
-    ('evil-inner-text-objects-map "c" 'evil-textobj-anyblock-inner-block)
-    ('evil-outer-text-objects-map "c" 'evil-textobj-anyblock-a-block))
+    ('evil-inner-text-objects-map "c" #'evil-textobj-anyblock-inner-block)
+    ('evil-outer-text-objects-map "c" #'evil-textobj-anyblock-a-block))
 
   (use-package evil-args
     :after evil
     :general
-    ('evil-inner-text-objects-map "a" 'evil-inner-arg)
-    ('evil-outer-text-objects-map "a" 'evil-outer-arg))
+    ('evil-inner-text-objects-map "a" #'evil-inner-arg)
+    ('evil-outer-text-objects-map "a" #'evil-outer-arg))
 
   (use-package evil-indent-plus
     :after evil
-    :defer t
     :config
     (evil-indent-plus-default-bindings))
 #+END_SRC
@@ -409,12 +412,12 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :hook ((prog-mode text-mode) . origami-mode)
     :general
     ('normal
-     "zm" 'origami-close-node-recursively
-     "zr" 'origami-open-node-recursively
+     "zm" #'origami-close-node-recursively
+     "zr" #'origami-open-node-recursively
      ;; "zM" 'origami-close-all-nodes
      ;; "zR" 'origami-open-all-nodes
-     "zj" 'origami-next-fold
-     "zk" 'origami-previous-fold))
+     "zj" #'origami-next-fold
+     "zk" #'origami-previous-fold))
 
   ;; multiple cursors
   (use-package evil-mc
@@ -449,24 +452,24 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     (counsel-describe-variable-function #'helpful-variable)
     :general
     (my-leader-def
-      "."   '(counsel-find-file      :which-key "find file")
-      "SPC" '(ivy-switch-buffer      :which-key "switch buffer")
-      "fr"  '(counsel-recentf        :which-key "find recent files")
-      "fi"  '(counsel-imenu          :which-key "imenu")
-      "fg"  '(counsel-git            :which-key "git files")
-      "fG"  '(counsel-git-grep       :which-key "git grep")
-      "ff"  '(counsel-rg             :which-key "ripgrep"))
+      "."   #'(counsel-find-file      :which-key "find file")
+      "SPC" #'(ivy-switch-buffer      :which-key "switch buffer")
+      "fr"  #'(counsel-recentf        :which-key "find recent files")
+      "fi"  #'(counsel-imenu          :which-key "imenu")
+      "fg"  #'(counsel-git            :which-key "git files")
+      "fG"  #'(counsel-git-grep       :which-key "git grep")
+      "ff"  #'(counsel-rg             :which-key "ripgrep"))
     :config
     (counsel-mode))
 
   (use-package swiper
     :general
     ('normal
-     [remap evil-search-forward]  'swiper
-     [remap evil-search-backward] 'swiper-backward)
+     [remap evil-search-forward]  #'swiper
+     [remap evil-search-backward] #'swiper-backward)
     (my-leader-def
-      "fb" '(swiper-multi :which-key "swiper in buffer")
-      "fB" '(swiper-all   :which-key "swiper in all buffers")))
+      "fb" #'(swiper-multi :which-key "swiper in buffer")
+      "fB" #'(swiper-all   :which-key "swiper in all buffers")))
 #+END_SRC
 * Vterm
 #+BEGIN_SRC emacs-lisp :results none
@@ -476,8 +479,8 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :general
     (my-leader-def
       "o"   '(:ignore t          :which-key "Open")
-      "ot"  '(vterm              :which-key "open vterm")
-      "ovt" '(vterm-other-window :which-key "open vterm in vsplit")))
+      "ot"  #'(vterm              :which-key "open vterm")
+      "ovt" #'(vterm-other-window :which-key "open vterm in vsplit")))
 #+END_SRC
 * Yasnippet
 #+BEGIN_SRC emacs-lisp :results none
@@ -488,9 +491,9 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :general
     (my-localleader-def
       "y"  '(:ignore t           :which-key "Yasnippet")
-      "yi" '(yas-insert-snippet  :which-key "insert snippet")
-      "yn" '(yas-new-snippet     :which-key "new snippet")
-      "yl" '(yas-describe-tables :which-key "list snippets")))
+      "yi" #'(yas-insert-snippet  :which-key "insert snippet")
+      "yn" #'(yas-new-snippet     :which-key "new snippet")
+      "yl" #'(yas-describe-tables :which-key "list snippets")))
 
   (use-package yasnippet-snippets
     :defer t
@@ -499,8 +502,8 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   (use-package auto-yasnippet
     :general
     (my-localleader-def
-      "yc" '(aya-create :which-key "create aya snippet")
-      "ye" '(aya-expand :which-key "expand aya snippet")))
+      "yc" #'(aya-create :which-key "create aya snippet")
+      "ye" #'(aya-expand :which-key "expand aya snippet")))
 #+END_SRC
 * Magit
 #+BEGIN_SRC emacs-lisp :results none
@@ -511,27 +514,27 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :general
     (my-leader-def ;; TODO unmap some of these
       "g"   '(:ignore t                  :which-key "Git")
-      "gs"  '(magit-status               :which-key "status")
-      "gb"  '(magit-branch-checkout      :which-key "checkout branch")
-      ;; "gB"  '(magit-blame-addition       :which-key "blame")
-      ;; "gc"  '(magit-clone                :which-key "clone")
-      ;; "gd"  '(magit-file-delete          :which-key "delete file")
-      ;; "gF"  '(magit-fetch                :which-key "fetch")
-      ;; "gG"  '(magit-status-here          :which-key "status here")
-      "gl"  '(magit-log                  :which-key "log")
-      "gS"  '(magit-stage-file           :which-key "stage file")
-      "gU"  '(magit-unstage-file         :which-key "unstage file")
+      "gs"  #'(magit-status               :which-key "status")
+      "gb"  #'(magit-branch-checkout      :which-key "checkout branch")
+      ;; "gB"  #'(magit-blame-addition       :which-key "blame")
+      ;; "gc"  #'(magit-clone                :which-key "clone")
+      ;; "gd"  #'(magit-file-delete          :which-key "delete file")
+      ;; "gF"  #'(magit-fetch                :which-key "fetch")
+      ;; "gG"  #'(magit-status-here          :which-key "status here")
+      "gl"  #'(magit-log                  :which-key "log")
+      "gS"  #'(magit-stage-file           :which-key "stage file")
+      "gU"  #'(magit-unstage-file         :which-key "unstage file")
       "gn"  '(:ignore t                  :which-key "New")
-      "gnb" '(magit-branch-and-checkout  :which-key "branch")
-      "gnc" '(magit-commit-create        :which-key "commit")
-      "gnf" '(magit-commit-fixup         :which-key "fixup commit")
-      ;; "gnd" '(magit-init                 :which-key "init")
+      "gnb" #'(magit-branch-and-checkout  :which-key "branch")
+      "gnc" #'(magit-commit-create        :which-key "commit")
+      "gnf" #'(magit-commit-fixup         :which-key "fixup commit")
+      ;; "gnd" #'(magit-init                 :which-key "init")
       "gf"  '(:ignore t                  :which-key "Find")
-      "gfc" '(magit-show-commit          :which-key "show commit")
-      "gff" '(magit-find-file            :which-key "file")
-      "gfg" '(magit-find-git-config-file :which-key "git config file")))
-      ;; "gfr" '(magit-list-repositories    :which-key "repository")
-      ;; "gfs" '(magit-list-submodules)     :which-key "submodule"))
+      "gfc" #'(magit-show-commit          :which-key "show commit")
+      "gff" #'(magit-find-file            :which-key "file")
+      "gfg" #'(magit-find-git-config-file :which-key "git config file")))
+      ;; "gfr" #'(magit-list-repositories    :which-key "repository")
+      ;; "gfs" #'(magit-list-submodules)     :which-key "submodule"))
 
   (use-package evil-magit
     :after magit
@@ -549,7 +552,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     (projectile-project-search-path '("~/code/" "~/.emacs.d/"))
     :general
     (my-leader-def
-      "p" '(projectile-command-map :which-key "Projectile")))
+      "p" #'(projectile-command-map :which-key "Projectile")))
 
   (use-package counsel-projectile
     :after (counsel projectile)
@@ -600,10 +603,10 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :hook (lsp-mode . flycheck-mode)
     :general
     ('normal
-     "[q" 'flycheck-previous-error
-     "]q" 'flycheck-next-error)
+     "[q" #'flycheck-previous-error
+     "]q" #'flycheck-next-error)
     (my-leader-def
-      "fe" '(flycheck-list-errors :which-key "list errors"))
+      "fe" #'(flycheck-list-errors :which-key "list errors"))
     :config
     (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 #+END_SRC
@@ -703,12 +706,12 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :diminish
     :general
     ('normal
-     ">" (general-key-dispatch 'evil-shift-right
-           ")" 'sp-forward-slurp-sexp
-           "(" 'sp-backward-barf-sexp)
-     "<" (general-key-dispatch 'evil-shift-left
-           ")" 'sp-forward-barf-sexp
-           "(" 'sp-backward-barf-sexp)))
+     ">" (general-key-dispatch #'evil-shift-right
+           ")" #'sp-forward-slurp-sexp
+           "(" #'sp-backward-barf-sexp)
+     "<" (general-key-dispatch #'evil-shift-left
+           ")" #'sp-forward-barf-sexp
+           "(" #'sp-backward-barf-sexp)))
 #+END_SRC
 * Org
 ** Org
@@ -716,10 +719,10 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   (use-package org
     :straight (:type built-in)
     :general
-    ("C-c l" '(org-store-link :which-key "store link")
-     "C-c c" '(org-capture    :which-key "capture")
-     "C-c s" '(org-sort       :which-key "sort")
-     "C-c a" '(org-agenda     :which-key "org agenda"))
+    ("C-c l" #'(org-store-link :which-key "store link")
+     "C-c c" #'(org-capture    :which-key "capture")
+     "C-c s" #'(org-sort       :which-key "sort")
+     "C-c a" #'(org-agenda     :which-key "org agenda"))
     :custom
     (org-agenda-files '("~/org"))
     (org-directory "~/org")
@@ -769,15 +772,16 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :hook (org-mode . evil-org-mode)
     :general
     (my-localleader-def
-      "c"   '(:ignore t :which-key "org")
+      "c"   '(:ignore t                    :which-key "org")
       "co"   (general-simulate-key "C-c '" :which-key "edit src block in its major mode")
-      "cl"  '(org-store-link :which-key "store link") ;; TODO vimify mappings
-      "c,l" '(org-insert-link :which-key "insert link")
-      "cc"  '(org-capture    :which-key "capture")
-      "cs"  '(org-sort       :which-key "sort")
-      "c,s" '(org-schedule :which-key "schedule")
-      "ca"  '(org-agenda     :which-key "org agenda")
-      "ce"  '(org-ctrl-c-ctrl-c :which-key "execute"))
+      "cl"  #'(org-store-link               :which-key "store link") ;; TODO vimify mappings
+      "c,l" #'(org-insert-link              :which-key "insert link")
+      "cc"  #'(org-capture                  :which-key "capture")
+      "cs"  #'(org-sort                     :which-key "sort")
+      "c,s" #'(org-schedule                 :which-key "schedule")
+      "ca"  #'(org-agenda                   :which-key "org agenda")
+      "ct"  #'(org-todo                     :which-key "todo")
+      "ce"  #'(org-ctrl-c-ctrl-c            :which-key "execute"))
     ('org-read-date-minibuffer-local-map
      "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
      "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
@@ -790,17 +794,17 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :config
     (evil-org-set-key-theme)
     (general-def '(normal insert) evil-org-mode-map
-      "M-h"   'org-metaleft
-      "M-l"   'org-metaright
-      "M-L"   'org-shiftright
-      "M-H"   'org-shiftleft
-      "M-J"   'org-shiftdown
-      "M-K"   'org-shiftup
-      "C-M-o" 'my/org-insert-subheading
-      "C-S-o" 'my/org-insert-heading-above
-      "C-o"   'evil-org-org-insert-heading-respect-content-below
-      "M-o"   'evil-org-org-insert-todo-heading-respect-content-below
-      "M-O"   'my/org-insert-todo-above)
+      "M-h"   #'org-metaleft
+      "M-l"   #'org-metaright
+      "M-L"   #'org-shiftright
+      "M-H"   #'org-shiftleft
+      "M-J"   #'org-shiftdown
+      "M-K"   #'org-shiftup
+      "C-M-o" #'my/org-insert-subheading
+      "C-S-o" #'my/org-insert-heading-above
+      "C-o"   #'evil-org-org-insert-heading-respect-content-below
+      "M-o"   #'evil-org-org-insert-todo-heading-respect-content-below
+      "M-O"   #'my/org-insert-todo-above)
     (require 'evil-org-agenda) ;; TODO add org agenda hook
     (evil-org-agenda-set-keys))
 #+END_SRC
@@ -809,8 +813,8 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   ;; easily navigate windows with prefix M-i
   (use-package ace-window
     :general
-    (my-localleader-def "w" 'ace-window))
-    ;; ("M-i" 'ace-window))
+    ;; (my-localleader-def "w" 'ace-window))
+    ("M-i" #'ace-window))
 
   (use-package golden-ratio
     :diminish
@@ -831,22 +835,22 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
     :general
     (my-leader-def
-      "fu" 'undo-tree-visualize))
+      "fu" #'undo-tree-visualize))
 
   (use-package format-all
     :general
     (my-leader-def
-      "=" '(format-all-buffer :which-key "format")))
+      "=" #'(format-all-buffer :which-key "format")))
 
   (use-package expand-region
     :general
-    ("M--" 'er/expand-region))
+    ("M--" #'er/expand-region))
 
   (use-package move-text
     :general
     ('normal
-     "]e" 'move-text-down
-     "[e" 'move-text-up))
+     "]e" #'move-text-down
+     "[e" #'move-text-up))
 #+END_SRC
 ** System
 #+BEGIN_SRC emacs-lisp :results none
@@ -854,7 +858,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :general
     (my-leader-def
       "e"  '(:ignore t     :which-key "Emacs Commands")
-      "er" '(restart-emacs :which-key "restart emacs"))
+      "er" #'(restart-emacs :which-key "restart emacs"))
     :custom
     (restart-emacs-restore-frames t)) ; Restore frames on restart
 
@@ -865,12 +869,12 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   (use-package helpful
     :general
     ('normal
-     "gh" 'helpful-at-point)
+     "gh" #'helpful-at-point)
     ('normal helpful-mode-map
-             "q" 'quit-window)
-    ([remap describe-command] 'helpful-command
-     [remap describe-key] 'helpful-key
-     [remap describe-symbol] 'helpful-symbol)
+             "q" #'quit-window)
+    ([remap describe-command] #'helpful-command
+     [remap describe-key] #'helpful-key
+     [remap describe-symbol] #'helpful-symbol)
     :config
     (evil-collection-inhibit-insert-state 'helpful-mode-map))
 
@@ -893,7 +897,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     ;;    self-insert-command))
     :general
     (my-leader-def
-      "fc" '(keyfreq-show :which-key "show command frequency"))
+      "fc" #'(keyfreq-show :which-key "show command frequency"))
     :config
     (keyfreq-mode 1)
     (keyfreq-autosave-mode 1))
@@ -948,19 +952,19 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   (my-leader-def
     "h" (general-simulate-key "C-h" :which-key "Help")
     ;; Windows
-    ";"  '(shell-command            :which-key "shell command")
+    ";"  #'(shell-command            :which-key "shell command")
     "w"  '(:ignore t                :which-key "Windows")
     "w"   (general-simulate-key "C-w") ; window command
     ;; Buffers TODO make hydra
     "b"  '(:ignore t                :which-key "Buffers")
-    "bs" '(save-buffer              :which-key "write file")
-    "bd" '(kill-this-buffer         :which-key "delete buffer")
-    "bq" 'my/save-and-kill-buffer)
+    "bs" #'(save-buffer              :which-key "write file")
+    "bd" #'(kill-this-buffer         :which-key "delete buffer")
+    "bq" #'my/save-and-kill-buffer)
 
   (general-def 'normal
-    "gs" 'my/split-line
+    "gs" #'my/split-line
     "gS" (lambda () (interactive) (my/split-line) (move-text-up)) ;; split line above
-    "gC" 'my/comment-until-end-of-line
-    "]b" '(next-buffer     :which-key "next buffer")
-    "[b" '(previous-buffer :which-key "previous buffer"))
+    "gC" #'my/comment-until-end-of-line
+    "]b" #'(next-buffer     :which-key "next buffer")
+    "[b" #'(previous-buffer :which-key "previous buffer"))
 #+END_SRC

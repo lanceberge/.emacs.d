@@ -12,7 +12,9 @@
       menu-bar-mode nil
       tool-bar-mode nil
       scroll-bar-mode nil
-      frame-inhibit-implied-resize t)
+      frame-inhibit-implied-resize t
+      inhibit-default-init t
+      site-run-file nil)
 
 (set-face-attribute 'default nil
                     :family "DejaVu Sans Mono"
