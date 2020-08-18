@@ -49,9 +49,28 @@
 
    (straight-use-package 'use-package)
 
+  ;; UI
    (use-package gruvbox-theme
      :config
      (load-theme 'gruvbox t))
+
+  (setq-default mode-line-format
+                '("%e"
+                  mode-line-front-space
+                  mode-line-mule-info
+                  mode-line-client-mode
+                  mode-line-modified
+                  mode-line-remote
+                  mode-line-frame-indentifcation
+                  " "
+                  mode-line-buffer-identification
+                  "  "
+                  (vc-mode vc-mode)
+                  " "
+                  mode-line-modes
+                  " "
+                  mode-line-misc-info
+                  mode-line-end-spaces))
  #+END_SRC
 * Init
 #+BEGIN_SRC emacs-lisp :tangle init.el :results none
@@ -69,12 +88,13 @@
       (message "Emacs startup time: %.2f seconds."
                  (time-to-seconds (time-since emacs-load-start-time))))
 #+END_SRC
-* Initial Settings
+* Initial
+** Settings
 
 Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
-  ;;; -*- lexical-binding: t -*-
+    ;;; -*- lexical-binding: t -*-
   (defvar default-file-name-handler-alist file-name-handler-alist)
 
   (setq file-name-handler-alist nil
@@ -119,7 +139,6 @@ Mostly taken from Doom Emacs
 
   (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
 
-
   (add-hook 'emacs-startup-hook
             (lambda ()
               (setq gc-cons-threshold 16777216
@@ -135,125 +154,127 @@ Mostly taken from Doom Emacs
   ;; Keeping ~/.emacs.d organized
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 #+END_SRC
-* Auto-Tangle
+** Auto-Tangle
 
-Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
+ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
-#+BEGIN_SRC emacs-lisp :results none
-  (defun tangle-config ()
-    "Export code blocks from the literate config file
-    asynchronously."
-    (interactive)
-    (let* ((tangle-config (format "(org-babel-tangle nil \"%s\")" config-el))
-           (process (start-process
-                     "tangle-config" nil
-                     "emacs" config-org "--batch" "--eval" tangle-config))
-           (filter (defun echo-process-output (process output)
-                     "Echo process output."
-                     (message (s-trim output)))))
-      (set-process-filter process filter)))
+ #+BEGIN_SRC emacs-lisp :results none
+   (defun tangle-config ()
+     "Export code blocks from the literate config file
+     asynchronously."
+     (interactive)
+     (let* ((tangle-config (format "(org-babel-tangle nil \"%s\")" config-el))
+            (process (start-process
+                      "tangle-config" nil
+                      "emacs" config-org "--batch" "--eval" tangle-config))
+            (filter (defun echo-process-output (process output)
+                      "Echo process output."
+                      (message (s-trim output)))))
+       (set-process-filter process filter)))
 
-  (defun add-local-hook (hook function)
-    (add-hook hook function nil t))
+   (defun add-local-hook (hook function)
+     (add-hook hook function nil t))
 
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (if (equal (buffer-file-name) config-org)
-                  (add-local-hook 'after-save-hook 'tangle-config))))
-#+END_SRC
-* Keymap Management
-#+BEGIN_SRC emacs-lisp :results none
-  (use-package general ; unified way to map keybindings; works with :general in use-package
-    :demand t
-    :config
-    (general-create-definer my-leader-def
-      :states '(normal visual insert emacs)
-      :prefix "SPC"
-      :non-normal-prefix "M-SPC")
+   (add-hook 'org-mode-hook
+             (lambda ()
+               (if (equal (buffer-file-name) config-org)
+                   (add-local-hook 'after-save-hook 'tangle-config))))
+ #+END_SRC
+** Built-in Packages
+ #+BEGIN_SRC emacs-lisp :results none
+   (use-package simple
+     :straight (:type built-in)
+     :defer t
+     :custom
+     (idle-update-delay 1.0) ; slow down how often emacs updates its ui
+     (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
 
-    (general-create-definer my-localleader-def
-      :states '(normal visual insert emacs)
-      :prefix ","
-      :non-normal-prefix "C-,")
+   (use-package advice
+     :straight (:type built-in)
+     :defer t
+     :custom (ad-redefinition-action 'accept)) ; disable warnings from legacy advice system
 
-    (my-leader-def
-      "f"  '(:ignore t                    :which-key "Find")
-      "fm" #'(general-describe-keybindings :which-key "list keybindings")))
+   (use-package files
+     :straight (:type built-in)
+     :defer t
+     :custom
+     (make-backup-files nil)
+     (create-lockfiles nil)
+     (auto-mode-case-fold nil)
+     (auto-save-default nil))
 
-  (use-package which-key ; show keybindings following when a prefix is pressed
-    :diminish
-    :defer 0.1
-    :custom
-    (which-key-sort-order #'which-key-prefix-then-key-order)
-    (which-key-min-display-lines 6)
-    (which-key-add-column-padding 1)
-    (which-key-sort-uppercase-first nil)
-    :config
-    (which-key-mode))
+   (use-package saveplace
+     :straight (:type built-in)
+     :hook (after-init . save-place-mode))
 
-  (use-package hydra
-    :defer t)
+   (use-package display-line-numbers
+     :straight (:type built-in)
+     :hook (after-init . global-display-line-numbers-mode)
+     :config
+     (menu-bar-display-line-numbers-mode 'visual)) ; relative line numbers
 
-  (use-package diminish
-    :demand t)
-#+END_SRC
-* Built-in Packages
-#+BEGIN_SRC emacs-lisp :results none
-  (use-package simple
-    :straight (:type built-in)
-    :defer t
-    :custom
-    (idle-update-delay 1.0) ; slow down how often emacs updates its ui
-    (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
+   (use-package whitespace
+     :straight (:type built-in)
+     :hook (before-save . whitespace-cleanup))
 
-  (use-package advice
-    :straight (:type built-in)
-    :defer t
-    :custom (ad-redefinition-action 'accept)) ; disable warnings from legacy advice system
+   (use-package eldoc
+     :straight (:type built-in)
+     :defer t
+     :diminish)
 
-  (use-package files
-    :straight (:type built-in)
-    :defer t
-    :custom
-    (make-backup-files nil)
-    (create-lockfiles nil)
-    (auto-mode-case-fold nil)
-    (auto-save-default nil))
+   (use-package savehist
+     :straight (:type built-in)
+     :hook (after-init . savehist-mode)
+     :custom
+     (savehist-file "~/.emacs.d/savehist")
+     (history-length 500)
+     (history-delete-duplicates t)
+     (savehist-save-minibuffer-history t))
 
-  (use-package paren
-    :straight (:type built-in)
-    :hook (prog-mode . show-paren-mode)
-    :custom
-    (show-paren-when-point-inside-paren t))
+   (use-package recentf
+     :straight (:type built-in)
+     :custom
+     (recentf-max-saved-items 200)
+     :hook (after-init . recentf-mode))
+ #+END_SRC
+** Keymap Management
+ #+BEGIN_SRC emacs-lisp :results none
+   (use-package general ; unified way to map keybindings; works with :general in use-package
+     :demand t
+     :config
+     (general-create-definer my-leader-def
+       :states '(normal visual insert emacs)
+       :prefix "SPC"
+       :non-normal-prefix "M-SPC")
 
-  (use-package dired
-    :straight (:type built-in)
-    :general
-    ('normal
-     "-"  #'(dired-jump :which-key "open dired"))
-    (my-leader-def
-      "fd" #'(dired      :which-key "navigate to a directory")))
+     (general-create-definer my-localleader-def
+       :states '(normal visual insert emacs)
+       :prefix ","
+       :non-normal-prefix "C-,")
 
-  (use-package saveplace
-    :straight (:type built-in)
-    :hook (after-init . save-place-mode))
+     (my-leader-def
+       "f"  '(:ignore t                    :which-key "Find")
+       "fm" #'(general-describe-keybindings :which-key "list keybindings")))
 
-  (use-package display-line-numbers
-    :straight (:type built-in)
-    :hook (after-init . global-display-line-numbers-mode)
-    :config
-    (menu-bar-display-line-numbers-mode 'visual)) ; relative line numbers
+   (use-package which-key ; show keybindings following when a prefix is pressed
+     :diminish
+     :defer 0.1
+     :custom
+     (which-key-sort-order #'which-key-prefix-then-key-order)
+     (which-key-min-display-lines 6)
+     (which-key-add-column-padding 1)
+     (which-key-sort-uppercase-first nil)
+     :config
+     (which-key-mode))
 
-  (use-package whitespace
-    :straight (:type built-in)
-    :hook (before-save . whitespace-cleanup))
+   (use-package hydra
+     :defer t)
 
-  (use-package eldoc
-    :straight (:type built-in)
-    :defer t
-    :diminish)
-#+END_SRC
+   (use-package diminish
+     :demand t)
+ #+END_SRC
 * Evil Mode
+** Evil
 #+BEGIN_SRC emacs-lisp :results none
   (use-package evil
     :after general
@@ -298,214 +319,234 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
       "d" #'evil-quit ; delete window
       "q" #'evil-save-modified-and-close)) ; quit and save window
 #+END_SRC
-* Evil-Related
-** Evil-Collection
+** Evil-Related
+*** Evil-Collection
+ #+BEGIN_SRC emacs-lisp :results none
+   ;; Evil everywhere
+   (use-package evil-collection
+     :after evil
+     :demand t
+     :custom
+     (evil-collection-calendar-want-org-bindings t)
+     (evil-collection-want-unimpaired-p t)
+     (evil-collection-setup-minibuffer t)
+     (evil-collection-mode-list
+      '(minibuffer
+        ivy
+        company
+        vterm
+        dired
+        eshell))
+     :config
+     (evil-collection-init))
+ #+END_SRC
+*** Extra operators/motions
+ #+BEGIN_SRC emacs-lisp :results none
+   ;; 2 character searches with s (ala vim-sneak)
+   (use-package evil-snipe
+     :diminish evil-snipe-local-mode
+     :hook ((prog-mode text-mode) . evil-snipe-override-local-mode)
+     :custom
+     (evil-snipe-show-prompt nil)
+     (evil-snipe-skip-leading-whitespace nil)
+     :config
+     (evil-snipe-local-mode)
+     (general-def 'motion
+       "M-;" #'evil-snipe-repeat
+       "M-," #'evil-snipe-repeat-reverse))
+
+   ;; s as an operator for surrounding
+   (use-package evil-surround
+     :diminish
+     :hook ((prog-mode text-mode) . evil-surround-mode))
+
+   ;; gc as an operator to comment
+   (use-package evil-commentary
+     :diminish
+     :hook ((prog-mode org-mode) . evil-commentary-mode))
+
+   ;; increment/decrement numbers
+   (use-package evil-numbers
+     :general
+     (my-localleader-def
+       "n"  '(:ignore t              :which-key "Evil-Numbers")
+       "nu" #'(evil-numbers/inc-at-pt :which-key "increment")
+       "nd" #'(evil-numbers/dec-at-pt :which-key "decrement")))
+
+   ;; gl as an operator to left-align, gL to right-align
+   (use-package evil-lion
+     :diminish
+     :hook ((prog-mode text-mode) . evil-lion-mode))
+
+   ;; navigate matching blocks of code with %
+   (use-package evil-matchit
+     :diminish
+     :hook ((prog-mode text-mode) . evil-matchit-mode))
+
+   ;; exchange text selected with gx
+   (use-package evil-exchange
+     :after evil
+     :config (evil-exchange-install))
+
+   (use-package evil-anzu
+     :defer t
+     :after evil)
+
+   (use-package evil-owl
+     :after evil
+     :diminish
+     :defer t
+     :config
+     (evil-owl-mode))
+
+   (use-package evil-textobj-anyblock
+     :general
+     ('evil-inner-text-objects-map "c" #'evil-textobj-anyblock-inner-block)
+     ('evil-outer-text-objects-map "c" #'evil-textobj-anyblock-a-block))
+
+   (use-package evil-args
+     :after evil
+     :general
+     ('evil-inner-text-objects-map "a" #'evil-inner-arg)
+     ('evil-outer-text-objects-map "a" #'evil-outer-arg))
+
+   (use-package evil-indent-plus
+     :after evil
+     :config
+     (evil-indent-plus-default-bindings))
+ #+END_SRC
+*** Miscellaneous
+ #+BEGIN_SRC emacs-lisp :results none
+   ;; jk to leave insert mode
+   (use-package evil-escape
+     :diminish
+     :hook ((prog-mode text-mode) . evil-escape-mode)
+     :custom
+     (evil-escape-key-sequence "jk")
+     (evil-escape-delay 0.25)
+     (evil-escape-excluded-major-modes '(evil-magit-mode org-agenda-mode))
+     (evil-escape-excluded-states '(normal visual emacs)))
+
+   ;; code folding
+   (use-package origami
+     :diminish
+     :hook ((prog-mode text-mode) . origami-mode)
+     :general
+     ('normal
+      "zm" #'origami-close-node-recursively
+      "zr" #'origami-open-node-recursively
+      ;; "zM" 'origami-close-all-nodes
+      ;; "zR" 'origami-open-all-nodes
+      "zj" #'origami-next-fold
+      "zk" #'origami-previous-fold))
+
+   ;; multiple cursors
+   (use-package evil-mc
+     :diminish
+     :hook ((prog-mode text-mode) . evil-mc-mode))
+
+   ;; evil port of targets.vim
+   (use-package targets
+     :straight (targets :type git :host github :repo "noctuid/targets.el")
+     :defer t
+     :config
+     (targets-setup t))
+
+   ;; g; and g,
+   (use-package goto-chg
+     :after evil)
+ #+END_SRC
+* Completion
+** Ivy
+ #+BEGIN_SRC emacs-lisp :results none
+   (use-package flx
+     :defer t) ; fuzzy sorting for ivy
+
+   (use-package smex ; TODO switch to amx
+     :custom
+     (smex-history-length 50)
+     :defer t)
+
+   (use-package ivy
+     :diminish
+     :defer 0.1
+     :custom
+     (ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; TODO configure counsel-rg, swiper, counsel-projectile-rg
+     :config
+     (ivy-mode))
+
+   (use-package counsel
+     :after ivy
+     :diminish
+     :custom
+     (counsel-describe-function-function #'helpful-callable)
+     (counsel-describe-variable-function #'helpful-variable)
+     :general
+     (my-leader-def
+       "."   #'(counsel-find-file      :which-key "find file")
+       "SPC" #'(ivy-switch-buffer      :which-key "switch buffer")
+       "fr"  #'(counsel-recentf        :which-key "find recent files")
+       "fi"  #'(counsel-imenu          :which-key "imenu")
+       "fg"  #'(counsel-git            :which-key "git files")
+       "fG"  #'(counsel-git-grep       :which-key "git grep")
+       "ff"  #'(counsel-rg             :which-key "ripgrep"))
+     :config
+     (counsel-mode))
+
+   (use-package swiper
+     :general
+     ('normal
+      [remap evil-search-forward]  #'swiper
+      [remap evil-search-backward] #'swiper-backward)
+     (my-leader-def
+       "fb" #'(swiper-multi :which-key "swiper in buffer")
+       "fB" #'(swiper-all   :which-key "swiper in all buffers")))
+ #+END_SRC
+** Yasnippet
+ #+BEGIN_SRC emacs-lisp :results none
+   (use-package yasnippet
+     :diminish yas-minor-mode
+     :hook (after-init . yas-global-mode)
+     :custom (yas-snippet-dirs '("~/.emacs.d/snippets"))
+     :general
+     (my-localleader-def
+       "y"  '(:ignore t           :which-key "Yasnippet")
+       "yi" #'(yas-insert-snippet  :which-key "insert snippet")
+       "yn" #'(yas-new-snippet     :which-key "new snippet")
+       "yl" #'(yas-describe-tables :which-key "list snippets")))
+
+   (use-package yasnippet-snippets
+     :defer t
+     :after yasnippet)
+
+   (use-package auto-yasnippet
+     :general
+     (my-localleader-def
+       "yc" #'(aya-create :which-key "create aya snippet")
+       "ye" #'(aya-expand :which-key "expand aya snippet")))
+ #+END_SRC
+** Company
 #+BEGIN_SRC emacs-lisp :results none
-  ;; Evil everywhere
-  (use-package evil-collection
-    :after evil
-    :demand t
+  ;; autocomplete
+  (use-package company
+    :diminish
+    :hook (prog-mode . company-mode)
     :custom
-    (evil-collection-calendar-want-org-bindings t)
-    (evil-collection-want-unimpaired-p t)
-    (evil-collection-setup-minibuffer t)
-    (evil-collection-mode-list
-     '(minibuffer
-       ivy
-       company
-       vterm
-       dired
-       eshell))
-    :config
-    (evil-collection-init))
+    (company-show-numbers t)
+    (company-backends '(company-capf
+                        company-files
+                        company-keywords
+                        company-yasnippet))
+    :general
+    ('company-active-map "C-w" nil) ; don't override evil C-w
+    ('insert
+     "C-n" 'company-complete)) ; manual completion with C-n
+
+  (use-package company-flx
+    :after company
+    :hook (company-mode . company-flx-mode))
 #+END_SRC
-** Extra operators/motions
-#+BEGIN_SRC emacs-lisp :results none
-  ;; 2 character searches with s (ala vim-sneak)
-  (use-package evil-snipe
-    :diminish evil-snipe-local-mode
-    :hook ((prog-mode text-mode) . evil-snipe-override-local-mode)
-    :custom
-    (evil-snipe-show-prompt nil)
-    (evil-snipe-skip-leading-whitespace nil)
-    :config
-    (evil-snipe-local-mode)
-    (general-def 'motion
-      "M-;" #'evil-snipe-repeat
-      "M-," #'evil-snipe-repeat-reverse))
-
-  ;; s as an operator for surrounding
-  (use-package evil-surround
-    :diminish
-    :hook ((prog-mode text-mode) . evil-surround-mode))
-
-  ;; gc as an operator to comment
-  (use-package evil-commentary
-    :diminish
-    :hook ((prog-mode org-mode) . evil-commentary-mode))
-
-  ;; increment/decrement numbers
-  (use-package evil-numbers
-    :general
-    (my-localleader-def
-      "n"  '(:ignore t              :which-key "Evil-Numbers")
-      "nu" #'(evil-numbers/inc-at-pt :which-key "increment")
-      "nd" #'(evil-numbers/dec-at-pt :which-key "decrement")))
-
-  ;; gl as an operator to left-align, gL to right-align
-  (use-package evil-lion
-    :diminish
-    :hook ((prog-mode text-mode) . evil-lion-mode))
-
-  ;; navigate matching blocks of code with %
-  (use-package evil-matchit
-    :diminish
-    :hook ((prog-mode text-mode) . evil-matchit-mode))
-
-  ;; exchange text selected with gx
-  (use-package evil-exchange
-    :after evil
-    :config (evil-exchange-install))
-
-  (use-package evil-anzu
-    :defer t
-    :after evil)
-
-  (use-package evil-owl
-    :after evil
-    :diminish
-    :defer t
-    :config
-    (evil-owl-mode))
-
-  (use-package evil-textobj-anyblock
-    :general
-    ('evil-inner-text-objects-map "c" #'evil-textobj-anyblock-inner-block)
-    ('evil-outer-text-objects-map "c" #'evil-textobj-anyblock-a-block))
-
-  (use-package evil-args
-    :after evil
-    :general
-    ('evil-inner-text-objects-map "a" #'evil-inner-arg)
-    ('evil-outer-text-objects-map "a" #'evil-outer-arg))
-
-  (use-package evil-indent-plus
-    :after evil
-    :config
-    (evil-indent-plus-default-bindings))
-#+END_SRC
-** Miscellaneous
-#+BEGIN_SRC emacs-lisp :results none
-  ;; jk to leave insert mode
-  (use-package evil-escape
-    :diminish
-    :hook ((prog-mode text-mode) . evil-escape-mode)
-    :custom
-    (evil-escape-key-sequence "jk")
-    (evil-escape-delay 0.25)
-    (evil-escape-excluded-major-modes '(evil-magit-mode org-agenda-mode))
-    (evil-escape-excluded-states '(normal visual emacs)))
-
-  ;; code folding
-  (use-package origami
-    :diminish
-    :hook ((prog-mode text-mode) . origami-mode)
-    :general
-    ('normal
-     "zm" #'origami-close-node-recursively
-     "zr" #'origami-open-node-recursively
-     ;; "zM" 'origami-close-all-nodes
-     ;; "zR" 'origami-open-all-nodes
-     "zj" #'origami-next-fold
-     "zk" #'origami-previous-fold))
-
-  ;; multiple cursors
-  (use-package evil-mc
-    :diminish
-    :hook ((prog-mode text-mode) . evil-mc-mode))
-
-  ;; evil port of targets.vim
-  (use-package targets
-    :straight (targets :type git :host github :repo "noctuid/targets.el")
-    :defer t
-    :config
-    (targets-setup t))
-#+END_SRC
-* Ivy
-#+BEGIN_SRC emacs-lisp :results none
-  (use-package flx
-    :after ivy) ; fuzzy sorting for ivy
-
-  (use-package ivy
-    :diminish
-    :defer 0.1
-    :custom
-    (ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; TODO configure counsel-rg, swiper, counsel-projectile-rg
-    :config
-    (ivy-mode))
-
-  (use-package counsel
-    :after ivy
-    :diminish
-    :custom
-    (counsel-describe-function-function #'helpful-callable)
-    (counsel-describe-variable-function #'helpful-variable)
-    :general
-    (my-leader-def
-      "."   #'(counsel-find-file      :which-key "find file")
-      "SPC" #'(ivy-switch-buffer      :which-key "switch buffer")
-      "fr"  #'(counsel-recentf        :which-key "find recent files")
-      "fi"  #'(counsel-imenu          :which-key "imenu")
-      "fg"  #'(counsel-git            :which-key "git files")
-      "fG"  #'(counsel-git-grep       :which-key "git grep")
-      "ff"  #'(counsel-rg             :which-key "ripgrep"))
-    :config
-    (counsel-mode))
-
-  (use-package swiper
-    :general
-    ('normal
-     [remap evil-search-forward]  #'swiper
-     [remap evil-search-backward] #'swiper-backward)
-    (my-leader-def
-      "fb" #'(swiper-multi :which-key "swiper in buffer")
-      "fB" #'(swiper-all   :which-key "swiper in all buffers")))
-#+END_SRC
-* Vterm
-#+BEGIN_SRC emacs-lisp :results none
-  (use-package vterm
-    :custom
-    (vterm-kill-buffer-on-exit t)
-    :general
-    (my-leader-def
-      "o"   '(:ignore t          :which-key "Open")
-      "ot"  #'(vterm              :which-key "open vterm")
-      "ovt" #'(vterm-other-window :which-key "open vterm in vsplit")))
-#+END_SRC
-* Yasnippet
-#+BEGIN_SRC emacs-lisp :results none
-  (use-package yasnippet
-    :diminish yas-minor-mode
-    :hook (after-init . yas-global-mode)
-    :custom (yas-snippet-dirs '("~/.emacs.d/snippets"))
-    :general
-    (my-localleader-def
-      "y"  '(:ignore t           :which-key "Yasnippet")
-      "yi" #'(yas-insert-snippet  :which-key "insert snippet")
-      "yn" #'(yas-new-snippet     :which-key "new snippet")
-      "yl" #'(yas-describe-tables :which-key "list snippets")))
-
-  (use-package yasnippet-snippets
-    :defer t
-    :after yasnippet)
-
-  (use-package auto-yasnippet
-    :general
-    (my-localleader-def
-      "yc" #'(aya-create :which-key "create aya snippet")
-      "ye" #'(aya-expand :which-key "expand aya snippet")))
-#+END_SRC
-* Magit
+* Version Control
 #+BEGIN_SRC emacs-lisp :results none
   (use-package magit
     :custom
@@ -542,7 +583,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     (evil-magit-state 'normal)
     (evil-magit-use-z-for-folds t))
 #+END_SRC
-* Projectile
+* Project Management
 #+BEGIN_SRC emacs-lisp :results none
   (use-package projectile
     :defer 0.1
@@ -563,25 +604,6 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 #+END_SRC
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
-  ;; autocomplete
-  (use-package company
-    :diminish
-    :hook (prog-mode . company-mode)
-    :custom
-    (company-show-numbers t)
-    (company-backends '(company-capf
-                        company-files
-                        company-keywords
-                        company-yasnippet))
-    :general
-    ('company-active-map "C-w" nil) ; don't override evil C-w
-    ('insert
-     "C-n" 'company-complete)) ; manual completion with C-n
-
-  (use-package company-flx
-    :after company
-    :hook (company-mode . company-flx-mode))
-
   ;; LSP
   (use-package lsp-mode
     :diminish
@@ -626,92 +648,15 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   (use-package highlight-symbol
     :diminish
     :hook (prog-mode . highlight-symbol-mode))
-#+END_SRC
-* Smartparens
-#+BEGIN_SRC emacs-lisp :results none
-  (use-package smartparens
-    :diminish
-    :commands
-    (sp-forward-sexp
-     sp-backward-sexp
-     sp-down-sexp
-     sp-backward-down-sexp
-     sp-up-sexp
-     sp-backward-up-sexp
-     sp-next-sexp
-     sp-previous-sexp
-     sp-beginning-of-sexp
-     sp-end-of-sexp
-     sp-delete-sexp
-     sp-kill-whole-line
-     sp-transpose-sexp
-     sp-forward-slurp-sexp
-     sp-backward-slurp-sexp
-     sp-backward-barf-sexp
-     sp-forward-slurp-sexp
-     sp-fowrard-barf-sexp
-     sp-backward-barf-sexp
-     sp-split-sexp
-     sp-join-sexp
-     sp-add-to-previous-sexp
-     sp-add-to-next-sexp)
+
+  (use-package highlight-escape-sequences
+    :hook (prog-mode . hes-mode))
+
+  (use-package paren
+    :straight (:type built-in)
+    :hook (prog-mode . show-paren-mode)
     :custom
-    (sp-highlight-pair-overlay nil)
-    (sp-highlight-wrap-overlay nil)
-    (sp-highlight-wrap-tag-overlay nil)
-    (sp-max-prefix-length 25)
-    (sp-max-pair-length 4)
-    :hook
-    (after-init . smartparens-global-mode)
-    (prog-mode . smartparens-strict-mode)
-    :general
-    (my-localleader-def
-      "s" '(hydra-smartparens/body :which-key "Smartparens"))
-    :config
-    (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) ; don't pair ' in elisp mode
-
-    (defhydra hydra-smartparens ()
-      ;; Movement
-      ("l" sp-forward-sexp "next pair")
-      ("h" sp-backward-sexp "previous pair")
-      ("j" sp-down-sexp "down")
-      ("J" sp-backward-down-sexp "backward down")
-      ("k" sp-up-sexp "up")
-      ("K" sp-backward-up-sexp "up")
-      ("n" sp-next-sexp "next")
-      ("p" sp-previous-sexp "previous")
-
-      ("H" sp-beginning-of-sexp "beginning")
-      ("L" sp-end-of-sexp "end")
-      ("d" sp-delete-sexp "delete")
-      ("D" sp-kill-whole-line "delete line")
-      ("t" sp-transpose-sexp "transpose")
-
-      ("s" sp-forward-slurp-sexp "slurp")
-      ("S" sp-backward-slurp-sexp "backward slurp")
-      ("b" sp-forward-barf-sexp "barf")
-      ("B" sp-backward-barf-sexp "backward barf")
-
-      ("v" sp-split-sexp "split pair")
-      ("u" sp-join-sexp "join pair")
-
-      ("p" sp-add-to-previous-sexp "add to previous pair")
-      ("n" sp-add-to-next-sexp "add to next pair")))
-
-
-
-  ;;   ;; Make vim change, delete, etc. commands preserve balance of parentheses
-  (use-package evil-smartparens
-    :hook (smartparens-strict-mode . evil-smartparens-mode)
-    :diminish
-    :general
-    ('normal
-     ">" (general-key-dispatch #'evil-shift-right
-           ")" #'sp-forward-slurp-sexp
-           "(" #'sp-backward-barf-sexp)
-     "<" (general-key-dispatch #'evil-shift-left
-           ")" #'sp-forward-barf-sexp
-           "(" #'sp-backward-barf-sexp)))
+    (show-paren-when-point-inside-paren t))
 #+END_SRC
 * Org
 ** Org
@@ -719,10 +664,7 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
   (use-package org
     :straight (:type built-in)
     :general
-    ("C-c l" #'(org-store-link :which-key "store link")
-     "C-c c" #'(org-capture    :which-key "capture")
-     "C-c s" #'(org-sort       :which-key "sort")
-     "C-c a" #'(org-agenda     :which-key "org agenda"))
+    ("C-c s" #'(org-sort       :which-key "sort"))
     :custom
     (org-agenda-files '("~/org"))
     (org-directory "~/org")
@@ -732,8 +674,6 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     (org-M-RET-may-split-line nil)
     (org-log-done 'time)
     (org-tag-alist '(("@school" . ?s) ("@personal" . ?p)))
-    ;; (org-src-window-setup 'current-window)
-    ;; (org-src-block-faces nil)
     (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
     :config
     (setq org-fontify-done-headline t)
@@ -754,6 +694,15 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
      '((shell   . t)
        (haskell . t))))
 
+  (use-package org-agenda
+    :straight (:type built-in)
+    :general
+    (my-localleader-def
+      "ca" #'org-agenda)
+    :config
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
+
   (use-package org-src
     :straight (:type built-in)
     :defer t
@@ -764,6 +713,19 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
 
   (use-package org-bullets
     :hook (org-mode . org-bullets-mode))
+
+  (use-package org-capture
+    :straight (:type built-in)
+    :general
+    (my-localleader-def
+      "cc" #'org-capture))
+
+  (use-package ol
+    :straight (:type built-in)
+    :general
+    (my-localleader-def
+      "cl"  #'(org-store-link  :which-key "store link")
+      "c,l" #'(org-insert-link :which-key "insert link")))
 #+END_SRC
 ** Evil-Org
 #+BEGIN_SRC emacs-lisp :results none
@@ -774,12 +736,8 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     (my-localleader-def
       "c"   '(:ignore t                    :which-key "org")
       "co"   (general-simulate-key "C-c '" :which-key "edit src block in its major mode")
-      "cl"  #'(org-store-link               :which-key "store link") ;; TODO vimify mappings
-      "c,l" #'(org-insert-link              :which-key "insert link")
-      "cc"  #'(org-capture                  :which-key "capture")
       "cs"  #'(org-sort                     :which-key "sort")
       "c,s" #'(org-schedule                 :which-key "schedule")
-      "ca"  #'(org-agenda                   :which-key "org agenda")
       "ct"  #'(org-todo                     :which-key "todo")
       "ce"  #'(org-ctrl-c-ctrl-c            :which-key "execute"))
     ('org-read-date-minibuffer-local-map
@@ -804,14 +762,25 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
       "C-S-o" #'my/org-insert-heading-above
       "C-o"   #'evil-org-org-insert-heading-respect-content-below
       "M-o"   #'evil-org-org-insert-todo-heading-respect-content-below
-      "M-O"   #'my/org-insert-todo-above)
-    (require 'evil-org-agenda) ;; TODO add org agenda hook
-    (evil-org-agenda-set-keys))
+      "M-O"   #'my/org-insert-todo-above))
 #+END_SRC
-* Windows
+* Windows, Buffers, Directory Management
+** Dired
 #+begin_SRC emacs-lisp :results none
+  (use-package dired
+    :straight (:type built-in)
+    :general
+    ('normal
+     "-"  #'(dired-jump :which-key "open dired"))
+    (my-leader-def
+      "fd" #'(dired      :which-key "navigate to a directory")))
+#+END_SRC
+** Windows
+#+BEGIN_SRC emacs-lisp :results none
   ;; easily navigate windows with prefix M-i
   (use-package ace-window
+    :custom
+    (aw-keys '(?a ?s ?d ?f ?j ?k ?l))
     :general
     ;; (my-localleader-def "w" 'ace-window))
     ("M-i" #'ace-window))
@@ -821,87 +790,176 @@ Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
     :hook (after-init . golden-ratio-mode)
     :custom
     (golden-ratio-auto-scale t))
+
+  ;; Undo and redo window configs
+  (use-package winner
+    :straight (:type built-in)
+    :hook (after-init . winner-mode)
+    :general
+    ('evil-window-map
+     "u" #'winner-undo
+     "r" #'winner-redo))
 #+END_SRC
-* Miscellaneous
-** Editing
-#+BEGIN_SRC emacs-lisp :results none
-  ;; Persistent Undos
-  (use-package undo-tree
-    :defer t
-    :diminish
-    :custom
-    (undo-limit 10000)
-    (undo-tree-auto-save-history t)
-    (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-    :general
-    (my-leader-def
-      "fu" #'undo-tree-visualize))
+* Editing
+** Smartparens
+ #+BEGIN_SRC emacs-lisp :results none
+   (use-package smartparens
+     :diminish
+     :custom
+     (sp-highlight-pair-overlay nil)
+     (sp-highlight-wrap-overlay nil)
+     (sp-highlight-wrap-tag-overlay nil)
+     (sp-max-prefix-length 25)
+     (sp-max-pair-length 4)
+     :hook
+     (text-mode . smartparens-mode)
+     (prog-mode . smartparens-strict-mode)
+     :general
+     (my-localleader-def
+       "s" '(hydra-smartparens/body :which-key "Smartparens"))
+     :config
+     (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) ; don't pair ' in elisp mode
 
-  (use-package format-all
-    :general
-    (my-leader-def
-      "=" #'(format-all-buffer :which-key "format")))
+     (defhydra hydra-smartparens ()
+       ;; Movement
+       ("l" sp-forward-sexp "next pair")
+       ("h" sp-backward-sexp "previous pair")
+       ("j" sp-down-sexp "down")
+       ("J" sp-backward-down-sexp "backward down")
+       ("k" sp-up-sexp "up")
+       ("K" sp-backward-up-sexp "up")
+       ("n" sp-next-sexp "next")
+       ("p" sp-previous-sexp "previous")
 
-  (use-package expand-region
-    :general
-    ("M--" #'er/expand-region))
+       ("H" sp-beginning-of-sexp "beginning")
+       ("L" sp-end-of-sexp "end")
+       ("d" sp-delete-sexp "delete")
+       ("D" sp-kill-whole-line "delete line")
+       ("t" sp-transpose-sexp "transpose")
 
-  (use-package move-text
-    :general
-    ('normal
-     "]e" #'move-text-down
-     "[e" #'move-text-up))
-#+END_SRC
-** System
-#+BEGIN_SRC emacs-lisp :results none
-  (use-package restart-emacs
-    :general
-    (my-leader-def
-      "e"  '(:ignore t     :which-key "Emacs Commands")
-      "er" #'(restart-emacs :which-key "restart emacs"))
-    :custom
-    (restart-emacs-restore-frames t)) ; Restore frames on restart
+       ("s" sp-forward-slurp-sexp "slurp")
+       ("S" sp-backward-slurp-sexp "backward slurp")
+       ("b" sp-forward-barf-sexp "barf")
+       ("B" sp-backward-barf-sexp "backward barf")
 
-  (use-package smex
-    :defer t
-    :after ivy)
+       ("v" sp-split-sexp "split pair")
+       ("u" sp-join-sexp "join pair")
 
-  (use-package helpful
-    :general
-    ('normal
-     "gh" #'helpful-at-point)
-    ('normal helpful-mode-map
-             "q" #'quit-window)
-    ([remap describe-command] #'helpful-command
-     [remap describe-key] #'helpful-key
-     [remap describe-symbol] #'helpful-symbol)
-    :config
-    (evil-collection-inhibit-insert-state 'helpful-mode-map))
+       ("p" sp-add-to-previous-sexp "add to previous pair")
+       ("n" sp-add-to-next-sexp "add to next pair")))
 
-  ;; Garbage collect in idle time
-  (use-package gcmh
-    :hook (after-init . gcmh-mode)
-    :commands gcmh-idle-garbage-collect
-    :diminish
-    :custom
-    (gcmh-idle-delay 10)
-    (gcmh-high-cons-threshold 16777216)
-    :config
-    (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
+   ;; Make vim change, delete, etc. commands preserve balance of parentheses
+   (use-package evil-smartparens
+     :hook (smartparens-strict-mode . evil-smartparens-mode)
+     :diminish
+     :general
+     ('normal
+      ">" (general-key-dispatch #'evil-shift-right
+            ")" #'sp-forward-slurp-sexp
+            "(" #'sp-backward-barf-sexp)
+      "<" (general-key-dispatch #'evil-shift-left
+            ")" #'sp-forward-barf-sexp
+            "(" #'sp-backward-barf-sexp)))
+ #+END_SRC
+** Miscellaneous
+ #+BEGIN_SRC emacs-lisp :results none
+   ;; Persistent Undos
+   (use-package undo-tree
+     :defer t
+     :diminish
+     :custom
+     (undo-limit 10000)
+     (undo-tree-auto-save-history t)
+     (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+     :general
+     (my-leader-def
+       "fu" #'undo-tree-visualize))
 
-  (use-package keyfreq
-    :defer t
-    ;; :custom
-    ;; (keyfreq-excluded-commands
-    ;;  '(org-self-insert-command
-    ;;    self-insert-command))
-    :general
-    (my-leader-def
-      "fc" #'(keyfreq-show :which-key "show command frequency"))
-    :config
-    (keyfreq-mode 1)
-    (keyfreq-autosave-mode 1))
-#+END_SRC
+   (use-package format-all
+     :general
+     (my-leader-def
+       "=" #'(format-all-buffer :which-key "format")))
+
+   (use-package expand-region
+     :general
+     ("M--" #'er/expand-region))
+
+   (use-package move-text
+     :general
+     ('normal
+      "]e" #'move-text-down
+      "[e" #'move-text-up))
+
+   (use-package aggressive-indent
+     :diminish
+     :hook (prog-mode . aggressive-indent-mode))
+ #+END_SRC
+* System
+** Terminal Emulator
+ #+BEGIN_SRC emacs-lisp :results none
+   (use-package vterm
+     :custom
+     (vterm-kill-buffer-on-exit t)
+     :general
+     (my-leader-def
+       "o"   '(:ignore t          :which-key "Open")
+       "ot"  #'(vterm              :which-key "open vterm")
+       "ovt" #'(vterm-other-window :which-key "open vterm in vsplit")))
+ #+END_SRC
+** Miscellaneous
+ #+BEGIN_SRC emacs-lisp :results none
+   (use-package restart-emacs
+     :general
+     (my-leader-def
+       "e"  '(:ignore t     :which-key "Emacs Commands")
+       "er" #'(restart-emacs :which-key "restart emacs"))
+     :custom
+     (restart-emacs-restore-frames t)) ; Restore frames on restart
+
+   (use-package helpful
+     :general
+     ('normal
+      "gh" #'helpful-at-point)
+     ('normal helpful-mode-map
+              "q" #'quit-window)
+     ([remap describe-command] #'helpful-command
+      [remap describe-key] #'helpful-key
+      [remap describe-symbol] #'helpful-symbol)
+     :config
+     (evil-collection-inhibit-insert-state 'helpful-mode-map))
+
+   ;; Garbage collect in idle time
+   (use-package gcmh
+     :hook (after-init . gcmh-mode)
+     :commands gcmh-idle-garbage-collect
+     :diminish
+     :custom
+     (gcmh-idle-delay 10)
+     (gcmh-high-cons-threshold 16777216)
+     :config
+     (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
+
+   (use-package keyfreq
+     :defer t
+     ;; :custom
+     ;; (keyfreq-excluded-commands
+     ;;  '(org-self-insert-command
+     ;;    self-insert-command))
+     :general
+     (my-leader-def
+       "fc" #'(keyfreq-show :which-key "show command frequency"))
+     :config
+     (keyfreq-mode 1)
+     (keyfreq-autosave-mode 1))
+
+   (use-package dumb-jump
+     :custom
+     (dumb-jump-default-project "~/code")
+     (dumb-jump-selector 'ivy)
+     (dumb-jump-prefer-searcher 'rg)
+     :config
+     (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+ #+END_SRC
 * Functions
 #+BEGIN_SRC emacs-lisp :results none
   ;;;###autoload
