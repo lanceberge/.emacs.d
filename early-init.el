@@ -47,10 +47,16 @@
 
  (straight-use-package 'use-package)
 
-;; UI
+ ;; UI
  (use-package gruvbox-theme
    :config
    (load-theme 'gruvbox t))
+
+ (use-package display-line-numbers ;; TODO move to early init
+   :straight (:type built-in)
+   :hook (after-init . global-display-line-numbers-mode)
+   :config
+   (menu-bar-display-line-numbers-mode 'visual)) ; relative line numbers
 
 (setq-default mode-line-format
               '("%e"

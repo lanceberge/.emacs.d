@@ -49,10 +49,16 @@
 
    (straight-use-package 'use-package)
 
-  ;; UI
+   ;; UI
    (use-package gruvbox-theme
      :config
      (load-theme 'gruvbox t))
+
+   (use-package display-line-numbers ;; TODO move to early init
+     :straight (:type built-in)
+     :hook (after-init . global-display-line-numbers-mode)
+     :config
+     (menu-bar-display-line-numbers-mode 'visual)) ; relative line numbers
 
   (setq-default mode-line-format
                 '("%e"
@@ -207,12 +213,6 @@ Mostly taken from Doom Emacs
      :straight (:type built-in)
      :hook (after-init . save-place-mode))
 
-   (use-package display-line-numbers
-     :straight (:type built-in)
-     :hook (after-init . global-display-line-numbers-mode)
-     :config
-     (menu-bar-display-line-numbers-mode 'visual)) ; relative line numbers
-
    (use-package whitespace
      :straight (:type built-in)
      :hook (before-save . whitespace-cleanup))
@@ -233,9 +233,9 @@ Mostly taken from Doom Emacs
 
    (use-package recentf
      :straight (:type built-in)
+     :hook (after-init . recentf-mode)
      :custom
-     (recentf-max-saved-items 200)
-     :hook (after-init . recentf-mode))
+     (recentf-max-saved-items 200))
  #+END_SRC
 ** Keymap Management
  #+BEGIN_SRC emacs-lisp :results none
@@ -256,9 +256,15 @@ Mostly taken from Doom Emacs
        "f"  '(:ignore t                    :which-key "Find")
        "fm" #'(general-describe-keybindings :which-key "list keybindings")))
 
+   (use-package diminish
+     :demand t)
+
    (use-package which-key ; show keybindings following when a prefix is pressed
      :diminish
-     :defer 0.1
+     :demand t
+     :general
+     (my-leader-def
+       "f SPC m" #'which-key-show-top-level)
      :custom
      (which-key-sort-order #'which-key-prefix-then-key-order)
      (which-key-min-display-lines 6)
@@ -269,9 +275,6 @@ Mostly taken from Doom Emacs
 
    (use-package hydra
      :defer t)
-
-   (use-package diminish
-     :demand t)
  #+END_SRC
 * Evil Mode
 ** Evil
@@ -280,7 +283,6 @@ Mostly taken from Doom Emacs
     :after general
     :demand t
     :diminish
-    ;; :hook (after-init . evil-mode)
     :commands
     (evil-quit
      evil-save-modified-and-close)
@@ -325,7 +327,6 @@ Mostly taken from Doom Emacs
    ;; Evil everywhere
    (use-package evil-collection
      :after evil
-     :demand t
      :custom
      (evil-collection-calendar-want-org-bindings t)
      (evil-collection-want-unimpaired-p t)
@@ -385,19 +386,17 @@ Mostly taken from Doom Emacs
 
    ;; exchange text selected with gx
    (use-package evil-exchange
-     :after evil
-     :config (evil-exchange-install))
+     :hook (after-init . evil-exchange-install))
+     ;; :after evil
+     ;; :config (evil-exchange-install))
 
    (use-package evil-anzu
-     :defer t
-     :after evil)
+     :defer t)
 
    (use-package evil-owl
      :after evil
      :diminish
-     :defer t
-     :config
-     (evil-owl-mode))
+     :hook ((prog-mode text-mode) . evil-owl-mode))
 
    (use-package evil-textobj-anyblock
      :general
@@ -411,9 +410,10 @@ Mostly taken from Doom Emacs
      ('evil-outer-text-objects-map "a" #'evil-outer-arg))
 
    (use-package evil-indent-plus
-     :after evil
-     :config
-     (evil-indent-plus-default-bindings))
+     :hook (after-init . evil-indent-plus-default-bindings))
+     ;; :after evil
+     ;; :config
+     ;; (evil-indent-plus-default-bindings))
  #+END_SRC
 *** Miscellaneous
  #+BEGIN_SRC emacs-lisp :results none
@@ -454,7 +454,7 @@ Mostly taken from Doom Emacs
 
    ;; g; and g,
    (use-package goto-chg
-     :after evil)
+     :defer t)
  #+END_SRC
 * Completion
 ** Ivy
@@ -506,7 +506,7 @@ Mostly taken from Doom Emacs
  #+BEGIN_SRC emacs-lisp :results none
    (use-package yasnippet
      :diminish yas-minor-mode
-     :hook (after-init . yas-global-mode)
+     :hook ((prog-mode text-mode) . yas-minor-mode)
      :custom (yas-snippet-dirs '("~/.emacs.d/snippets"))
      :general
      (my-localleader-def
@@ -516,8 +516,7 @@ Mostly taken from Doom Emacs
        "yl" #'(yas-describe-tables :which-key "list snippets")))
 
    (use-package yasnippet-snippets
-     :defer t
-     :after yasnippet)
+     :defer t)
 
    (use-package auto-yasnippet
      :general
@@ -544,7 +543,8 @@ Mostly taken from Doom Emacs
 
   (use-package company-flx
     :after company
-    :hook (company-mode . company-flx-mode))
+    :config
+    (company-flx-mode))
 #+END_SRC
 * Version Control
 #+BEGIN_SRC emacs-lisp :results none
@@ -586,8 +586,8 @@ Mostly taken from Doom Emacs
 * Project Management
 #+BEGIN_SRC emacs-lisp :results none
   (use-package projectile
-    :defer 0.1
     :diminish
+    :hook (after-init . projectile-mode)
     :custom
     (projectile-auto-discover nil)
     (projectile-project-search-path '("~/code/" "~/.emacs.d/"))
@@ -597,7 +597,6 @@ Mostly taken from Doom Emacs
 
   (use-package counsel-projectile
     :after (counsel projectile)
-    :defer t
     :diminish
     :config
     (counsel-projectile-mode))
@@ -622,7 +621,7 @@ Mostly taken from Doom Emacs
   ;; linting
   (use-package flycheck
     :diminish
-    :hook (lsp-mode . flycheck-mode)
+    :hook (prog-mode . flycheck-mode)
     :general
     ('normal
      "[q" #'flycheck-previous-error
@@ -666,7 +665,7 @@ Mostly taken from Doom Emacs
     :general
     ("C-c s" #'(org-sort       :which-key "sort"))
     :custom
-    (org-agenda-files '("~/org"))
+    (org-agenda-files '("~/org" "~/.emacs.d"))
     (org-directory "~/org")
     (org-default-notes-file (concat org-directory "/notes.org"))
     (org-confirm-babel-evaluate nil)
@@ -865,7 +864,7 @@ Mostly taken from Doom Emacs
  #+BEGIN_SRC emacs-lisp :results none
    ;; Persistent Undos
    (use-package undo-tree
-     :defer t
+     :after evil
      :diminish
      :custom
      (undo-limit 10000)
@@ -953,6 +952,7 @@ Mostly taken from Doom Emacs
      (keyfreq-autosave-mode 1))
 
    (use-package dumb-jump
+     :defer t
      :custom
      (dumb-jump-default-project "~/code")
      (dumb-jump-selector 'ivy)
