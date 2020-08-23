@@ -158,7 +158,8 @@ Mostly taken from Doom Emacs
                 indent-tabs-mode nil)
 
   ;; Keeping ~/.emacs.d organized
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (defconst my/etc-dir (concat user-emacs-directory "etc/"))
+  (setq custom-file (concat my/etc-dir "custom.el"))
 #+END_SRC
 ** Auto-Tangle
 
@@ -226,7 +227,7 @@ Mostly taken from Doom Emacs
      :straight (:type built-in)
      :hook (after-init . savehist-mode)
      :custom
-     (savehist-file "~/.emacs.d/savehist")
+     (savehist-file (concat my/etc-dir "savehist")) ; hardcoded
      (history-length 500)
      (history-delete-duplicates t)
      (savehist-save-minibuffer-history t))
@@ -353,7 +354,7 @@ Mostly taken from Doom Emacs
      :config
      (evil-snipe-local-mode)
      (general-def 'motion
-       "M-;" #'evil-snipe-repeat
+       ":" #'evil-snipe-repeat
        "M-," #'evil-snipe-repeat-reverse))
 
    ;; s as an operator for surrounding
@@ -510,7 +511,6 @@ Mostly taken from Doom Emacs
    (use-package yasnippet
      :diminish yas-minor-mode
      :hook (after-init . yas-global-mode)
-     :custom (yas-snippet-dirs '("~/.emacs.d/snippets"))
      :general
      (my-localleader-def
        "y"  '(:ignore t           :which-key "Yasnippet")
@@ -593,7 +593,7 @@ Mostly taken from Doom Emacs
     :hook (after-init . projectile-mode)
     :custom
     (projectile-auto-discover nil)
-    (projectile-project-search-path '("~/code/" "~/.emacs.d/"))
+    (projectile-project-search-path '("~/code/"))
     :general
     (my-leader-def
       "p" #'(projectile-command-map :which-key "Projectile")))
@@ -675,7 +675,7 @@ Mostly taken from Doom Emacs
   (use-package org
     :straight (:type built-in)
     :custom
-    (org-agenda-files '("~/org" "~/.emacs.d"))
+    (org-agenda-files '("~/org"))
     (org-directory "~/org")
     (org-default-notes-file (concat org-directory "/notes.org"))
     (org-confirm-babel-evaluate nil)
@@ -686,11 +686,11 @@ Mostly taken from Doom Emacs
     (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
     :custom-face
     ;; No unnecessary background highlighting
-    (org-block ((t (:background "282828"))))
-    (org-block-begin-line ((t (:background "282828"))))
-    (org-block-end-line ((t (:background "282828"))))
-    (org-level-1 ((t (:background "282828"))))
-    (org-quote ((t (:background "282828"))))
+    (org-block ((t (:background "#282828"))))
+    (org-block-begin-line ((t (:background "#282828"))))
+    (org-block-end-line ((t (:background "#282828"))))
+    (org-level-1 ((t (:background "#282828"))))
+    (org-quote ((t (:background "#282828"))))
     ;; Gray out done headlines and text; strike-through the text
     (org-headline-done ((t (:strike-through t :foreground "#7C6f64"))))
     (org-done ((t (:foreground "#7C6f64"))))
@@ -783,11 +783,11 @@ Mostly taken from Doom Emacs
       "M-H"   #'org-shiftleft
       "M-J"   #'org-shiftdown
       "M-K"   #'org-shiftup
-      "C-M-o" #'my/org-insert-subheading
-      "C-S-o" #'my/org-insert-heading-above
-      "C-o"   #'evil-org-org-insert-heading-respect-content-below
-      "M-o"   #'evil-org-org-insert-todo-heading-respect-content-below
-      "M-O"   #'my/org-insert-todo-above))
+      "C-M-;" #'my/org-insert-subheading
+      "C-:" #'my/org-insert-heading-above
+      "C-;"   #'evil-org-org-insert-heading-respect-content-below
+      "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below
+      "M-:"   #'my/org-insert-todo-above))
 #+END_SRC
 * Windows, Buffers, Directory Management
 ** Dired
@@ -808,7 +808,7 @@ Mostly taken from Doom Emacs
     (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
     :general
     ;; (my-localleader-def "w" 'ace-window))
-    ("M-i" #'ace-window))
+    ("M-o" #'ace-window))
 
   (use-package golden-ratio
     :diminish
@@ -895,7 +895,7 @@ Mostly taken from Doom Emacs
      :custom
      (undo-limit 10000)
      (undo-tree-auto-save-history t)
-     (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+     (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))) ;; hardcoded
      :general
      (my-leader-def
        "fu" #'undo-tree-visualize))
