@@ -54,7 +54,7 @@
      :config
      (load-theme 'gruvbox t))
 
-   (use-package display-line-numbers ;; TODO move to early init
+   (use-package display-line-numbers
      :straight (:type built-in)
      :hook (after-init . global-display-line-numbers-mode)
      :config
@@ -411,9 +411,6 @@ Mostly taken from Doom Emacs
 
    (use-package evil-indent-plus
      :hook (after-init . evil-indent-plus-default-bindings))
-     ;; :after evil
-     ;; :config
-     ;; (evil-indent-plus-default-bindings))
  #+END_SRC
 *** Miscellaneous
  #+BEGIN_SRC emacs-lisp :results none
@@ -470,6 +467,9 @@ Mostly taken from Doom Emacs
    (use-package ivy
      :diminish
      :defer 0.1
+     :general
+     ('ivy-minibuffer-map
+       ";" #'ivy-done)
      :custom
      (ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; TODO configure counsel-rg, swiper, counsel-projectile-rg
      :config
@@ -506,7 +506,7 @@ Mostly taken from Doom Emacs
  #+BEGIN_SRC emacs-lisp :results none
    (use-package yasnippet
      :diminish yas-minor-mode
-     :hook ((prog-mode text-mode) . yas-minor-mode)
+     :hook (after-init . yas-global-mode)
      :custom (yas-snippet-dirs '("~/.emacs.d/snippets"))
      :general
      (my-localleader-def
@@ -607,6 +607,15 @@ Mostly taken from Doom Emacs
   (use-package lsp-mode
     :diminish
     :hook prog-mode
+    :custom
+    ;; Disable slow features
+    (lsp-enable-file-watchers nil)
+    (lsp-enable-folding nil)
+    (lsp-enable-text-document-color nil)
+
+    ;; Don't modify our code w/o permission
+    (lsp-enable-indentation nil)
+    (lsp-enable-on-type-formatting nil)
     :general
     (my-localleader-def
       "gr" 'lsp-rename))
@@ -662,8 +671,6 @@ Mostly taken from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
   (use-package org
     :straight (:type built-in)
-    :general
-    ("C-c s" #'(org-sort       :which-key "sort"))
     :custom
     (org-agenda-files '("~/org" "~/.emacs.d"))
     (org-directory "~/org")
@@ -674,20 +681,18 @@ Mostly taken from Doom Emacs
     (org-log-done 'time)
     (org-tag-alist '(("@school" . ?s) ("@personal" . ?p)))
     (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
+    :custom-face
+    ;; No unnecessary background highlighting
+    (org-block ((t (:background "282828"))))
+    (org-block-begin-line ((t (:background "282828"))))
+    (org-block-end-line ((t (:background "282828"))))
+    (org-level-1 ((t (:background "282828"))))
+    (org-quote ((t (:background "282828"))))
+    ;; Gray out done headlines and text; strike-through the text
+    (org-headline-done ((t (:strike-through t :foreground "#7C6f64"))))
+    (org-done ((t (:foreground "#7C6f64"))))
     :config
     (setq org-fontify-done-headline t)
-    ;; No highlighting behind src blocks
-    (dolist (face '(org-block
-                    org-block-begin-line
-                    org-block-end-line
-                    org-level-1
-                    org-quote))
-      (set-face-attribute face nil :background
-                          (color-darken-name
-                           (face-attribute 'default :background) 0)))
-
-    (set-face-attribute 'org-headline-done nil :strike-through t :foreground "#7c6f64")
-    (set-face-attribute 'org-done nil :foreground "#7c6f64")
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((shell   . t)
@@ -735,10 +740,12 @@ Mostly taken from Doom Emacs
     (my-localleader-def
       "c"   '(:ignore t                    :which-key "org")
       "co"   (general-simulate-key "C-c '" :which-key "edit src block in its major mode")
-      "cs"  #'(org-sort                     :which-key "sort")
-      "c,s" #'(org-schedule                 :which-key "schedule")
-      "ct"  #'(org-todo                     :which-key "todo")
-      "ce"  #'(org-ctrl-c-ctrl-c            :which-key "execute"))
+      "cs"  #'(org-sort                    :which-key "sort")
+      "c,s" #'(org-schedule                :which-key "schedule")
+      "ct"  #'(org-todo                    :which-key "todo")
+      "ce"  #'(org-ctrl-c-ctrl-c           :which-key "execute")
+      "cd"  #'(org-deadline                :which-key "deadline")
+      "c."  #'(org-time-stamp              :which-key "timestamp"))
     ('org-read-date-minibuffer-local-map
      "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
      "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
@@ -779,7 +786,7 @@ Mostly taken from Doom Emacs
   ;; easily navigate windows with prefix M-i
   (use-package ace-window
     :custom
-    (aw-keys '(?a ?s ?d ?f ?j ?k ?l))
+    (aw-keys '(?j ?k ?l ?s ?d ?f ?h ?a))
     :general
     ;; (my-localleader-def "w" 'ace-window))
     ("M-i" #'ace-window))
@@ -817,7 +824,7 @@ Mostly taken from Doom Emacs
      (my-localleader-def
        "s" '(hydra-smartparens/body :which-key "Smartparens"))
      :config
-     (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil) ; don't pair ' in elisp mode
+     (sp-local-pair '(org-mode emacs-lisp-mode) "'" nil :actions nil) ; don't pair ' in elisp mode
 
      (defhydra hydra-smartparens ()
        ;; Movement
@@ -939,7 +946,6 @@ Mostly taken from Doom Emacs
      (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
    (use-package keyfreq
-     :defer t
      ;; :custom
      ;; (keyfreq-excluded-commands
      ;;  '(org-self-insert-command
@@ -1005,7 +1011,7 @@ Mostly taken from Doom Emacs
 * Keybindings
 #+BEGIN_SRC emacs-lisp :results none
   (general-def 'evil-window-map
-    "Q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
+    "SPC q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
 
   (my-leader-def
     "h" (general-simulate-key "C-h" :which-key "Help")
