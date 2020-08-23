@@ -52,7 +52,7 @@
    :config
    (load-theme 'gruvbox t))
 
- (use-package display-line-numbers ;; TODO move to early init
+ (use-package display-line-numbers
    :straight (:type built-in)
    :hook (after-init . global-display-line-numbers-mode)
    :config
