@@ -340,7 +340,8 @@ Mostly taken from Doom Emacs
         company
         vterm
         dired
-        eshell))
+        eshell
+        (pdf pdf-tools)))
      :config
      (evil-collection-init))
  #+END_SRC
@@ -756,7 +757,7 @@ Mostly taken from Doom Emacs
     :general
     (my-localleader-def
       "c"    '(:ignore t                    :which-key "org")
-      "co"    (general-simulate-key "C-c '" :which-key "edit src block in its major mode")
+      "c'"    (general-simulate-key "C-c '" :which-key "edit src block in its major mode")
       "cs"  #'(org-sort                     :which-key "sort")
       "c,s" #'(org-schedule                 :which-key "schedule")
       "ct"  #'(org-todo                     :which-key "todo")
@@ -764,7 +765,6 @@ Mostly taken from Doom Emacs
       "cs"  #'(org-sort                     :which-key "sort")
       "c,s" #'(org-schedule                 :which-key "schedule")
       "ct"  #'(org-todo                     :which-key "todo")
-      "ce"  #'(org-ctrl-c-ctrl-c            :which-key "execute")
       "cd"  #'(org-deadline                 :which-key "deadline")
       "c."  #'(org-time-stamp               :which-key "timestamp")
       "ce"  #'(org-export-dispatch          :which-key "export"))
@@ -989,6 +989,15 @@ Mostly taken from Doom Emacs
      :config
      (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
  #+END_SRC
+* Language Specific
+** PDF
+#+BEGIN_SRC emacs-lisp :results none
+  (use-package pdf-tools
+    :mode ("\\.pdf\\'" . pdf-view-mode)
+    :config
+    (evil-set-initial-state 'pdf-view-mode 'normal)
+    (pdf-tools-install :no-query))
+#+END_SRC
 * Functions
 #+BEGIN_SRC emacs-lisp :results none
   ;;;###autoload
