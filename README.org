@@ -345,7 +345,7 @@ Mostly taken from Doom Emacs
      :config
      (evil-collection-init))
  #+END_SRC
-*** Extra operators/motions
+*** Extra operators/motion
  #+BEGIN_SRC emacs-lisp :results none
    ;; 2 character searches with s (ala vim-sneak)
    (use-package evil-snipe
@@ -355,9 +355,9 @@ Mostly taken from Doom Emacs
      (evil-snipe-show-prompt nil)
      (evil-snipe-skip-leading-whitespace nil)
      :config
-     (evil-snipe-local-mode)
+     (evil-snipe-mode)
      (general-def 'motion
-       ":" #'evil-snipe-repeat
+       ":"   #'evil-snipe-repeat
        "M-," #'evil-snipe-repeat-reverse))
 
    ;; s as an operator for surrounding
@@ -697,20 +697,19 @@ Mostly taken from Doom Emacs
     ;; Gray out done headlines and text; strike-through the text
     (org-headline-done ((t (:strike-through t :foreground "#7C6f64"))))
     (org-done ((t (:foreground "#7C6f64"))))
+    :general
+    (:keymaps 'override
+              :prefix "C-c"
+              "s"  #'(org-sort                     :which-key "sort")
+              ",s" #'(org-schedule                 :which-key "schedule")
+              "t"  #'(org-todo                     :which-key "todo")
+              ",c" #'(org-ctrl-c-ctrl-c            :which-key "execute")
+              "s"  #'(org-sort                     :which-key "sort")
+              ",s" #'(org-schedule                 :which-key "schedule")
+              ",d"  #'(org-deadline                 :which-key "deadline")
+              "e"  #'(org-export-dispatch          :which-key "export"))
     :config
     (setq org-fontify-done-headline t)
-    ;; No highlighting behind src blocks
-    ;; (dolist (face '(org-block
-    ;;                 org-block-begin-line
-    ;;                 org-block-end-line
-    ;;                 org-level-1
-    ;;                 org-quote))
-    ;;   (set-face-attribute face nil :background
-    ;;                       (color-darken-name
-    ;;                        (face-attribute 'default :background) 0)))
-
-    (set-face-attribute 'org-headline-done nil :strike-through t :foreground "#7c6f64")
-    (set-face-attribute 'org-done nil :foreground "#7c6f64")
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((shell   . t)
@@ -719,8 +718,8 @@ Mostly taken from Doom Emacs
   (use-package org-agenda
     :straight (:type built-in)
     :general
-    (my-localleader-def
-      "ca" #'org-agenda)
+    (:prefix "C-c"
+             "a" #'org-agenda)
     :config
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
@@ -739,15 +738,16 @@ Mostly taken from Doom Emacs
   (use-package org-capture
     :straight (:type built-in)
     :general
-    (my-localleader-def
-      "cc" #'org-capture))
+    (:prefix "C-c"
+             "c" #'org-capture))
 
   (use-package ol
     :straight (:type built-in)
     :general
-    (my-localleader-def
-      "cl"  #'(org-store-link  :which-key "store link")
-      "c,l" #'(org-insert-link :which-key "insert link")))
+    (:keymaps 'override
+              :prefix "C-c"
+              ",l" #'(org-insert-link :which-key "insert link")
+              "l"  #'(org-store-link  :which-key "store link")))
 #+END_SRC
 ** Evil-Org
 #+BEGIN_SRC emacs-lisp :results none
@@ -756,18 +756,7 @@ Mostly taken from Doom Emacs
     :hook (org-mode . evil-org-mode)
     :general
     (my-localleader-def
-      "c"    '(:ignore t                    :which-key "org")
-      "c'"    (general-simulate-key "C-c '" :which-key "edit src block in its major mode")
-      "cs"  #'(org-sort                     :which-key "sort")
-      "c,s" #'(org-schedule                 :which-key "schedule")
-      "ct"  #'(org-todo                     :which-key "todo")
-      "c,c" #'(org-ctrl-c-ctrl-c            :which-key "execute")
-      "cs"  #'(org-sort                     :which-key "sort")
-      "c,s" #'(org-schedule                 :which-key "schedule")
-      "ct"  #'(org-todo                     :which-key "todo")
-      "cd"  #'(org-deadline                 :which-key "deadline")
-      "c."  #'(org-time-stamp               :which-key "timestamp")
-      "ce"  #'(org-export-dispatch          :which-key "export"))
+      "c"    (general-simulate-key "C-c"))
     ('org-read-date-minibuffer-local-map
      "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
      "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
