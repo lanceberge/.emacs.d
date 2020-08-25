@@ -685,7 +685,7 @@ Mostly taken from Doom Emacs
     (org-startup-folded t)
     (org-M-RET-may-split-line nil)
     (org-log-done 'time)
-    (org-tag-alist '(("@school" . ?s) ("@personal" . ?p)))
+    (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d)))
     (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
     :custom-face
     ;; No unnecessary background highlighting
@@ -700,14 +700,13 @@ Mostly taken from Doom Emacs
     :general
     (:keymaps 'override
               :prefix "C-c"
-              "s"  #'(org-sort                     :which-key "sort")
-              ",s" #'(org-schedule                 :which-key "schedule")
               "t"  #'(org-todo                     :which-key "todo")
               ",c" #'(org-ctrl-c-ctrl-c            :which-key "execute")
               "s"  #'(org-sort                     :which-key "sort")
               ",s" #'(org-schedule                 :which-key "schedule")
-              ",d"  #'(org-deadline                 :which-key "deadline")
-              "e"  #'(org-export-dispatch          :which-key "export"))
+              "d"  #'(org-deadline                 :which-key "deadline")
+              "e"  #'(org-export-dispatch          :which-key "export")
+              "q"  #'(org-set-tags-command         :which-key "add tags"))
     :config
     (setq org-fontify-done-headline t)
     (org-babel-do-load-languages
@@ -737,6 +736,14 @@ Mostly taken from Doom Emacs
 
   (use-package org-capture
     :straight (:type built-in)
+    :custom
+    (org-capture-templates
+     '(("t" "TODO entry"
+        entry (file+headline "~/org/todo.org" "Miscellaneous")
+        "* TODO %?\n %i\n %a")
+      ("d" "org drill"
+        entry (file+headline "~/org/notes.org" "Miscellaneous")
+        "* %? :drill:")))
     :general
     (:prefix "C-c"
              "c" #'org-capture))
@@ -748,6 +755,11 @@ Mostly taken from Doom Emacs
               :prefix "C-c"
               ",l" #'(org-insert-link :which-key "insert link")
               "l"  #'(org-store-link  :which-key "store link")))
+
+  (use-package org-drill
+    :general
+    (:prefix "C-c"
+             ",d" 'org-drill))
 #+END_SRC
 ** Evil-Org
 #+BEGIN_SRC emacs-lisp :results none
