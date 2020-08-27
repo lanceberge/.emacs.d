@@ -252,7 +252,7 @@ Mostly taken from Doom Emacs
      :straight (:type built-in)
      :hook (after-init . savehist-mode)
      :custom
-     (savehist-file (concat my/etc-dir "savehist")) ; hardcoded
+     (savehist-file (expand-file-name "savehist" my/etc-dir))
      (history-length 500)
      (history-delete-duplicates t)
      (savehist-save-minibuffer-history t))
@@ -261,11 +261,13 @@ Mostly taken from Doom Emacs
      :straight (:type built-in)
      :hook (after-init . recentf-mode)
      :custom
+     (recentf-auto-cleanup 'never)
      (recentf-save-file (expand-file-name "recentf" my/etc-dir))
      (recentf-max-saved-items 200))
 
    (use-package flyspell
      :straight (:type built-in)
+     :diminish
      :hook ((text-mode . flyspell-mode)
             (prog-mode . flyspell-prog-mode)))
  #+END_SRC
@@ -793,8 +795,6 @@ Mostly taken from Doom Emacs
              ",d" 'org-drill))
 
   (use-package org-pomodoro
-    ;; :custom
-    ;; (alert-user-configuration (quote ((((:category . "org-pomodoro")) libnotify nil))))
     :general
     ("C-c p" #'org-pomodoro))
 #+END_SRC
