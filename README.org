@@ -3,6 +3,9 @@
     ;;; -*- lexical-binding: t -*-
    (setq gc-cons-threshold most-positive-fixnum)
 
+   (defconst IS-LINUX (eq system-type 'gnu/linux))
+   (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+
    (setq package-enable-at-startup nil)
    (advice-add #'package--ensure-init-file :override #'ignore)
 
@@ -57,9 +60,14 @@
 
    (use-package display-line-numbers
      :straight (:type built-in)
-     :hook (after-init . global-display-line-numbers-mode)
+     ;; :init
+     ;; (setq-default display-line-numbers-width 5)
+     ;; (setq-default display-line-numbers-widen t)
+     ;; (setq-default display-line-numbers-width-start t)
      :config
-     (menu-bar-display-line-numbers-mode 'visual)) ; relative line numbers
+     (global-display-line-numbers-mode)
+     (when IS-LINUX
+       (setq-default display-line-numbers-type 'visual)))
 
    (setq-default mode-line-format
                  '("%e"
@@ -81,25 +89,22 @@
  #+END_SRC
 * Init
 #+BEGIN_SRC emacs-lisp :tangle init.el :results none
-    ;;; -*- lexical-binding: t -*-
-  (defconst config-org (expand-file-name "README.org" user-emacs-directory))
-  (defconst config-el  (expand-file-name "config.el" user-emacs-directory))
+      ;;; -*- lexical-binding: t -*-
+    (defconst config-org (expand-file-name "README.org" user-emacs-directory))
+    (defconst config-el  (expand-file-name "config.el" user-emacs-directory))
 
-  (defconst IS-LINUX (eq system-type 'gnu/linux))
-  (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+    (when (and IS-WINDOWS (null (getenv "HOME")))
+      (setenv "HOME" (getenv "USERPROFILE")))
 
-  (when (and IS-WINDOWS (null (getenv "HOME")))
-    (setenv "HOME" (getenv "USERPROFILE")))
+    (unless (file-exists-p config-el)
+      (require 'org)
+      (org-babel-tangle-file config-org config-el))
 
-  (unless (file-exists-p config-el)
-    (require 'org)
-    (org-babel-tangle-file config-org config-el))
+    (load-file config-el)
 
-  (load-file config-el)
-
-  (when (require 'time-date nil t)
-    (message "Emacs startup time: %.2f seconds."
-             (time-to-seconds (time-since emacs-load-start-time))))
+    (when (require 'time-date nil t)
+      (message "Emacs startup time: %.2f seconds."
+               (time-to-seconds (time-since emacs-load-start-time))))
 #+END_SRC
 * Initial
 ** Settings
@@ -193,16 +198,20 @@ Mostly taken from Doom Emacs
  #+BEGIN_SRC emacs-lisp :results none
    (defun tangle-config ()
      "Export code blocks from the literate config file
-     asynchronously."
+        asynchronously."
      (interactive)
-     (let* ((tangle-config (format "(org-babel-tangle nil \"%s\")" config-el))
-            (process (start-process
-                      "tangle-config" nil
-                      "emacs" config-org "--batch" "--eval" tangle-config))
-            (filter (defun echo-process-output (process output)
-                      "Echo process output."
-                      (message (s-trim output)))))
-       (set-process-filter process filter)))
+     (when IS-LINUX
+       (let* ((tangle-config (format "(org-babel-tangle nil \"%s\")" config-el))
+              (process (start-process
+                        "tangle-config" nil
+                        "emacs" config-org "--batch" "--eval" tangle-config))
+              (filter (defun echo-process-output (process output)
+                        "Echo process output."
+                        (message (s-trim output)))))
+         (set-process-filter process filter)))
+     (when IS-WINDOWS
+       (let ((prog-mode-hook nil))
+         (org-babel-tangle nil config-el))))
 
    (defun add-local-hook (hook function)
      (add-hook hook function nil t))

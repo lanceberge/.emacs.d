@@ -1,6 +1,9 @@
 ;;; -*- lexical-binding: t -*-
 (setq gc-cons-threshold most-positive-fixnum)
 
+(defconst IS-LINUX (eq system-type 'gnu/linux))
+(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+
 (setq package-enable-at-startup nil)
 (advice-add #'package--ensure-init-file :override #'ignore)
 
@@ -55,9 +58,14 @@
 
 (use-package display-line-numbers
   :straight (:type built-in)
-  :hook (after-init . global-display-line-numbers-mode)
+  ;; :init
+  ;; (setq-default display-line-numbers-width 5)
+  ;; (setq-default display-line-numbers-widen t)
+  ;; (setq-default display-line-numbers-width-start t)
   :config
-  (menu-bar-display-line-numbers-mode 'visual)) ; relative line numbers
+  (global-display-line-numbers-mode)
+  (when IS-LINUX
+    (setq-default display-line-numbers-type 'visual)))
 
 (setq-default mode-line-format
               '("%e"
