@@ -1,6 +1,6 @@
 * Early-Init
  #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
-   ;;; -*- lexical-binding: t -*-
+    ;;; -*- lexical-binding: t -*-
    (setq gc-cons-threshold most-positive-fixnum)
 
    (setq package-enable-at-startup nil)
@@ -16,7 +16,8 @@
          scroll-bar-mode nil
          frame-inhibit-implied-resize t
          inhibit-default-init t
-         site-run-file nil)
+         site-run-file nil
+         comp-deferred-compilation nil)
 
    (set-face-attribute 'default nil
                        :family "DejaVu Sans Mono"
@@ -60,29 +61,35 @@
      :config
      (menu-bar-display-line-numbers-mode 'visual)) ; relative line numbers
 
-  (setq-default mode-line-format
-                '("%e"
-                  mode-line-front-space
-                  mode-line-mule-info
-                  mode-line-client-mode
-                  mode-line-modified
-                  mode-line-remote
-                  mode-line-frame-indentifcation
-                  " "
-                  mode-line-buffer-identification
-                  "  "
-                  (vc-mode vc-mode)
-                  " "
-                  mode-line-modes
-                  " "
-                  mode-line-misc-info
-                  mode-line-end-spaces))
+   (setq-default mode-line-format
+                 '("%e"
+                   mode-line-front-space
+                   mode-line-mule-info
+                   mode-line-client-mode
+                   mode-line-modified
+                   mode-line-remote
+                   mode-line-frame-indentifcation
+                   " "
+                   mode-line-buffer-identification
+                   "  "
+                   (vc-mode vc-mode)
+                   " "
+                   mode-line-modes
+                   " "
+                   mode-line-misc-info
+                   mode-line-end-spaces))
  #+END_SRC
 * Init
 #+BEGIN_SRC emacs-lisp :tangle init.el :results none
-  ;;; -*- lexical-binding: t -*-
+    ;;; -*- lexical-binding: t -*-
   (defconst config-org (expand-file-name "README.org" user-emacs-directory))
   (defconst config-el  (expand-file-name "config.el" user-emacs-directory))
+
+  (defconst IS-LINUX (eq system-type 'gnu/linux))
+  (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+
+  (when (and IS-WINDOWS (null (getenv "HOME")))
+    (setenv "HOME" (getenv "USERPROFILE")))
 
   (unless (file-exists-p config-el)
     (require 'org)
@@ -91,8 +98,8 @@
   (load-file config-el)
 
   (when (require 'time-date nil t)
-      (message "Emacs startup time: %.2f seconds."
-                 (time-to-seconds (time-since emacs-load-start-time))))
+    (message "Emacs startup time: %.2f seconds."
+             (time-to-seconds (time-since emacs-load-start-time))))
 #+END_SRC
 * Initial
 ** Settings
@@ -100,7 +107,7 @@
 Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
-    ;;; -*- lexical-binding: t -*-
+              ;;; -*- lexical-binding: t -*-
   (defvar default-file-name-handler-alist file-name-handler-alist)
 
   (setq file-name-handler-alist nil
@@ -119,7 +126,6 @@ Mostly taken from Doom Emacs
         ;; inhibit-default-init t
         initial-scratch-message nil
         initial-major-mode 'fundamental-mode ; start in an empty mode
-        command-line-x-option-alist nil ; less command line options to process on startup
         user-mail-address "bergeron.lance6@gmail.com"
 
         kill-buffer-query-functions nil
@@ -141,7 +147,26 @@ Mostly taken from Doom Emacs
         indent-tabs-mode nil
         apropos-do-all t) ; more extensive apropos searches
 
+  (unless IS-WINDOWS
+    (setq selection-coding-system 'utf-8))
+
+  (when IS-WINDOWS
+    (setq w32-get-true-file-attributes nil
+          w32-pipe-read-delay 0
+          w32-pipe-buffer-size (* 64 1024)
+          w32-lwindow-modifier 'super
+          w32-rwindow-modifier 'super
+          abbreviated-home-dir "\\ `'"))
+
+  (unless IS-LINUX
+    (setq command-line-x-option-alist nil))
+
+  (when IS-LINUX
+    (setq x-gtk-use-system-tooltips nil))
+
   (advice-add #'tty-run-terminal-initialization :override #'ignore)
+
+  (advice-add #'display-startup-echo-area-message :override #'ignore) ; Get rid of For information about GNU Emacs message
 
   (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
 
@@ -236,7 +261,13 @@ Mostly taken from Doom Emacs
      :straight (:type built-in)
      :hook (after-init . recentf-mode)
      :custom
+     (recentf-save-file (expand-file-name "recentf" my/etc-dir))
      (recentf-max-saved-items 200))
+
+   (use-package flyspell
+     :straight (:type built-in)
+     :hook ((text-mode . flyspell-mode)
+            (prog-mode . flyspell-prog-mode)))
  #+END_SRC
 ** Keymap Management
  #+BEGIN_SRC emacs-lisp :results none
