@@ -772,7 +772,7 @@ Mostly taken from Doom Emacs
      '(("t" "TODO entry"
         entry (file+headline "~/org/todo.org" "Miscellaneous")
         "* TODO %?\n %i\n %a")
-      ("d" "org drill"
+       ("d" "org drill"
         entry (file+headline "~/org/notes.org" "Miscellaneous")
         "* %? :drill:")))
     :general
@@ -791,6 +791,12 @@ Mostly taken from Doom Emacs
     :general
     (:prefix "C-c"
              ",d" 'org-drill))
+
+  (use-package org-pomodoro
+    ;; :custom
+    ;; (alert-user-configuration (quote ((((:category . "org-pomodoro")) libnotify nil))))
+    :general
+    ("C-c p" #'org-pomodoro))
 #+END_SRC
 ** Evil-Org
 #+BEGIN_SRC emacs-lisp :results none
