@@ -1035,6 +1035,10 @@ Mostly taken from Doom Emacs
      (dumb-jump-prefer-searcher 'rg)
      :config
      (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
+   (use-package tramp
+     :straight (:type built-in)
+     :defer t)
  #+END_SRC
 * Language Specific
 ** PDF
