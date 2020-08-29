@@ -279,6 +279,11 @@ Mostly taken from Doom Emacs
      :diminish
      :hook ((text-mode . flyspell-mode)
             (prog-mode . flyspell-prog-mode)))
+
+  (use-package eldoc
+    :straight (:type built-in)
+    :defer t
+    :diminish)
  #+END_SRC
 ** Keymap Management
  #+BEGIN_SRC emacs-lisp :results none
@@ -715,7 +720,7 @@ Mostly taken from Doom Emacs
     (show-paren-when-point-inside-paren t))
 #+END_SRC
 * Org
-** Org
+** Org & built-ins
 #+BEGIN_SRC emacs-lisp :results none
   (use-package org
     :straight (:type built-in)
@@ -773,9 +778,6 @@ Mostly taken from Doom Emacs
     (org-src-window-setup 'current-window)
     (org-src-block-faces nil))
 
-  (use-package org-bullets
-    :hook (org-mode . org-bullets-mode))
-
   (use-package org-capture
     :straight (:type built-in)
     :custom
@@ -797,15 +799,20 @@ Mostly taken from Doom Emacs
               :prefix "C-c"
               ",l" #'(org-insert-link :which-key "insert link")
               "l"  #'(org-store-link  :which-key "store link")))
-
+#+END_SRC
+** Non-built-ins
+#+BEGIN_SRC emacs-lisp :results none
   (use-package org-drill
     :general
     (:prefix "C-c"
-             ",d" 'org-drill))
+             ",d" #'org-drill))
 
   (use-package org-pomodoro
     :general
     ("C-c p" #'org-pomodoro))
+
+  (use-package org-bullets
+    :hook (org-mode . org-bullets-mode))
 #+END_SRC
 ** Evil-Org
 #+BEGIN_SRC emacs-lisp :results none
