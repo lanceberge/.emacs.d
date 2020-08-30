@@ -297,7 +297,7 @@ Mostly taken from Doom Emacs
      ";"  #'(shell-command            :which-key "shell command")
      "w"  '(:ignore t                :which-key "Windows")
      "w"   (general-simulate-key "C-w") ; window command
-     ;; Buffers TODO make hydra
+     ;; Buffers
      "b"  '(:ignore t                :which-key "Buffers")
      "bs" #'(save-buffer              :which-key "write file")
      "bd" #'(kill-this-buffer         :which-key "delete buffer")
@@ -706,7 +706,7 @@ Mostly taken from Doom Emacs
     (show-paren-when-point-inside-paren t))
 #+END_SRC
 * Org
-** Org & built-ins
+** Org
 #+BEGIN_SRC emacs-lisp :results none
   (use-package org
     :straight (:type built-in)
@@ -750,7 +750,9 @@ Mostly taken from Doom Emacs
     (add-hook 'kill-emacs-hook
               (lambda ()
                 (org-babel-tangle-file config-org config-el))))
-
+#+END_SRC
+** Org built-ins
+#+BEGIN_SRC emacs-lisp :results none
   (use-package org-agenda
     :straight (:type built-in)
     :general
