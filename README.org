@@ -318,10 +318,6 @@ Mostly taken from Doom Emacs
                 (message "Emacs startup time: %.2f seconds."
                          (time-to-seconds (time-since emacs-load-start-time))))))
 
-  (add-hook 'kill-emacs-hook
-            (lambda ()
-              (org-babel-tangle-file config-org config-el)))
-
   (add-hook 'emacs-startup-hook
             (lambda ()
               (setq gc-cons-threshold 16777216
@@ -477,7 +473,7 @@ Mostly taken from Doom Emacs
 
    (use-package origami ; code folding
      :diminish
-     :hook ((prog-mode text-mode) . origami-mode)
+     :hook (prog-mode . origami-mode)
      :general
      ('normal
       "zm" #'origami-close-node-recursively
@@ -749,7 +745,11 @@ Mostly taken from Doom Emacs
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((shell   . t)
-       (haskell . t))))
+       (haskell . t)))
+
+    (add-hook 'kill-emacs-hook
+              (lambda ()
+                (org-babel-tangle-file config-org config-el))))
 
   (use-package org-agenda
     :straight (:type built-in)

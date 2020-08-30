@@ -51,17 +51,12 @@
 
 (straight-use-package 'use-package)
 
-;; UI
 (use-package gruvbox-theme
   :config
   (load-theme 'gruvbox t))
 
 (use-package display-line-numbers
   :straight (:type built-in)
-  ;; :init
-  ;; (setq-default display-line-numbers-width 5)
-  ;; (setq-default display-line-numbers-widen t)
-  ;; (setq-default display-line-numbers-width-start t)
   :config
   (global-display-line-numbers-mode)
   (when IS-LINUX
