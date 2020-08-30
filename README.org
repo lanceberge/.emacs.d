@@ -1,4 +1,4 @@
-* Table of Contents                                                     :TOC:
+* Table of Contents                                                     :TOC_3:
 - [[#early-init][Early-Init]]
   - [[#initial-settings][Initial Settings]]
   - [[#straight][Straight]]
@@ -14,6 +14,9 @@
 - [[#evil-mode][Evil Mode]]
   - [[#evil][Evil]]
   - [[#evil-related][Evil-Related]]
+    - [[#evil-collection][Evil-Collection]]
+    - [[#extra-operatorsmotion][Extra operators/motion]]
+    - [[#miscellaneous][Miscellaneous]]
 - [[#completion][Completion]]
   - [[#ivy][Ivy]]
   - [[#yasnippet][Yasnippet]]
@@ -32,10 +35,10 @@
   - [[#windows][Windows]]
 - [[#editing][Editing]]
   - [[#smartparens][Smartparens]]
-  - [[#miscellaneous][Miscellaneous]]
-- [[#system][System]]
-  - [[#terminal-emulator][Terminal Emulator]]
   - [[#miscellaneous-1][Miscellaneous]]
+- [[#system][System]]
+  - [[#terminalsshells][Terminals/shells]]
+  - [[#miscellaneous-2][Miscellaneous]]
 - [[#language-specific][Language Specific]]
   - [[#pdf][PDF]]
 - [[#functions][Functions]]
@@ -204,7 +207,14 @@ Mostly taken from Doom Emacs
 
   ;; Keeping ~/.emacs.d organized
   (defconst my/etc-dir (concat user-emacs-directory "etc/"))
-  (setq custom-file (concat my/etc-dir "custom.el"))
+  (setq custom-file                 (expand-file-name "custom.el" my/etc-dir)
+        bookmark-default-file       (expand-file-name "bookarks" my/etc-dir)
+        custom-theme-directory      (expand-file-name "themes/" my/etc-dir)
+        url-configuration-directory (expand-file-name "url/" my/etc-dir)
+        url-cache-directory         (expand-file-name "url/" my/etc-dir)
+        persist--directory-location (expand-file-name "persist/" my/etc-dir)
+        transient-history-file      (expand-file-name "transient/history.el" my/etc-dir)
+        auto-save-list-file-prefix  (expand-file-name "auto-save/sessions" my/etc-dir))
 #+END_SRC
 ** OS Specific
 #+BEGIN_SRC emacs-lisp :results none
@@ -253,7 +263,9 @@ Mostly taken from Doom Emacs
 
     (use-package saveplace
       :straight (:type built-in)
-      :hook (after-init . save-place-mode))
+      :hook (after-init . save-place-mode)
+      :custom
+      (save-place-file (expand-file-name "places" my/etc-dir)))
 
     (use-package whitespace
       :straight (:type built-in)
@@ -547,10 +559,11 @@ Mostly taken from Doom Emacs
    (use-package flx
      :defer t) ; fuzzy sorting for ivy
 
-   (use-package smex ; TODO switch to amx
+   (use-package amx ; TODO switch to amx
+     :hook (ivy-mode . amx-mode)
      :custom
-     (smex-history-length 50)
-     :defer t)
+     (amx-save-file (expand-file-name "amx-history" my/etc-dir))
+     (amx-history-length 50))
 
    (use-package ivy
      :diminish
@@ -677,6 +690,8 @@ Mostly taken from Doom Emacs
     :custom
     (projectile-auto-discover nil)
     (projectile-project-search-path '("~/code/"))
+    (projectile-cache-file (expand-file-name "projectile/cache.el" my/etc-dir))
+    (projectile-known-projects-file (expand-file-name "projectile/known-projects.el" my/etc-dir))
     :general
     (my-leader-def
       "p" #'(projectile-command-map :which-key "Projectile")))
@@ -763,7 +778,8 @@ Mostly taken from Doom Emacs
     (org-M-RET-may-split-line nil)
     (org-log-done 'time)
     (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
-    (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
+    (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)"))
+    (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir)))
     :custom-face
     ;; No unnecessary background highlighting
     (org-block ((t (:background "#282828"))))
@@ -791,6 +807,7 @@ Mostly taken from Doom Emacs
      '((shell   . t)
        (haskell . t)))
 
+    ;; tangle config every time I quit emacs
     (add-hook 'kill-emacs-hook
               (lambda ()
                 (org-babel-tangle-file config-org config-el))))
@@ -847,11 +864,13 @@ Mostly taken from Doom Emacs
     :general
     ("C-c p" #'org-pomodoro))
 
-  (use-package org-bullets
-    :hook (org-mode . org-bullets-mode))
+  (use-package org-superstar
+    :hook (org-mode . org-superstar-mode)
+    :custom
+    (org-hide-leading-stars t))
 
   (use-package toc-org
-    :hook (org-mode . toc-org-mode))
+    :hook ((org-mode markdown-mode) . toc-org-mode))
 #+END_SRC
 ** Evil-Org
 #+BEGIN_SRC emacs-lisp :results none
@@ -986,7 +1005,8 @@ Mostly taken from Doom Emacs
      :custom
      (undo-limit 10000)
      (undo-tree-auto-save-history t)
-     (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))) ;; hardcoded
+     ;; (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
+     (undo-tree-history-directory-alist (list (cons "." (expand-file-name "undo/" my/etc-dir))))
      :general
      (my-leader-def
        "fu" #'undo-tree-visualize))
@@ -1011,7 +1031,7 @@ Mostly taken from Doom Emacs
      :hook (prog-mode . aggressive-indent-mode))
  #+END_SRC
 * System
-** Terminal Emulator
+** Terminals/shells
  #+BEGIN_SRC emacs-lisp :results none
    (use-package vterm
      :custom
@@ -1021,6 +1041,13 @@ Mostly taken from Doom Emacs
        "o"   '(:ignore t          :which-key "Open")
        "ot"  #'(vterm              :which-key "open vterm")
        "ovt" #'(vterm-other-window :which-key "open vterm in vsplit")))
+
+   (use-package shell
+     :custom
+     (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
+     :general
+     (my-leader-def
+       "oe" #'eshell))
  #+END_SRC
 ** Miscellaneous
  #+BEGIN_SRC emacs-lisp :results none
@@ -1078,6 +1105,8 @@ Mostly taken from Doom Emacs
 
    (use-package tramp
      :straight (:type built-in)
+     :custom
+     (tramp-autosave-directory (expand-file-name "tramp" my/etc-dir))
      :defer t)
  #+END_SRC
 * Language Specific
