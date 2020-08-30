@@ -201,34 +201,40 @@ Mostly taken from Doom Emacs
   (setq custom-file (concat my/etc-dir "custom.el"))
 #+END_SRC
 ** Auto-Tangle
-
- Taken from: [[https://github.com/KaratasFurkan/.emacs.d]]
-
  #+BEGIN_SRC emacs-lisp :results none
-   (defun tangle-config ()
-     "Export code blocks from the literate config file
-        asynchronously."
-     (interactive)
-     (when IS-LINUX
-       (let* ((tangle-config (format "(org-babel-tangle nil \"%s\")" config-el))
-              (process (start-process
-                        "tangle-config" nil
-                        "emacs" config-org "--batch" "--eval" tangle-config))
-              (filter (defun echo-process-output (process output)
-                        "Echo process output."
-                        (message (s-trim output)))))
-         (set-process-filter process filter)))
-     (when IS-WINDOWS
-       (let ((prog-mode-hook nil))
-         (org-babel-tangle nil config-el))))
+   ;;  (defun tangle-config ()
+   ;;   "Export code blocks from the literate config file
+   ;;      asynchronously."
+   ;;   (interactive)
+   ;;   (when IS-LINUX
+   ;;     (let* ((tangle-config (format "(org-babel-tangle nil \"%s\")" config-el))
+   ;;            (process (start-process
+   ;;                      "tangle-config" nil
+   ;;                      "emacs" config-org "--batch" "--eval" tangle-config))
+   ;;            (filter (defun echo-process-output (process output)
+   ;;                      "Echo process output."
+   ;;                      (message (s-trim output)))))
+   ;;       (set-process-filter process filter)))
+   ;;   (when IS-WINDOWS
+   ;;     (let ((prog-mode-hook nil))
+   ;;       (org-babel-tangle nil config-el))))
 
-   (defun add-local-hook (hook function)
-     (add-hook hook function nil t))
+   ;; (defun add-local-hook (hook function)
+   ;;   (add-hook hook function nil t))
 
-   (add-hook 'org-mode-hook
+   ;; (add-hook 'org-mode-hook
+   ;;           (lambda ()
+   ;;             (if (equal (buffer-file-name) config-org)
+   ;;                 (add-local-hook 'after-save-hook 'tangle-config))))
+   ;; (defun my/tangle-config ()
+   ;;   "Export code blocks from the literate config file
+   ;;               asynchronously."
+   ;;   (interactive)
+   ;;     (org-babel-tangle nil config-el))
+
+   (add-hook 'kill-emacs-hook
              (lambda ()
-               (if (equal (buffer-file-name) config-org)
-                   (add-local-hook 'after-save-hook 'tangle-config))))
+               (org-babel-tangle-file config-org config-el)))
  #+END_SRC
 ** Built-in Packages
  #+BEGIN_SRC emacs-lisp :results none
