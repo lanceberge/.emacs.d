@@ -1,3 +1,47 @@
+* Table of Contents                                                     :TOC:
+- [[#early-init][Early-Init]]
+  - [[#initial-settings][Initial Settings]]
+  - [[#straight][Straight]]
+  - [[#ui][UI]]
+- [[#init][Init]]
+- [[#initial][Initial]]
+  - [[#settings][Settings]]
+  - [[#os-specific][OS Specific]]
+  - [[#built-in-packages][Built-in Packages]]
+  - [[#keymap-management][Keymap Management]]
+  - [[#keybindings][Keybindings]]
+  - [[#hooks][Hooks]]
+- [[#evil-mode][Evil Mode]]
+  - [[#evil][Evil]]
+  - [[#evil-related][Evil-Related]]
+- [[#completion][Completion]]
+  - [[#ivy][Ivy]]
+  - [[#yasnippet][Yasnippet]]
+  - [[#company][Company]]
+- [[#version-control][Version Control]]
+- [[#project-management][Project Management]]
+- [[#lsp-related][LSP-Related]]
+- [[#ui-1][UI]]
+- [[#org][Org]]
+  - [[#org-1][Org]]
+  - [[#org-built-ins][Org built-ins]]
+  - [[#non-built-ins][Non-built-ins]]
+  - [[#evil-org][Evil-Org]]
+- [[#windows-buffers-directory-management][Windows, Buffers, Directory Management]]
+  - [[#dired][Dired]]
+  - [[#windows][Windows]]
+- [[#editing][Editing]]
+  - [[#smartparens][Smartparens]]
+  - [[#miscellaneous][Miscellaneous]]
+- [[#system][System]]
+  - [[#terminal-emulator][Terminal Emulator]]
+  - [[#miscellaneous-1][Miscellaneous]]
+- [[#language-specific][Language Specific]]
+  - [[#pdf][PDF]]
+- [[#functions][Functions]]
+- [[#in-progress][In-Progress]]
+  - [[#mu4e][Mu4e]]
+
 * Early-Init
 ** Initial Settings
  #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
@@ -718,7 +762,7 @@ Mostly taken from Doom Emacs
     (org-startup-folded t)
     (org-M-RET-may-split-line nil)
     (org-log-done 'time)
-    (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d)))
+    (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
     (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
     :custom-face
     ;; No unnecessary background highlighting
@@ -805,6 +849,9 @@ Mostly taken from Doom Emacs
 
   (use-package org-bullets
     :hook (org-mode . org-bullets-mode))
+
+  (use-package toc-org
+    :hook (org-mode . toc-org-mode))
 #+END_SRC
 ** Evil-Org
 #+BEGIN_SRC emacs-lisp :results none
