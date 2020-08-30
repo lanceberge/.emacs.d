@@ -338,9 +338,6 @@ Mostly taken from Doom Emacs
  #+END_SRC
 ** Keybindings
  #+BEGIN_SRC emacs-lisp :results none
-   (general-def 'evil-window-map
-     "SPC q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
-
    (my-leader-def
      "h" (general-simulate-key "C-h" :which-key "Help")
      ;; Windows
@@ -387,7 +384,9 @@ Mostly taken from Doom Emacs
     ('(normal visual motion)
      ";" #'evil-ex ; switch ; and :
      "H" #'evil-first-non-blank
-     "L" #'evil-end-of-line)
+     "L" #'evil-end-of-line
+     "M-/" #'evil-search-forward
+     "M-?" #'evil-search-backward)
 
     ;; Evil-avy
     ('normal :prefix "g"
@@ -398,6 +397,9 @@ Mostly taken from Doom Emacs
       "ft" #'(evil-avy-goto-char-timer           :which-key "avy timer")
       "bS" #'(evil-write-all                     :which-key "write all buffers")
       "bl" #'(evil-switch-to-windows-last-buffer :which-key "last buffer"))
+
+   ('evil-window-map
+     "SPC q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
 
     :config
     (evil-mode)
@@ -584,9 +586,11 @@ Mostly taken from Doom Emacs
 
    (use-package swiper
      :general
-     ('normal
-      [remap evil-search-forward]  #'swiper
-      [remap evil-search-backward] #'swiper-backward)
+     ('normal override
+       "?" #'swiper-backward
+       "/" #'swiper)
+      ;; [remap evil-search-forward]  #'swiper
+      ;; [remap evil-search-backward] #'swiper-backward)
      (my-leader-def
        "fb" #'(swiper-multi :which-key "swiper in buffer")
        "fB" #'(swiper-all   :which-key "swiper in all buffers")))
@@ -602,7 +606,9 @@ Mostly taken from Doom Emacs
        "y"  '(:ignore t           :which-key "Yasnippet")
        "yi" #'(yas-insert-snippet  :which-key "insert snippet")
        "yn" #'(yas-new-snippet     :which-key "new snippet")
-       "yl" #'(yas-describe-tables :which-key "list snippets")))
+       "yl" #'(yas-describe-tables :which-key "list snippets"))
+     :config
+     (yas-global-mode))
 
    (use-package yasnippet-snippets
      :defer t)
@@ -1133,4 +1139,15 @@ Mostly taken from Doom Emacs
     (evil-commentary-line)
     (evil-previous-line 2)
     (join-line))
+#+END_SRC
+* In-Progress
+** Mu4e
+#+BEGIN_SRC emacs-lisp :results none
+(use-package mu4e
+  :disabled t
+  :custom
+  (mail-user-agent 'mu4e-user-agent))
+
+(use-package org-msg
+  :after mu4e)
 #+END_SRC
