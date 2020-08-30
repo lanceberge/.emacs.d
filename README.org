@@ -6,6 +6,7 @@
 - [[#init][Init]]
 - [[#initial][Initial]]
   - [[#settings][Settings]]
+  - [[#keeping-emacsd-organized][Keeping ~/.emacs.d organized]]
   - [[#os-specific][OS Specific]]
   - [[#built-in-packages][Built-in Packages]]
   - [[#keymap-management][Keymap Management]]
@@ -204,7 +205,9 @@ Mostly taken from Doom Emacs
                 bidi-paragraph-direction 'left-to-right
                 cursor-in-non-selected-windows nil
                 indent-tabs-mode nil)
-
+#+END_SRC
+** Keeping ~/.emacs.d organized
+#+BEGIN_SRC emacs-lisp :results none
   ;; Keeping ~/.emacs.d organized
   (defconst my/etc-dir (concat user-emacs-directory "etc/"))
   (setq custom-file                 (expand-file-name "custom.el" my/etc-dir)
@@ -559,7 +562,7 @@ Mostly taken from Doom Emacs
    (use-package flx
      :defer t) ; fuzzy sorting for ivy
 
-   (use-package amx ; TODO switch to amx
+   (use-package amx
      :hook (ivy-mode . amx-mode)
      :custom
      (amx-save-file (expand-file-name "amx-history" my/etc-dir))
