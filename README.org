@@ -146,6 +146,24 @@ Mostly taken from Doom Emacs
         indent-tabs-mode nil
         apropos-do-all t) ; more extensive apropos searches
 
+  (advice-add #'tty-run-terminal-initialization :override #'ignore)
+
+  (advice-add #'display-startup-echo-area-message :override #'ignore) ; Get rid of For information about GNU Emacs message
+
+  (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
+
+  ;; Disable bidirectional text rendering for performance
+  (setq-default bidi-display-reordering 'left-to-right
+                bidi-paragraph-direction 'left-to-right
+                cursor-in-non-selected-windows nil
+                indent-tabs-mode nil)
+
+  ;; Keeping ~/.emacs.d organized
+  (defconst my/etc-dir (concat user-emacs-directory "etc/"))
+  (setq custom-file (concat my/etc-dir "custom.el"))
+#+END_SRC
+** OS Specific
+#+BEGIN_SRC emacs-lisp :results none
   (unless IS-WINDOWS
     (setq selection-coding-system 'utf-8))
 
@@ -165,22 +183,6 @@ Mostly taken from Doom Emacs
 
   (when IS-LINUX
     (setq x-gtk-use-system-tooltips nil))
-
-  (advice-add #'tty-run-terminal-initialization :override #'ignore)
-
-  (advice-add #'display-startup-echo-area-message :override #'ignore) ; Get rid of For information about GNU Emacs message
-
-  (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
-
-  ;; Disable bidirectional text rendering for performance
-  (setq-default bidi-display-reordering 'left-to-right
-                bidi-paragraph-direction 'left-to-right
-                cursor-in-non-selected-windows nil
-                indent-tabs-mode nil)
-
-  ;; Keeping ~/.emacs.d organized
-  (defconst my/etc-dir (concat user-emacs-directory "etc/"))
-  (setq custom-file (concat my/etc-dir "custom.el"))
 #+END_SRC
 ** Built-in Packages
  #+BEGIN_SRC emacs-lisp :results none
