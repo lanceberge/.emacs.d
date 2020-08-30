@@ -217,7 +217,6 @@ Mostly taken from Doom Emacs
   ;; Keeping ~/.emacs.d organized
   (defconst my/etc-dir (concat user-emacs-directory "etc/"))
   (setq custom-file                 (expand-file-name "custom.el" my/etc-dir)
-        bookmark-default-file       (expand-file-name "bookarks" my/etc-dir)
         custom-theme-directory      (expand-file-name "themes/" my/etc-dir)
         url-configuration-directory (expand-file-name "url/" my/etc-dir)
         url-cache-directory         (expand-file-name "url/" my/etc-dir)
@@ -290,69 +289,75 @@ Mostly taken from Doom Emacs
  #+END_SRC
 ** Built-in Packages
  #+BEGIN_SRC emacs-lisp :results none
-    (use-package simple
-      :straight (:type built-in)
-      :defer t
-      :custom
-      (idle-update-delay 1.0) ; slow down how often emacs updates its ui
-      (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
+   (use-package simple
+     :straight (:type built-in)
+     :defer t
+     :custom
+     (idle-update-delay 1.0) ; slow down how often emacs updates its ui
+     (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
 
-    (use-package advice
-      :straight (:type built-in)
-      :defer t
-      :custom (ad-redefinition-action 'accept)) ; disable warnings from legacy advice system
+   (use-package advice
+     :straight (:type built-in)
+     :defer t
+     :custom (ad-redefinition-action 'accept)) ; disable warnings from legacy advice system
 
-    (use-package files
-      :straight (:type built-in)
-      :defer t
-      :custom
-      (make-backup-files nil)
-      (create-lockfiles nil)
-      (auto-mode-case-fold nil)
-      (auto-save-default nil))
+   (use-package files
+     :straight (:type built-in)
+     :defer t
+     :custom
+     (make-backup-files nil)
+     (create-lockfiles nil)
+     (auto-mode-case-fold nil)
+     (auto-save-default nil))
 
-    (use-package saveplace
-      :straight (:type built-in)
-      :hook (after-init . save-place-mode)
-      :custom
-      (save-place-file (expand-file-name "places" my/etc-dir)))
+   (use-package saveplace
+     :straight (:type built-in)
+     :hook (after-init . save-place-mode)
+     :custom
+     (save-place-file (expand-file-name "places" my/etc-dir)))
 
-    (use-package whitespace
-      :straight (:type built-in)
-      :hook (before-save . whitespace-cleanup))
-
-    (use-package eldoc
-      :straight (:type built-in)
-      :defer t
-      :diminish)
-
-    (use-package savehist
-      :straight (:type built-in)
-      :hook (after-init . savehist-mode)
-      :custom
-      (savehist-file (expand-file-name "savehist" my/etc-dir))
-      (history-length 500)
-      (history-delete-duplicates t)
-      (savehist-save-minibuffer-history t))
-
-    (use-package recentf
-      :straight (:type built-in)
-      :defer 0.5
-      :custom
-      (recentf-auto-cleanup 'never)
-      (recentf-save-file (expand-file-name "recentf" my/etc-dir))
-      (recentf-max-saved-items 200))
-
-    (use-package flyspell
-      :straight (:type built-in)
-      :diminish
-      :hook ((text-mode . flyspell-mode)
-             (prog-mode . flyspell-prog-mode)))
+   (use-package whitespace
+     :straight (:type built-in)
+     :hook (before-save . whitespace-cleanup))
 
    (use-package eldoc
      :straight (:type built-in)
      :defer t
      :diminish)
+
+   (use-package savehist
+     :straight (:type built-in)
+     :hook (after-init . savehist-mode)
+     :custom
+     (savehist-file (expand-file-name "savehist" my/etc-dir))
+     (history-length 500)
+     (history-delete-duplicates t)
+     (savehist-save-minibuffer-history t))
+
+   (use-package recentf
+     :straight (:type built-in)
+     :defer 0.5
+     :custom
+     (recentf-auto-cleanup 'never)
+     (recentf-save-file (expand-file-name "recentf" my/etc-dir))
+     (recentf-max-saved-items 200))
+
+   (use-package flyspell
+     :straight (:type built-in)
+     :diminish
+     :hook ((text-mode . flyspell-mode)
+            (prog-mode . flyspell-prog-mode)))
+
+   (use-package eldoc
+     :straight (:type built-in)
+     :defer t
+     :diminish)
+
+   (use-package bookmark
+     :straight (:type built-in)
+     :defer t
+     :custom
+     (bookmark-default-file (expand-file-name "bookarks" my/etc-dir)))
  #+END_SRC
 ** Keybindings
  #+BEGIN_SRC emacs-lisp :results none
@@ -405,6 +410,7 @@ Mostly taken from Doom Emacs
     (evil-vsplit-window-right t)
     (evil-search-wrap t)
     (evil-want-keybinding nil)
+    (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
     :general
     ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
@@ -433,6 +439,8 @@ Mostly taken from Doom Emacs
    ('evil-window-map
      "SPC q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
 
+   ('(normal insert motion visual)
+     "C-l" #'evil-ex-nohighlight)
     :config
     (evil-mode)
     (general-def 'evil-window-map
