@@ -7,9 +7,3 @@
   (org-babel-tangle-file config-org config-el))
 
 (load-file config-el)
-
-(add-hook 'after-init-hook
-          (lambda ()
-            (when (require 'time-date nil t)
-              (message "Emacs startup time: %.2f seconds."
-                       (time-to-seconds (time-since emacs-load-start-time))))))
