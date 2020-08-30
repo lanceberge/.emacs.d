@@ -1,6 +1,7 @@
 * Early-Init
+** Initial Settings
  #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
-    ;;; -*- lexical-binding: t -*-
+   ;;; -*- lexical-binding: t -*-
    (setq gc-cons-threshold most-positive-fixnum)
 
    (defconst IS-LINUX (eq system-type 'gnu/linux))
@@ -31,6 +32,9 @@
 
    (advice-add #'x-apply-session-resources :override #'ignore)
 
+#+END_SRC
+** Straight
+ #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
    ;; Boostrap straight.el
    (let ((bootstrap-file
           (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -53,58 +57,60 @@
 
    (straight-use-package 'use-package)
 
-   ;; UI
-   (use-package gruvbox-theme
-     :config
-     (load-theme 'gruvbox t))
+#+END_SRC
+** UI
+#+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
+  ;; UI
+  (use-package gruvbox-theme
+    :config
+    (load-theme 'gruvbox t))
 
-   (use-package display-line-numbers
-     :straight (:type built-in)
-     ;; :init
-     ;; (setq-default display-line-numbers-width 5)
-     ;; (setq-default display-line-numbers-widen t)
-     ;; (setq-default display-line-numbers-width-start t)
-     :config
-     (global-display-line-numbers-mode)
-     (when IS-LINUX
-       (setq-default display-line-numbers-type 'visual)))
+  (use-package display-line-numbers
+    :straight (:type built-in)
+    ;; :init
+    ;; (setq-default display-line-numbers-width 5)
+    ;; (setq-default display-line-numbers-widen t)
+    ;; (setq-default display-line-numbers-width-start t)
+    :config
+    (global-display-line-numbers-mode)
+    (when IS-LINUX
+      (setq-default display-line-numbers-type 'visual)))
 
-   (setq-default mode-line-format
-                 '("%e"
-                   mode-line-front-space
-                   mode-line-mule-info
-                   mode-line-client-mode
-                   mode-line-modified
-                   mode-line-remote
-                   mode-line-frame-indentifcation
-                   " "
-                   mode-line-buffer-identification
-                   "  "
-                   (vc-mode vc-mode)
-                   " "
-                   mode-line-modes
-                   " "
-                   mode-line-misc-info
-                   mode-line-end-spaces))
+  (setq-default mode-line-format
+                '("%e"
+                  mode-line-front-space
+                  mode-line-mule-info
+                  mode-line-client-mode
+                  mode-line-modified
+                  mode-line-remote
+                  mode-line-frame-indentifcation
+                  " "
+                  mode-line-buffer-identification
+                  "  "
+                  (vc-mode vc-mode)
+                  " "
+                  mode-line-modes
+                  " "
+                  mode-line-misc-info
+                  mode-line-end-spaces))
  #+END_SRC
 * Init
 #+BEGIN_SRC emacs-lisp :tangle init.el :results none
-      ;;; -*- lexical-binding: t -*-
-    (defconst config-org (expand-file-name "README.org" user-emacs-directory))
-    (defconst config-el  (expand-file-name "config.el" user-emacs-directory))
+  ;;; -*- lexical-binding: t -*-
+  (defconst config-org (expand-file-name "README.org" user-emacs-directory))
+  (defconst config-el  (expand-file-name "config.el" user-emacs-directory))
 
-    (when (and IS-WINDOWS (null (getenv "HOME")))
-      (setenv "HOME" (getenv "USERPROFILE")))
+  (unless (file-exists-p config-el)
+    (require 'org)
+    (org-babel-tangle-file config-org config-el))
 
-    (unless (file-exists-p config-el)
-      (require 'org)
-      (org-babel-tangle-file config-org config-el))
+  (load-file config-el)
 
-    (load-file config-el)
-
-    (when (require 'time-date nil t)
-      (message "Emacs startup time: %.2f seconds."
-               (time-to-seconds (time-since emacs-load-start-time))))
+  (add-hook 'after-init-hook
+            (lambda ()
+              (when (require 'time-date nil t)
+                (message "Emacs startup time: %.2f seconds."
+                         (time-to-seconds (time-since emacs-load-start-time))))))
 #+END_SRC
 * Initial
 ** Settings
@@ -162,6 +168,9 @@ Mostly taken from Doom Emacs
           w32-lwindow-modifier 'super
           w32-rwindow-modifier 'super
           abbreviated-home-dir "\\ `'"))
+
+  (when (and IS-WINDOWS (null (getenv "HOME")))
+    (setenv "HOME" (getenv "USERPROFILE")))
 
   (unless IS-LINUX
     (setq command-line-x-option-alist nil))
@@ -223,67 +232,68 @@ Mostly taken from Doom Emacs
  #+END_SRC
 ** Built-in Packages
  #+BEGIN_SRC emacs-lisp :results none
-   (use-package simple
-     :straight (:type built-in)
-     :defer t
-     :custom
-     (idle-update-delay 1.0) ; slow down how often emacs updates its ui
-     (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
+    (use-package simple
+      :straight (:type built-in)
+      :defer t
+      :custom
+      (idle-update-delay 1.0) ; slow down how often emacs updates its ui
+      (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
 
-   (use-package advice
-     :straight (:type built-in)
-     :defer t
-     :custom (ad-redefinition-action 'accept)) ; disable warnings from legacy advice system
+    (use-package advice
+      :straight (:type built-in)
+      :defer t
+      :custom (ad-redefinition-action 'accept)) ; disable warnings from legacy advice system
 
-   (use-package files
-     :straight (:type built-in)
-     :defer t
-     :custom
-     (make-backup-files nil)
-     (create-lockfiles nil)
-     (auto-mode-case-fold nil)
-     (auto-save-default nil))
+    (use-package files
+      :straight (:type built-in)
+      :defer t
+      :custom
+      (make-backup-files nil)
+      (create-lockfiles nil)
+      (auto-mode-case-fold nil)
+      (auto-save-default nil))
 
-   (use-package saveplace
-     :straight (:type built-in)
-     :hook (after-init . save-place-mode))
+    (use-package saveplace
+      :straight (:type built-in)
+      :hook (after-init . save-place-mode))
 
-   (use-package whitespace
-     :straight (:type built-in)
-     :hook (before-save . whitespace-cleanup))
+    (use-package whitespace
+      :straight (:type built-in)
+      :hook (before-save . whitespace-cleanup))
+
+    (use-package eldoc
+      :straight (:type built-in)
+      :defer t
+      :diminish)
+
+    (use-package savehist
+      :straight (:type built-in)
+      :hook (after-init . savehist-mode)
+      :custom
+      (savehist-file (expand-file-name "savehist" my/etc-dir))
+      (history-length 500)
+      (history-delete-duplicates t)
+      (savehist-save-minibuffer-history t))
+
+    (use-package recentf
+      :straight (:type built-in)
+      :defer 0.5
+      ;; :hook (after-init . recentf-mode)
+      :custom
+      (recentf-auto-cleanup 'never)
+      (recentf-save-file (expand-file-name "recentf" my/etc-dir))
+      (recentf-max-saved-items 200))
+
+    (use-package flyspell
+      :straight (:type built-in)
+      :diminish
+      :hook ((text-mode . flyspell-mode)
+             (prog-mode . flyspell-prog-mode)))
 
    (use-package eldoc
      :straight (:type built-in)
      :defer t
      :diminish)
-
-   (use-package savehist
-     :straight (:type built-in)
-     :hook (after-init . savehist-mode)
-     :custom
-     (savehist-file (expand-file-name "savehist" my/etc-dir))
-     (history-length 500)
-     (history-delete-duplicates t)
-     (savehist-save-minibuffer-history t))
-
-   (use-package recentf
-     :straight (:type built-in)
-     :hook (after-init . recentf-mode)
-     :custom
-     (recentf-auto-cleanup 'never)
-     (recentf-save-file (expand-file-name "recentf" my/etc-dir))
-     (recentf-max-saved-items 200))
-
-   (use-package flyspell
-     :straight (:type built-in)
-     :diminish
-     :hook ((text-mode . flyspell-mode)
-            (prog-mode . flyspell-prog-mode)))
-
-  (use-package eldoc
-    :straight (:type built-in)
-    :defer t
-    :diminish)
  #+END_SRC
 ** Keymap Management
  #+BEGIN_SRC emacs-lisp :results none
@@ -325,6 +335,30 @@ Mostly taken from Doom Emacs
 
    (use-package hydra
      :defer t)
+ #+END_SRC
+** Keybindings
+ #+BEGIN_SRC emacs-lisp :results none
+   (general-def 'evil-window-map
+     "SPC q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
+
+   (my-leader-def
+     "h" (general-simulate-key "C-h" :which-key "Help")
+     ;; Windows
+     ";"  #'(shell-command            :which-key "shell command")
+     "w"  '(:ignore t                :which-key "Windows")
+     "w"   (general-simulate-key "C-w") ; window command
+     ;; Buffers TODO make hydra
+     "b"  '(:ignore t                :which-key "Buffers")
+     "bs" #'(save-buffer              :which-key "write file")
+     "bd" #'(kill-this-buffer         :which-key "delete buffer")
+     "bq" #'my/save-and-kill-buffer)
+
+   (general-def 'normal
+     "gs" #'my/split-line
+     "gS" (lambda () (interactive) (my/split-line) (move-text-up)) ;; split line above
+     "gC" #'my/comment-until-end-of-line
+     "]b" #'(next-buffer     :which-key "next buffer")
+     "[b" #'(previous-buffer :which-key "previous buffer"))
  #+END_SRC
 * Evil Mode
 ** Evil
@@ -523,9 +557,10 @@ Mostly taken from Doom Emacs
      :defer 0.1
      :general
      ('ivy-minibuffer-map
-     ";" #'ivy-done)
+      ";" #'ivy-done)
      :custom
-     (ivy-re-builders-alist '((t . ivy--regex-fuzzy))) ;; TODO configure counsel-rg, swiper, counsel-projectile-rg
+     (ivy-re-builders-alist '((swiper . ivy--regex-plus)
+                              (t . ivy--regex-fuzzy))) ;; TODD configure counsel-rg, swiper, counsel-projectile-rg
      :config
      (ivy-mode))
 
@@ -560,7 +595,8 @@ Mostly taken from Doom Emacs
  #+BEGIN_SRC emacs-lisp :results none
    (use-package yasnippet
      :diminish yas-minor-mode
-     :hook (after-init . yas-global-mode)
+     :defer 0.1
+     ;; :hook (after-init . yas-global-mode)
      :general
      (my-localleader-def
        "y"  '(:ignore t           :which-key "Yasnippet")
@@ -1097,28 +1133,4 @@ Mostly taken from Doom Emacs
     (evil-commentary-line)
     (evil-previous-line 2)
     (join-line))
-#+END_SRC
-* Keybindings
-#+BEGIN_SRC emacs-lisp :results none
-  (general-def 'evil-window-map
-    "SPC q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
-
-  (my-leader-def
-    "h" (general-simulate-key "C-h" :which-key "Help")
-    ;; Windows
-    ";"  #'(shell-command            :which-key "shell command")
-    "w"  '(:ignore t                :which-key "Windows")
-    "w"   (general-simulate-key "C-w") ; window command
-    ;; Buffers TODO make hydra
-    "b"  '(:ignore t                :which-key "Buffers")
-    "bs" #'(save-buffer              :which-key "write file")
-    "bd" #'(kill-this-buffer         :which-key "delete buffer")
-    "bq" #'my/save-and-kill-buffer)
-
-  (general-def 'normal
-    "gs" #'my/split-line
-    "gS" (lambda () (interactive) (my/split-line) (move-text-up)) ;; split line above
-    "gC" #'my/comment-until-end-of-line
-    "]b" #'(next-buffer     :which-key "next buffer")
-    "[b" #'(previous-buffer :which-key "previous buffer"))
 #+END_SRC
