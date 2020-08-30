@@ -105,12 +105,6 @@
     (org-babel-tangle-file config-org config-el))
 
   (load-file config-el)
-
-  (add-hook 'after-init-hook
-            (lambda ()
-              (when (require 'time-date nil t)
-                (message "Emacs startup time: %.2f seconds."
-                         (time-to-seconds (time-since emacs-load-start-time))))))
 #+END_SRC
 * Initial
 ** Settings
@@ -184,12 +178,6 @@ Mostly taken from Doom Emacs
 
   (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
 
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (setq gc-cons-threshold 16777216
-                    gc-cons-percentage 0.1
-                    file-name-handler-alist default-file-name-handler-alist)))
-
   ;; Disable bidirectional text rendering for performance
   (setq-default bidi-display-reordering 'left-to-right
                 bidi-paragraph-direction 'left-to-right
@@ -200,42 +188,6 @@ Mostly taken from Doom Emacs
   (defconst my/etc-dir (concat user-emacs-directory "etc/"))
   (setq custom-file (concat my/etc-dir "custom.el"))
 #+END_SRC
-** Auto-Tangle
- #+BEGIN_SRC emacs-lisp :results none
-   ;;  (defun tangle-config ()
-   ;;   "Export code blocks from the literate config file
-   ;;      asynchronously."
-   ;;   (interactive)
-   ;;   (when IS-LINUX
-   ;;     (let* ((tangle-config (format "(org-babel-tangle nil \"%s\")" config-el))
-   ;;            (process (start-process
-   ;;                      "tangle-config" nil
-   ;;                      "emacs" config-org "--batch" "--eval" tangle-config))
-   ;;            (filter (defun echo-process-output (process output)
-   ;;                      "Echo process output."
-   ;;                      (message (s-trim output)))))
-   ;;       (set-process-filter process filter)))
-   ;;   (when IS-WINDOWS
-   ;;     (let ((prog-mode-hook nil))
-   ;;       (org-babel-tangle nil config-el))))
-
-   ;; (defun add-local-hook (hook function)
-   ;;   (add-hook hook function nil t))
-
-   ;; (add-hook 'org-mode-hook
-   ;;           (lambda ()
-   ;;             (if (equal (buffer-file-name) config-org)
-   ;;                 (add-local-hook 'after-save-hook 'tangle-config))))
-   ;; (defun my/tangle-config ()
-   ;;   "Export code blocks from the literate config file
-   ;;               asynchronously."
-   ;;   (interactive)
-   ;;     (org-babel-tangle nil config-el))
-
-   (add-hook 'kill-emacs-hook
-             (lambda ()
-               (org-babel-tangle-file config-org config-el)))
- #+END_SRC
 ** Built-in Packages
  #+BEGIN_SRC emacs-lisp :results none
     (use-package simple
@@ -363,6 +315,24 @@ Mostly taken from Doom Emacs
      "]b" #'(next-buffer     :which-key "next buffer")
      "[b" #'(previous-buffer :which-key "previous buffer"))
  #+END_SRC
+** Hooks
+#+BEGIN_SRC emacs-lisp :results none
+  (add-hook 'after-init-hook
+            (lambda ()
+              (when (require 'time-date nil t)
+                (message "Emacs startup time: %.2f seconds."
+                         (time-to-seconds (time-since emacs-load-start-time))))))
+
+  (add-hook 'kill-emacs-hook
+            (lambda ()
+              (org-babel-tangle-file config-org config-el)))
+
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (setq gc-cons-threshold 16777216
+                    gc-cons-percentage 0.1
+                    file-name-handler-alist default-file-name-handler-alist)))
+#+END_SRC
 * Evil Mode
 ** Evil
 #+BEGIN_SRC emacs-lisp :results none
