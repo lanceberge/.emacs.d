@@ -29,7 +29,7 @@
 
 (advice-add #'x-apply-session-resources :override #'ignore)
 
-;; Boostrap straight.el
+;; Bootstrap straight.el
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))

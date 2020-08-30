@@ -8,8 +8,8 @@
   - [[#settings][Settings]]
   - [[#keeping-emacsd-organized][Keeping ~/.emacs.d organized]]
   - [[#os-specific][OS Specific]]
-  - [[#built-in-packages][Built-in Packages]]
   - [[#keymap-management][Keymap Management]]
+  - [[#built-in-packages][Built-in Packages]]
   - [[#keybindings][Keybindings]]
   - [[#hooks][Hooks]]
 - [[#evil-mode][Evil Mode]]
@@ -47,6 +47,9 @@
   - [[#mu4e][Mu4e]]
 
 * Early-Init
+
+Tangles to early-init.el
+
 ** Initial Settings
  #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
    ;;; -*- lexical-binding: t -*-
@@ -82,7 +85,7 @@
 #+END_SRC
 ** Straight
  #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
-   ;; Boostrap straight.el
+   ;; Bootstrap straight.el
    (let ((bootstrap-file
           (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
          (bootstrap-version 5))
@@ -136,6 +139,9 @@
                   mode-line-end-spaces))
  #+END_SRC
 * Init
+
+Tangles to init.el
+
 #+BEGIN_SRC emacs-lisp :tangle init.el :results none
   ;;; -*- lexical-binding: t -*-
   (defconst config-org (expand-file-name "README.org" user-emacs-directory))
@@ -241,6 +247,47 @@ Mostly taken from Doom Emacs
   (when IS-LINUX
     (setq x-gtk-use-system-tooltips nil))
 #+END_SRC
+** Keymap Management
+ #+BEGIN_SRC emacs-lisp :results none
+   (use-package general ; unified way to map keybindings; works with :general in use-package
+     :demand t
+     :config
+     (general-create-definer my-leader-def
+       :states '(normal visual insert emacs)
+       :keymaps 'override
+       :prefix "SPC"
+       :non-normal-prefix "M-SPC")
+
+     (general-create-definer my-localleader-def
+       :states '(normal visual insert emacs)
+       :keymaps 'override
+       :prefix ","
+       :non-normal-prefix "C-,")
+
+     (my-leader-def
+       "f"  '(:ignore t                    :which-key "Find")
+       "fm" #'(general-describe-keybindings :which-key "list keybindings")))
+
+   (use-package diminish
+     :demand t)
+
+   (use-package which-key ; show keybindings following when a prefix is pressed
+     :diminish
+     :demand t
+     :general
+     (my-leader-def
+       "f SPC m" #'which-key-show-top-level)
+     :custom
+     (which-key-sort-order #'which-key-prefix-then-key-order)
+     (which-key-min-display-lines 6)
+     (which-key-add-column-padding 1)
+     (which-key-sort-uppercase-first nil)
+     :config
+     (which-key-mode))
+
+   (use-package hydra
+     :defer t)
+ #+END_SRC
 ** Built-in Packages
  #+BEGIN_SRC emacs-lisp :results none
     (use-package simple
@@ -307,47 +354,6 @@ Mostly taken from Doom Emacs
      :defer t
      :diminish)
  #+END_SRC
-** Keymap Management
- #+BEGIN_SRC emacs-lisp :results none
-   (use-package general ; unified way to map keybindings; works with :general in use-package
-     :demand t
-     :config
-     (general-create-definer my-leader-def
-       :states '(normal visual insert emacs)
-       :keymaps 'override
-       :prefix "SPC"
-       :non-normal-prefix "M-SPC")
-
-     (general-create-definer my-localleader-def
-       :states '(normal visual insert emacs)
-       :keymaps 'override
-       :prefix ","
-       :non-normal-prefix "C-,")
-
-     (my-leader-def
-       "f"  '(:ignore t                    :which-key "Find")
-       "fm" #'(general-describe-keybindings :which-key "list keybindings")))
-
-   (use-package diminish
-     :demand t)
-
-   (use-package which-key ; show keybindings following when a prefix is pressed
-     :diminish
-     :demand t
-     :general
-     (my-leader-def
-       "f SPC m" #'which-key-show-top-level)
-     :custom
-     (which-key-sort-order #'which-key-prefix-then-key-order)
-     (which-key-min-display-lines 6)
-     (which-key-add-column-padding 1)
-     (which-key-sort-uppercase-first nil)
-     :config
-     (which-key-mode))
-
-   (use-package hydra
-     :defer t)
- #+END_SRC
 ** Keybindings
  #+BEGIN_SRC emacs-lisp :results none
    (my-leader-def
@@ -387,7 +393,6 @@ Mostly taken from Doom Emacs
 ** Evil
 #+BEGIN_SRC emacs-lisp :results none
   (use-package evil
-    :after general
     :demand t
     :diminish
     :commands
@@ -418,7 +423,7 @@ Mostly taken from Doom Emacs
     ;; Evil-avy
     ('normal :prefix "g"
      "o" #'(evil-avy-goto-char-2     :which-key "2-chars")
-     "O" #'(evil-avy-goto-char-timer :which-key "timer"))
+     "SPC o" #'(evil-avy-goto-char-timer :which-key "timer"))
 
     (my-leader-def
       "ft" #'(evil-avy-goto-char-timer           :which-key "avy timer")
@@ -568,6 +573,15 @@ Mostly taken from Doom Emacs
      (amx-save-file (expand-file-name "amx-history" my/etc-dir))
      (amx-history-length 50))
 
+   (use-package swiper
+     :general
+     ('normal override
+              "?" #'swiper-backward
+              "/" #'swiper)
+     (my-leader-def
+       "fb" #'(swiper-multi :which-key "swiper in buffer")
+       "fB" #'(swiper-all   :which-key "swiper in all buffers")))
+
    (use-package ivy
      :diminish
      :defer 0.1
@@ -597,17 +611,10 @@ Mostly taken from Doom Emacs
        "fg"  #'(counsel-git            :which-key "git files")
        "fG"  #'(counsel-git-grep       :which-key "git grep")
        "ff"  #'(counsel-rg             :which-key "ripgrep"))
+     (my-localleader-def
+       "x" #'counsel-M-x)
      :config
      (counsel-mode))
-
-   (use-package swiper
-     :general
-     ('normal override
-              "?" #'swiper-backward
-              "/" #'swiper)
-     (my-leader-def
-       "fb" #'(swiper-multi :which-key "swiper in buffer")
-       "fB" #'(swiper-all   :which-key "swiper in all buffers")))
  #+END_SRC
 ** Yasnippet
  #+BEGIN_SRC emacs-lisp :results none
@@ -763,7 +770,7 @@ Mostly taken from Doom Emacs
 
   (use-package paren
     :straight (:type built-in)
-    :hook (prog-mode . show-paren-mode)
+    :hook ((prog-mode text-mode) . show-paren-mode)
     :custom
     (show-paren-when-point-inside-paren t))
 #+END_SRC
@@ -989,7 +996,7 @@ Mostly taken from Doom Emacs
        ("n" sp-add-to-next-sexp "add to next pair")))
 
    (use-package evil-smartparens ; Make evil commands preserve balance of parentheses
-     :hook (smartparens-strict-mode . evil-smartparens-mode)
+     :hook (smartparens-mode . evil-smartparens-mode)
      :diminish
      :general
      ('normal
@@ -1045,7 +1052,8 @@ Mostly taken from Doom Emacs
        "ot"  #'(vterm              :which-key "open vterm")
        "ovt" #'(vterm-other-window :which-key "open vterm in vsplit")))
 
-   (use-package shell
+   (use-package eshell
+     :straight (:type built-in)
      :custom
      (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
      :general
