@@ -50,6 +50,7 @@
       straight-fix-org nil)
 
 (straight-use-package 'use-package)
+(setq use-package-verbose t)
 
 (use-package gruvbox-theme
   :config

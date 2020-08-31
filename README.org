@@ -106,6 +106,7 @@ Tangles to early-init.el
          straight-fix-org nil)
 
    (straight-use-package 'use-package)
+   (setq use-package-verbose t)
 #+END_SRC
 ** UI
 #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
@@ -285,7 +286,7 @@ Mostly taken from Doom Emacs
      (which-key-mode))
 
    (use-package hydra
-     :defer t)
+   :defer t)
  #+END_SRC
 ** Built-in Packages
  #+BEGIN_SRC emacs-lisp :results none
@@ -379,6 +380,9 @@ Mostly taken from Doom Emacs
      "gC" #'my/comment-until-end-of-line
      "]b" #'(next-buffer     :which-key "next buffer")
      "[b" #'(previous-buffer :which-key "previous buffer"))
+
+   (general-def 'insert
+     "C-y" #'yank) ; otherwise is overridden by evil
  #+END_SRC
 ** Hooks
 #+BEGIN_SRC emacs-lisp :results none
@@ -451,7 +455,7 @@ Mostly taken from Doom Emacs
 *** Evil-Collection
  #+BEGIN_SRC emacs-lisp :results none
    (use-package evil-collection
-     :after evil
+     :defer 0.5
      :custom
      (evil-collection-calendar-want-org-bindings t)
      (evil-collection-want-unimpaired-p t)
@@ -505,14 +509,13 @@ Mostly taken from Doom Emacs
      :hook ((prog-mode text-mode) . evil-matchit-mode))
 
    (use-package evil-exchange ; exchange text selected with gx
-     :after evil
+     :defer 1
      :config (evil-exchange-install))
 
    (use-package evil-anzu
-     :defer t)
+     :defer 1)
 
    (use-package evil-owl
-     :after evil
      :diminish
      :hook ((prog-mode text-mode) . evil-owl-mode))
 
@@ -522,13 +525,12 @@ Mostly taken from Doom Emacs
      ('evil-outer-text-objects-map "c" #'evil-textobj-anyblock-a-block))
 
    (use-package evil-args
-     :after evil
      :general
      ('evil-inner-text-objects-map "a" #'evil-inner-arg)
      ('evil-outer-text-objects-map "a" #'evil-outer-arg))
 
    (use-package evil-indent-plus
-     :after evil
+     :defer 1
      :config
      (evil-indent-plus-default-bindings))
  #+END_SRC
@@ -560,21 +562,12 @@ Mostly taken from Doom Emacs
      :diminish
      :hook ((prog-mode text-mode) . evil-mc-mode))
 
-   (use-package targets ; evil port of targets.vim
-     :straight (targets :type git :host github :repo "noctuid/targets.el")
-     :defer t
-     :config
-     (targets-setup t))
-
    (use-package goto-chg ; g; and g,
      :defer t)
  #+END_SRC
 * Completion
 ** Ivy
  #+BEGIN_SRC emacs-lisp :results none
-   (use-package flx
-     :defer t) ; fuzzy sorting for ivy
-
    (use-package amx
      :hook (ivy-mode . amx-mode)
      :custom
@@ -592,7 +585,7 @@ Mostly taken from Doom Emacs
 
    (use-package ivy
      :diminish
-     :defer 0.1
+     :demand t
      :general
      ('ivy-minibuffer-map
       ";" #'ivy-done)
@@ -605,7 +598,6 @@ Mostly taken from Doom Emacs
      (ivy-mode))
 
    (use-package counsel
-     :after ivy
      :diminish
      :custom
      (counsel-describe-function-function #'helpful-callable)
@@ -623,12 +615,14 @@ Mostly taken from Doom Emacs
        "x" #'counsel-M-x)
      :config
      (counsel-mode))
+
+   (use-package flx)
  #+END_SRC
 ** Yasnippet
  #+BEGIN_SRC emacs-lisp :results none
    (use-package yasnippet
      :diminish yas-minor-mode
-     :defer 0.1
+     :defer 0.5
      :general
      (my-localleader-def
        "y"  '(:ignore t           :which-key "Yasnippet")
@@ -639,7 +633,7 @@ Mostly taken from Doom Emacs
      (yas-global-mode))
 
    (use-package yasnippet-snippets
-     :defer t)
+     :defer 0.6)
 
    (use-package auto-yasnippet
      :general
@@ -664,9 +658,7 @@ Mostly taken from Doom Emacs
      "C-n" 'company-complete)) ; manual completion with C-n
 
   (use-package company-flx
-    :after company
-    :config
-    (company-flx-mode))
+    :hook (company-mode . company-flx-mode))
 #+END_SRC
 * Version Control
 #+BEGIN_SRC emacs-lisp :results none
@@ -704,27 +696,27 @@ Mostly taken from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
   (use-package projectile
     :diminish
-    :hook (after-init . projectile-mode)
+    :defer t
     :custom
     (projectile-auto-discover nil)
     (projectile-project-search-path '("~/code/"))
     (projectile-cache-file (expand-file-name "projectile/cache.el" my/etc-dir))
     (projectile-known-projects-file (expand-file-name "projectile/known-projects.el" my/etc-dir))
+    :init
+    (projectile-mode))
     :general
     (my-leader-def
-      "p" #'(projectile-command-map :which-key "Projectile")))
+      "p" #'(projectile-command-map :which-key "Projectile"))
 
   (use-package counsel-projectile
-    :after (counsel projectile)
-    :diminish
-    :config
-    (counsel-projectile-mode))
+    :hook (projectile-mode . counsel-projectile-mode)
+    :diminish)
 #+END_SRC
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
   (use-package lsp-mode ; LSP
     :diminish
-    :hook prog-mode
+    :hook (prog-mode . lsp-mode)
     :custom
     ;; Disable slow features
     (lsp-enable-file-watchers nil)
@@ -743,7 +735,7 @@ Mostly taken from Doom Emacs
     :custom (lsp-ui-doc-position 'bottom))
 
   (use-package lsp-ivy
-    :after (lsp-mode ivy))
+    :after (lsp-mode))
 
   (use-package flycheck ; linting
     :diminish
@@ -907,6 +899,10 @@ Mostly taken from Doom Emacs
      "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1)))
      "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
      "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
+    ('override
+     :prefix "C-c"
+     "v"  #'org-toggle-inline-images
+     ",v" #'org-redisplay-inline-images)
     :config
     (evil-org-set-key-theme)
     (general-def '(normal insert) evil-org-mode-map
@@ -1018,7 +1014,6 @@ Mostly taken from Doom Emacs
 ** Miscellaneous
  #+BEGIN_SRC emacs-lisp :results none
    (use-package undo-tree ; Persistent Undos
-     :after evil
      :diminish
      :custom
      (undo-limit 10000)
@@ -1091,13 +1086,14 @@ Mostly taken from Doom Emacs
      (evil-collection-inhibit-insert-state 'helpful-mode-map))
 
    (use-package gcmh ; Garbage collect in idle time
-     :hook (after-init . gcmh-mode)
+     :defer 0.6
      :commands gcmh-idle-garbage-collect
      :diminish
      :custom
      (gcmh-idle-delay 10)
      (gcmh-high-cons-threshold 16777216)
      :config
+     (gcmh-mode)
      (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
    (use-package keyfreq
@@ -1182,10 +1178,7 @@ Mostly taken from Doom Emacs
 * In-Progress
 ** Mu4e
 #+BEGIN_SRC emacs-lisp :results none
-(use-package mu4e
-  :disabled t
-  :custom
-  (mail-user-agent 'mu4e-user-agent))
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 
 (use-package org-msg
   :after mu4e)
