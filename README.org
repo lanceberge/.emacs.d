@@ -8,6 +8,7 @@
   - [[#settings][Settings]]
   - [[#keeping-emacsd-organized][Keeping ~/.emacs.d organized]]
   - [[#os-specific][OS Specific]]
+  - [[#defer-incrementally][Defer Incrementally]]
   - [[#keymap-management][Keymap Management]]
   - [[#built-in-packages][Built-in Packages]]
   - [[#keybindings][Keybindings]]
@@ -43,8 +44,6 @@
 - [[#language-specific][Language Specific]]
   - [[#pdf][PDF]]
 - [[#functions][Functions]]
-- [[#in-progress][In-Progress]]
-  - [[#mu4e][Mu4e]]
 
 * Early-Init
 
@@ -247,6 +246,103 @@ Mostly taken from Doom Emacs
   (when IS-LINUX
     (setq x-gtk-use-system-tooltips nil))
 #+END_SRC
+** Defer Incrementally
+#+BEGIN_SRC emacs-lisp :results none
+;; https://github.com/hlissner/doom-emacs/blob/42a21dffddeee57d84e82a9f0b65d1b0cba2b2af/core/core.el#L353
+(defvar doom-incremental-packages '(t)
+  "A list of packages to load incrementally after startup. Any large packages
+here may cause noticeable pauses, so it's recommended you break them up into
+sub-packages. For example, `org' is comprised of many packages, and can be
+broken up into:
+  (doom-load-packages-incrementally
+   '(calendar find-func format-spec org-macs org-compat
+     org-faces org-entities org-list org-pcomplete org-src
+     org-footnote org-macro ob org org-clock org-agenda
+     org-capture))
+This is already done by the lang/org module, however.
+If you want to disable incremental loading altogether, either remove
+`doom-load-packages-incrementally-h' from `emacs-startup-hook' or set
+`doom-incremental-first-idle-timer' to nil.")
+
+(defvar doom-incremental-first-idle-timer 2.0
+  "How long (in idle seconds) until incremental loading starts.
+Set this to nil to disable incremental loading.")
+
+(defvar doom-incremental-idle-timer 0.75
+  "How long (in idle seconds) in between incrementally loading packages.")
+
+(defvar doom-incremental-load-immediately nil
+  ;; (daemonp)
+  "If non-nil, load all incrementally deferred packages immediately at startup.")
+
+(defmacro appendq! (sym &rest lists)
+  "Append LISTS to SYM in place."
+  `(setq ,sym (append ,sym ,@lists)))
+
+(defun doom-load-packages-incrementally (packages &optional now)
+  "Registers PACKAGES to be loaded incrementally.
+If NOW is non-nil, load PACKAGES incrementally, in `doom-incremental-idle-timer'
+intervals."
+  (if (not now)
+      (appendq! doom-incremental-packages packages)
+    (while packages
+      (let ((req (pop packages)))
+        (unless (featurep req)
+          (message "Incrementally loading %s" req)
+          (condition-case e
+              (or (while-no-input
+                    ;; If `default-directory' is a directory that doesn't exist
+                    ;; or is unreadable, Emacs throws up file-missing errors, so
+                    ;; we set it to a directory we know exists and is readable.
+                    (let ((default-directory user-emacs-directory)
+                          (gc-cons-threshold most-positive-fixnum)
+                          file-name-handler-alist)
+                      (require req nil t))
+                    t)
+                  (push req packages))
+            ((error debug)
+             (message "Failed to load '%s' package incrementally, because: %s"
+                      req e)))
+          (if (not packages)
+              (message "Finished incremental loading")
+            (run-with-idle-timer doom-incremental-idle-timer
+                                 nil #'doom-load-packages-incrementally
+                                 packages t)
+            (setq packages nil)))))))
+
+(defun doom-load-packages-incrementally-h ()
+  "Begin incrementally loading packages in `doom-incremental-packages'.
+If this is a daemon session, load them all immediately instead."
+  (if doom-incremental-load-immediately
+      (mapc #'require (cdr doom-incremental-packages))
+    (when (numberp doom-incremental-first-idle-timer)
+      (run-with-idle-timer doom-incremental-first-idle-timer
+                           nil #'doom-load-packages-incrementally
+                           (cdr doom-incremental-packages) t))))
+
+(add-hook 'emacs-startup-hook #'doom-load-packages-incrementally-h)
+
+;; Adds two keywords to `use-package' to expand its lazy-loading capabilities:
+;;
+;;   :after-call SYMBOL|LIST
+;;   :defer-incrementally SYMBOL|LIST|t
+;;
+;; Check out `use-package!'s documentation for more about these two.
+(eval-when-compile
+  (dolist (keyword '(:defer-incrementally :after-call))
+    (push keyword use-package-deferring-keywords)
+    (setq use-package-keywords
+          (use-package-list-insert keyword use-package-keywords :after)))
+
+  (defalias 'use-package-normalize/:defer-incrementally #'use-package-normalize-symlist)
+  (defun use-package-handler/:defer-incrementally (name _keyword targets rest state)
+    (use-package-concat
+     `((doom-load-packages-incrementally
+        ',(if (equal targets '(t))
+              (list name)
+            (append targets (list name)))))
+     (use-package-process-keywords name rest state))))
+#+END_SRC
 ** Keymap Management
  #+BEGIN_SRC emacs-lisp :results none
    (use-package general ; unified way to map keybindings; works with :general in use-package
@@ -269,7 +365,7 @@ Mostly taken from Doom Emacs
        "fm" #'(general-describe-keybindings :which-key "list keybindings")))
 
    (use-package diminish
-     :demand t)
+     :defer t)
 
    (use-package which-key ; show keybindings following when a prefix is pressed
      :diminish
@@ -286,7 +382,7 @@ Mostly taken from Doom Emacs
      (which-key-mode))
 
    (use-package hydra
-   :defer t)
+     :defer t)
  #+END_SRC
 ** Built-in Packages
  #+BEGIN_SRC emacs-lisp :results none
@@ -337,7 +433,8 @@ Mostly taken from Doom Emacs
 
    (use-package recentf
      :straight (:type built-in)
-     :defer 0.5
+     :defer-incrementally (easymenu tree-widget timer)
+     :defer t
      :custom
      (recentf-auto-cleanup 'never)
      (recentf-save-file (expand-file-name "recentf" my/etc-dir))
@@ -389,7 +486,7 @@ Mostly taken from Doom Emacs
   (add-hook 'after-init-hook
             (lambda ()
               (when (require 'time-date nil t)
-                (message "Emacs startup time: %.2f seconds."
+                (message "Emacs init time: %.2f seconds."
                          (time-to-seconds (time-since emacs-load-start-time))))))
 
   (add-hook 'emacs-startup-hook
@@ -397,6 +494,17 @@ Mostly taken from Doom Emacs
               (setq gc-cons-threshold 16777216
                     gc-cons-percentage 0.1
                     file-name-handler-alist default-file-name-handler-alist)))
+
+  ;; Raise gc threshold while minibuffer is active to not slow down ivy
+  (defun doom-defer-garbage-collection-h ()
+    (setq gc-cons-threshold most-positive-fixnum))
+
+  (defun doom-restore-garbage-collectio-h ()
+    (run-at-time
+     1 nil (lambda () (setq gc-cons-threshold 16777216))))
+
+  (add-hook 'minibuffer-setup-hook #'doom-defer-garbage-collection-h)
+  (add-hook 'minibuffer-exit-hook #'doom-restore-garbage-collection-h)
 #+END_SRC
 * Evil Mode
 ** Evil
@@ -568,12 +676,6 @@ Mostly taken from Doom Emacs
 * Completion
 ** Ivy
  #+BEGIN_SRC emacs-lisp :results none
-   (use-package amx
-     :hook (ivy-mode . amx-mode)
-     :custom
-     (amx-save-file (expand-file-name "amx-history" my/etc-dir))
-     (amx-history-length 50))
-
    (use-package swiper
      :general
      ('normal override
@@ -616,6 +718,12 @@ Mostly taken from Doom Emacs
      :config
      (counsel-mode))
 
+   (use-package amx
+     :hook (ivy-mode . amx-mode)
+     :custom
+     (amx-save-file (expand-file-name "amx-history" my/etc-dir))
+     (amx-history-length 50))
+
    (use-package flx)
  #+END_SRC
 ** Yasnippet
@@ -623,6 +731,7 @@ Mostly taken from Doom Emacs
    (use-package yasnippet
      :diminish yas-minor-mode
      :defer 0.5
+     :defer-incrementally (eldoc easymenu help-mode)
      :general
      (my-localleader-def
        "y"  '(:ignore t           :which-key "Yasnippet")
@@ -663,6 +772,8 @@ Mostly taken from Doom Emacs
 * Version Control
 #+BEGIN_SRC emacs-lisp :results none
   (use-package magit
+    :defer-incrementally
+    (dash f s with-editor git-commit package eieio lv transient)
     :custom
     (magit-auto-revert-mode nil)
     (magit-save-repository-buffers nil)
@@ -696,20 +807,18 @@ Mostly taken from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
   (use-package projectile
     :diminish
-    :defer t
+    :commands projectile-mode
     :custom
     (projectile-auto-discover nil)
     (projectile-project-search-path '("~/code/"))
     (projectile-cache-file (expand-file-name "projectile/cache.el" my/etc-dir))
     (projectile-known-projects-file (expand-file-name "projectile/known-projects.el" my/etc-dir))
-    :init
-    (projectile-mode))
-    :general
+    :config
     (my-leader-def
-      "p" #'(projectile-command-map :which-key "Projectile"))
+      "p" #'(projectile-command-map :which-key "Projectile")))
 
   (use-package counsel-projectile
-    :hook (projectile-mode . counsel-projectile-mode)
+    :defer 0.1
     :diminish)
 #+END_SRC
 * LSP-Related
@@ -779,6 +888,11 @@ Mostly taken from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
   (use-package org
     :straight (:type built-in)
+    :defer-incrementally
+    (calendar find-func format-spec org-macs org-compat
+              org-faces org-entities org-list org-pcomplete org-src
+              org-footnote org-macro ob org org-clock org-agenda
+              org-capture)
     :custom
     (org-agenda-files '("~/org"))
     (org-directory "~/org")
@@ -789,7 +903,7 @@ Mostly taken from Doom Emacs
     (org-log-done 'time)
     (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
     (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)"))
-    (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir)))
+                       (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir)))
     :custom-face
     ;; No unnecessary background highlighting
     (org-block ((t (:background "#282828"))))
@@ -812,11 +926,6 @@ Mostly taken from Doom Emacs
               "q"  #'(org-set-tags-command         :which-key "add tags"))
     :config
     (setq org-fontify-done-headline t)
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((shell   . t)
-       (haskell . t)))
-
     ;; tangle config every time I quit emacs
     (add-hook 'kill-emacs-hook
               (lambda ()
@@ -862,6 +971,14 @@ Mostly taken from Doom Emacs
               :prefix "C-c"
               ",l" #'(org-insert-link :which-key "insert link")
               "l"  #'(org-store-link  :which-key "store link")))
+
+  (use-package ob-haskell
+    :straight (:type built-in)
+    :defer t)
+
+  (use-package ob-shell
+    :straight (:type built-in)
+    :defer t)
 #+END_SRC
 ** Non-built-ins
 #+BEGIN_SRC emacs-lisp :results none
@@ -1097,7 +1214,6 @@ Mostly taken from Doom Emacs
      (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
    (use-package keyfreq
-     :defer t
      :custom
      (keyfreq-excluded-commands
       '(org-self-insert-command
@@ -1120,9 +1236,9 @@ Mostly taken from Doom Emacs
 
    (use-package tramp
      :straight (:type built-in)
+     :defer t
      :custom
-     (tramp-autosave-directory (expand-file-name "tramp" my/etc-dir))
-     :defer t)
+     (tramp-autosave-directory (expand-file-name "tramp" my/etc-dir)))
  #+END_SRC
 * Language Specific
 ** PDF
@@ -1174,12 +1290,4 @@ Mostly taken from Doom Emacs
     (evil-commentary-line)
     (evil-previous-line 2)
     (join-line))
-#+END_SRC
-* In-Progress
-** Mu4e
-#+BEGIN_SRC emacs-lisp :results none
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
-
-(use-package org-msg
-  :after mu4e)
 #+END_SRC
