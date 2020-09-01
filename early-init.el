@@ -50,7 +50,7 @@
       straight-fix-org nil)
 
 (straight-use-package 'use-package)
-(setq use-package-verbose t)
+(setq use-package-verbose t) ; show which packages are being loaded on startup and when
 
 (use-package gruvbox-theme
   :config
@@ -65,6 +65,7 @@
   (when IS-LINUX
     (setq-default display-line-numbers-type 'visual)))
 
+;; Minimalistic mode-line
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space

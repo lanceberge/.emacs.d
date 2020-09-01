@@ -5,6 +5,7 @@
   - [[#ui][UI]]
 - [[#init][Init]]
 - [[#initial][Initial]]
+  - [[#move-to-a-use-package-emacs][move to a use-package emacs]]
   - [[#settings][Settings]]
   - [[#keeping-emacsd-organized][Keeping ~/.emacs.d organized]]
   - [[#os-specific][OS Specific]]
@@ -105,7 +106,7 @@ Tangles to early-init.el
          straight-fix-org nil)
 
    (straight-use-package 'use-package)
-   (setq use-package-verbose t)
+   (setq use-package-verbose t) ; show which packages are being loaded on startup and when
 #+END_SRC
 ** UI
 #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
@@ -122,6 +123,7 @@ Tangles to early-init.el
     (when IS-LINUX
       (setq-default display-line-numbers-type 'visual)))
 
+  ;; Minimalistic mode-line
   (setq-default mode-line-format
                 '("%e"
                   mode-line-front-space
@@ -156,6 +158,7 @@ Tangles to init.el
   (load-file config-el)
 #+END_SRC
 * Initial
+** TODO move to a use-package emacs
 ** Settings
 
 Mostly taken from Doom Emacs
@@ -217,7 +220,7 @@ Mostly taken from Doom Emacs
 ** Keeping ~/.emacs.d organized
 #+BEGIN_SRC emacs-lisp :results none
   ;; Keeping ~/.emacs.d organized
-  (defconst my/etc-dir (concat user-emacs-directory "etc/"))
+  (defconst my/etc-dir (expand-file-name "etc/" user-emacs-directory))
   (setq custom-file                 (expand-file-name "custom.el" my/etc-dir)
         custom-theme-directory      (expand-file-name "themes/" my/etc-dir)
         url-configuration-directory (expand-file-name "url/" my/etc-dir)
@@ -249,6 +252,9 @@ Mostly taken from Doom Emacs
     (setq x-gtk-use-system-tooltips nil))
 #+END_SRC
 ** Defer Incrementally
+
+Use :defer-incrementally with packages with a lot of dependencies to incrementally load them in idle time
+
 #+BEGIN_SRC emacs-lisp :results none
 ;; https://github.com/hlissner/doom-emacs/blob/42a21dffddeee57d84e82a9f0b65d1b0cba2b2af/core/core.el#L353
 (defvar doom-incremental-packages '(t)
@@ -350,13 +356,13 @@ If this is a daemon session, load them all immediately instead."
    (use-package general ; unified way to map keybindings; works with :general in use-package
      :demand t
      :config
-     (general-create-definer my-leader-def
+     (general-create-definer my-leader-def ; SPC prefixed bindings
        :states '(normal visual insert emacs)
        :keymaps 'override
        :prefix "SPC"
        :non-normal-prefix "M-SPC")
 
-     (general-create-definer my-localleader-def
+     (general-create-definer my-localleader-def ; , prefixed bindings
        :states '(normal visual insert emacs)
        :keymaps 'override
        :prefix ","
@@ -512,7 +518,7 @@ If this is a daemon session, load them all immediately instead."
 * Evil Mode
 ** Evil
 #+BEGIN_SRC emacs-lisp :results none
-  (use-package evil
+  (use-package evil ; vim bindings in emacs
     :demand t
     :diminish
     :commands
@@ -563,7 +569,7 @@ If this is a daemon session, load them all immediately instead."
 ** Evil-Related
 *** Evil-Collection
  #+BEGIN_SRC emacs-lisp :results none
-   (use-package evil-collection
+   (use-package evil-collection ; evil bindings for many modes
      :defer 0.5
      :custom
      (evil-collection-calendar-want-org-bindings t)
@@ -682,28 +688,25 @@ If this is a daemon session, load them all immediately instead."
      ('normal
      [remap evil-ex-search-forward]  #'swiper
      [remap evil-ex-search-backward] #'swiper-backward)
-     ;; ('normal override
-     ;;          "?" #'swiper-backward
-     ;;          "/" #'swiper)
      (my-leader-def
        "fb" #'(swiper-multi :which-key "swiper in buffer")
        "fB" #'(swiper-all   :which-key "swiper in all buffers")))
 
-   (use-package ivy
+   (use-package ivy ; narrowing framework
      :diminish
      :demand t
      :general
      ('ivy-minibuffer-map
       ";" #'ivy-done)
      :custom
-     (ivy-re-builders-alist '((swiper . ivy--regex-plus)
-                              (counsel-rg . ivy--regex-plus)
+     (ivy-re-builders-alist '((swiper                . ivy--regex-plus)
+                              (counsel-rg            . ivy--regex-plus)
                               (counsel-projectile-rg . ivy-regex-plus)
-                              (t . ivy--regex-fuzzy)))
+                              (t                     . ivy--regex-fuzzy)))
      :config
      (ivy-mode))
 
-   (use-package counsel
+   (use-package counsel ; ivy support for many functions
      :diminish
      :custom
      (counsel-describe-function-function #'helpful-callable)
@@ -722,17 +725,17 @@ If this is a daemon session, load them all immediately instead."
      :config
      (counsel-mode))
 
-   (use-package amx
+   (use-package amx ; show recently used commands
      :hook (ivy-mode . amx-mode)
      :custom
      (amx-save-file (expand-file-name "amx-history" my/etc-dir))
      (amx-history-length 50))
 
-   (use-package flx)
+   (use-package flx) ; fuzzy sorting for ivy
  #+END_SRC
 ** Yasnippet
  #+BEGIN_SRC emacs-lisp :results none
-   (use-package yasnippet
+   (use-package yasnippet ; snippets
      :diminish yas-minor-mode
      :defer-incrementally (eldoc easymenu help-mode)
      :general
@@ -769,12 +772,12 @@ If this is a daemon session, load them all immediately instead."
     ('insert
      "C-n" 'company-complete)) ; manual completion with C-n
 
-  (use-package company-flx
+  (use-package company-flx ; fuzzy sorting for company completion options
     :hook (company-mode . company-flx-mode))
 #+END_SRC
 * Version Control
 #+BEGIN_SRC emacs-lisp :results none
-  (use-package magit
+  (use-package magit ; git client
     :defer-incrementally
     (dash f s with-editor git-commit package eieio lv transient)
     :custom
@@ -800,7 +803,7 @@ If this is a daemon session, load them all immediately instead."
       "gff" #'(magit-find-file            :which-key "file")
       "gfg" #'(magit-find-git-config-file :which-key "git config file")))
 
-  (use-package evil-magit
+  (use-package evil-magit ; evil bindings for magit
     :after magit
     :custom
     (evil-magit-state 'normal)
@@ -808,7 +811,7 @@ If this is a daemon session, load them all immediately instead."
 #+END_SRC
 * Project Management
 #+BEGIN_SRC emacs-lisp :results none
-  (use-package projectile
+  (use-package projectile ; project management
     :diminish
     :commands projectile-mode
     :custom
@@ -920,14 +923,14 @@ If this is a daemon session, load them all immediately instead."
     :general
     (:keymaps 'override
               :prefix "C-c"
-              "t"  #'(org-todo                     :which-key "todo")
-              ",c" #'(org-ctrl-c-ctrl-c            :which-key "execute")
-              "s"  #'(org-sort                     :which-key "sort")
-              ",s" #'(org-schedule                 :which-key "schedule")
-              "d"  #'(org-deadline                 :which-key "deadline")
-              "e"  #'(org-export-dispatch          :which-key "export")
-              "q"  #'(org-set-tags-command         :which-key "add tags")
-              "f"  #'(counsel-org-goto-all         :which-key "find org headline"))
+              "t"  #'(org-todo             :which-key "todo")
+              ",c" #'(org-ctrl-c-ctrl-c    :which-key "execute")
+              "s"  #'(org-sort             :which-key "sort")
+              ",s" #'(org-schedule         :which-key "schedule")
+              "d"  #'(org-deadline         :which-key "deadline")
+              "e"  #'(org-export-dispatch  :which-key "export")
+              "q"  #'(org-set-tags-command :which-key "add tags")
+              "f"  #'(counsel-org-goto-all :which-key "find org headline"))
     :config
     (setq org-fontify-done-headline t)
     ;; tangle config every time I quit emacs
@@ -1201,8 +1204,8 @@ If this is a daemon session, load them all immediately instead."
      ('normal helpful-mode-map
               "q" #'quit-window)
      ([remap describe-command] #'helpful-command
-      [remap describe-key] #'helpful-key
-      [remap describe-symbol] #'helpful-symbol)
+      [remap describe-key]     #'helpful-key
+      [remap describe-symbol]  #'helpful-symbol)
      :config
      (evil-collection-inhibit-insert-state 'helpful-mode-map))
 
