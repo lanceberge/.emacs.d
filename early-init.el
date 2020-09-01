@@ -58,6 +58,8 @@
 
 (use-package display-line-numbers
   :straight (:type built-in)
+  :custom
+  (display-line-numbers-width-start t)
   :config
   (global-display-line-numbers-mode)
   (when IS-LINUX

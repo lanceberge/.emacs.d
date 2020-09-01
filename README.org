@@ -115,6 +115,8 @@ Tangles to early-init.el
 
   (use-package display-line-numbers
     :straight (:type built-in)
+    :custom
+    (display-line-numbers-width-start t)
     :config
     (global-display-line-numbers-mode)
     (when IS-LINUX
@@ -730,7 +732,6 @@ If this is a daemon session, load them all immediately instead."
  #+BEGIN_SRC emacs-lisp :results none
    (use-package yasnippet
      :diminish yas-minor-mode
-     :defer 0.5
      :defer-incrementally (eldoc easymenu help-mode)
      :general
      (my-localleader-def
@@ -894,6 +895,7 @@ If this is a daemon session, load them all immediately instead."
               org-footnote org-macro ob org org-clock org-agenda
               org-capture)
     :custom
+    (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
     (org-agenda-files '("~/org"))
     (org-directory "~/org")
     (org-default-notes-file (concat org-directory "/notes.org"))
@@ -902,8 +904,7 @@ If this is a daemon session, load them all immediately instead."
     (org-M-RET-may-split-line nil)
     (org-log-done 'time)
     (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
-    (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)"))
-                       (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir)))
+    (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
     :custom-face
     ;; No unnecessary background highlighting
     (org-block ((t (:background "#282828"))))
@@ -923,7 +924,8 @@ If this is a daemon session, load them all immediately instead."
               ",s" #'(org-schedule                 :which-key "schedule")
               "d"  #'(org-deadline                 :which-key "deadline")
               "e"  #'(org-export-dispatch          :which-key "export")
-              "q"  #'(org-set-tags-command         :which-key "add tags"))
+              "q"  #'(org-set-tags-command         :which-key "add tags")
+              "f"  #'(counsel-org-goto-all         :which-key "find org headline"))
     :config
     (setq org-fontify-done-headline t)
     ;; tangle config every time I quit emacs
@@ -984,8 +986,8 @@ If this is a daemon session, load them all immediately instead."
 #+BEGIN_SRC emacs-lisp :results none
   (use-package org-drill
     :general
-    (:prefix "C-c"
-             ",d" #'org-drill))
+    ('override :prefix "C-c"
+     ",d" #'org-drill))
 
   (use-package org-pomodoro
     :general
