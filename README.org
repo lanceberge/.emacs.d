@@ -442,11 +442,12 @@ If this is a daemon session, load them all immediately instead."
      (recentf-save-file (expand-file-name "recentf" my/etc-dir))
      (recentf-max-saved-items 200))
 
-   (use-package flyspell
-     :straight (:type built-in)
-     :diminish
-     :hook ((text-mode . flyspell-mode)
-            (prog-mode . flyspell-prog-mode)))
+   (when IS-LINUX
+     (use-package flyspell
+       :straight (:type built-in)
+       :diminish
+       :hook ((text-mode . flyspell-mode)
+              (prog-mode . flyspell-prog-mode))))
 
    (use-package eldoc
      :straight (:type built-in)
@@ -536,9 +537,7 @@ If this is a daemon session, load them all immediately instead."
     ('(normal visual motion)
      ";" #'evil-ex ; switch ; and :
      "H" #'evil-first-non-blank
-     "L" #'evil-end-of-line
-     "M-/" #'evil-search-forward
-     "M-?" #'evil-search-backward)
+     "L" #'evil-end-of-line)
 
     ;; Evil-avy
     ('normal :prefix "g"
@@ -680,9 +679,12 @@ If this is a daemon session, load them all immediately instead."
  #+BEGIN_SRC emacs-lisp :results none
    (use-package swiper
      :general
-     ('normal override
-              "?" #'swiper-backward
-              "/" #'swiper)
+     ('normal
+     [remap evil-ex-search-forward]  #'swiper
+     [remap evil-ex-search-backward] #'swiper-backward)
+     ;; ('normal override
+     ;;          "?" #'swiper-backward
+     ;;          "/" #'swiper)
      (my-leader-def
        "fb" #'(swiper-multi :which-key "swiper in buffer")
        "fB" #'(swiper-all   :which-key "swiper in all buffers")))
@@ -893,7 +895,7 @@ If this is a daemon session, load them all immediately instead."
     (calendar find-func format-spec org-macs org-compat
               org-faces org-entities org-list org-pcomplete org-src
               org-footnote org-macro ob org org-clock org-agenda
-              org-capture)
+              org-capture evil-org)
     :custom
     (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
     (org-agenda-files '("~/org"))
