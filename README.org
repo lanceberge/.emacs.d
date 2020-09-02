@@ -162,7 +162,6 @@ Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
   ;;; -*- lexical-binding: t -*-
-
   (use-package emacs
     :custom
     (default-file-name-handler-alist file-name-handler-alist)
@@ -211,6 +210,7 @@ Mostly taken from Doom Emacs
     (cursor-in-non-selected-windows nil)
     (indent-tabs-mode nil)
 
+    ;; Keeping ~/.emacs.d clean
     (my/etc-dir                  (expand-file-name "etc/" user-emacs-directory))
     (custom-file                 (expand-file-name "custom.el" my/etc-dir))
     (custom-theme-directory      (expand-file-name "themes/" my/etc-dir))
@@ -507,7 +507,7 @@ If this is a daemon session, load them all immediately instead."
   (defun doom-defer-garbage-collection-h ()
     (setq gc-cons-threshold most-positive-fixnum))
 
-  (defun doom-restore-garbage-collectio-h ()
+  (defun doom-restore-garbage-collection-h ()
     (run-at-time
      1 nil (lambda () (setq gc-cons-threshold 16777216))))
 
@@ -707,6 +707,7 @@ If this is a daemon session, load them all immediately instead."
 
    (use-package counsel ; ivy support for many functions
      :diminish
+     :defer 0.1
      :custom
      (counsel-describe-function-function #'helpful-callable)
      (counsel-describe-variable-function #'helpful-variable)
@@ -725,12 +726,13 @@ If this is a daemon session, load them all immediately instead."
      (counsel-mode))
 
    (use-package amx ; show recently used commands
-     :hook (ivy-mode . amx-mode)
+     :hook (counsel-mode . amx-mode)
      :custom
      (amx-save-file (expand-file-name "amx-history" my/etc-dir))
      (amx-history-length 50))
 
-   (use-package flx) ; fuzzy sorting for ivy
+   (use-package flx
+     :after counsel) ; fuzzy sorting for ivy
  #+END_SRC
 ** Yasnippet
  #+BEGIN_SRC emacs-lisp :results none
@@ -747,7 +749,7 @@ If this is a daemon session, load them all immediately instead."
      (yas-global-mode))
 
    (use-package yasnippet-snippets
-     :defer 0.6)
+     :defer 1)
 
    (use-package auto-yasnippet
      :general
@@ -778,7 +780,7 @@ If this is a daemon session, load them all immediately instead."
 #+BEGIN_SRC emacs-lisp :results none
   (use-package magit ; git client
     :defer-incrementally
-    (dash f s with-editor git-commit package eieio lv transient)
+    (dash f s with-editor git-commit package eieio lv transient evil-magit)
     :custom
     (magit-auto-revert-mode nil)
     (magit-save-repository-buffers nil)
