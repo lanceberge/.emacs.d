@@ -572,7 +572,7 @@ If this is a daemon session, load them all immediately instead."
 *** Evil-Collection
  #+BEGIN_SRC emacs-lisp :results none
    (use-package evil-collection ; evil bindings for many modes
-     :defer 0.5
+     :defer 0.2
      :custom
      (evil-collection-calendar-want-org-bindings t)
      (evil-collection-want-unimpaired-p t)
@@ -663,14 +663,13 @@ If this is a daemon session, load them all immediately instead."
      :diminish
      :hook (prog-mode . origami-mode)
      :general
-     ('normal
-      "zm" #'origami-close-node-recursively
-      "zr" #'origami-open-node-recursively
-      "zj" #'origami-next-fold
-      "zk" #'origami-previous-fold)
       ('normal origami-mode
-      "zM" 'origami-close-all-nodes
-      "zR" 'origami-open-all-nodes))
+      "zc" #'origami-close-node-recursively
+      "zo" #'origami-open-node-recursively
+      "zj" #'origami-next-fold
+      "zk" #'origami-previous-fold
+      "zm" #'origami-close-all-nodes
+      "zr" #'origami-open-all-nodes))
 
    (use-package evil-mc ; multiple cursors
      :diminish
@@ -928,16 +927,20 @@ If this is a daemon session, load them all immediately instead."
     (org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
     (org-done             ((t (:foreground "#7C6f64"))))
     :general
-    (:keymaps 'override
-              :prefix "C-c"
-              "t"  #'(org-todo             :which-key "todo")
-              ",c" #'(org-ctrl-c-ctrl-c    :which-key "execute")
-              "s"  #'(org-sort             :which-key "sort")
-              ",s" #'(org-schedule         :which-key "schedule")
-              "d"  #'(org-deadline         :which-key "deadline")
-              "e"  #'(org-export-dispatch  :which-key "export")
-              "q"  #'(org-set-tags-command :which-key "add tags")
-              "f"  #'(counsel-org-goto-all :which-key "find org headline"))
+    ('override
+     :prefix "C-c"
+     "v"  #'org-toggle-inline-images
+     ",v" #'org-redisplay-inline-images)
+    ('override
+     :prefix "C-c"
+     "t"  #'(org-todo             :which-key "todo")
+     ",c" #'(org-ctrl-c-ctrl-c    :which-key "execute")
+     "s"  #'(org-sort             :which-key "sort")
+     ",s" #'(org-schedule         :which-key "schedule")
+     "d"  #'(org-deadline         :which-key "deadline")
+     "e"  #'(org-export-dispatch  :which-key "export")
+     "q"  #'(org-set-tags-command :which-key "add tags")
+     "f"  #'(counsel-org-goto-all :which-key "find org headline"))
     :config
     (setq org-fontify-done-headline t)
     ;; tangle config every time I quit emacs
@@ -988,11 +991,15 @@ If this is a daemon session, load them all immediately instead."
 
   (use-package ob-haskell
     :straight (:type built-in)
-    :defer t)
+    :commands org-babal-execute:haskell)
 
   (use-package ob-shell
     :straight (:type built-in)
-    :defer t)
+    :commands org-babal-execute:sh)
+
+  (use-package ob-C
+    :straight (:type built-in)
+    :commands org-babel-execute:C)
 #+END_SRC
 ** Non built-ins
 #+BEGIN_SRC emacs-lisp :results none
@@ -1031,10 +1038,6 @@ If this is a daemon session, load them all immediately instead."
      "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1)))
      "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
      "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
-    ('override
-     :prefix "C-c"
-     "v"  #'org-toggle-inline-images
-     ",v" #'org-redisplay-inline-images)
     :config
     (evil-org-set-key-theme)
     (general-def '(normal insert) evil-org-mode-map
@@ -1048,7 +1051,11 @@ If this is a daemon session, load them all immediately instead."
       "C-:"   #'my/org-insert-heading-above
       "C-;"   #'evil-org-org-insert-heading-respect-content-below
       "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below
-      "M-:"   #'my/org-insert-todo-above))
+      "M-:"   #'my/org-insert-todo-above)
+    (general-def 'normal evil-org-mode-map
+      "zo" #'outline-show-subtree
+      "zk" #'org-backward-element
+      "zj" #'org-forward-element))
 #+END_SRC
 * Windows, Buffers, Directory Management
 ** Dired
@@ -1097,6 +1104,9 @@ If this is a daemon session, load them all immediately instead."
      (sp-highlight-wrap-tag-overlay nil)
      (sp-max-prefix-length 25)
      (sp-max-pair-length 4)
+     (sp-escape-quotes-after-insert nil)
+     (sp-show-pair-from-inside t)
+     (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
      :hook
      (text-mode . smartparens-mode)
      (prog-mode . smartparens-strict-mode)
@@ -1104,7 +1114,8 @@ If this is a daemon session, load them all immediately instead."
      (my-localleader-def
        "s" '(hydra-smartparens/body :which-key "Smartparens"))
      :config
-     (sp-local-pair '(org-mode emacs-lisp-mode) "'" nil :actions nil) ; don't pair ' in elisp mode
+     (require 'smartparens-config) ; config for many languages
+     (sp-local-pair 'org-mode "'" nil :actions nil) ; don't pair ' in elisp mode
 
      (defhydra hydra-smartparens ()
        ;; Movement
