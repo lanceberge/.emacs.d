@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: Org drill
+# key: od
+# --
+*** $0 :drill:
+
+$1
+
+**** Answer
+
+$2
