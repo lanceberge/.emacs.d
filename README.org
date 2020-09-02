@@ -1,13 +1,11 @@
-* Table of Contents                                                     :TOC_3:
+* Table of Contents                                                   :TOC_3:
 - [[#early-init][Early-Init]]
   - [[#initial-settings][Initial Settings]]
   - [[#straight][Straight]]
   - [[#ui][UI]]
 - [[#init][Init]]
 - [[#initial][Initial]]
-  - [[#move-to-a-use-package-emacs][move to a use-package emacs]]
   - [[#settings][Settings]]
-  - [[#keeping-emacsd-organized][Keeping ~/.emacs.d organized]]
   - [[#os-specific][OS Specific]]
   - [[#defer-incrementally][Defer Incrementally]]
   - [[#keymap-management][Keymap Management]]
@@ -158,76 +156,75 @@ Tangles to init.el
   (load-file config-el)
 #+END_SRC
 * Initial
-** TODO move to a use-package emacs
 ** Settings
 
 Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
   ;;; -*- lexical-binding: t -*-
-  (defvar default-file-name-handler-alist file-name-handler-alist)
 
-  (setq file-name-handler-alist nil
-        gc-cons-threshold most-positive-fixnum
-        gc-cons-percentage 0.6
+  (use-package emacs
+    :custom
+    (default-file-name-handler-alist file-name-handler-alist)
 
-        load-prefer-newer noninteractive
-        locale-coding-system 'utf-8;
-        message-log-max 5000 ; longer number of max messages
-        ring-bell-function 'ignore
+    (file-name-handler-alist nil)
+    (gc-cons-threshold most-positive-fixnum)
+    (gc-cons-percentage 0.6)
 
-        ;; startup.el settings
-        inhibit-startup-screen t
-        inhibit-startup-message t
-        inhibit-startup-echo-area-message user-login-name
+    (load-prefer-newer noninteractive)
+    (locale-coding-system 'utf-8)
+    (message-log-max 5000) ; longer number of max messages
+    (ring-bell-function 'ignore)
 
-        ;; inhibit-default-init t
-        initial-scratch-message nil
-        initial-major-mode 'fundamental-mode ; start in an empty mode
-        user-mail-address "bergeron.lance6@gmail.com"
+    ;; startup.el settings
+    (inhibit-startup-screen t)
+    (inhibit-startup-message t)
+    (inhibit-startup-echo-area-message user-login-name)
 
-        kill-buffer-query-functions nil
-        inhibit-compacting-font-caches t ; inhibit font compacting
-        highlight-nonselected-windows nil
-        ffap-machine-p-known 'reject ; don't ping things that look like domain names
-        bidi-inhibit-bpa t
-        fast-but-imprecise-scrolling t ; faster scrolling over unfontified regions
+    ;; inhibit-default-init t
+    (initial-scratch-message nil)
+    (initial-major-mode 'fundamental-mode) ; start in an empty mode
+    (user-mail-address "bergeron.lance6@gmail.com")
 
-        ;; User Settings
-        user-full-name "Lance Bergeron"
+    (kill-buffer-query-functions nil)
+    (inhibit-compacting-font-caches t) ; inhibit font compacting
+    (highlight-nonselected-windows nil)
+    (ffap-machine-p-known 'reject) ; don't ping things that look like domain names
+    (bidi-inhibit-bpa t)
+    (fast-but-imprecise-scrolling t) ; faster scrolling over unfontified regions
 
-        ;; Scrolling
-        scroll-conservatively 1000
-        scroll-margin 4
-        scroll-step 1
+    ;; User Settings
+    (user-full-name "Lance Bergeron")
 
-        ;; General
-        indent-tabs-mode nil
-        apropos-do-all t) ; more extensive apropos searches
+    ;; Scrolling
+    (scroll-conservatively 1000)
+    (scroll-margin 4)
+    (scroll-step 1)
+
+    ;; General
+    (indent-tabs-mode nil)
+    (apropos-do-all t) ; more extensive apropos searches
+
+    ;; Disable bidirectional text rendering for performance
+    (bidi-display-reordering 'left-to-right)
+    (bidi-paragraph-direction 'left-to-right)
+    (cursor-in-non-selected-windows nil)
+    (indent-tabs-mode nil)
+
+    (my/etc-dir                  (expand-file-name "etc/" user-emacs-directory))
+    (custom-file                 (expand-file-name "custom.el" my/etc-dir))
+    (custom-theme-directory      (expand-file-name "themes/" my/etc-dir))
+    (url-configuration-directory (expand-file-name "url/" my/etc-dir))
+    (url-cache-directory         (expand-file-name "url/" my/etc-dir))
+    (persist--directory-location (expand-file-name "persist/" my/etc-dir))
+    (transient-history-file      (expand-file-name "transient/history.el" my/etc-dir))
+    (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions" my/etc-dir)))
 
   (advice-add #'tty-run-terminal-initialization :override #'ignore)
 
   (advice-add #'display-startup-echo-area-message :override #'ignore) ; Get rid of For information about GNU Emacs message
 
   (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
-
-  ;; Disable bidirectional text rendering for performance
-  (setq-default bidi-display-reordering 'left-to-right
-                bidi-paragraph-direction 'left-to-right
-                cursor-in-non-selected-windows nil
-                indent-tabs-mode nil)
-#+END_SRC
-** Keeping ~/.emacs.d organized
-#+BEGIN_SRC emacs-lisp :results none
-  ;; Keeping ~/.emacs.d organized
-  (defconst my/etc-dir (expand-file-name "etc/" user-emacs-directory))
-  (setq custom-file                 (expand-file-name "custom.el" my/etc-dir)
-        custom-theme-directory      (expand-file-name "themes/" my/etc-dir)
-        url-configuration-directory (expand-file-name "url/" my/etc-dir)
-        url-cache-directory         (expand-file-name "url/" my/etc-dir)
-        persist--directory-location (expand-file-name "persist/" my/etc-dir)
-        transient-history-file      (expand-file-name "transient/history.el" my/etc-dir)
-        auto-save-list-file-prefix  (expand-file-name "auto-save/sessions" my/etc-dir))
 #+END_SRC
 ** OS Specific
 #+BEGIN_SRC emacs-lisp :results none
@@ -468,27 +465,29 @@ If this is a daemon session, load them all immediately instead."
  #+END_SRC
 ** Keybindings
  #+BEGIN_SRC emacs-lisp :results none
-   (my-leader-def
-     "h" (general-simulate-key "C-h" :which-key "Help")
-     ;; Windows
-     ";"  #'(shell-command            :which-key "shell command")
-     "w"  '(:ignore t                :which-key "Windows")
-     "w"   (general-simulate-key "C-w") ; window command
-     ;; Buffers
-     "b"  '(:ignore t                :which-key "Buffers")
-     "bs" #'(save-buffer              :which-key "write file")
-     "bd" #'(kill-this-buffer         :which-key "delete buffer")
-     "bq" #'my/save-and-kill-buffer)
+   (use-package emacs
+     :general
+     (my-leader-def
+       "h" (general-simulate-key "C-h" :which-key "Help")
+       ;; Windows
+       ";"  #'(shell-command            :which-key "shell command")
+       "w"  '(:ignore t                :which-key "Windows")
+       "w"   (general-simulate-key "C-w") ; window command
+       ;; Buffers
+       "b"  '(:ignore t                :which-key "Buffers")
+       "bs" #'(save-buffer              :which-key "write file")
+       "bd" #'(kill-this-buffer         :which-key "delete buffer")
+       "bq" #'my/save-and-kill-buffer)
 
-   (general-def 'normal
-     "gs" #'my/split-line
-     "gS" (lambda () (interactive) (my/split-line) (move-text-up)) ; split line above
-     "gC" #'my/comment-until-end-of-line
-     "]b" #'(next-buffer     :which-key "next buffer")
-     "[b" #'(previous-buffer :which-key "previous buffer"))
+     ('normal
+       "gs" #'my/split-line
+       "gS" (lambda () (interactive) (my/split-line) (move-text-up)) ; split line above
+       "gC" #'my/comment-until-end-of-line
+       "]b" #'(next-buffer     :which-key "next buffer")
+       "[b" #'(previous-buffer :which-key "previous buffer"))
 
-   (general-def 'insert
-     "C-y" #'yank) ; otherwise is overridden by evil
+     ('insert
+       "C-y" #'yank)) ; otherwise is overridden by evil
  #+END_SRC
 ** Hooks
 #+BEGIN_SRC emacs-lisp :results none
