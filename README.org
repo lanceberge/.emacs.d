@@ -29,7 +29,7 @@
 - [[#org][Org]]
   - [[#org-1][Org]]
   - [[#org-built-ins][Org built-ins]]
-  - [[#non-built-ins][Non-built-ins]]
+  - [[#non-built-ins][Non built-ins]]
   - [[#evil-org][Evil-Org]]
 - [[#windows-buffers-directory-management][Windows, Buffers, Directory Management]]
   - [[#dired][Dired]]
@@ -445,6 +445,7 @@ If this is a daemon session, load them all immediately instead."
      (recentf-save-file (expand-file-name "recentf" my/etc-dir))
      (recentf-max-saved-items 200))
 
+     ;; TODO change to :ensure-system-dependency
    (when IS-LINUX
      (use-package flyspell
        :straight (:type built-in)
@@ -480,14 +481,14 @@ If this is a daemon session, load them all immediately instead."
        "bq" #'my/save-and-kill-buffer)
 
      ('normal
-       "gs" #'my/split-line
-       "gS" (lambda () (interactive) (my/split-line) (move-text-up)) ; split line above
-       "gC" #'my/comment-until-end-of-line
-       "]b" #'(next-buffer     :which-key "next buffer")
-       "[b" #'(previous-buffer :which-key "previous buffer"))
+      "gs" #'my/split-line
+      "gS" (lambda () (interactive) (my/split-line) (move-text-up)) ; split line above
+      "gC" #'my/comment-until-end-of-line
+      "]b" #'(next-buffer     :which-key "next buffer")
+      "[b" #'(previous-buffer :which-key "previous buffer"))
 
      ('insert
-       "C-y" #'yank)) ; otherwise is overridden by evil
+      "C-y" #'yank)) ; otherwise is overridden by evil
  #+END_SRC
 ** Hooks
 #+BEGIN_SRC emacs-lisp :results none
@@ -524,6 +525,7 @@ If this is a daemon session, load them all immediately instead."
     (evil-quit
      evil-save-modified-and-close)
     :custom
+    ;; TODO nohl
     (evil-want-C-u-scroll t)
     (evil-want-Y-yank-to-eol t)
     (evil-split-window-below t)
@@ -561,6 +563,7 @@ If this is a daemon session, load them all immediately instead."
      "C-l" #'evil-ex-nohighlight)
     :config
     (evil-mode)
+    (diminish 'defining-kbd-macro) ; don't add DEF in modeline when writing a macro
     (general-def 'evil-window-map
       "d" #'evil-quit ; delete window
       "q" #'evil-save-modified-and-close)) ; quit and save window
@@ -625,9 +628,6 @@ If this is a daemon session, load them all immediately instead."
    (use-package evil-exchange ; exchange text selected with gx
      :defer 1
      :config (evil-exchange-install))
-
-   (use-package evil-anzu
-     :defer 1)
 
    (use-package evil-owl
      :diminish
@@ -696,7 +696,10 @@ If this is a daemon session, load them all immediately instead."
      :demand t
      :general
      ('ivy-minibuffer-map
-      ";" #'ivy-done)
+      ";" #'exit-minibuffer)
+
+     ('minibuffer-local-mode-map
+      ";" #'exit-minibuffer)
      :custom
      (ivy-re-builders-alist '((swiper                . ivy--regex-plus)
                               (counsel-rg            . ivy--regex-plus)
@@ -704,6 +707,7 @@ If this is a daemon session, load them all immediately instead."
                               (t                     . ivy--regex-fuzzy)))
      :config
      (ivy-mode))
+
 
    (use-package counsel ; ivy support for many functions
      :diminish
@@ -761,7 +765,7 @@ If this is a daemon session, load them all immediately instead."
 #+BEGIN_SRC emacs-lisp :results none
   (use-package company ; autocomplete
     :diminish
-    :hook (prog-mode . company-mode)
+    :defer 0.1
     :custom
     (company-show-numbers t)
     (company-backends '(company-capf
@@ -771,7 +775,9 @@ If this is a daemon session, load them all immediately instead."
     :general
     ('company-active-map "C-w" nil) ; don't override evil C-w
     ('insert
-     "C-n" 'company-complete)) ; manual completion with C-n
+     "C-n" 'company-complete) ; manual completion with C-n
+     :config
+     (global-company-mode))
 
   (use-package company-flx ; fuzzy sorting for company completion options
     :hook (company-mode . company-flx-mode))
@@ -904,7 +910,7 @@ If this is a daemon session, load them all immediately instead."
     (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
     (org-agenda-files '("~/org"))
     (org-directory "~/org")
-    (org-default-notes-file (concat org-directory "/notes.org"))
+    (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
     (org-confirm-babel-evaluate nil)
     (org-startup-folded t)
     (org-M-RET-may-split-line nil)
@@ -913,14 +919,14 @@ If this is a daemon session, load them all immediately instead."
     (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
     :custom-face
     ;; No unnecessary background highlighting
-    (org-block ((t (:background "#282828"))))
+    (org-block            ((t (:background "#282828"))))
     (org-block-begin-line ((t (:background "#282828"))))
-    (org-block-end-line ((t (:background "#282828"))))
-    (org-level-1 ((t (:background "#282828"))))
-    (org-quote ((t (:background "#282828"))))
+    (org-block-end-line   ((t (:background "#282828"))))
+    (org-level-1          ((t (:background "#282828"))))
+    (org-quote            ((t (:background "#282828"))))
     ;; Gray out done headlines and text; strike-through the text
-    (org-headline-done ((t (:strike-through t :foreground "#7C6f64"))))
-    (org-done ((t (:foreground "#7C6f64"))))
+    (org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
+    (org-done             ((t (:foreground "#7C6f64"))))
     :general
     (:keymaps 'override
               :prefix "C-c"
@@ -988,7 +994,7 @@ If this is a daemon session, load them all immediately instead."
     :straight (:type built-in)
     :defer t)
 #+END_SRC
-** Non-built-ins
+** Non built-ins
 #+BEGIN_SRC emacs-lisp :results none
   (use-package org-drill
     :general
@@ -1016,6 +1022,7 @@ If this is a daemon session, load them all immediately instead."
     (my-localleader-def
       "c"    (general-simulate-key "C-c"))
     ('org-read-date-minibuffer-local-map
+     ";" #'exit-minibuffer
      "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
      "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
      "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
@@ -1070,7 +1077,9 @@ If this is a daemon session, load them all immediately instead."
 
   (use-package winner ; Undo and redo window configs
     :straight (:type built-in)
-    :hook (after-init . winner-mode)
+    :defer 0.3
+    :config
+    (winner-mode)
     :general
     ('evil-window-map
      "u" #'winner-undo
@@ -1081,6 +1090,7 @@ If this is a daemon session, load them all immediately instead."
  #+BEGIN_SRC emacs-lisp :results none
    (use-package smartparens
      :diminish
+     :defer 0.3
      :custom
      (sp-highlight-pair-overlay nil)
      (sp-highlight-wrap-overlay nil)
@@ -1211,7 +1221,7 @@ If this is a daemon session, load them all immediately instead."
      (evil-collection-inhibit-insert-state 'helpful-mode-map))
 
    (use-package gcmh ; Garbage collect in idle time
-     :defer 0.6
+     :defer 0.4
      :commands gcmh-idle-garbage-collect
      :diminish
      :custom
