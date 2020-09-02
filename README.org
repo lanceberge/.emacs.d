@@ -40,7 +40,7 @@
 - [[#system][System]]
   - [[#terminalsshells][Terminals/shells]]
   - [[#miscellaneous-2][Miscellaneous]]
-- [[#language-specific][Language Specific]]
+- [[#filetype-specific][Filetype Specific]]
   - [[#pdf][PDF]]
 - [[#functions][Functions]]
 
@@ -766,17 +766,23 @@ If this is a daemon session, load them all immediately instead."
     :diminish
     :defer 0.1
     :custom
+    (company-idle-delay 0.25)
+    (company-minimum-prefix-length 2)
+    (company-require-match 'never)
     (company-show-numbers t)
+    (company-dabbrev-other-buffers nil)
+    (company-dabbrev-ignore-case nil)
     (company-backends '(company-capf
                         company-files
+                        company-yasnippet
                         company-keywords
-                        company-yasnippet))
+                        company-dabbrev))
     :general
     ('company-active-map "C-w" nil) ; don't override evil C-w
     ('insert
-     "C-n" 'company-complete) ; manual completion with C-n
-     :config
-     (global-company-mode))
+     [remap evil-complete-next] 'company-complete) ; manual completion with C-n
+    :config
+    (global-company-mode))
 
   (use-package company-flx ; fuzzy sorting for company completion options
     :hook (company-mode . company-flx-mode))
@@ -1108,8 +1114,7 @@ If this is a daemon session, load them all immediately instead."
      (sp-show-pair-from-inside t)
      (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
      :hook
-     (text-mode . smartparens-mode)
-     (prog-mode . smartparens-strict-mode)
+     ((prog-mode text-mode) . smartparens-mode)
      :general
      (my-localleader-def
        "s" '(hydra-smartparens/body :which-key "Smartparens"))
@@ -1187,7 +1192,10 @@ If this is a daemon session, load them all immediately instead."
 
    (use-package aggressive-indent
      :diminish
-     :hook (prog-mode . aggressive-indent-mode))
+     :defer 0.4
+     :config
+     (global-aggressive-indent-mode)
+     (push 'org-mode aggressive-indent-excluded-modes))
  #+END_SRC
 * System
 ** Terminals/shells
@@ -1269,7 +1277,7 @@ If this is a daemon session, load them all immediately instead."
      :custom
      (tramp-autosave-directory (expand-file-name "tramp" my/etc-dir)))
  #+END_SRC
-* Language Specific
+* Filetype Specific
 ** PDF
 #+BEGIN_SRC emacs-lisp :results none
   (use-package pdf-tools
