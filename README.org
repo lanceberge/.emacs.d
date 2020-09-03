@@ -42,6 +42,7 @@
   - [[#miscellaneous-2][Miscellaneous]]
 - [[#filetype-specific][Filetype Specific]]
   - [[#pdf][PDF]]
+  - [[#c-family][C family]]
 - [[#functions][Functions]]
 
 * Early-Init
@@ -946,6 +947,7 @@ If this is a daemon session, load them all immediately instead."
      "d"  #'(org-deadline         :which-key "deadline")
      "e"  #'(org-export-dispatch  :which-key "export")
      "q"  #'(org-set-tags-command :which-key "add tags")
+     "b"  #'(org-babel-tangle     :which-key "tangle file")
      "f"  #'(counsel-org-goto-all :which-key "find org headline"))
     :config
     (setq org-fontify-done-headline t)
@@ -1285,6 +1287,14 @@ If this is a daemon session, load them all immediately instead."
     :config
     (evil-set-initial-state 'pdf-view-mode 'normal)
     (pdf-tools-install :no-query))
+#+END_SRC
+** C family
+#+BEGIN_SRC emacs-lisp :results none
+(use-package cc-mode
+:straight (:type built-in)
+:defer t
+:custom
+(c-basic-offset 4))
 #+END_SRC
 * Functions
 #+BEGIN_SRC emacs-lisp :results none
