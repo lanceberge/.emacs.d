@@ -50,40 +50,40 @@
 Tangles to early-init.el
 
 ** Initial Settings
- #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
-   ;;; -*- lexical-binding: t -*-
-   (setq gc-cons-threshold most-positive-fixnum)
+#+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
+  ;;; -*- lexical-binding: t -*-
+  (setq gc-cons-threshold most-positive-fixnum)
 
-   (defconst IS-LINUX (eq system-type 'gnu/linux))
-   (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+  (defconst IS-LINUX (eq system-type 'gnu/linux))
+  (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
 
-   (setq package-enable-at-startup nil)
-   (advice-add #'package--ensure-init-file :override #'ignore)
+  (setq package-enable-at-startup nil)
+  (advice-add #'package--ensure-init-file :override #'ignore)
 
-   (push '(menu-bar-lines . 0) default-frame-alist)
-   (push '(tool-bar-lines . 0) default-frame-alist)
-   (push '(vertical-scroll-bars) default-frame-alist)
+  (push '(menu-bar-lines . 0) default-frame-alist)
+  (push '(tool-bar-lines . 0) default-frame-alist)
+  (push '(vertical-scroll-bars) default-frame-alist)
 
-   (setq emacs-load-start-time (current-time)
-         menu-bar-mode nil
-         tool-bar-mode nil
-         scroll-bar-mode nil
-         frame-inhibit-implied-resize t
-         inhibit-default-init t
-         site-run-file nil
-         comp-deferred-compilation nil)
+  (setq emacs-load-start-time (current-time)
+        menu-bar-mode nil
+        tool-bar-mode nil
+        scroll-bar-mode nil
+        frame-inhibit-implied-resize t
+        inhibit-default-init t
+        site-run-file nil
+        comp-deferred-compilation nil)
 
-   (set-face-attribute 'default nil
-                       :family "DejaVu Sans Mono"
-                       :height 110
-                       :weight 'normal
-                       :width 'normal)
+  (set-face-attribute 'default nil
+                      :family "DejaVu Sans Mono"
+                      :height 110
+                      :weight 'normal
+                      :width 'normal)
 
 
-   (advice-add #'x-apply-session-resources :override #'ignore)
+  (advice-add #'x-apply-session-resources :override #'ignore)
 #+END_SRC
 ** Straight
- #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
+#+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
    ;; Bootstrap straight.el
    (let ((bootstrap-file
           (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -140,7 +140,7 @@ Tangles to early-init.el
                   " "
                   mode-line-misc-info
                   mode-line-end-spaces))
- #+END_SRC
+#+END_SRC
 * Init
 
 Tangles to init.el
@@ -350,48 +350,48 @@ If this is a daemon session, load them all immediately instead."
      (use-package-process-keywords name rest state))))
 #+END_SRC
 ** Keymap Management
- #+BEGIN_SRC emacs-lisp :results none
-   (use-package general ; unified way to map keybindings; works with :general in use-package
-     :demand t
-     :config
-     (general-create-definer my-leader-def ; SPC prefixed bindings
-       :states '(normal visual insert emacs)
-       :keymaps 'override
-       :prefix "SPC"
-       :non-normal-prefix "M-SPC")
+#+BEGIN_SRC emacs-lisp :results none
+  (use-package general ; unified way to map keybindings; works with :general in use-package
+    :demand t
+    :config
+    (general-create-definer my-leader-def ; SPC prefixed bindings
+      :states '(normal visual insert emacs)
+      :keymaps 'override
+      :prefix "SPC"
+      :non-normal-prefix "M-SPC")
 
-     (general-create-definer my-localleader-def ; , prefixed bindings
-       :states '(normal visual insert emacs)
-       :keymaps 'override
-       :prefix ","
-       :non-normal-prefix "C-,")
+    (general-create-definer my-localleader-def ; , prefixed bindings
+      :states '(normal visual insert emacs)
+      :keymaps 'override
+      :prefix ","
+      :non-normal-prefix "C-,")
 
-     (my-leader-def
-       "f"  '(:ignore t                    :which-key "Find")
-       "fm" #'(general-describe-keybindings :which-key "list keybindings")))
+    (my-leader-def
+      "f"  '(:ignore t                    :which-key "Find")
+      "fm" #'(general-describe-keybindings :which-key "list keybindings")))
 
-   (use-package diminish
-     :defer t)
+  (use-package diminish
+    :defer t)
 
-   (use-package which-key ; show keybindings following when a prefix is pressed
-     :diminish
-     :demand t
-     :general
-     (my-leader-def
-       "f SPC m" #'which-key-show-top-level)
-     :custom
-     (which-key-sort-order #'which-key-prefix-then-key-order)
-     (which-key-min-display-lines 6)
-     (which-key-add-column-padding 1)
-     (which-key-sort-uppercase-first nil)
-     :config
-     (which-key-mode))
+  (use-package which-key ; show keybindings following when a prefix is pressed
+    :diminish
+    :demand t
+    :general
+    (my-leader-def
+      "f SPC m" #'which-key-show-top-level)
+    :custom
+    (which-key-sort-order #'which-key-prefix-then-key-order)
+    (which-key-min-display-lines 6)
+    (which-key-add-column-padding 1)
+    (which-key-sort-uppercase-first nil)
+    :config
+    (which-key-mode))
 
-   (use-package hydra
-     :defer t)
- #+END_SRC
+  (use-package hydra
+    :defer t)
+#+END_SRC
 ** Built-in Packages
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
    (use-package simple
      :straight (:type built-in)
      :defer t
@@ -464,33 +464,33 @@ If this is a daemon session, load them all immediately instead."
      :defer t
      :custom
      (bookmark-default-file (expand-file-name "bookarks" my/etc-dir)))
- #+END_SRC
+#+END_SRC
 ** Keybindings
- #+BEGIN_SRC emacs-lisp :results none
-   (use-package emacs
-     :general
-     (my-leader-def
-       "h" (general-simulate-key "C-h" :which-key "Help")
-       ;; Windows
-       ";"  #'(shell-command            :which-key "shell command")
-       "w"  '(:ignore t                :which-key "Windows")
-       "w"   (general-simulate-key "C-w") ; window command
-       ;; Buffers
-       "b"  '(:ignore t                :which-key "Buffers")
-       "bs" #'(save-buffer              :which-key "write file")
-       "bd" #'(kill-this-buffer         :which-key "delete buffer")
-       "bq" #'my/save-and-kill-buffer)
+#+BEGIN_SRC emacs-lisp :results none
+  (use-package emacs
+    :general
+    (my-leader-def
+      "h" (general-simulate-key "C-h" :which-key "Help")
+      ;; Windows
+      ";"  #'(shell-command            :which-key "shell command")
+      "w"  '(:ignore t                :which-key "Windows")
+      "w"   (general-simulate-key "C-w") ; window command
+      ;; Buffers
+      "b"  '(:ignore t                :which-key "Buffers")
+      "bs" #'(save-buffer              :which-key "write file")
+      "bd" #'(kill-this-buffer         :which-key "delete buffer")
+      "bq" #'my/save-and-kill-buffer)
 
-     ('normal
-      "gs" #'my/split-line
-      "gS" (lambda () (interactive) (my/split-line) (move-text-up)) ; split line above
-      "gC" #'my/comment-until-end-of-line
-      "]b" #'(next-buffer     :which-key "next buffer")
-      "[b" #'(previous-buffer :which-key "previous buffer"))
+    ('normal
+     "gs" #'my/split-line
+     "gS" (lambda () (interactive) (my/split-line) (move-text-up)) ; split line above
+     "gC" #'my/comment-until-end-of-line
+     "]b" #'(next-buffer     :which-key "next buffer")
+     "[b" #'(previous-buffer :which-key "previous buffer"))
 
-     ('insert
-      "C-y" #'yank)) ; otherwise is overridden by evil
- #+END_SRC
+    ('insert
+     "C-y" #'yank)) ; otherwise is overridden by evil
+#+END_SRC
 ** Hooks
 #+BEGIN_SRC emacs-lisp :results none
   (add-hook 'after-init-hook
@@ -536,7 +536,6 @@ If this is a daemon session, load them all immediately instead."
     (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
     :general
     ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
-
     ('normal
      "zR" #'evil-open-folds
      "zM" #'evil-close-folds
@@ -571,26 +570,22 @@ If this is a daemon session, load them all immediately instead."
 #+END_SRC
 ** Evil-Related
 *** Evil-Collection
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
    (use-package evil-collection ; evil bindings for many modes
-     :defer 0.2
+     :defer t
      :custom
-     (evil-collection-calendar-want-org-bindings t)
      (evil-collection-want-unimpaired-p t)
      (evil-collection-setup-minibuffer t)
      (evil-collection-mode-list
       '(minibuffer
         ivy
-        company
-        vterm
+        ;; vterm
         dired
         eshell
-        (pdf pdf-tools)))
-     :config
-     (evil-collection-init))
- #+END_SRC
+        (pdf pdf-tools))))
+#+END_SRC
 *** Extra operators/motion
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
    (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
      :diminish evil-snipe-local-mode
      :hook ((prog-mode text-mode) . evil-snipe-override-local-mode)
@@ -648,17 +643,19 @@ If this is a daemon session, load them all immediately instead."
      :defer 1
      :config
      (evil-indent-plus-default-bindings))
- #+END_SRC
+#+END_SRC
 *** Miscellaneous
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
    (use-package evil-escape ; jk to leave insert mode
      :diminish
-     :hook ((prog-mode text-mode) . evil-escape-mode)
+     :defer 0.2
      :custom
      (evil-escape-key-sequence "jk")
      (evil-escape-delay 0.25)
      (evil-escape-excluded-major-modes '(evil-magit-mode org-agenda-mode))
-     (evil-escape-excluded-states '(normal visual emacs)))
+     (evil-escape-excluded-states '(normal visual emacs))
+     :config
+     (evil-escape-mode))
 
    (use-package origami ; code folding
      :diminish
@@ -678,10 +675,10 @@ If this is a daemon session, load them all immediately instead."
 
    (use-package goto-chg ; g; and g,
      :defer t)
- #+END_SRC
+#+END_SRC
 * Completion
 ** Ivy
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
    (use-package swiper
      :general
      ('normal
@@ -695,8 +692,10 @@ If this is a daemon session, load them all immediately instead."
      :diminish
      :demand t
      :general
-     ('ivy-minibuffer-map
-      ";" #'exit-minibuffer)
+     ('(normal insert) ivy-minibuffer-map
+      ";"   #'exit-minibuffer
+      "C-j" #'ivy-next-line
+      "C-k" #'ivy-previous-line)
 
      ('minibuffer-local-mode-map
       ";" #'exit-minibuffer)
@@ -706,6 +705,8 @@ If this is a daemon session, load them all immediately instead."
                               (counsel-projectile-rg . ivy-regex-plus)
                               (t                     . ivy--regex-fuzzy)))
      :config
+     (evil-collection-init 'minibuffer)
+     (evil-collection-init 'ivy)
      (ivy-mode))
 
 
@@ -737,9 +738,9 @@ If this is a daemon session, load them all immediately instead."
 
    (use-package flx
      :after counsel) ; fuzzy sorting for ivy
- #+END_SRC
+#+END_SRC
 ** Yasnippet
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
    (use-package yasnippet ; snippets
      :diminish yas-minor-mode
      :defer-incrementally (eldoc easymenu help-mode)
@@ -760,15 +761,15 @@ If this is a daemon session, load them all immediately instead."
      (my-localleader-def
        "yc" #'(aya-create :which-key "create aya snippet")
        "ye" #'(aya-expand :which-key "expand aya snippet")))
- #+END_SRC
+#+END_SRC
 ** Company
 #+BEGIN_SRC emacs-lisp :results none
   (use-package company ; autocomplete
     :diminish
     :defer 0.1
     :custom
-    (company-idle-delay 0.25)
-    (company-minimum-prefix-length 2)
+    (company-idle-delay nil) ; manual completion only
+    ;; (company-minimum-prefix-length 2)
     (company-require-match 'never)
     (company-show-numbers t)
     (company-dabbrev-other-buffers nil)
@@ -779,13 +780,20 @@ If this is a daemon session, load them all immediately instead."
                         company-keywords
                         company-dabbrev))
     :general
-    ('company-active-map "C-w" nil) ; don't override evil C-w
-    ('insert
-     [remap evil-complete-next] 'company-complete) ; manual completion with C-n
+    ('insert company-mode-map
+             [remap evil-complete-next] #'company-manual-begin) ; manual completion with C-n
     :config
-    (global-company-mode))
+    (global-company-mode)
+    ;; (define-key company-active-map [(tab)] nil)
+    ;; (define-key company-active-map (kbd "TAB") nil)
+    (general-def 'company-active-map "TAB" nil) ; don't use tab to complete - buggy with company-yasnippet
 
-  (use-package company-flx ; fuzzy sorting for company completion options
+    (general-def 'company-active-map "C-w" nil ; don't override evil C-w
+      "C-n" #'company-select-next-or-abort
+      "C-p" #'company-select-previous-or-abort
+      ";"   #'company-complete-selection)) ; choose a completion with ; instead of tab
+
+  (use-package company-flx ; fuzzy sorting for company completion options with company-capf
     :hook (company-mode . company-flx-mode))
 #+END_SRC
 * Version Control
@@ -972,8 +980,7 @@ If this is a daemon session, load them all immediately instead."
     :defer t
     :diminish
     :custom
-    (org-src-window-setup 'current-window)
-    (org-src-block-faces nil))
+    (org-src-window-setup 'current-window))
 
   (use-package org-capture
     :straight (:type built-in)
@@ -1047,7 +1054,7 @@ If this is a daemon session, load them all immediately instead."
      "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
      "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
     :config
-    (evil-org-set-key-theme)
+    ;; (evil-org-set-key-theme)
     (general-def '(normal insert) evil-org-mode-map
       "M-h"   #'org-metaleft
       "M-l"   #'org-metaright
@@ -1067,14 +1074,16 @@ If this is a daemon session, load them all immediately instead."
 #+END_SRC
 * Windows, Buffers, Directory Management
 ** Dired
-#+begin_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
   (use-package dired
     :straight (:type built-in)
     :general
     ('normal
      "-"  #'(dired-jump :which-key "open dired"))
     (my-leader-def
-      "fd" #'(dired      :which-key "navigate to a directory")))
+      "fd" #'(dired      :which-key "navigate to a directory"))
+      :config
+      (evil-collection-init 'dired))
 #+END_SRC
 ** Windows
 #+BEGIN_SRC emacs-lisp :results none
@@ -1102,7 +1111,7 @@ If this is a daemon session, load them all immediately instead."
 #+END_SRC
 * Editing
 ** Smartparens
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
    (use-package smartparens
      :diminish
      :defer 0.3
@@ -1163,9 +1172,9 @@ If this is a daemon session, load them all immediately instead."
       "<" (general-key-dispatch #'evil-shift-left
             ")" #'sp-forward-barf-sexp
             "(" #'sp-backward-barf-sexp)))
- #+END_SRC
+#+END_SRC
 ** Miscellaneous
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
    (use-package undo-tree ; Persistent Undos
      :diminish
      :custom
@@ -1198,10 +1207,10 @@ If this is a daemon session, load them all immediately instead."
      :config
      (global-aggressive-indent-mode)
      (push 'org-mode aggressive-indent-excluded-modes))
- #+END_SRC
+#+END_SRC
 * System
 ** Terminals/shells
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
    (use-package vterm
      :custom
      (vterm-kill-buffer-on-exit t)
@@ -1217,10 +1226,20 @@ If this is a daemon session, load them all immediately instead."
      (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
      :general
      (my-leader-def
-       "oe" #'eshell))
- #+END_SRC
+       "oe" #'eshell)
+     :config
+     (evil-collection-init 'eshell)
+     (add-hook 'eshell-mode-hook #'smartparens-mode)
+     (add-hook 'eshell-first-time-mode-hook
+               (defun my/eshell-init-keymaps ()
+                 (general-def '(insert normal) eshell-mode-map
+                   "C-j" #'eshell-next-matching-input-from-input
+                   "C-k" #'eshell-previous-matching-input-from-input
+                   "C-l" #'my/eshell-clear
+                   "C-c" #'eshell-interrupt-process))))
+#+END_SRC
 ** Miscellaneous
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
    (use-package restart-emacs
      :general
      (my-leader-def
@@ -1277,24 +1296,26 @@ If this is a daemon session, load them all immediately instead."
      :straight (:type built-in)
      :defer t
      :custom
-     (tramp-autosave-directory (expand-file-name "tramp" my/etc-dir)))
- #+END_SRC
+     (tramp-autosave-directory (expand-file-name "tramp/auto-save/" my/etc-dir))
+     (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir)))
+#+END_SRC
 * Filetype Specific
 ** PDF
 #+BEGIN_SRC emacs-lisp :results none
   (use-package pdf-tools
     :mode ("\\.pdf\\'" . pdf-view-mode)
     :config
-    (evil-set-initial-state 'pdf-view-mode 'normal)
-    (pdf-tools-install :no-query))
+    (pdf-tools-install :no-query)
+    (evil-collection-pdf-setup)
+    (evil-collection-init 'pdf))
 #+END_SRC
 ** C family
 #+BEGIN_SRC emacs-lisp :results none
-(use-package cc-mode
-:straight (:type built-in)
-:defer t
-:custom
-(c-basic-offset 4))
+  (use-package cc-mode
+    :straight (:type built-in)
+    :defer t
+    :custom
+    (c-basic-offset 4))
 #+END_SRC
 * Functions
 #+BEGIN_SRC emacs-lisp :results none
@@ -1337,4 +1358,11 @@ If this is a daemon session, load them all immediately instead."
     (evil-commentary-line)
     (evil-previous-line 2)
     (join-line))
+
+  ;;;###autoload
+  (defun my/eshell-clear ()
+    (interactive)
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (eshell-send-input)))
 #+END_SRC
