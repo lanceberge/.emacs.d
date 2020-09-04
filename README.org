@@ -570,19 +570,19 @@ If this is a daemon session, load them all immediately instead."
 #+END_SRC
 ** Evil-Related
 *** Evil-Collection
+
 #+BEGIN_SRC emacs-lisp :results none
-   (use-package evil-collection ; evil bindings for many modes
-     :defer t
-     :custom
-     (evil-collection-want-unimpaired-p t)
-     (evil-collection-setup-minibuffer t)
-     (evil-collection-mode-list
-      '(minibuffer
-        ivy
-        ;; vterm
-        dired
-        eshell
-        (pdf pdf-tools))))
+  (use-package evil-collection ; evil bindings for many modes
+    :defer t
+    :custom
+    (evil-collection-want-unimpaired-p t)
+    (evil-collection-setup-minibuffer t)
+    (evil-collection-mode-list
+     '(minibuffer
+       ivy
+       dired
+       eshell
+       (pdf pdf-tools))))
 #+END_SRC
 *** Extra operators/motion
 #+BEGIN_SRC emacs-lisp :results none
@@ -697,9 +697,13 @@ If this is a daemon session, load them all immediately instead."
       "C-j" #'ivy-next-line
       "C-k" #'ivy-previous-line)
 
+     ('normal ivy-minibuffer-map
+       "q" #'minibuffer-keyboard-quit)
+
      ('minibuffer-local-mode-map
       ";" #'exit-minibuffer)
      :custom
+     (ivy-initial-inputs-alist nil) ; no initial ^, let flx do all the sorting work
      (ivy-re-builders-alist '((swiper                . ivy--regex-plus)
                               (counsel-rg            . ivy--regex-plus)
                               (counsel-projectile-rg . ivy-regex-plus)
@@ -769,7 +773,6 @@ If this is a daemon session, load them all immediately instead."
     :defer 0.1
     :custom
     (company-idle-delay nil) ; manual completion only
-    ;; (company-minimum-prefix-length 2)
     (company-require-match 'never)
     (company-show-numbers t)
     (company-dabbrev-other-buffers nil)
@@ -789,6 +792,8 @@ If this is a daemon session, load them all immediately instead."
     (general-def 'company-active-map "TAB" nil) ; don't use tab to complete - buggy with company-yasnippet
 
     (general-def 'company-active-map "C-w" nil ; don't override evil C-w
+      "C-j" #'company-select-next-or-abort
+      "C-k" #'company-select-previous-or-abort
       "C-n" #'company-select-next-or-abort
       "C-p" #'company-select-previous-or-abort
       ";"   #'company-complete-selection)) ; choose a completion with ; instead of tab
@@ -806,20 +811,17 @@ If this is a daemon session, load them all immediately instead."
     (magit-save-repository-buffers nil)
     :general
     (my-leader-def
-      "g"   '(:ignore t                  :which-key "Git")
+      "g"    '(:ignore t                  :which-key "Git")
       "gs"  #'(magit-status               :which-key "status")
       "gb"  #'(magit-branch-checkout      :which-key "checkout branch")
-      ;; "gB"  #'(magit-blame-addition       :which-key "blame")
       "gc"  #'(magit-clone                :which-key "clone")
       "gd"  #'(magit-file-delete          :which-key "delete file")
       "gF"  #'(magit-fetch                :which-key "fetch")
-      ;; "gG"  #'(magit-status-here          :which-key "status here")
-      "gl"  #'(magit-log                  :which-key "log")
-      "gn"  '(:ignore t                  :which-key "New")
+      "gn"   '(:ignore t                  :which-key "New")
       "gnb" #'(magit-branch-and-checkout  :which-key "branch")
       "gnf" #'(magit-commit-fixup         :which-key "fixup commit")
-      "gi" #'(magit-init                 :which-key "init")
-      "gf"  '(:ignore t                  :which-key "Find")
+      "gi"  #'(magit-init                 :which-key "init")
+      "gf"   '(:ignore t                  :which-key "Find")
       "gfc" #'(magit-show-commit          :which-key "show commit")
       "gff" #'(magit-find-file            :which-key "file")
       "gfg" #'(magit-find-git-config-file :which-key "git config file")))
@@ -842,11 +844,13 @@ If this is a daemon session, load them all immediately instead."
     (projectile-known-projects-file (expand-file-name "projectile/known-projects.el" my/etc-dir))
     :config
     (my-leader-def
-      "p" #'(projectile-command-map :which-key "Projectile")))
+      "p" #'(projectile-command-map :which-key "Projectile"))) ;; TODO bind these manually
 
   (use-package counsel-projectile
     :defer 0.1
-    :diminish)
+    :diminish
+    :config
+    (counsel-projectile-mode))
 #+END_SRC
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
@@ -1006,11 +1010,11 @@ If this is a daemon session, load them all immediately instead."
 
   (use-package ob-haskell
     :straight (:type built-in)
-    :commands org-babal-execute:haskell)
+    :commands org-babel-execute:haskell)
 
   (use-package ob-shell
     :straight (:type built-in)
-    :commands org-babal-execute:sh)
+    :commands org-babel-execute:sh)
 
   (use-package ob-C
     :straight (:type built-in)
@@ -1042,7 +1046,8 @@ If this is a daemon session, load them all immediately instead."
     :hook (org-mode . evil-org-mode)
     :general
     (my-localleader-def
-      "c"    (general-simulate-key "C-c"))
+      "c" (general-simulate-key "C-c"))
+
     ('org-read-date-minibuffer-local-map
      ";" #'exit-minibuffer
      "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
@@ -1067,6 +1072,8 @@ If this is a daemon session, load them all immediately instead."
       "C-;"   #'evil-org-org-insert-heading-respect-content-below
       "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below
       "M-:"   #'my/org-insert-todo-above)
+
+    ;; Folding maps based on vim
     (general-def 'normal evil-org-mode-map
       "zo" #'outline-show-subtree
       "zk" #'org-backward-element
@@ -1133,7 +1140,7 @@ If this is a daemon session, load them all immediately instead."
      (require 'smartparens-config) ; config for many languages
      (sp-local-pair 'org-mode "'" nil :actions nil) ; don't pair ' in elisp mode
 
-     (defhydra hydra-smartparens ()
+     (defhydra hydra-smartparens () ; TODO delete and remap these for normal mode
        ;; Movement
        ("l" sp-forward-sexp "next pair")
        ("h" sp-backward-sexp "previous pair")
@@ -1211,32 +1218,57 @@ If this is a daemon session, load them all immediately instead."
 * System
 ** Terminals/shells
 #+BEGIN_SRC emacs-lisp :results none
-   (use-package vterm
-     :custom
-     (vterm-kill-buffer-on-exit t)
-     :general
-     (my-leader-def
-       "o"   '(:ignore t          :which-key "Open")
-       "ot"  #'(vterm              :which-key "open vterm")
-       "ovt" #'(vterm-other-window :which-key "open vterm in vsplit")))
+  (use-package vterm
+    :custom
+    (vterm-kill-buffer-on-exit t)
+    :general
+    (my-leader-def
+      "o"   '(:ignore t          :which-key "Open")
+      "ot"  #'(vterm              :which-key "open vterm")
+      "ovt" #'(vterm-other-window :which-key "open vterm in vsplit")))
 
-   (use-package eshell
-     :straight (:type built-in)
-     :custom
-     (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
-     :general
-     (my-leader-def
-       "oe" #'eshell)
-     :config
-     (evil-collection-init 'eshell)
-     (add-hook 'eshell-mode-hook #'smartparens-mode)
-     (add-hook 'eshell-first-time-mode-hook
-               (defun my/eshell-init-keymaps ()
-                 (general-def '(insert normal) eshell-mode-map
-                   "C-j" #'eshell-next-matching-input-from-input
-                   "C-k" #'eshell-previous-matching-input-from-input
-                   "C-l" #'my/eshell-clear
-                   "C-c" #'eshell-interrupt-process))))
+  (use-package eshell
+    :straight (:type built-in)
+    :custom
+    (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
+    :general
+    (my-leader-def
+      "oe" #'eshell)
+    :config
+    (evil-collection-init 'eshell)
+    (add-hook 'eshell-mode-hook #'smartparens-mode)
+    (add-hook 'eshell-first-time-mode-hook
+              (defun my/eshell-init-keymaps ()
+                (general-def '(insert normal) eshell-mode-map
+                  "C-j" #'eshell-next-matching-input-from-input
+                  "C-k" #'eshell-previous-matching-input-from-input
+                  "C-l" #'my/eshell-clear
+                  "C-c" #'eshell-interrupt-process))))
+
+  ;; (defvar my/eshell-aliases
+  ;;   '(("s" "sudo")
+
+  ;;     ("alias" "gs git status")
+  ;;     ("alias" "g git")
+  ;;     ("alias" "ga git add")
+  ;;     ("alias" "gaa git add -A")
+  ;;     ("alias" "gcam git commit -a m")
+  ;;     ("alias" "gr git reset")
+  ;;     ("alias" "grs git reset --soft HEAD~1")
+  ;;     ("alias" "gl git log")
+  ;;     ("alias" "gp git push -u origin master")
+
+  ;;     ("alias" "l ls -AF")
+  ;;     ("alias" "ll ls -lF")
+  ;;     ("alias" "la ls -lAF")))
+
+  ;; (advice-add #'eshell-write-aliases-list :override #'ignore)
+
+  ;; (defun +eshell-init-aliases-h ()
+  ;;   (setq eshell-command-aliases-list
+  ;;         (append eshell-command-aliases-list
+  ;;                 my/eshell-aliases)))
+  ;; (add-hook 'eshell-alias-load-hook '+eshell-init-aliases-h))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -1306,8 +1338,7 @@ If this is a daemon session, load them all immediately instead."
     :mode ("\\.pdf\\'" . pdf-view-mode)
     :config
     (pdf-tools-install :no-query)
-    (evil-collection-pdf-setup)
-    (evil-collection-init 'pdf))
+    (evil-collection-pdf-setup))
 #+END_SRC
 ** C family
 #+BEGIN_SRC emacs-lisp :results none
