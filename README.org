@@ -42,6 +42,7 @@
 - [[#filetype-specific][Filetype Specific]]
   - [[#pdf][PDF]]
   - [[#c-family][C family]]
+  - [[#statistics-r][Statistics (R)]]
 - [[#functions][Functions]]
 
 * Early-Init
@@ -108,37 +109,48 @@ Tangles to early-init.el
 #+END_SRC
 ** UI
 #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
-  (use-package gruvbox-theme
-    :config
-    (load-theme 'gruvbox t))
+    (use-package gruvbox-theme
+      :config
+      (load-theme 'gruvbox t))
 
-  (use-package display-line-numbers
-    :straight (:type built-in)
-    :custom
-    (display-line-numbers-width-start t)
-    :config
-    (global-display-line-numbers-mode)
-    (when IS-LINUX
-      (setq-default display-line-numbers-type 'visual)))
+    (use-package display-line-numbers
+      :straight (:type built-in)
+      :custom
+      (display-line-numbers-width-start t)
+      :custom-face
+      (line-number ((t (:background "#282828"))))
+      (line-number-current-line ((t (:background "#282828"))))
+      :config
+      (global-display-line-numbers-mode)
+      (when IS-LINUX
+        (setq-default display-line-numbers-type 'visual)))
 
-  ;; Minimalistic mode-line
-  (setq-default mode-line-format
-                '("%e"
-                  mode-line-front-space
-                  mode-line-mule-info
-                  mode-line-client-mode
-                  mode-line-modified
-                  mode-line-remote
-                  mode-line-frame-indentifcation
-                  " "
-                  mode-line-buffer-identification
-                  "  "
-                  (vc-mode vc-mode)
-                  " "
-                  mode-line-modes
-                  " "
-                  mode-line-misc-info
-                  mode-line-end-spaces))
+    ;; Minimalistic mode-line
+    (setq-default mode-line-format
+                  '("%e"
+                    mode-line-front-space
+                    mode-line-mule-info
+                    mode-line-client-mode
+                    mode-line-modified
+                    mode-line-remote
+                    mode-line-frame-indentifcation
+                    " "
+                    mode-line-buffer-identification
+                    "  "
+                    ;; '(:eval (propertize (vc-mode) 'face '(:foreground "black") 'help-echo (vc-mode)))
+                    vc-mode
+                    " "
+                    mode-line-modes
+                    " "
+                    mode-line-misc-info
+                    mode-line-end-spaces))
+
+
+    (custom-set-faces '(mode-line ((t (:background "#282828" :foreground "#928374"))))
+                      '(mode-line-inactive ((t (:background "#282828"))))
+                      '(mode-line-buffer-id ((t (:bold t)))))
+
+  (set-face-foreground 'vertical-border "#282828")
 #+END_SRC
 * Init
 
@@ -755,7 +767,7 @@ Taken entirely from Doom Emacs
     :diminish yas-minor-mode
     :defer-incrementally (eldoc easymenu help-mode)
     :general
-    (my-localleader-def
+    (my-leader-def
       "y"   '(:ignore t           :which-key "Yasnippet")
       "yi" #'(yas-insert-snippet  :which-key "insert snippet")
       "yn" #'(yas-new-snippet     :which-key "new snippet")
@@ -783,11 +795,11 @@ Taken entirely from Doom Emacs
     (company-show-numbers t)
     (company-dabbrev-other-buffers nil)
     (company-dabbrev-ignore-case nil)
+
+    ;; global default for the backend, buffer-local backends will be set based on filetype
     (company-backends '(company-capf
                         company-files
-                        company-yasnippet
-                        company-keywords
-                        company-dabbrev))
+                        company-yasnippet))
     :general
     ('insert company-mode-map
              [remap evil-complete-next] #'company-manual-begin) ; manual completion with C-n
@@ -1052,6 +1064,10 @@ Taken entirely from Doom Emacs
   (use-package ob-C
     :straight (:type built-in)
     :commands org-babel-execute:C)
+
+  (use-package ob-R
+    :straight (:type built-in)
+    :commands org-babel-execute:R)
 #+END_SRC
 ** Non built-ins
 #+BEGIN_SRC emacs-lisp :results none
@@ -1138,8 +1154,6 @@ Taken entirely from Doom Emacs
     (sp-escape-quotes-after-insert nil)
     (sp-show-pair-from-inside t)
     (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
-    :hook
-    ((prog-mode text-mode) . smartparens-mode)
     :general
     (my-localleader-def
       "s" '(hydra-smartparens/body :which-key "Smartparens"))
@@ -1152,6 +1166,7 @@ Taken entirely from Doom Emacs
            ")" #'sp-forward-barf-sexp
            "(" #'sp-backward-barf-sexp))
     :config
+    (smartparens-global-mode)
     (require 'smartparens-config) ; config for many languages
     (sp-local-pair 'org-mode "'" nil :actions nil) ; don't pair ' in elisp mode
 
@@ -1354,6 +1369,22 @@ Taken entirely from Doom Emacs
     :defer t
     :custom
     (c-basic-offset 4))
+#+END_SRC
+** Statistics (R)
+#+BEGIN_SRC emacs-lisp :results none
+  (use-package ess
+    :hook (ess-r-mode . company-r-mode)
+    :general
+    ('normal ess-mode-map
+    "C-;" #'ess-eval-line)
+    :config
+    (defun company-r-mode ()
+      (set (make-local-variable 'company-backends)
+           '((company-yasnippet
+              company-R-args
+              company-R-objects
+              company-dabbrev-code
+              company-files)))))
 #+END_SRC
 * Functions
 #+BEGIN_SRC emacs-lisp :results none
