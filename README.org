@@ -497,7 +497,9 @@ Taken entirely from Doom Emacs
       "b"   '(:ignore t               :which-key "Buffers")
       "bs" #'(save-buffer             :which-key "write file")
       "bd" #'(kill-this-buffer        :which-key "delete buffer")
-      "bq" #'my/save-and-kill-buffer)
+      "bq" #'my/save-and-kill-buffer
+      "b SPC d" #'my/kill-window-and-buffer
+      "br" #'revert-buffer)
 
     ('normal
      "gs" #'my/split-line
@@ -505,6 +507,9 @@ Taken entirely from Doom Emacs
      "gC" #'my/comment-until-end-of-line
      "]b" #'(next-buffer     :which-key "next buffer")
      "[b" #'(previous-buffer :which-key "previous buffer"))
+
+    (my-localleader-def
+      "c" (general-simulate-key "C-c"))
 
     ('insert
      "C-y" #'yank)) ; otherwise is overridden by evil
@@ -964,15 +969,13 @@ Taken entirely from Doom Emacs
     (org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
     (org-done             ((t (:foreground "#7C6f64"))))
     :general
-    (my-localleader-def
-      "c" (general-simulate-key "C-c"))
 
-    ('override
+    ('(normal insert) org-mode-map
      :prefix "C-c"
-     "v"  #'org-toggle-inline-images
-     ",v" #'org-redisplay-inline-images
-     "t"  #'(org-todo             :which-key "todo")
      ",c" #'(org-ctrl-c-ctrl-c    :which-key "execute")
+     ",v" #'org-redisplay-inline-images
+     "v"  #'org-toggle-inline-images
+     "t"  #'(org-todo             :which-key "todo")
      "s"  #'(org-sort             :which-key "sort")
      ",s" #'(org-schedule         :which-key "schedule")
      "d"  #'(org-deadline         :which-key "deadline")
@@ -995,17 +998,17 @@ Taken entirely from Doom Emacs
 
     ;; Folding maps based on vim
     ('normal org-mode-map
-      "zo" #'outline-show-subtree
-      "zk" #'org-backward-element
-      "zj" #'org-forward-element)
+             "zo" #'outline-show-subtree
+             "zk" #'org-backward-element
+             "zj" #'org-forward-element)
 
     ('(normal insert) org-mode-map
-      ;; TODOS with M-;, headlines with C-;, add shift to do those above
-      "C-M-;" #'my/org-insert-subheading
-      "C-:"   #'my/org-insert-heading-above
-      "C-;"   #'evil-org-org-insert-heading-respect-content-below
-      "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below
-      "M-:"   #'my/org-insert-todo-above)
+     ;; TODOS with M-;, headlines with C-;, add shift to do those above
+     "C-M-;" #'my/org-insert-subheading
+     "C-:"   #'my/org-insert-heading-above
+     "C-;"   #'evil-org-org-insert-heading-respect-content-below
+     "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below
+     "M-:"   #'my/org-insert-todo-above)
     :config
     (setq org-fontify-done-headline t)
     ;; tangle config every time I quit emacs
@@ -1018,8 +1021,8 @@ Taken entirely from Doom Emacs
   (use-package org-agenda
     :straight (:type built-in)
     :general
-    (:prefix "C-c"
-             "a" #'org-agenda)
+    (my-leader-def
+      "oa" #'org-agenda)
     :config
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
@@ -1042,16 +1045,18 @@ Taken entirely from Doom Emacs
         entry (file+headline "~/org/notes.org" "Miscellaneous")
         "* %? :drill:")))
     :general
-    (:prefix "C-c"
-             "c" #'org-capture))
+    (my-leader-def
+      "oc" #'org-capture))
 
   (use-package ol
     :straight (:type built-in)
     :general
-    (:keymaps 'override
-              :prefix "C-c"
-              ",l" #'(org-insert-link :which-key "insert link")
-              "l"  #'(org-store-link  :which-key "store link")))
+    ('(normal insert) org-mode-map
+     :prefix "C-c"
+     ",l" #'(org-insert-link :which-key "insert link"))
+    ('override
+     :prefix "C-c"
+     "l"  #'(org-store-link  :which-key "store link")))
 
   (use-package ob-haskell
     :straight (:type built-in)
@@ -1375,8 +1380,20 @@ Taken entirely from Doom Emacs
   (use-package ess
     :hook (ess-r-mode . company-r-mode)
     :general
-    ('normal ess-mode-map
-    "C-;" #'ess-eval-line)
+    ('(normal insert) ess-mode-map
+     "C-;" #'ess-eval-line
+     "M-;" #'ess-eval-buffer)
+
+     ('visual ess-mode-map
+"C-;" #'ess-eval-region)
+
+    ('(normal insert) ess-mode-map
+     :prefix "C-c"
+     "'" #'R
+     "b" #'ess-eval-buffer
+     "r" #'ess-eval-region
+     "f" #'ess-eval-function
+     "h" #'ess-doc-map)
     :config
     (defun company-r-mode ()
       (set (make-local-variable 'company-backends)
@@ -1434,4 +1451,10 @@ Taken entirely from Doom Emacs
     (let ((inhibit-read-only t))
       (erase-buffer)
       (eshell-send-input)))
+
+  ;;;###autoload
+  (defun my/kill-window-and-buffer ()
+      (interactive)
+    (kill-this-buffer)
+    (evil-quit))
 #+END_SRC
