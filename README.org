@@ -1025,6 +1025,7 @@ Taken entirely from Doom Emacs
   ;; tangle config every time I quit emacs
   (add-hook 'kill-emacs-hook
             (lambda ()
+              (find-file config-org)
               (org-babel-tangle-file config-org config-el))))
 #+END_SRC
 ** Org built-ins
@@ -1472,7 +1473,6 @@ Taken entirely from Doom Emacs
 * Test
 #+BEGIN_SRC emacs-lisp :results none
 (use-package poly-org
-  :disabled t
   :diminish
   :hook (org-mode . poly-org-mode))
 #+END_SRC
