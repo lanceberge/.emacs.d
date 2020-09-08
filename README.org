@@ -374,13 +374,13 @@ Taken entirely from Doom Emacs
   :demand t
   :config
   (general-create-definer my-leader-def ; SPC prefixed bindings
-    :states '(normal visual insert emacs)
+    :states '(normal visual motion insert emacs)
     :keymaps 'override
     :prefix "SPC"
     :non-normal-prefix "M-SPC")
 
   (general-create-definer my-localleader-def ; , prefixed bindings
-    :states '(normal visual insert emacs)
+    :states '(normal visual motion insert emacs)
     :keymaps 'override
     :prefix ","
     :non-normal-prefix "C-,")
@@ -543,55 +543,57 @@ Taken entirely from Doom Emacs
 * Evil Mode
 ** Evil
 #+BEGIN_SRC emacs-lisp :results none
-(use-package evil ; vim bindings in emacs
-  :demand t
-  :diminish
-  :commands
-  (evil-quit
-   evil-save-modified-and-close)
-  :custom
-  ;; TODO nohl
-  (evil-want-C-u-scroll t)
-  (evil-want-Y-yank-to-eol t)
-  (evil-split-window-below t)
-  (evil-vsplit-window-right t)
-  (evil-search-wrap t)
-  (evil-want-keybinding nil)
-  (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
-  :general
-  ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
-  ('normal
-   "zR" #'evil-open-folds
-   "zM" #'evil-close-folds
-   "gm" (general-simulate-key "@@")) ; last macro
+  (use-package evil ; vim bindings in emacs
+    :demand t
+    :diminish
+    :commands
+    (evil-quit
+     evil-save-modified-and-close)
+    :custom
+    ;; TODO nohl
+    (evil-want-C-u-scroll t)
+    (evil-want-Y-yank-to-eol t)
+    (evil-split-window-below t)
+    (evil-vsplit-window-right t)
+    (evil-search-wrap t)
+    (evil-want-keybinding nil)
+    (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
+    :general
+    ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
+    ('normal
+     "zR" #'evil-open-folds
+     "zM" #'evil-close-folds
+     "gm" (general-simulate-key "@@")) ; last macro
 
-  ('(normal visual motion)
-   ";" #'evil-ex ; switch ; and :
-   "H" #'evil-first-non-blank
-   "L" #'evil-end-of-line)
+    ('(normal visual motion)
+     ";" #'evil-ex ; switch ; and :
+     "H" #'evil-first-non-blank
+     "L" #'evil-end-of-line)
 
-  ;; Evil-avy
-  ('normal :prefix "g"
-           "o"     #'(evil-avy-goto-char-2     :which-key "2-chars")
-           "SPC o" #'(evil-avy-goto-char-timer :which-key "timer")
-           "SPC l" #'evil-avy-goto-line)
+    ;; Evil-avy
+    ('normal
+     "go" #'(evil-avy-goto-char-2     :which-key "2-chars"))
 
-  (my-leader-def
-    "ft" #'(evil-avy-goto-char-timer           :which-key "avy timer")
-    "bS" #'(evil-write-all                     :which-key "write all buffers")
-    "bl" #'(evil-switch-to-windows-last-buffer :which-key "last buffer"))
+    (my-leader-def
+     "go" #'evil-avy-goto-char-timer
+     "gl" #'evil-avy-goto-line)
 
-  ('evil-window-map
-   "SPC q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
+    (my-leader-def
+      "ft" #'(evil-avy-goto-char-timer           :which-key "avy timer")
+      "bS" #'(evil-write-all                     :which-key "write all buffers")
+      "bl" #'(evil-switch-to-windows-last-buffer :which-key "last buffer"))
 
-  ('(normal insert)
-   "C-l" #'evil-ex-nohighlight)
-  :config
-  (evil-mode)
-  (diminish 'defining-kbd-macro) ; don't add DEF in modeline when writing a macro
-  (general-def 'evil-window-map
-    "d" #'evil-quit ; delete window
-    "q" #'evil-save-modified-and-close)) ; quit and save window
+    ('evil-window-map
+     "SPC q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
+
+    ('(normal insert)
+     "C-l" #'evil-ex-nohighlight)
+    :config
+    (evil-mode)
+    (diminish 'defining-kbd-macro) ; don't add DEF in modeline when writing a macro
+    (general-def 'evil-window-map
+      "d" #'evil-quit ; delete window
+      "q" #'evil-save-modified-and-close)) ; quit and save window
 #+END_SRC
 ** Evil-Related
 *** Evil-Collection
