@@ -166,7 +166,6 @@ Loads the file config.el on startup. Every time I exit emacs (if org has been lo
 
 (unless (file-exists-p config-el)
   (require 'org)
-  (poly-org-mode -1)
   (org-babel-tangle-file config-org config-el))
 
 (load-file config-el)
@@ -574,7 +573,8 @@ Taken entirely from Doom Emacs
   ;; Evil-avy
   ('normal :prefix "g"
            "o"     #'(evil-avy-goto-char-2     :which-key "2-chars")
-           "SPC o" #'(evil-avy-goto-char-timer :which-key "timer"))
+           "SPC o" #'(evil-avy-goto-char-timer :which-key "timer")
+           "SPC l" #'evil-avy-goto-line)
 
   (my-leader-def
     "ft" #'(evil-avy-goto-char-timer           :which-key "avy timer")
@@ -584,7 +584,7 @@ Taken entirely from Doom Emacs
   ('evil-window-map
    "SPC q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
 
-  ('(normal insert motion visual)
+  ('(normal insert)
    "C-l" #'evil-ex-nohighlight)
   :config
   (evil-mode)
@@ -611,76 +611,83 @@ Taken entirely from Doom Emacs
 #+END_SRC
 *** Extra operators/motion
 #+BEGIN_SRC emacs-lisp :results none
-(use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
-  :diminish evil-snipe-local-mode
-  :hook ((prog-mode text-mode) . evil-snipe-override-local-mode)
-  :custom
-  (evil-snipe-show-prompt nil)
-  (evil-snipe-skip-leading-whitespace nil)
-  :config
-  (evil-snipe-mode)
-  (general-def 'motion
-    ":"   #'evil-snipe-repeat
-    "M-," #'evil-snipe-repeat-reverse))
+  (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
+    :diminish evil-snipe-local-mode
+    :hook (pre-command . evil-snipe-override-local-mode)
+    :hook (pre-command . evil-snipe-mode)
+    :custom
+    (evil-snipe-show-prompt nil)
+    (evil-snipe-skip-leading-whitespace nil)
+    :general
+    ('motion
+     ":"   #'evil-snipe-repeat
+     "M-," #'evil-snipe-repeat-reverse))
 
-(use-package evil-surround ; s as an operator for surrounding
-  :diminish
-  :hook ((prog-mode text-mode) . evil-surround-mode))
+  (use-package evil-surround ; s as an operator for surrounding
+    :diminish
+    :hook ((prog-mode text-mode) . evil-surround-mode))
 
-(use-package evil-commentary ; gc as an operator to comment
-  :diminish
-  :hook ((prog-mode org-mode) . evil-commentary-mode))
+  (use-package evil-commentary ; gc as an operator to comment
+    :diminish
+    :hook ((prog-mode org-mode) . evil-commentary-mode))
 
-(use-package evil-numbers ; increment/decrement numbers
-  :general
-  (my-localleader-def
-    "n"   '(:ignore t              :which-key "Evil-Numbers")
-    "nu" #'(evil-numbers/inc-at-pt :which-key "increment")
-    "nd" #'(evil-numbers/dec-at-pt :which-key "decrement")))
+  (use-package evil-numbers ; increment/decrement numbers
+    :general
+    (my-localleader-def
+      "n"   '(:ignore t              :which-key "Evil-Numbers")
+      "nu" #'(evil-numbers/inc-at-pt :which-key "increment")
+      "nd" #'(evil-numbers/dec-at-pt :which-key "decrement")))
 
-(use-package evil-lion ; gl as an operator to left-align, gL to right-align
-  :diminish
-  :hook ((prog-mode text-mode) . evil-lion-mode))
+  (use-package evil-lion ; gl as an operator to left-align, gL to right-align
+    :diminish
+    :hook ((prog-mode text-mode) . evil-lion-mode))
 
-(use-package evil-matchit ; navigate matching blocks of code with %
-  :diminish
-  :hook ((prog-mode text-mode) . evil-matchit-mode))
+  (use-package evil-matchit ; navigate matching blocks of code with %
+    :diminish
+    :hook ((prog-mode text-mode) . evil-matchit-mode))
 
-(use-package evil-exchange ; exchange text selected with gx
-  :defer 1
-  :config (evil-exchange-install))
+  (use-package evil-exchange ; exchange text selected with gx
+    :general
+    ('(normal visual)
+     "gx" #'evil-exchange
+     "gX" #'evil-exchange-cancel))
 
-(use-package evil-owl
-  :diminish
-  :hook ((prog-mode text-mode) . evil-owl-mode))
+  (use-package evil-owl
+    :diminish
+    :hook ((prog-mode text-mode) . evil-owl-mode))
 
-(use-package evil-textobj-anyblock
-  :general
-  ('evil-inner-text-objects-map "c" #'evil-textobj-anyblock-inner-block)
-  ('evil-outer-text-objects-map "c" #'evil-textobj-anyblock-a-block))
+  (use-package evil-textobj-anyblock
+    :general
+    ('evil-inner-text-objects-map "c" #'evil-textobj-anyblock-inner-block)
+    ('evil-outer-text-objects-map "c" #'evil-textobj-anyblock-a-block))
 
-(use-package evil-args
-  :general
-  ('evil-inner-text-objects-map "a" #'evil-inner-arg)
-  ('evil-outer-text-objects-map "a" #'evil-outer-arg))
+  (use-package evil-args
+    :general
+    ('evil-inner-text-objects-map "a" #'evil-inner-arg)
+    ('evil-outer-text-objects-map "a" #'evil-outer-arg))
 
-(use-package evil-indent-plus
-  :defer 1
-  :config
-  (evil-indent-plus-default-bindings))
+  (use-package evil-indent-plus
+    :general
+    ('evil-inner-text-objects-map
+     "i" #'evil-indent-plus-i-indent
+     "I" #'evil-indent-plus-i-indent-up
+     "J" #'evil-indent-plus-i-indent-up-down)
+
+    ('evil-outer-text-objects-map
+     "i" #'evil-indent-plus-a-indent
+     "I" #'evil-indent-plus-a-indent-up
+     "J" #'evil-indent-plus-a-indent-up-down))
 #+END_SRC
 *** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil-escape ; jk to leave insert mode
   :diminish
-  :defer 0.2
+  :hook (pre-command . evil-escape-mode)
   :custom
   (evil-escape-key-sequence "jk")
   (evil-escape-delay 0.25)
   (evil-escape-excluded-major-modes '(evil-magit-mode org-agenda-mode))
-  (evil-escape-excluded-states '(normal visual emacs))
-  :config
-  (evil-escape-mode))
+  (evil-escape-excluded-states '(normal visual emacs)))
 
 (use-package origami ; code folding
   :diminish
@@ -770,26 +777,26 @@ Taken entirely from Doom Emacs
 #+END_SRC
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp :results none
-(use-package yasnippet ; snippets
-  :diminish yas-minor-mode
-  :defer-incrementally (eldoc easymenu help-mode)
-  :general
-  (my-leader-def
-    "y"   '(:ignore t           :which-key "Yasnippet")
-    "yi" #'(yas-insert-snippet  :which-key "insert snippet")
-    "yn" #'(yas-new-snippet     :which-key "new snippet")
-    "yl" #'(yas-describe-tables :which-key "list snippets"))
-  :config
-  (yas-global-mode))
+  (use-package yasnippet ; snippets
+    :diminish yas-minor-mode
+    :defer-incrementally (eldoc easymenu help-mode)
+    :general
+    (my-leader-def
+      "y"   '(:ignore t           :which-key "Yasnippet")
+      "yi" #'(yas-insert-snippet  :which-key "insert snippet")
+      "yn" #'(yas-new-snippet     :which-key "new snippet")
+      "yl" #'(yas-describe-tables :which-key "list snippets"))
+    :config
+    (yas-global-mode))
 
-(use-package yasnippet-snippets
-  :defer 1)
+  (use-package yasnippet-snippets
+    :after yasnippet)
 
-(use-package auto-yasnippet
-  :general
-  (my-localleader-def
-    "yc" #'(aya-create :which-key "create aya snippet")
-    "ye" #'(aya-expand :which-key "expand aya snippet")))
+    (use-package auto-yasnippet
+      :general
+      (my-localleader-def
+        "yc" #'(aya-create :which-key "create aya snippet")
+        "ye" #'(aya-expand :which-key "expand aya snippet")))
 #+END_SRC
 ** Company
 #+BEGIN_SRC emacs-lisp :results none
@@ -918,7 +925,7 @@ Taken entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package rainbow-delimiters
   :diminish
-  :hook ((prog-mode) . rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package highlight-numbers
   :hook ((prog-mode text-mode) . highlight-numbers-mode))
@@ -1016,7 +1023,6 @@ Taken entirely from Doom Emacs
   ;; tangle config every time I quit emacs
   (add-hook 'kill-emacs-hook
             (lambda ()
-              (poly-org-mode -1)
               (org-babel-tangle-file config-org config-el))))
 #+END_SRC
 ** Org built-ins
@@ -1464,6 +1470,7 @@ Taken entirely from Doom Emacs
 * Test
 #+BEGIN_SRC emacs-lisp :results none
 (use-package poly-org
+  :disabled t
   :diminish
   :hook (org-mode . poly-org-mode))
 #+END_SRC

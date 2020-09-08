@@ -4,7 +4,6 @@
 
 (unless (file-exists-p config-el)
   (require 'org)
-  (poly-org-mode -1)
   (org-babel-tangle-file config-org config-el))
 
 (load-file config-el)
