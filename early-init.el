@@ -53,44 +53,44 @@
 (setq use-package-verbose t) ; show which packages are being loaded on startup and when
 
 (use-package gruvbox-theme
-    :config
-    (load-theme 'gruvbox t))
+  :config
+  (load-theme 'gruvbox t))
 
-  (use-package display-line-numbers
-    :straight (:type built-in)
-    :custom
-    (display-line-numbers-width-start t)
-    :custom-face
-    (line-number ((t (:background "#282828"))))
-    (line-number-current-line ((t (:background "#282828"))))
-    :config
-    (global-display-line-numbers-mode)
-    (when IS-LINUX
-      (setq-default display-line-numbers-type 'visual)))
+(use-package display-line-numbers
+  :straight (:type built-in)
+  :custom
+  (display-line-numbers-width-start t)
+  :custom-face
+  (line-number ((t (:background "#282828"))))
+  (line-number-current-line ((t (:background "#282828"))))
+  :config
+  (global-display-line-numbers-mode)
+  (when IS-LINUX
+    (setq-default display-line-numbers-type 'visual)))
 
-  ;; Minimalistic mode-line
-  (setq-default mode-line-format
-                '("%e"
-                  mode-line-front-space
-                  mode-line-mule-info
-                  mode-line-client-mode
-                  mode-line-modified
-                  mode-line-remote
-                  mode-line-frame-indentifcation
-                  " "
-                  mode-line-buffer-identification
-                  "  "
-                  ;; '(:eval (propertize (vc-mode) 'face '(:foreground "black") 'help-echo (vc-mode)))
-                  vc-mode
-                  " "
-                  mode-line-modes
-                  " "
-                  mode-line-misc-info
-                  mode-line-end-spaces))
+;; Minimalistic mode-line
+(setq-default mode-line-format
+              '("%e"
+                mode-line-front-space
+                mode-line-mule-info
+                mode-line-client-mode
+                mode-line-modified
+                mode-line-remote
+                mode-line-frame-indentifcation
+                " "
+                mode-line-buffer-identification
+                "  "
+                ;; '(:eval (propertize (vc-mode) 'face '(:foreground "black") 'help-echo (vc-mode)))
+                vc-mode
+                " "
+                mode-line-modes
+                " "
+                mode-line-misc-info
+                mode-line-end-spaces))
 
 
-  (custom-set-faces '(mode-line ((t (:background "#282828" :foreground "#928374"))))
-                    '(mode-line-inactive ((t (:background "#282828"))))
-                    '(mode-line-buffer-id ((t (:bold t)))))
+(custom-set-faces '(mode-line ((t (:background "#282828" :foreground "#928374"))))
+                  '(mode-line-inactive ((t (:background "#282828"))))
+                  '(mode-line-buffer-id ((t (:bold t)))))
 
 (set-face-foreground 'vertical-border "#282828")
