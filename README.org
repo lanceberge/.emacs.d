@@ -110,9 +110,9 @@ Tangles to early-init.el
 #+END_SRC
 ** UI
 #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
-(use-package gruvbox-theme
-  :config
-  (load-theme 'gruvbox t))
+  (use-package gruvbox-theme
+    :config
+    (load-theme 'gruvbox t))
 
 (use-package display-line-numbers
   :straight (:type built-in)
@@ -646,7 +646,10 @@ Taken entirely from Doom Emacs
 
   (use-package evil-matchit ; navigate matching blocks of code with %
     :diminish
-    :hook ((prog-mode text-mode) . evil-matchit-mode))
+    :hook ((prog-mode text-mode) . evil-matchit-mode)
+    :general
+    ('motion
+     "%" #'evilmi-jump-items))
 
   (use-package evil-exchange ; exchange text selected with gx
     :general
@@ -1117,7 +1120,6 @@ Taken entirely from Doom Emacs
     "M-H"   #'org-shiftleft
     "M-J"   #'org-shiftdown
     "M-K"   #'org-shiftup))
-;; (evil-org-set-key-theme)
 #+END_SRC
 * Windows, Buffers, Directory Management
 ** Dired
@@ -1248,11 +1250,9 @@ Taken entirely from Doom Emacs
    "[e" #'move-text-up))
 
 (use-package aggressive-indent
+  :disabled t
   :diminish
-  :defer 0.4
-  :config
-  (add-to-list 'aggressive-indent-excluded-modes 'org-mode)
-  (add-to-list 'aggressive-indent-excluded-modes 'poly-org-mode))
+  :hook (prog-mode . aggressive-indent-mode))
 #+END_SRC
 * System
 ** Terminals/shells
