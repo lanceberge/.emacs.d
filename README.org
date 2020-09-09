@@ -52,7 +52,7 @@ Tangles to early-init.el
 
 ** Initial Settings
 #+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
-    ;;; -*- lexical-binding: t -*-
+  ;;; -*- lexical-binding: t -*-
   (setq gc-cons-threshold most-positive-fixnum)
 
   (defconst IS-LINUX (eq system-type 'gnu/linux))
@@ -179,7 +179,7 @@ The rest of this file tangles to config.el
 Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
-    ;;; -*- lexical-binding: t -*-
+   ;;; -*- lexical-binding: t -*-
   (use-package emacs
     :custom
     (default-file-name-handler-alist file-name-handler-alist)
@@ -500,10 +500,15 @@ Taken entirely from Doom Emacs
       "bd" #'(kill-this-buffer        :which-key "delete buffer")
       "bq" #'my/save-and-kill-buffer
       "b SPC d" #'my/kill-window-and-buffer
-      "br" #'revert-buffer)
+      "br" #'revert-buffer
 
-    (my-leader-def
-      "," "C-c '")
+      "er" #'eval-region
+      "es" #'eval-last-sexp
+      "ee" #'eval-expression
+      "eb" #'eval-buffer
+      "ef" #'eval-defun
+
+      "'" "C-c '")
 
     ('normal
      "gs" #'my/split-line
@@ -1318,7 +1323,7 @@ Taken entirely from Doom Emacs
     :general
     (my-leader-def
       "e"  '(:ignore t     :which-key "Emacs Commands")
-      "er" #'(restart-emacs :which-key "restart emacs"))
+      "e SPC r" #'(restart-emacs :which-key "restart emacs"))
     :custom
     (restart-emacs-restore-frames t)) ; Restore frames on restart
 
