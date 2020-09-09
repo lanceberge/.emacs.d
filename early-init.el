@@ -53,8 +53,8 @@
 (setq use-package-verbose t) ; show which packages are being loaded on startup and when
 
 (use-package gruvbox-theme
-    :config
-    (load-theme 'gruvbox t))
+  :config
+  (load-theme 'gruvbox t))
 
 (use-package display-line-numbers
   :straight (:type built-in)
