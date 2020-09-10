@@ -398,7 +398,7 @@ Taken entirely from Doom Emacs
   :hook (pre-command . which-key-mode)
   :general
   (my-leader-def
-    "f SPC m" #'which-key-show-top-level)
+    "f SPC m" #'(which-key-show-top-level :which-key "keybinding"))
   :custom
   (which-key-sort-order #'which-key-prefix-then-key-order)
   (which-key-min-display-lines 6)
@@ -488,26 +488,23 @@ Taken entirely from Doom Emacs
 (use-package emacs
   :general
   (my-leader-def
-    "h" (general-simulate-key "C-h" :which-key "Help")
+    "h" (general-simulate-key "C-h"   :which-key "+Help")
     ;; Windows
-    ";"  #'(shell-command           :which-key "shell command")
-    "w"   '(:ignore t               :which-key "Windows")
-    "w"   (general-simulate-key "C-w") ; window command
+    ";"  #'(shell-command             :which-key "shell command")
+    "w"   (general-simulate-key "C-w" :which-key "+Windows") ; window command
     ;; Buffers
-    "b"   '(:ignore t               :which-key "Buffers")
-    "bs" #'(save-buffer             :which-key "write file")
-    "bd" #'(kill-this-buffer        :which-key "delete buffer")
-    "bq" #'my/save-and-kill-buffer
+    "b"   '(:ignore t                 :which-key "Buffers")
+    "bs" #'(save-buffer               :which-key "write file")
+    "bd" #'(kill-this-buffer          :which-key "delete buffer")
+    "bq" #'(my/save-and-kill-buffer   :which-key "kill window and buffer")
     "b SPC d" #'my/kill-window-and-buffer
     "br" #'revert-buffer
 
-    "er" #'eval-region
-    "es" #'eval-last-sexp
-    "ee" #'eval-expression
-    "eb" #'eval-buffer
-    "ef" #'eval-defun
-
-    "'" "C-c '")
+    "er" #'(eval-region               :which-key "execute elisp region")
+    "es" #'(eval-last-sexp            :which-key "execute elisp sexp")
+    "ee" #'(eval-expression           :which-key "evaluate elisp expression")
+    "eb" #'(eval-buffer               :which-key "evaluate elisp buffer")
+    "ef" #'(eval-defun                :which-key "evaluate elisp defun"))
 
   ('normal
    "gs" #'my/split-line
@@ -517,7 +514,7 @@ Taken entirely from Doom Emacs
    "[b" #'(previous-buffer :which-key "previous buffer"))
 
   (my-localleader-def
-    "c" (general-simulate-key "C-c"))
+    "c" (general-simulate-key "C-c" :which-key "mode specific maps"))
 
   ('insert
    "C-y" #'yank)) ; otherwise is overridden by evil
@@ -769,7 +766,7 @@ Taken entirely from Doom Emacs
     "fG"  #'(counsel-git-grep  :which-key "git grep")
     "ff"  #'(counsel-rg        :which-key "ripgrep"))
   (my-localleader-def
-    "x" #'counsel-M-x)
+    "x" #'(counsel-M-x :which-key "M-x"))
   :config
   (counsel-mode))
 
@@ -800,7 +797,7 @@ Taken entirely from Doom Emacs
 
 (use-package auto-yasnippet
   :general
-  (my-localleader-def
+  (my-leader-def
     "yc" #'(aya-create :which-key "create aya snippet")
     "ye" #'(aya-expand :which-key "expand aya snippet")))
 #+END_SRC
@@ -906,7 +903,7 @@ Taken entirely from Doom Emacs
   (lsp-enable-on-type-formatting nil)
   :general
   (my-localleader-def
-    "gr" 'lsp-rename))
+    "gr" #'(lsp-rename :which-key "rename with lsp")))
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
@@ -999,7 +996,8 @@ Taken entirely from Doom Emacs
    "e"  #'(org-export-dispatch  :which-key "export")
    "q"  #'(org-set-tags-command :which-key "add tags")
    "b"  #'(org-babel-tangle     :which-key "tangle file")
-   "f"  #'(counsel-org-goto-all :which-key "find org headline"))
+   "f"  #'(counsel-org-goto-all :which-key "find org headline")
+   "'" #'(org-edit-special     :which-key "edit org src block in its major mode"))
 
   ;; Vim keys calendar maps
   ('org-read-date-minibuffer-local-map
@@ -1040,7 +1038,7 @@ Taken entirely from Doom Emacs
   :straight (:type built-in)
   :general
   (my-leader-def
-    "oa" #'org-agenda)
+    "oa" #'(org-agenda :which-key "agenda"))
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
@@ -1064,7 +1062,7 @@ Taken entirely from Doom Emacs
       "* %? :drill:")))
   :general
   (my-leader-def
-    "oc" #'org-capture))
+    "oc" #'(org-capture :which-key "org capture")))
 
 (use-package ol
   :straight (:type built-in)
@@ -1167,65 +1165,65 @@ Taken entirely from Doom Emacs
 * Editing
 ** Smartparens
 #+BEGIN_SRC emacs-lisp :results none
-  (use-package smartparens
-    :diminish
-    :defer 0.3
-    :custom
-    (sp-highlight-pair-overlay nil)
-    (sp-highlight-wrap-overlay nil)
-    (sp-highlight-wrap-tag-overlay nil)
-    (sp-max-prefix-length 25)
-    (sp-max-pair-length 4)
-    (sp-escape-quotes-after-insert nil)
-    (sp-show-pair-from-inside t)
-    (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
-    :general
-    ;; (my-localleader-def
-    ;;   "s" '(hydra-smartparens/body :which-key "Smartparens"))
+(use-package smartparens
+  :diminish
+  :defer 0.3
+  :custom
+  (sp-highlight-pair-overlay nil)
+  (sp-highlight-wrap-overlay nil)
+  (sp-highlight-wrap-tag-overlay nil)
+  (sp-max-prefix-length 25)
+  (sp-max-pair-length 4)
+  (sp-escape-quotes-after-insert nil)
+  (sp-show-pair-from-inside t)
+  (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
+  :general
+  ;; (my-localleader-def
+  ;;   "s" '(hydra-smartparens/body :which-key "Smartparens"))
 
-    ('normal
-     ">" (general-key-dispatch #'evil-shift-right
-           ")" #'sp-forward-slurp-sexp
-           "(" #'sp-backward-barf-sexp)
-     "<" (general-key-dispatch #'evil-shift-left
-           ")" #'sp-forward-barf-sexp
-           "(" #'sp-backward-barf-sexp))
-    :config
-    (smartparens-global-mode)
-    (require 'smartparens-config) ; config for many languages
-    (sp-local-pair 'org-mode "'" nil :actions nil)) ; don't pair ' in elisp mode
+  ('normal
+   ">" (general-key-dispatch #'evil-shift-right
+         ")" #'sp-forward-slurp-sexp
+         "(" #'sp-backward-barf-sexp)
+   "<" (general-key-dispatch #'evil-shift-left
+         ")" #'sp-forward-barf-sexp
+         "(" #'sp-backward-barf-sexp))
+  :config
+  (smartparens-global-mode)
+  (require 'smartparens-config) ; config for many languages
+  (sp-local-pair 'org-mode "'" nil :actions nil)) ; don't pair ' in elisp mode
 
-    ;; (defhydra hydra-smartparens () ; TODO delete and remap these for normal mode
-    ;;   ;; Movement
-    ;;   ("l" sp-forward-sexp "next pair")
-    ;;   ("h" sp-backward-sexp "previous pair")
-    ;;   ("j" sp-down-sexp "down")
-    ;;   ("J" sp-backward-down-sexp "backward down")
-    ;;   ("k" sp-up-sexp "up")
-    ;;   ("K" sp-backward-up-sexp "up")
-    ;;   ("n" sp-next-sexp "next")
-    ;;   ("p" sp-previous-sexp "previous")
+;; (defhydra hydra-smartparens () ; TODO delete and remap these for normal mode
+;;   ;; Movement
+;;   ("l" sp-forward-sexp "next pair")
+;;   ("h" sp-backward-sexp "previous pair")
+;;   ("j" sp-down-sexp "down")
+;;   ("J" sp-backward-down-sexp "backward down")
+;;   ("k" sp-up-sexp "up")
+;;   ("K" sp-backward-up-sexp "up")
+;;   ("n" sp-next-sexp "next")
+;;   ("p" sp-previous-sexp "previous")
 
-    ;;   ("H" sp-beginning-of-sexp "beginning")
-    ;;   ("L" sp-end-of-sexp "end")
-    ;;   ("d" sp-delete-sexp "delete")
-    ;;   ("D" sp-kill-whole-line "delete line")
-    ;;   ("t" sp-transpose-sexp "transpose")
+;;   ("H" sp-beginning-of-sexp "beginning")
+;;   ("L" sp-end-of-sexp "end")
+;;   ("d" sp-delete-sexp "delete")
+;;   ("D" sp-kill-whole-line "delete line")
+;;   ("t" sp-transpose-sexp "transpose")
 
-    ;;   ("s" sp-forward-slurp-sexp "slurp")
-    ;;   ("S" sp-backward-slurp-sexp "backward slurp")
-    ;;   ("b" sp-forward-barf-sexp "barf")
-    ;;   ("B" sp-backward-barf-sexp "backward barf")
+;;   ("s" sp-forward-slurp-sexp "slurp")
+;;   ("S" sp-backward-slurp-sexp "backward slurp")
+;;   ("b" sp-forward-barf-sexp "barf")
+;;   ("B" sp-backward-barf-sexp "backward barf")
 
-    ;;   ("v" sp-split-sexp "split pair")
-    ;;   ("u" sp-join-sexp "join pair")
+;;   ("v" sp-split-sexp "split pair")
+;;   ("u" sp-join-sexp "join pair")
 
-    ;;   ("p" sp-add-to-previous-sexp "add to previous pair")
-    ;;   ("n" sp-add-to-next-sexp "add to next pair")))
+;;   ("p" sp-add-to-previous-sexp "add to previous pair")
+;;   ("n" sp-add-to-next-sexp "add to next pair")))
 
-  (use-package evil-smartparens ; Make evil commands preserve balance of parentheses
-    :hook (smartparens-mode . evil-smartparens-mode)
-    :diminish)
+(use-package evil-smartparens ; Make evil commands preserve balance of parentheses
+  :hook (smartparens-mode . evil-smartparens-mode)
+  :diminish)
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -1238,7 +1236,7 @@ Taken entirely from Doom Emacs
   (undo-tree-history-directory-alist (list (cons "." (expand-file-name "undo/" my/etc-dir))))
   :general
   (my-leader-def
-    "fu" #'undo-tree-visualize))
+    "fu" #'(undo-tree-visualize :which-key "undo")))
 
 (use-package format-all
   :custom
@@ -1414,10 +1412,10 @@ Taken entirely from Doom Emacs
   ('(normal insert) ess-mode-map
    :prefix "C-c"
    "o" #'R
-   "b" #'ess-eval-buffer
-   "r" #'ess-eval-region
-   "f" #'ess-eval-function
-   "h" #'ess-doc-map)
+   "b" #'(ess-eval-buffer   :which-key "eval R buffer")
+   "r" #'(ess-eval-region   :which-key "eval R region")
+   "f" #'(ess-eval-function :which-key "eval R function")
+   "h" #'(ess-doc-map       :which-key "R help"))
   :config
   (defun company-r-mode ()
     (set (make-local-variable 'company-backends)
