@@ -406,7 +406,7 @@ Taken entirely from Doom Emacs
   (which-key-sort-uppercase-first nil))
 
 (use-package hydra
-  :defer t)
+  :disabled t)
 #+END_SRC
 ** Built-in Packages
 #+BEGIN_SRC emacs-lisp :results none
@@ -433,7 +433,7 @@ Taken entirely from Doom Emacs
 
 (use-package saveplace
   :straight (:type built-in)
-  :hook (after-init . save-place-mode)
+  :hook (pre-command . save-place-mode)
   :custom
   (save-place-file (expand-file-name "places" my/etc-dir)))
 
@@ -448,7 +448,7 @@ Taken entirely from Doom Emacs
 
 (use-package savehist
   :straight (:type built-in)
-  :hook (after-init . savehist-mode)
+  :hook (pre-command . savehist-mode)
   :custom
   (savehist-file (expand-file-name "savehist" my/etc-dir))
   (history-length 500)
@@ -620,8 +620,8 @@ Taken entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
   :diminish evil-snipe-local-mode
-  :hook (pre-command . evil-snipe-override-local-mode)
-  :hook (pre-command . evil-snipe-mode)
+  :hook ((prog-mode text-mode) . evil-snipe-override-local-mode)
+  :hook ((prog-mode text-mode) . evil-snipe-mode)
   :custom
   (evil-snipe-show-prompt nil)
   (evil-snipe-skip-leading-whitespace nil)
@@ -753,12 +753,9 @@ Taken entirely from Doom Emacs
   :config
   (evil-collection-init 'minibuffer)
   (evil-collection-init 'ivy))
-;; (ivy-mode))
-
 
 (use-package counsel ; ivy support for many functions
   :diminish
-  :defer 0.1
   :custom
   (counsel-describe-function-function #'helpful-callable)
   (counsel-describe-variable-function #'helpful-variable)
@@ -777,7 +774,7 @@ Taken entirely from Doom Emacs
   (counsel-mode))
 
 (use-package amx ; show recently used commands
-  :hook (counsel-mode . amx-mode)
+  :hook (pre-command . amx-mode)
   :custom
   (amx-save-file (expand-file-name "amx-history" my/etc-dir))
   (amx-history-length 50))
@@ -789,15 +786,14 @@ Taken entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package yasnippet ; snippets
   :diminish yas-minor-mode
+  :hook ((prog-mode text-mode) . yas-minor-mode-on)
   :defer-incrementally (eldoc easymenu help-mode)
   :general
   (my-leader-def
     "y"   '(:ignore t           :which-key "Yasnippet")
     "yi" #'(yas-insert-snippet  :which-key "insert snippet")
     "yn" #'(yas-new-snippet     :which-key "new snippet")
-    "yl" #'(yas-describe-tables :which-key "list snippets"))
-  :config
-  (yas-global-mode))
+    "yl" #'(yas-describe-tables :which-key "list snippets")))
 
 (use-package yasnippet-snippets
   :after yasnippet)
@@ -922,6 +918,8 @@ Taken entirely from Doom Emacs
 (use-package flycheck ; linting
   :diminish
   :hook (prog-mode . flycheck-mode)
+  :custom
+  (flycheck-display-errors-delay 0.25)
   :general
   ('normal
    "[q" #'flycheck-previous-error
@@ -1152,7 +1150,7 @@ Taken entirely from Doom Emacs
 
 (use-package golden-ratio
   :diminish
-  :hook (after-init . golden-ratio-mode)
+  :hook (window-setup . golden-ratio-mode)
   :custom
   (golden-ratio-auto-scale t))
 
@@ -1169,65 +1167,65 @@ Taken entirely from Doom Emacs
 * Editing
 ** Smartparens
 #+BEGIN_SRC emacs-lisp :results none
-(use-package smartparens
-  :diminish
-  :defer 0.3
-  :custom
-  (sp-highlight-pair-overlay nil)
-  (sp-highlight-wrap-overlay nil)
-  (sp-highlight-wrap-tag-overlay nil)
-  (sp-max-prefix-length 25)
-  (sp-max-pair-length 4)
-  (sp-escape-quotes-after-insert nil)
-  (sp-show-pair-from-inside t)
-  (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
-  :general
-  (my-localleader-def
-    "s" '(hydra-smartparens/body :which-key "Smartparens"))
+  (use-package smartparens
+    :diminish
+    :defer 0.3
+    :custom
+    (sp-highlight-pair-overlay nil)
+    (sp-highlight-wrap-overlay nil)
+    (sp-highlight-wrap-tag-overlay nil)
+    (sp-max-prefix-length 25)
+    (sp-max-pair-length 4)
+    (sp-escape-quotes-after-insert nil)
+    (sp-show-pair-from-inside t)
+    (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
+    :general
+    ;; (my-localleader-def
+    ;;   "s" '(hydra-smartparens/body :which-key "Smartparens"))
 
-  ('normal
-   ">" (general-key-dispatch #'evil-shift-right
-         ")" #'sp-forward-slurp-sexp
-         "(" #'sp-backward-barf-sexp)
-   "<" (general-key-dispatch #'evil-shift-left
-         ")" #'sp-forward-barf-sexp
-         "(" #'sp-backward-barf-sexp))
-  :config
-  (smartparens-global-mode)
-  (require 'smartparens-config) ; config for many languages
-  (sp-local-pair 'org-mode "'" nil :actions nil) ; don't pair ' in elisp mode
+    ('normal
+     ">" (general-key-dispatch #'evil-shift-right
+           ")" #'sp-forward-slurp-sexp
+           "(" #'sp-backward-barf-sexp)
+     "<" (general-key-dispatch #'evil-shift-left
+           ")" #'sp-forward-barf-sexp
+           "(" #'sp-backward-barf-sexp))
+    :config
+    (smartparens-global-mode)
+    (require 'smartparens-config) ; config for many languages
+    (sp-local-pair 'org-mode "'" nil :actions nil)) ; don't pair ' in elisp mode
 
-  (defhydra hydra-smartparens () ; TODO delete and remap these for normal mode
-    ;; Movement
-    ("l" sp-forward-sexp "next pair")
-    ("h" sp-backward-sexp "previous pair")
-    ("j" sp-down-sexp "down")
-    ("J" sp-backward-down-sexp "backward down")
-    ("k" sp-up-sexp "up")
-    ("K" sp-backward-up-sexp "up")
-    ("n" sp-next-sexp "next")
-    ("p" sp-previous-sexp "previous")
+    ;; (defhydra hydra-smartparens () ; TODO delete and remap these for normal mode
+    ;;   ;; Movement
+    ;;   ("l" sp-forward-sexp "next pair")
+    ;;   ("h" sp-backward-sexp "previous pair")
+    ;;   ("j" sp-down-sexp "down")
+    ;;   ("J" sp-backward-down-sexp "backward down")
+    ;;   ("k" sp-up-sexp "up")
+    ;;   ("K" sp-backward-up-sexp "up")
+    ;;   ("n" sp-next-sexp "next")
+    ;;   ("p" sp-previous-sexp "previous")
 
-    ("H" sp-beginning-of-sexp "beginning")
-    ("L" sp-end-of-sexp "end")
-    ("d" sp-delete-sexp "delete")
-    ("D" sp-kill-whole-line "delete line")
-    ("t" sp-transpose-sexp "transpose")
+    ;;   ("H" sp-beginning-of-sexp "beginning")
+    ;;   ("L" sp-end-of-sexp "end")
+    ;;   ("d" sp-delete-sexp "delete")
+    ;;   ("D" sp-kill-whole-line "delete line")
+    ;;   ("t" sp-transpose-sexp "transpose")
 
-    ("s" sp-forward-slurp-sexp "slurp")
-    ("S" sp-backward-slurp-sexp "backward slurp")
-    ("b" sp-forward-barf-sexp "barf")
-    ("B" sp-backward-barf-sexp "backward barf")
+    ;;   ("s" sp-forward-slurp-sexp "slurp")
+    ;;   ("S" sp-backward-slurp-sexp "backward slurp")
+    ;;   ("b" sp-forward-barf-sexp "barf")
+    ;;   ("B" sp-backward-barf-sexp "backward barf")
 
-    ("v" sp-split-sexp "split pair")
-    ("u" sp-join-sexp "join pair")
+    ;;   ("v" sp-split-sexp "split pair")
+    ;;   ("u" sp-join-sexp "join pair")
 
-    ("p" sp-add-to-previous-sexp "add to previous pair")
-    ("n" sp-add-to-next-sexp "add to next pair")))
+    ;;   ("p" sp-add-to-previous-sexp "add to previous pair")
+    ;;   ("n" sp-add-to-next-sexp "add to next pair")))
 
-(use-package evil-smartparens ; Make evil commands preserve balance of parentheses
-  :hook (smartparens-mode . evil-smartparens-mode)
-  :diminish)
+  (use-package evil-smartparens ; Make evil commands preserve balance of parentheses
+    :hook (smartparens-mode . evil-smartparens-mode)
+    :diminish)
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -1245,8 +1243,6 @@ Taken entirely from Doom Emacs
 (use-package format-all
   :custom
   (+format-with-lsp t)
-  :config
-
   :general
   (my-leader-def
     :states 'normal
