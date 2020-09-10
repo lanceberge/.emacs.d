@@ -14,10 +14,9 @@
   - [[#hooks][Hooks]]
 - [[#evil-mode][Evil Mode]]
   - [[#evil][Evil]]
-  - [[#evil-related][Evil-Related]]
-    - [[#evil-collection][Evil-Collection]]
-    - [[#extra-operatorsmotion][Extra operators/motion]]
-    - [[#miscellaneous][Miscellaneous]]
+  - [[#evil-collection][Evil-Collection]]
+  - [[#extra-operatorsmotion][Extra operators/motion]]
+  - [[#miscellaneous][Miscellaneous]]
 - [[#completion][Completion]]
   - [[#ivy][Ivy]]
   - [[#yasnippet][Yasnippet]]
@@ -179,7 +178,7 @@ The rest of this file tangles to config.el
 Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
-   ;;; -*- lexical-binding: t -*-
+  ;;; -*- lexical-binding: t -*-
   (use-package emacs
     :custom
     (default-file-name-handler-alist file-name-handler-alist)
@@ -603,9 +602,7 @@ Taken entirely from Doom Emacs
       "d" #'evil-quit ; delete window
       "q" #'evil-save-modified-and-close)) ; quit and save window
 #+END_SRC
-** Evil-Related
-*** Evil-Collection
-
+** Evil-Collection
 #+BEGIN_SRC emacs-lisp :results none
   (use-package evil-collection ; evil bindings for many modes
     :defer t
@@ -619,7 +616,7 @@ Taken entirely from Doom Emacs
        eshell
        (pdf pdf-tools))))
 #+END_SRC
-*** Extra operators/motion
+** Extra operators/motion
 #+BEGIN_SRC emacs-lisp :results none
   (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
     :diminish evil-snipe-local-mode
@@ -691,7 +688,7 @@ Taken entirely from Doom Emacs
      "I" #'evil-indent-plus-a-indent-up
      "J" #'evil-indent-plus-a-indent-up-down))
 #+END_SRC
-*** Miscellaneous
+** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
   (use-package evil-escape ; jk to leave insert mode
     :diminish
@@ -1258,7 +1255,6 @@ Taken entirely from Doom Emacs
      "[e" #'move-text-up))
 
   (use-package aggressive-indent
-    :disabled t
     :diminish
     :hook (prog-mode . aggressive-indent-mode))
 #+END_SRC
