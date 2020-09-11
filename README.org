@@ -504,7 +504,8 @@ Taken entirely from Doom Emacs
     "es" #'(eval-last-sexp            :which-key "execute elisp sexp")
     "ee" #'(eval-expression           :which-key "evaluate elisp expression")
     "eb" #'(eval-buffer               :which-key "evaluate elisp buffer")
-    "ef" #'(eval-defun                :which-key "evaluate elisp defun"))
+    "ef" #'(eval-defun                :which-key "evaluate elisp defun")
+    "'"    "C-c '")
 
   ('normal
    "gs" #'my/split-line
@@ -514,7 +515,7 @@ Taken entirely from Doom Emacs
    "[b" #'(previous-buffer :which-key "previous buffer"))
 
   (my-localleader-def
-    "c" (general-simulate-key "C-c" :which-key "mode specific maps"))
+    "c" (general-simulate-key "C-c" :which-key "+Mode specific maps"))
 
   ('insert
    "C-y" #'yank)) ; otherwise is overridden by evil
@@ -996,8 +997,7 @@ Taken entirely from Doom Emacs
    "e"  #'(org-export-dispatch  :which-key "export")
    "q"  #'(org-set-tags-command :which-key "add tags")
    "b"  #'(org-babel-tangle     :which-key "tangle file")
-   "f"  #'(counsel-org-goto-all :which-key "find org headline")
-   "'" #'(org-edit-special     :which-key "edit org src block in its major mode"))
+   "f"  #'(counsel-org-goto-all :which-key "find org headline"))
 
   ;; Vim keys calendar maps
   ('org-read-date-minibuffer-local-map
