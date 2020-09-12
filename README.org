@@ -618,8 +618,8 @@ Taken entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
   :diminish evil-snipe-local-mode
-  :hook ((prog-mode text-mode) . evil-snipe-override-local-mode)
-  :hook ((prog-mode text-mode) . evil-snipe-mode)
+  :hook (pre-command . evil-snipe-override-mode)
+  :hook (pre-command . evil-snipe-mode)
   :custom
   (evil-snipe-show-prompt nil)
   (evil-snipe-skip-leading-whitespace nil)
@@ -860,7 +860,9 @@ Taken entirely from Doom Emacs
     "gf"   '(:ignore t                  :which-key "Find")
     "gfc" #'(magit-show-commit          :which-key "show commit")
     "gff" #'(magit-find-file            :which-key "file")
-    "gfg" #'(magit-find-git-config-file :which-key "git config file")))
+    "gfg" #'(magit-find-git-config-file :which-key "git config file"))
+  ('normal '(override magit-mode-map)
+           "g" #'magit-status-jump))
 
 (use-package evil-magit ; evil bindings for magit
   :after magit
@@ -1395,7 +1397,13 @@ Taken entirely from Doom Emacs
   (c-default-style "linux")
   :general
   ('c-mode-base-map
-   "M-;" #'my/append-semicolon))
+   "M-;" #'my/append-semicolon)
+  :config
+  ;; Don't change indentation because a semicolon hasn't been added yet
+  (add-to-list
+   'aggressive-indent-dont-indent-if
+   '(null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
+                        (thing-at-point 'line)))))
 #+END_SRC
 ** Statistics (R)
 #+BEGIN_SRC emacs-lisp :results none
@@ -1419,11 +1427,11 @@ Taken entirely from Doom Emacs
   :config
   (defun company-r-mode ()
     (set (make-local-variable 'company-backends)
-         '((company-yasnippet
-            company-R-args
+         '((company-R-args
             company-R-objects
             company-dabbrev-code
-            company-files)))))
+            company-files
+            company-yasnippet)))))
 #+END_SRC
 * Functions
 ** Miscellaneous
