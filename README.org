@@ -860,9 +860,7 @@ Taken entirely from Doom Emacs
     "gf"   '(:ignore t                  :which-key "Find")
     "gfc" #'(magit-show-commit          :which-key "show commit")
     "gff" #'(magit-find-file            :which-key "file")
-    "gfg" #'(magit-find-git-config-file :which-key "git config file"))
-  ('normal '(override magit-mode-map)
-           "g" #'magit-status-jump))
+    "gfg" #'(magit-find-git-config-file :which-key "git config file")))
 
 (use-package evil-magit ; evil bindings for magit
   :after magit
@@ -1224,7 +1222,7 @@ Taken entirely from Doom Emacs
 ;;   ("n" sp-add-to-next-sexp "add to next pair")))
 
 (use-package evil-smartparens ; Make evil commands preserve balance of parentheses
-  :hook (smartparens-mode . evil-smartparens-mode)
+  :hook (prog-mode . evil-smartparens-mode)
   :diminish)
 #+END_SRC
 ** Miscellaneous
