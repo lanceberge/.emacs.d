@@ -42,6 +42,7 @@
   - [[#pdf][PDF]]
   - [[#c-family][C family]]
   - [[#statistics-r][Statistics (R)]]
+  - [[#markdown][Markdown]]
 - [[#functions][Functions]]
   - [[#miscellaneous-3][Miscellaneous]]
   - [[#format][Format]]
@@ -237,7 +238,9 @@ Mostly taken from Doom Emacs
   (url-cache-directory         (expand-file-name "url/" my/etc-dir))
   (persist--directory-location (expand-file-name "persist/" my/etc-dir))
   (transient-history-file      (expand-file-name "transient/history.el" my/etc-dir))
-  (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions" my/etc-dir)))
+  (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions" my/etc-dir))
+  :config
+  (global-visual-line-mode 1)) ; makes wrapped lines easlier to work with
 
 (advice-add #'tty-run-terminal-initialization :override #'ignore)
 
@@ -517,6 +520,10 @@ Taken entirely from Doom Emacs
   (my-localleader-def
     "c" (general-simulate-key "C-c" :which-key "+Mode specific maps"))
 
+  ('(normal insert)
+   :prefix "C-c"
+   ",c" (general-simulate-key "C-c C-c"))
+
   ('insert
    "C-y" #'yank)) ; otherwise is overridden by evil
 #+END_SRC
@@ -564,6 +571,10 @@ Taken entirely from Doom Emacs
   (evil-want-keybinding nil)
   (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
   :general
+  ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
+   [remap evil-next-line] #'evil-next-visual-line
+   [remap evil-previous-line] #'evil-previous-visual-line)
+
   ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
   ('normal
    "zR" #'evil-open-folds
@@ -784,14 +795,16 @@ Taken entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package yasnippet ; snippets
   :diminish yas-minor-mode
-  :hook ((prog-mode text-mode) . yas-minor-mode-on)
+  :defer 0.2
   :defer-incrementally (eldoc easymenu help-mode)
   :general
   (my-leader-def
     "y"   '(:ignore t           :which-key "Yasnippet")
     "yi" #'(yas-insert-snippet  :which-key "insert snippet")
     "yn" #'(yas-new-snippet     :which-key "new snippet")
-    "yl" #'(yas-describe-tables :which-key "list snippets")))
+    "yl" #'(yas-describe-tables :which-key "list snippets"))
+  :config
+  (yas-global-mode))
 
 (use-package yasnippet-snippets
   :after yasnippet)
@@ -987,7 +1000,7 @@ Taken entirely from Doom Emacs
 
   ('(normal insert) org-mode-map
    :prefix "C-c"
-   ",c" #'(org-ctrl-c-ctrl-c    :which-key "execute")
+   ;; ",c" #'(org-ctrl-c-ctrl-c    :which-key "execute")
    ",v" #'org-redisplay-inline-images
    "v"  #'org-toggle-inline-images
    "t"  #'(org-todo             :which-key "todo")
@@ -998,6 +1011,9 @@ Taken entirely from Doom Emacs
    "q"  #'(org-set-tags-command :which-key "add tags")
    "b"  #'(org-babel-tangle     :which-key "tangle file")
    "f"  #'(counsel-org-goto-all :which-key "find org headline"))
+
+  ('normal org-mode-map
+           "RET" #'org-open-at-point)
 
   ;; Vim keys calendar maps
   ('org-read-date-minibuffer-local-map
@@ -1137,6 +1153,9 @@ Taken entirely from Doom Emacs
     "fd" #'(dired      :which-key "navigate to a directory"))
   :config
   (evil-collection-init 'dired))
+
+(use-package dired-x
+  :straight (:type built-in)) ; TODO hide ./ and ../
 #+END_SRC
 ** Windows
 #+BEGIN_SRC emacs-lisp :results none
@@ -1261,7 +1280,13 @@ Taken entirely from Doom Emacs
 
 (use-package aggressive-indent
   :diminish
-  :hook (prog-mode . aggressive-indent-mode))
+  :hook (prog-mode . aggressive-indent-mode)
+  :config
+  (add-to-list
+   'aggressive-indent-dont-indent-if
+   '(and (equal major-mode 'c-mode)
+         (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
+                             (thing-at-point 'line))))))
 #+END_SRC
 * System
 ** Terminals/shells
@@ -1395,18 +1420,13 @@ Taken entirely from Doom Emacs
   (c-default-style "linux")
   :general
   ('c-mode-base-map
-   "M-;" #'my/append-semicolon)
-  :config
-  ;; Don't change indentation because a semicolon hasn't been added yet
-  (add-to-list
-   'aggressive-indent-dont-indent-if
-   '(null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
-                        (thing-at-point 'line)))))
+   "M-;" #'my/append-semicolon))
 #+END_SRC
 ** Statistics (R)
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ess
   :hook (ess-r-mode . company-r-mode)
+  :hook (ess-r-mode . prog-mode) ; ESS doesn't load prog-mode by default
   :general
   ('(normal insert) ess-mode-map
    "C-;" #'ess-eval-line
@@ -1430,6 +1450,14 @@ Taken entirely from Doom Emacs
             company-dabbrev-code
             company-files
             company-yasnippet)))))
+#+END_SRC
+** Markdown
+#+BEGIN_SRC emacs-lisp :results none
+(use-package pandoc-mode
+  :hook (markdown-mode . pandoc-mode)
+  :general
+  (:prefix "C-c"
+           "c" #'(pandoc-main-hydra/body :which-key "pandoc")))
 #+END_SRC
 * Functions
 ** Miscellaneous
