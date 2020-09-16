@@ -46,6 +46,10 @@
 - [[#functions][Functions]]
   - [[#miscellaneous-3][Miscellaneous]]
   - [[#format][Format]]
+  - [[#mode-specific][Mode specific]]
+    - [[#org-2][Org]]
+    - [[#eshell][Eshell]]
+    - [[#ess-r][ESS-R]]
 
 * Early-Init
 
@@ -237,9 +241,7 @@ Mostly taken from Doom Emacs
   (url-cache-directory         (expand-file-name "url/" my/etc-dir))
   (persist--directory-location (expand-file-name "persist/" my/etc-dir))
   (transient-history-file      (expand-file-name "transient/history.el" my/etc-dir))
-  (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions" my/etc-dir))
-  :config
-  (global-visual-line-mode 1)) ; makes wrapped lines easlier to work with
+  (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions" my/etc-dir)))
 
 (advice-add #'tty-run-terminal-initialization :override #'ignore)
 
@@ -387,7 +389,6 @@ Taken entirely from Doom Emacs
     :keymaps 'override
     :prefix ","
     :non-normal-prefix "C-,")
-
   (my-leader-def
     "f"   '(:ignore t                    :which-key "Find")
     "fm" #'(general-describe-keybindings :which-key "list keybindings")))
@@ -417,7 +418,9 @@ Taken entirely from Doom Emacs
   :defer t
   :custom
   (idle-update-delay 1.0) ; slow down how often emacs updates its ui
-  (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
+  (kill-do-not-save-duplicates t) ; no duplicates in kill ring
+  :config
+  (global-visual-line-mode 1)) ; makes wrapped lines easlier to work with
 
 (use-package advice
   :straight (:type built-in)
@@ -599,16 +602,15 @@ Taken entirely from Doom Emacs
     "bl" #'(evil-switch-to-windows-last-buffer :which-key "last buffer"))
 
   ('evil-window-map
+   "d" #'evil-quit ; delete window
+   "q" #'evil-save-modified-and-close ; quit and save window
    "SPC q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
 
   ('(normal insert)
    "C-l" #'evil-ex-nohighlight)
   :config
   (evil-mode)
-  (diminish 'defining-kbd-macro) ; don't add DEF in modeline when writing a macro
-  (general-def 'evil-window-map
-    "d" #'evil-quit ; delete window
-    "q" #'evil-save-modified-and-close)) ; quit and save window
+  (diminish 'defining-kbd-macro)) ; don't add DEF in modeline when writing a macro TODO change to :diminish
 #+END_SRC
 ** Evil-Collection
 #+BEGIN_SRC emacs-lisp :results none
@@ -628,8 +630,8 @@ Taken entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
   :diminish evil-snipe-local-mode
-  :hook (pre-command . evil-snipe-override-mode)
-  :hook (pre-command . evil-snipe-mode)
+  :hook ((pre-command . evil-snipe-override-mode)
+         (pre-command . evil-snipe-mode))
   :custom
   (evil-snipe-show-prompt nil)
   (evil-snipe-skip-leading-whitespace nil)
@@ -835,8 +837,6 @@ Taken entirely from Doom Emacs
            [remap evil-complete-next] #'company-manual-begin) ; manual completion with C-n
   :config
   (global-company-mode)
-  ;; (define-key company-active-map [(tab)] nil)
-  ;; (define-key company-active-map (kbd "TAB") nil)
   (general-def 'company-active-map "TAB" nil) ; don't use tab to complete - buggy with company-yasnippet
 
   (general-def 'company-active-map "C-w" nil ; don't override evil C-w
@@ -969,6 +969,7 @@ Taken entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org
   :straight (:type built-in)
+  :hook (kill-emacs . +org/tangle-config)
   :defer-incrementally
   (calendar find-func format-spec org-macs org-compat
             org-faces org-entities org-list org-pcomplete org-src
@@ -999,7 +1000,6 @@ Taken entirely from Doom Emacs
 
   ('(normal insert) org-mode-map
    :prefix "C-c"
-   ;; ",c" #'(org-ctrl-c-ctrl-c    :which-key "execute")
    ",v" #'org-redisplay-inline-images
    "v"  #'org-toggle-inline-images
    "t"  #'(org-todo             :which-key "todo")
@@ -1040,12 +1040,7 @@ Taken entirely from Doom Emacs
    "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below
    "M-:"   #'my/org-insert-todo-above)
   :config
-  (setq org-fontify-done-headline t)
-  ;; tangle config every time I quit emacs
-  (add-hook 'kill-emacs-hook
-            (lambda ()
-              (find-file config-org)
-              (org-babel-tangle-file config-org config-el))))
+  (setq org-fontify-done-headline t))
 #+END_SRC
 ** Org built-ins
 #+BEGIN_SRC emacs-lisp :results none
@@ -1127,17 +1122,17 @@ Taken entirely from Doom Emacs
 (use-package evil-org
   :diminish
   :hook (org-mode . evil-org-mode)
-  :config
-  (general-def '(normal insert) evil-org-mode-map
-    ;; Vim keys > arrow keys
-    "M-h"   #'org-metaleft
-    "M-l"   #'org-metaright
-    "M-j"   #'org-metadown
-    "M-k"   #'org-metaup
-    "M-L"   #'org-shiftright
-    "M-H"   #'org-shiftleft
-    "M-J"   #'org-shiftdown
-    "M-K"   #'org-shiftup))
+  :general
+  ('(normal insert) evil-org-mode-map
+   ;; Vim keys > arrow keys
+   "M-h"   #'org-metaleft
+   "M-l"   #'org-metaright
+   "M-j"   #'org-metadown
+   "M-k"   #'org-metaup
+   "M-L"   #'org-shiftright
+   "M-H"   #'org-shiftleft
+   "M-J"   #'org-shiftdown
+   "M-K"   #'org-shiftup))
 #+END_SRC
 * Windows, Buffers, Directory Management
 ** Dired
@@ -1156,7 +1151,8 @@ Taken entirely from Doom Emacs
   (evil-collection-init 'dired))
 
 (use-package dired-x
-  :straight (:type built-in)) ; TODO hide ./ and ../
+  :straight (:type built-in)
+  :defer t) ; TODO hide ./ and ../
 #+END_SRC
 ** Windows
 #+BEGIN_SRC emacs-lisp :results none
@@ -1293,6 +1289,9 @@ Taken entirely from Doom Emacs
 
 (use-package eshell
   :straight (:type built-in)
+  :hook ((eshell-mode . smartparens-mode)
+         (eshell-first-time-mode . +eshell/init-keymaps)
+         (eshell-post-command . +eshell/init-aliases-h))
   :custom
   (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
   :general
@@ -1300,37 +1299,9 @@ Taken entirely from Doom Emacs
     "oe" #'eshell)
   :config
   (evil-collection-init 'eshell)
-  (add-hook 'eshell-mode-hook #'smartparens-mode)
-  (add-hook 'eshell-first-time-mode-hook
-            (defun my/eshell-init-keymaps ()
-              (general-def '(insert normal) eshell-mode-map
-                "C-j" #'eshell-next-matching-input-from-input
-                "C-k" #'eshell-previous-matching-input-from-input
-                "C-l" #'my/eshell-clear
-                "C-c" #'eshell-interrupt-process)))
 
   ;; Aliases
-  (advice-add #'eshell-write-aliases-list :override #'ignore)
-
-  (defun +eshell-init-aliases-h ()
-    (dolist (var '(("s" "sudo")
-
-                   ("l" "ls -AF")
-                   ("alias" "ll ls -lF")
-                   ("alias" "la ls -lAF")
-
-                   ("alias" "g git")
-                   ("gs" "git status")
-                   ("alias" "gl git log")
-                   ("alias" "ga git add")
-                   ("alias" "gaa git add -A")
-                   ("alias" "gcam git commit -a m")
-                   ("alias" "gr git reset")
-                   ("alias" "grs git reset --soft HEAD~1")
-                   ("alias" "gp git push -u origin master")))
-      (add-to-list 'eshell-command-aliases-list var)))
-
-  (add-hook 'eshell-post-command-hook '+eshell-init-aliases-h))
+  (advice-add #'eshell-write-aliases-list :override #'ignore))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -1390,7 +1361,7 @@ Taken entirely from Doom Emacs
   :straight (:type built-in)
   :defer t
   :custom
-  (tramp-autosave-directory (expand-file-name "tramp/auto-save/" my/etc-dir))
+  (tramp-autosave-directory    (expand-file-name "tramp/auto-save/" my/etc-dir))
   (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir)))
 #+END_SRC
 * Filetype Specific
@@ -1416,8 +1387,8 @@ Taken entirely from Doom Emacs
 ** Statistics (R)
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ess
-  :hook (ess-r-mode . company-r-mode)
-  :hook (ess-r-mode . prog-mode) ; ESS doesn't load prog-mode by default
+  :hook ((ess-r-mode . +ess/company-mode)
+         (ess-r-mode . prog-mode)) ; ESS doesn't load prog-mode by default
   :general
   ('(normal insert) ess-mode-map
    "C-;" #'ess-eval-line
@@ -1432,15 +1403,7 @@ Taken entirely from Doom Emacs
    "b" #'(ess-eval-buffer   :which-key "eval R buffer")
    "r" #'(ess-eval-region   :which-key "eval R region")
    "f" #'(ess-eval-function :which-key "eval R function")
-   "h" #'(ess-doc-map       :which-key "R help"))
-  :config
-  (defun company-r-mode ()
-    (set (make-local-variable 'company-backends)
-         '((company-R-args
-            company-R-objects
-            company-dabbrev-code
-            company-files
-            company-yasnippet)))))
+   "h" #'(ess-doc-map       :which-key "R help")))
 #+END_SRC
 ** Markdown
 #+BEGIN_SRC emacs-lisp :results none
@@ -1575,4 +1538,52 @@ Entirely from Doom Emacs
              (narrow-to-region beg end)
              (let ((+format-region-p t))
                (+format/buffer)))))))
+#+END_SRC
+** Mode specific
+*** Org
+#+BEGIN_SRC emacs-lisp :results none
+;;;###autoload
+(defun +org/tangle-config ()
+  (find-file config-org)
+  (org-babel-tangle-file config-org config-el))
+#+END_SRC
+*** Eshell
+#+BEGIN_SRC emacs-lisp :results none
+;;;###autoload
+(defun +eshell/init-keymaps ()
+  (general-def '(insert normal) eshell-mode-map
+    "C-j" #'eshell-next-matching-input-from-input
+    "C-k" #'eshell-previous-matching-input-from-input
+    "C-l" #'my/eshell-clear
+    "C-c" #'eshell-interrupt-process))
+
+;;;###autoload
+(defun +eshell/init-aliases-h ()
+  (dolist (var '(("s" "sudo")
+
+                 ("l" "ls -AF")
+                 ("alias" "ll ls -lF")
+                 ("alias" "la ls -lAF")
+
+                 ("alias" "g git")
+                 ("gs" "git status")
+                 ("alias" "gl git log")
+                 ("alias" "ga git add")
+                 ("alias" "gaa git add -A")
+                 ("alias" "gcam git commit -a m")
+                 ("alias" "gr git reset")
+                 ("alias" "grs git reset --soft HEAD~1")
+                 ("alias" "gp git push -u origin master")))
+    (add-to-list 'eshell-command-aliases-list var)))
+#+END_SRC
+*** ESS-R
+#+BEGIN_SRC emacs-lisp :results none
+;;;###autoload
+(defun +ess/company-mode ()
+  (set (make-local-variable 'company-backends)
+       '((company-R-args
+          company-R-objects
+          company-dabbrev-code
+          company-files
+          company-yasnippet))))
 #+END_SRC
