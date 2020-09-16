@@ -1,4 +1,4 @@
-* Table of Contents                                                   :TOC_3:
+* Table of Contents                                                   :TOC:
 - [[#early-init][Early-Init]]
   - [[#initial-settings][Initial Settings]]
   - [[#straight][Straight]]
@@ -13,13 +13,11 @@
   - [[#keybindings][Keybindings]]
   - [[#hooks][Hooks]]
   - [[#functions][Functions]]
-    - [[#miscellaneous][Miscellaneous]]
-    - [[#format][Format]]
 - [[#evil-mode][Evil Mode]]
   - [[#evil][Evil]]
   - [[#evil-collection][Evil-Collection]]
   - [[#extra-operatorsmotion][Extra operators/motion]]
-  - [[#miscellaneous-1][Miscellaneous]]
+  - [[#miscellaneous][Miscellaneous]]
 - [[#completion][Completion]]
   - [[#ivy][Ivy]]
   - [[#yasnippet][Yasnippet]]
@@ -38,16 +36,15 @@
   - [[#windows][Windows]]
 - [[#editing][Editing]]
   - [[#smartparens][Smartparens]]
-  - [[#miscellaneous-2][Miscellaneous]]
+  - [[#miscellaneous-1][Miscellaneous]]
 - [[#system][System]]
   - [[#vterm][vterm]]
   - [[#eshell][Eshell]]
-  - [[#miscellaneous-3][Miscellaneous]]
+  - [[#miscellaneous-2][Miscellaneous]]
 - [[#filetype-specific][Filetype Specific]]
   - [[#pdf][PDF]]
   - [[#c-family][C family]]
   - [[#statistics-r][Statistics (R)]]
-    - [[#functions-2][Functions]]
   - [[#markdown][Markdown]]
 
 * Early-Init
@@ -55,7 +52,7 @@
 Tangles to early-init.el
 
 ** Initial Settings
-#+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
+#+BEGIN_SRC emacs-lisp :results none :tangle ~/.emacs.d/early-init.el
 ;;; -*- lexical-binding: t -*-
 (setq gc-cons-threshold most-positive-fixnum)
 
@@ -88,7 +85,7 @@ Tangles to early-init.el
 (advice-add #'x-apply-session-resources :override #'ignore)
 #+END_SRC
 ** Straight
-#+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
+#+BEGIN_SRC emacs-lisp :results none :tangle ~/.emacs.d/early-init.el
 ;; Bootstrap straight.el
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -113,7 +110,7 @@ Tangles to early-init.el
 (setq use-package-verbose t) ; show which packages are being loaded on startup and when
 #+END_SRC
 ** UI
-#+BEGIN_SRC emacs-lisp :results none :tangle early-init.el
+#+BEGIN_SRC emacs-lisp :results none :tangle ~/.emacs.d/early-init.el
 (use-package gruvbox-theme
   :config
   (load-theme 'gruvbox t))
@@ -163,7 +160,7 @@ Tangles to init.el
 
 Loads the file config.el on startup. Every time I exit emacs (if org has been loaded), this file tangles to config.el (defined in [[*Org][Org]] under kill-emacs-hook). If the file doesn't exist, org is loaded and the file is tangled.
 
-#+BEGIN_SRC emacs-lisp :tangle init.el :results none
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el :results none
 ;;; -*- lexical-binding: t -*-
 (defconst config-org (expand-file-name "README.org" user-emacs-directory))
 (defconst config-el  (expand-file-name "config.el" user-emacs-directory))
