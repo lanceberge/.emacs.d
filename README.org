@@ -46,7 +46,6 @@
 - [[#functions][Functions]]
   - [[#miscellaneous-3][Miscellaneous]]
   - [[#format][Format]]
-- [[#test][Test]]
 
 * Early-Init
 
@@ -409,7 +408,7 @@ Taken entirely from Doom Emacs
   (which-key-sort-uppercase-first nil))
 
 (use-package hydra
-  :disabled t)
+  :defer t)
 #+END_SRC
 ** Built-in Packages
 #+BEGIN_SRC emacs-lisp :results none
@@ -1279,17 +1278,6 @@ Taken entirely from Doom Emacs
   ('normal
    "]e" #'move-text-down
    "[e" #'move-text-up))
-
-(use-package aggressive-indent
-  :disabled t
-  :diminish
-  :hook (prog-mode . aggressive-indent-mode)
-  :config
-  (add-to-list
-   'aggressive-indent-dont-indent-if
-   '(and (equal major-mode 'c-mode)
-         (null (string-match "\\([;{}]\\|\\b\\(if\\|for\\|while\\)\\b\\)"
-                             (thing-at-point 'line))))))
 #+END_SRC
 * System
 ** Terminals/shells
@@ -1587,17 +1575,4 @@ Entirely from Doom Emacs
              (narrow-to-region beg end)
              (let ((+format-region-p t))
                (+format/buffer)))))))
-#+END_SRC
-* Test
-#+BEGIN_SRC emacs-lisp :results none
-(use-package poly-org
-  :disabled t
-  :hook (org-mode . poly-org-mode)
-  ;; :commands poly-org-mode
-  :diminish
-  ;; :config
-  ;; (add-hook 'web-mode-hook #'(defun my/poly-org-for-config ()
-  ;;     (when (string-equal buffer-file-name config-org)
-  ;;       (poly-org-mode))))
-  )
 #+END_SRC
