@@ -522,7 +522,7 @@ Taken entirely from Doom Emacs
 
   ('(normal insert)
    :prefix "C-c"
-   ",c" (general-simulate-key "C-c C-c"))
+   "SPC" (general-simulate-key "C-c C-c"))
 
   ('insert
    "C-y" #'yank)) ; otherwise is overridden by evil
@@ -799,10 +799,10 @@ Taken entirely from Doom Emacs
   :defer-incrementally (eldoc easymenu help-mode)
   :general
   (my-leader-def
-    "y"   '(:ignore t           :which-key "Yasnippet")
-    "yi" #'(yas-insert-snippet  :which-key "insert snippet")
-    "yn" #'(yas-new-snippet     :which-key "new snippet")
-    "yl" #'(yas-describe-tables :which-key "list snippets"))
+    "s"   '(:ignore t           :which-key "Yasnippet")
+    "si" #'(yas-insert-snippet  :which-key "insert snippet")
+    "sn" #'(yas-new-snippet     :which-key "new snippet")
+    "sl" #'(yas-describe-tables :which-key "list snippets"))
   :config
   (yas-global-mode))
 
@@ -1128,11 +1128,13 @@ Taken entirely from Doom Emacs
 (use-package evil-org
   :diminish
   :hook (org-mode . evil-org-mode)
-  :general
+  :config
   (general-def '(normal insert) evil-org-mode-map
     ;; Vim keys > arrow keys
     "M-h"   #'org-metaleft
     "M-l"   #'org-metaright
+    "M-j"   #'org-metadown
+    "M-k"   #'org-metaup
     "M-L"   #'org-shiftright
     "M-H"   #'org-shiftleft
     "M-J"   #'org-shiftdown
@@ -1279,6 +1281,7 @@ Taken entirely from Doom Emacs
    "[e" #'move-text-up))
 
 (use-package aggressive-indent
+  :disabled t
   :diminish
   :hook (prog-mode . aggressive-indent-mode)
   :config
