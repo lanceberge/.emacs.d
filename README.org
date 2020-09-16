@@ -12,11 +12,14 @@
   - [[#built-in-packages][Built-in Packages]]
   - [[#keybindings][Keybindings]]
   - [[#hooks][Hooks]]
+  - [[#functions][Functions]]
+    - [[#miscellaneous][Miscellaneous]]
+    - [[#format][Format]]
 - [[#evil-mode][Evil Mode]]
   - [[#evil][Evil]]
   - [[#evil-collection][Evil-Collection]]
   - [[#extra-operatorsmotion][Extra operators/motion]]
-  - [[#miscellaneous][Miscellaneous]]
+  - [[#miscellaneous-1][Miscellaneous]]
 - [[#completion][Completion]]
   - [[#ivy][Ivy]]
   - [[#yasnippet][Yasnippet]]
@@ -29,27 +32,23 @@
   - [[#org-1][Org]]
   - [[#org-built-ins][Org built-ins]]
   - [[#non-built-ins][Non built-ins]]
+  - [[#functions-1][Functions]]
 - [[#windows-buffers-directory-management][Windows, Buffers, Directory Management]]
   - [[#dired][Dired]]
   - [[#windows][Windows]]
 - [[#editing][Editing]]
   - [[#smartparens][Smartparens]]
-  - [[#miscellaneous-1][Miscellaneous]]
-- [[#system][System]]
-  - [[#terminalsshells][Terminals/shells]]
   - [[#miscellaneous-2][Miscellaneous]]
+- [[#system][System]]
+  - [[#vterm][vterm]]
+  - [[#eshell][Eshell]]
+  - [[#miscellaneous-3][Miscellaneous]]
 - [[#filetype-specific][Filetype Specific]]
   - [[#pdf][PDF]]
   - [[#c-family][C family]]
   - [[#statistics-r][Statistics (R)]]
+    - [[#functions-2][Functions]]
   - [[#markdown][Markdown]]
-- [[#functions][Functions]]
-  - [[#miscellaneous-3][Miscellaneous]]
-  - [[#format][Format]]
-  - [[#mode-specific][Mode specific]]
-    - [[#org-2][Org]]
-    - [[#eshell][Eshell]]
-    - [[#ess-r][ess-R]]
 
 * Early-Init
 
@@ -420,7 +419,8 @@ Taken entirely from Doom Emacs
   (idle-update-delay 1.0) ; slow down how often emacs updates its ui
   (kill-do-not-save-duplicates t) ; no duplicates in kill ring
   :config
-  (global-visual-line-mode 1)) ; makes wrapped lines easlier to work with
+  (global-visual-line-mode 1) ; makes wrapped lines easlier to work with
+  (diminish 'visual-line-mode))
 
 (use-package advice
   :straight (:type built-in)
@@ -554,6 +554,105 @@ Taken entirely from Doom Emacs
 (add-hook 'minibuffer-setup-hook #'doom-defer-garbage-collection-h)
 (add-hook 'minibuffer-exit-hook #'doom-restore-garbage-collection-h)
 #+END_SRC
+** Functions
+*** Miscellaneous
+ #+BEGIN_SRC emacs-lisp :results none
+   ;;;###autoload
+   (defun my/save-and-kill-buffer ()
+     (interactive)
+     (save-buffer)
+     (kill-this-buffer))
+
+   ;;;###autoload
+   (defun my/split-line ()
+     (interactive)
+     (newline)
+     (indent-according-to-mode))
+
+   ;;;###autoload
+   (defun my/comment-until-end-of-line () ;; TOOD fix
+     (interactive)
+     (my/split-line)
+     (evil-commentary-line)
+     (evil-previous-line 2)
+     (join-line))
+
+   ;;;###autoload
+   (defun my/kill-window-and-buffer ()
+     (interactive)
+     (kill-this-buffer)
+     (evil-quit))
+
+   ;;;###autoload
+   (defun my/append-semicolon()
+     (interactive)
+     (save-excursion
+       (call-interactively 'move-end-of-line)
+       (insert ";")))
+ #+END_SRC
+*** Format
+
+ Entirely from Doom Emacs
+
+ #+BEGIN_SRC emacs-lisp :results none
+ ;;;###autoload
+ (defun +format--org-region (beg end)
+   "Reformat the region within BEG and END.
+     If nil, BEG and/or END will default to the boundaries of the src block at point."
+   (let ((element (org-element-at-point)))
+     (save-excursion
+       (let* ((block-beg (save-excursion
+                           (goto-char (org-babel-where-is-src-block-head element))
+                           (line-beginning-position 2)))
+              (block-end (save-excursion
+                           (goto-char (org-element-property :end element))
+                           (skip-chars-backward " \t\n")
+                           (line-beginning-position)))
+              (beg (if beg (max beg block-beg) block-beg))
+              (end (if end (min end block-end) block-end))
+              (lang (org-element-property :language element))
+              (major-mode (org-src-get-lang-mode lang)))
+         (if (eq major-mode 'org-mode)
+             (user-error "Cannot reformat an org src block in org-mode")
+           (+format/region beg end))))))
+
+ ;;;###autoload
+ (defun +format/buffer ()
+   "Reformat the current buffer using LSP or `format-all-buffer'."
+   (interactive)
+   (if (and (eq major-mode 'org-mode)
+            (org-in-src-block-p t))
+       (+format--org-region nil nil)
+     (call-interactively
+      (cond ((and +format-with-lsp
+                  (bound-and-true-p lsp-mode)
+                  (lsp-feature? "textDocument/formatting"))
+             #'lsp-format-buffer)
+            (#'format-all-buffer)))))
+
+ ;;;###autoload
+ (defun +format/region (beg end)
+   "Runs the active formatter on the lines within BEG and END.
+   WARNING: this may not work everywhere. It will throw errors if the region
+   contains a syntax error in isolation. It is mostly useful for formatting
+   snippets or single lines."
+   (interactive "rP")
+   (if (and (eq major-mode 'org-mode)
+            (org-in-src-block-p t))
+       (+format--org-region beg end)
+     (cond ((and +format-with-lsp
+                 (bound-and-true-p lsp-mode)
+                 (lsp-feature? "textDocument/rangeFormatting"))
+            (call-interactively #'lsp-format-region))
+           ((and +format-with-lsp
+                 (bound-and-true-p eglot--managed-mode)
+                 (eglot--server-capable :documentRangeFormattingProvider))
+            (call-interactively #'eglot-format))
+           ((save-restriction
+              (narrow-to-region beg end)
+              (let ((+format-region-p t))
+                (+format/buffer)))))))
+ #+END_SRC
 * Evil Mode
 ** Evil
 #+BEGIN_SRC emacs-lisp :results none
@@ -1134,6 +1233,33 @@ Taken entirely from Doom Emacs
    "M-J"   #'org-shiftdown
    "M-K"   #'org-shiftup))
 #+END_SRC
+** Functions
+#+BEGIN_SRC emacs-lisp :results none
+;;;###autoload
+(defun +org/tangle-config ()
+  (find-file config-org)
+  (org-babel-tangle-file config-org config-el))
+
+;;;###autoload
+(defun +org/insert-subheading ()
+  (interactive)
+  (evil-append-line 1)
+  (org-insert-subheading 1))
+
+;;;###autoload
+(defun +org/insert-heading-above ()
+  (interactive)
+  (evil-append-line 1)
+  (move-beginning-of-line nil)
+  (org-insert-heading))
+
+;;;###autoload
+(defun +org/insert-todo-above ()
+  (interactive)
+  (evil-append-line 1)
+  (move-beginning-of-line nil)
+  (org-insert-todo-heading 1))
+#+END_SRC
 * Windows, Buffers, Directory Management
 ** Dired
 #+BEGIN_SRC emacs-lisp :results none
@@ -1276,7 +1402,7 @@ Taken entirely from Doom Emacs
    "[e" #'move-text-up))
 #+END_SRC
 * System
-** Terminals/shells
+** vterm
 #+BEGIN_SRC emacs-lisp :results none
 (use-package vterm
   :custom
@@ -1287,6 +1413,10 @@ Taken entirely from Doom Emacs
     "ot"  #'(vterm              :which-key "open vterm")
     "ovt" #'(vterm-other-window :which-key "open vterm in vsplit")))
 
+
+#+END_SRC
+** Eshell
+#+BEGIN_SRC emacs-lisp :results none
 (use-package eshell
   :straight (:type built-in)
   :hook ((eshell-mode . smartparens-mode)
@@ -1302,6 +1432,42 @@ Taken entirely from Doom Emacs
 
   ;; Aliases
   (advice-add #'eshell-write-aliases-list :override #'ignore))
+#+END_SRC
+**** Functions
+#+BEGIN_SRC emacs-lisp :results none
+;;;###autoload
+(defun +eshell/init-keymaps ()
+  (general-def '(insert normal) eshell-mode-map
+    "C-j" #'eshell-next-matching-input-from-input
+    "C-k" #'eshell-previous-matching-input-from-input
+    "C-l" #'+eshell/clear
+    "C-c" #'eshell-interrupt-process))
+
+;;;###autoload
+(defun +eshell/init-aliases-h ()
+  (dolist (var '(("s" "sudo")
+
+                 ("l" "ls -AF")
+                 ("alias" "ll ls -lF")
+                 ("alias" "la ls -lAF")
+
+                 ("alias" "g git")
+                 ("gs" "git status")
+                 ("alias" "gl git log")
+                 ("alias" "ga git add")
+                 ("alias" "gaa git add -A")
+                 ("alias" "gcam git commit -a m")
+                 ("alias" "gr git reset")
+                 ("alias" "grs git reset --soft HEAD~1")
+                 ("alias" "gp git push -u origin master")))
+    (add-to-list 'eshell-command-aliases-list var)))
+
+;;;###autoload
+(defun +eshell-clear ()
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -1405,178 +1571,7 @@ Taken entirely from Doom Emacs
    "f" #'(ess-eval-function :which-key "eval R function")
    "h" #'(ess-doc-map       :which-key "R help")))
 #+END_SRC
-** Markdown
-#+BEGIN_SRC emacs-lisp :results none
-(use-package pandoc-mode
-  :hook (markdown-mode . pandoc-mode)
-  :general
-  (:prefix "C-c"
-           "c" #'(pandoc-main-hydra/body :which-key "pandoc")))
-#+END_SRC
-* Functions
-** Miscellaneous
-#+BEGIN_SRC emacs-lisp :results none
-;;;###autoload
-(defun my/save-and-kill-buffer ()
-  (interactive)
-  (save-buffer)
-  (kill-this-buffer))
-
-;;;###autoload
-(defun my/split-line ()
-  (interactive)
-  (newline)
-  (indent-according-to-mode))
-
-;;;###autoload
-(defun my/comment-until-end-of-line () ;; TOOD fix
-  (interactive)
-  (my/split-line)
-  (evil-commentary-line)
-  (evil-previous-line 2)
-  (join-line))
-
-;;;###autoload
-(defun my/kill-window-and-buffer ()
-  (interactive)
-  (kill-this-buffer)
-  (evil-quit))
-
-;;;###autoload
-(defun my/append-semicolon()
-  (interactive)
-  (save-excursion
-    (call-interactively 'move-end-of-line)
-    (insert ";")))
-#+END_SRC
-** Format
-
-Entirely from Doom Emacs
-
-#+BEGIN_SRC emacs-lisp :results none
-;;;###autoload
-(defun +format--org-region (beg end)
-  "Reformat the region within BEG and END.
-    If nil, BEG and/or END will default to the boundaries of the src block at point."
-  (let ((element (org-element-at-point)))
-    (save-excursion
-      (let* ((block-beg (save-excursion
-                          (goto-char (org-babel-where-is-src-block-head element))
-                          (line-beginning-position 2)))
-             (block-end (save-excursion
-                          (goto-char (org-element-property :end element))
-                          (skip-chars-backward " \t\n")
-                          (line-beginning-position)))
-             (beg (if beg (max beg block-beg) block-beg))
-             (end (if end (min end block-end) block-end))
-             (lang (org-element-property :language element))
-             (major-mode (org-src-get-lang-mode lang)))
-        (if (eq major-mode 'org-mode)
-            (user-error "Cannot reformat an org src block in org-mode")
-          (+format/region beg end))))))
-
-;;;###autoload
-(defun +format/buffer ()
-  "Reformat the current buffer using LSP or `format-all-buffer'."
-  (interactive)
-  (if (and (eq major-mode 'org-mode)
-           (org-in-src-block-p t))
-      (+format--org-region nil nil)
-    (call-interactively
-     (cond ((and +format-with-lsp
-                 (bound-and-true-p lsp-mode)
-                 (lsp-feature? "textDocument/formatting"))
-            #'lsp-format-buffer)
-           (#'format-all-buffer)))))
-
-;;;###autoload
-(defun +format/region (beg end)
-  "Runs the active formatter on the lines within BEG and END.
-  WARNING: this may not work everywhere. It will throw errors if the region
-  contains a syntax error in isolation. It is mostly useful for formatting
-  snippets or single lines."
-  (interactive "rP")
-  (if (and (eq major-mode 'org-mode)
-           (org-in-src-block-p t))
-      (+format--org-region beg end)
-    (cond ((and +format-with-lsp
-                (bound-and-true-p lsp-mode)
-                (lsp-feature? "textDocument/rangeFormatting"))
-           (call-interactively #'lsp-format-region))
-          ((and +format-with-lsp
-                (bound-and-true-p eglot--managed-mode)
-                (eglot--server-capable :documentRangeFormattingProvider))
-           (call-interactively #'eglot-format))
-          ((save-restriction
-             (narrow-to-region beg end)
-             (let ((+format-region-p t))
-               (+format/buffer)))))))
-#+END_SRC
-** Mode specific
-*** Org
-#+BEGIN_SRC emacs-lisp :results none
-;;;###autoload
-(defun +org/tangle-config ()
-  (find-file config-org)
-  (org-babel-tangle-file config-org config-el))
-
-;;;###autoload
-(defun +org/insert-subheading ()
-  (interactive)
-  (evil-append-line 1)
-  (org-insert-subheading 1))
-
-;;;###autoload
-(defun +org/insert-heading-above ()
-  (interactive)
-  (evil-append-line 1)
-  (move-beginning-of-line nil)
-  (org-insert-heading))
-
-;;;###autoload
-(defun +org/insert-todo-above ()
-  (interactive)
-  (evil-append-line 1)
-  (move-beginning-of-line nil)
-  (org-insert-todo-heading 1))
-#+END_SRC
-*** Eshell
-#+BEGIN_SRC emacs-lisp :results none
-;;;###autoload
-(defun +eshell/init-keymaps ()
-  (general-def '(insert normal) eshell-mode-map
-    "C-j" #'eshell-next-matching-input-from-input
-    "C-k" #'eshell-previous-matching-input-from-input
-    "C-l" #'+eshell/clear
-    "C-c" #'eshell-interrupt-process))
-
-;;;###autoload
-(defun +eshell/init-aliases-h ()
-  (dolist (var '(("s" "sudo")
-
-                 ("l" "ls -AF")
-                 ("alias" "ll ls -lF")
-                 ("alias" "la ls -lAF")
-
-                 ("alias" "g git")
-                 ("gs" "git status")
-                 ("alias" "gl git log")
-                 ("alias" "ga git add")
-                 ("alias" "gaa git add -A")
-                 ("alias" "gcam git commit -a m")
-                 ("alias" "gr git reset")
-                 ("alias" "grs git reset --soft HEAD~1")
-                 ("alias" "gp git push -u origin master")))
-    (add-to-list 'eshell-command-aliases-list var)))
-
-;;;###autoload
-(defun +eshell-clear ()
-  (interactive)
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (eshell-send-input)))
-#+END_SRC
-*** ess-R
+*** Functions
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun +ess/company-mode ()
@@ -1586,4 +1581,12 @@ Entirely from Doom Emacs
           company-dabbrev-code
           company-files
           company-yasnippet))))
+#+END_SRC
+** Markdown
+#+BEGIN_SRC emacs-lisp :results none
+(use-package pandoc-mode
+  :hook (markdown-mode . pandoc-mode)
+  :general
+  (:prefix "C-c"
+           "c" #'(pandoc-main-hydra/body :which-key "pandoc")))
 #+END_SRC
