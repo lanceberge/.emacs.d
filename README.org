@@ -49,7 +49,7 @@
   - [[#mode-specific][Mode specific]]
     - [[#org-2][Org]]
     - [[#eshell][Eshell]]
-    - [[#ess-r][ESS-R]]
+    - [[#ess-r][ess-R]]
 
 * Early-Init
 
@@ -1034,11 +1034,11 @@ Taken entirely from Doom Emacs
 
   ('(normal insert) org-mode-map
    ;; TODOS with M-;, headlines with C-;, add shift to do those above
-   "C-M-;" #'my/org-insert-subheading
-   "C-:"   #'my/org-insert-heading-above
+   "C-M-;" #'+org/insert-subheading
+   "C-:"   #'+org/insert-heading-above
    "C-;"   #'evil-org-org-insert-heading-respect-content-below
    "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below
-   "M-:"   #'my/org-insert-todo-above)
+   "M-:"   #'+org/insert-todo-above)
   :config
   (setq org-fontify-done-headline t))
 #+END_SRC
@@ -1417,26 +1417,6 @@ Taken entirely from Doom Emacs
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
-(defun my/org-insert-subheading ()
-  (interactive)
-  (evil-append-line 1)
-  (org-insert-subheading 1))
-
-;;;###autoload
-(defun my/org-insert-heading-above ()
-  (interactive)
-  (evil-append-line 1)
-  (move-beginning-of-line nil)
-  (org-insert-heading))
-
-;;;###autoload
-(defun my/org-insert-todo-above ()
-  (interactive)
-  (evil-append-line 1)
-  (move-beginning-of-line nil)
-  (org-insert-todo-heading 1))
-
-;;;###autoload
 (defun my/save-and-kill-buffer ()
   (interactive)
   (save-buffer)
@@ -1455,13 +1435,6 @@ Taken entirely from Doom Emacs
   (evil-commentary-line)
   (evil-previous-line 2)
   (join-line))
-
-;;;###autoload
-(defun my/eshell-clear ()
-  (interactive)
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (eshell-send-input)))
 
 ;;;###autoload
 (defun my/kill-window-and-buffer ()
@@ -1546,6 +1519,26 @@ Entirely from Doom Emacs
 (defun +org/tangle-config ()
   (find-file config-org)
   (org-babel-tangle-file config-org config-el))
+
+;;;###autoload
+(defun +org/insert-subheading ()
+  (interactive)
+  (evil-append-line 1)
+  (org-insert-subheading 1))
+
+;;;###autoload
+(defun +org/insert-heading-above ()
+  (interactive)
+  (evil-append-line 1)
+  (move-beginning-of-line nil)
+  (org-insert-heading))
+
+;;;###autoload
+(defun +org/insert-todo-above ()
+  (interactive)
+  (evil-append-line 1)
+  (move-beginning-of-line nil)
+  (org-insert-todo-heading 1))
 #+END_SRC
 *** Eshell
 #+BEGIN_SRC emacs-lisp :results none
@@ -1554,7 +1547,7 @@ Entirely from Doom Emacs
   (general-def '(insert normal) eshell-mode-map
     "C-j" #'eshell-next-matching-input-from-input
     "C-k" #'eshell-previous-matching-input-from-input
-    "C-l" #'my/eshell-clear
+    "C-l" #'+eshell/clear
     "C-c" #'eshell-interrupt-process))
 
 ;;;###autoload
@@ -1575,8 +1568,15 @@ Entirely from Doom Emacs
                  ("alias" "grs git reset --soft HEAD~1")
                  ("alias" "gp git push -u origin master")))
     (add-to-list 'eshell-command-aliases-list var)))
+
+;;;###autoload
+(defun +eshell-clear ()
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
 #+END_SRC
-*** ESS-R
+*** ess-R
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun +ess/company-mode ()
