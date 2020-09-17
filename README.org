@@ -1205,7 +1205,7 @@ Entirely from Doom Emacs
 
 (use-package org-pomodoro
   :general
-  ("C-c p" #'org-pomodoro))
+  ('org-mode-map "C-c p" #'org-pomodoro))
 
 (use-package org-superstar
   :hook (org-mode . org-superstar-mode)
@@ -1550,8 +1550,7 @@ Entirely from Doom Emacs
 ** Statistics (R)
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ess
-  :hook ((ess-r-mode . +ess/company-mode)
-         (ess-r-mode . prog-mode)) ; ESS doesn't load prog-mode by default
+  :hook (ess-r-mode . +ess/company-mode)
   :general
   ('(normal insert) ess-mode-map
    "C-;" #'ess-eval-line
@@ -1584,6 +1583,6 @@ Entirely from Doom Emacs
 (use-package pandoc-mode
   :hook (markdown-mode . pandoc-mode)
   :general
-  (:prefix "C-c"
+  ('markdown-mode-map :prefix "C-c"
            "c" #'(pandoc-main-hydra/body :which-key "pandoc")))
 #+END_SRC
