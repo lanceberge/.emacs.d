@@ -1526,11 +1526,6 @@ Entirely from Doom Emacs
   :custom
   (tramp-autosave-directory    (expand-file-name "tramp/auto-save/" my/etc-dir))
   (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir)))
-
-(use-package exec-path-from-shell
-  :defer 0.3
-  :config
-  (exec-path-from-shell-initialize))
 #+END_SRC
 * Filetype Specific
 ** PDF
