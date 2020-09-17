@@ -553,103 +553,103 @@ Taken entirely from Doom Emacs
 #+END_SRC
 ** Functions
 *** Miscellaneous
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
    ;;;###autoload
-   (defun my/save-and-kill-buffer ()
-     (interactive)
-     (save-buffer)
-     (kill-this-buffer))
+(defun my/save-and-kill-buffer ()
+  (interactive)
+  (save-buffer)
+  (kill-this-buffer))
 
    ;;;###autoload
-   (defun my/split-line ()
-     (interactive)
-     (newline)
-     (indent-according-to-mode))
+(defun my/split-line ()
+  (interactive)
+  (newline)
+  (indent-according-to-mode))
 
    ;;;###autoload
-   (defun my/comment-until-end-of-line () ;; TOOD fix
-     (interactive)
-     (my/split-line)
-     (evil-commentary-line)
-     (evil-previous-line 2)
-     (join-line))
+(defun my/comment-until-end-of-line () ;; TOOD fix
+  (interactive)
+  (my/split-line)
+  (evil-commentary-line)
+  (evil-previous-line 2)
+  (join-line))
 
    ;;;###autoload
-   (defun my/kill-window-and-buffer ()
-     (interactive)
-     (kill-this-buffer)
-     (evil-quit))
+(defun my/kill-window-and-buffer ()
+  (interactive)
+  (kill-this-buffer)
+  (evil-quit))
 
    ;;;###autoload
-   (defun my/append-semicolon()
-     (interactive)
-     (save-excursion
-       (call-interactively 'move-end-of-line)
-       (insert ";")))
- #+END_SRC
+(defun my/append-semicolon()
+  (interactive)
+  (save-excursion
+    (call-interactively 'move-end-of-line)
+    (insert ";")))
+#+END_SRC
 *** Format
 
- Entirely from Doom Emacs
+Entirely from Doom Emacs
 
- #+BEGIN_SRC emacs-lisp :results none
+#+BEGIN_SRC emacs-lisp :results none
  ;;;###autoload
- (defun +format--org-region (beg end)
-   "Reformat the region within BEG and END.
+(defun +format--org-region (beg end)
+  "Reformat the region within BEG and END.
      If nil, BEG and/or END will default to the boundaries of the src block at point."
-   (let ((element (org-element-at-point)))
-     (save-excursion
-       (let* ((block-beg (save-excursion
-                           (goto-char (org-babel-where-is-src-block-head element))
-                           (line-beginning-position 2)))
-              (block-end (save-excursion
-                           (goto-char (org-element-property :end element))
-                           (skip-chars-backward " \t\n")
-                           (line-beginning-position)))
-              (beg (if beg (max beg block-beg) block-beg))
-              (end (if end (min end block-end) block-end))
-              (lang (org-element-property :language element))
-              (major-mode (org-src-get-lang-mode lang)))
-         (if (eq major-mode 'org-mode)
-             (user-error "Cannot reformat an org src block in org-mode")
-           (+format/region beg end))))))
+  (let ((element (org-element-at-point)))
+    (save-excursion
+      (let* ((block-beg (save-excursion
+                          (goto-char (org-babel-where-is-src-block-head element))
+                          (line-beginning-position 2)))
+             (block-end (save-excursion
+                          (goto-char (org-element-property :end element))
+                          (skip-chars-backward " \t\n")
+                          (line-beginning-position)))
+             (beg (if beg (max beg block-beg) block-beg))
+             (end (if end (min end block-end) block-end))
+             (lang (org-element-property :language element))
+             (major-mode (org-src-get-lang-mode lang)))
+        (if (eq major-mode 'org-mode)
+            (user-error "Cannot reformat an org src block in org-mode")
+          (+format/region beg end))))))
 
  ;;;###autoload
- (defun +format/buffer ()
-   "Reformat the current buffer using LSP or `format-all-buffer'."
-   (interactive)
-   (if (and (eq major-mode 'org-mode)
-            (org-in-src-block-p t))
-       (+format--org-region nil nil)
-     (call-interactively
-      (cond ((and +format-with-lsp
-                  (bound-and-true-p lsp-mode)
-                  (lsp-feature? "textDocument/formatting"))
-             #'lsp-format-buffer)
-            (#'format-all-buffer)))))
+(defun +format/buffer ()
+  "Reformat the current buffer using LSP or `format-all-buffer'."
+  (interactive)
+  (if (and (eq major-mode 'org-mode)
+           (org-in-src-block-p t))
+      (+format--org-region nil nil)
+    (call-interactively
+     (cond ((and +format-with-lsp
+                 (bound-and-true-p lsp-mode)
+                 (lsp-feature? "textDocument/formatting"))
+            #'lsp-format-buffer)
+           (#'format-all-buffer)))))
 
  ;;;###autoload
- (defun +format/region (beg end)
-   "Runs the active formatter on the lines within BEG and END.
+(defun +format/region (beg end)
+  "Runs the active formatter on the lines within BEG and END.
    WARNING: this may not work everywhere. It will throw errors if the region
    contains a syntax error in isolation. It is mostly useful for formatting
    snippets or single lines."
-   (interactive "rP")
-   (if (and (eq major-mode 'org-mode)
-            (org-in-src-block-p t))
-       (+format--org-region beg end)
-     (cond ((and +format-with-lsp
-                 (bound-and-true-p lsp-mode)
-                 (lsp-feature? "textDocument/rangeFormatting"))
-            (call-interactively #'lsp-format-region))
-           ((and +format-with-lsp
-                 (bound-and-true-p eglot--managed-mode)
-                 (eglot--server-capable :documentRangeFormattingProvider))
-            (call-interactively #'eglot-format))
-           ((save-restriction
-              (narrow-to-region beg end)
-              (let ((+format-region-p t))
-                (+format/buffer)))))))
- #+END_SRC
+  (interactive "rP")
+  (if (and (eq major-mode 'org-mode)
+           (org-in-src-block-p t))
+      (+format--org-region beg end)
+    (cond ((and +format-with-lsp
+                (bound-and-true-p lsp-mode)
+                (lsp-feature? "textDocument/rangeFormatting"))
+           (call-interactively #'lsp-format-region))
+          ((and +format-with-lsp
+                (bound-and-true-p eglot--managed-mode)
+                (eglot--server-capable :documentRangeFormattingProvider))
+           (call-interactively #'eglot-format))
+          ((save-restriction
+             (narrow-to-region beg end)
+             (let ((+format-region-p t))
+               (+format/buffer)))))))
+#+END_SRC
 * Evil Mode
 ** Evil
 #+BEGIN_SRC emacs-lisp :results none
@@ -1526,6 +1526,11 @@ Taken entirely from Doom Emacs
   :custom
   (tramp-autosave-directory    (expand-file-name "tramp/auto-save/" my/etc-dir))
   (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir)))
+
+(use-package exec-path-from-shell
+  :defer 0.3
+  :config
+  (exec-path-from-shell-initialize))
 #+END_SRC
 * Filetype Specific
 ** PDF
