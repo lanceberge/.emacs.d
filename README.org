@@ -554,33 +554,25 @@ Taken entirely from Doom Emacs
 ** Functions
 *** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
-   ;;;###autoload
+;;;###autoload
 (defun my/save-and-kill-buffer ()
   (interactive)
   (save-buffer)
   (kill-this-buffer))
 
-   ;;;###autoload
+;;;###autoload
 (defun my/split-line ()
   (interactive)
   (newline)
   (indent-according-to-mode))
 
-   ;;;###autoload
-(defun my/comment-until-end-of-line () ;; TOOD fix
-  (interactive)
-  (my/split-line)
-  (evil-commentary-line)
-  (evil-previous-line 2)
-  (join-line))
-
-   ;;;###autoload
+;;;###autoload
 (defun my/kill-window-and-buffer ()
   (interactive)
   (kill-this-buffer)
   (evil-quit))
 
-   ;;;###autoload
+;;;###autoload
 (defun my/append-semicolon()
   (interactive)
   (save-excursion
@@ -988,9 +980,9 @@ Entirely from Doom Emacs
   (projectile-project-search-path '("~/code/"))
   (projectile-cache-file (expand-file-name "projectile/cache.el" my/etc-dir))
   (projectile-known-projects-file (expand-file-name "projectile/known-projects.el" my/etc-dir))
-  :config
+  :general
   (my-leader-def
-    "p" #'(projectile-command-map :which-key "Projectile"))) ;; TODO bind these manually
+    "p" #'(projectile-command-map :which-key "Projectile")))
 
 (use-package counsel-projectile
   :defer 0.1
@@ -1028,14 +1020,13 @@ Entirely from Doom Emacs
   :hook (prog-mode . flycheck-mode)
   :custom
   (flycheck-display-errors-delay 0.25)
+  (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
   :general
   ('normal
    "[q" #'flycheck-previous-error
    "]q" #'flycheck-next-error)
   (my-leader-def
-    "fe" #'(flycheck-list-errors :which-key "list errors"))
-  :config
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+    "fe" #'(flycheck-list-errors :which-key "list errors")))
 #+END_SRC
 * UI
 #+BEGIN_SRC emacs-lisp :results none
@@ -1084,6 +1075,7 @@ Entirely from Doom Emacs
   (org-log-done 'time)
   (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
   (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
+  (org-fontify-done-headline t)
   (org-latex-packages-alist '(("margin=1in" "geometry" nil)))
   :custom-face
   ;; No unnecessary background highlighting
@@ -1139,8 +1131,8 @@ Entirely from Doom Emacs
    "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below
    "M-:"   #'+org/insert-todo-above)
   :config
-  (plist-put org-format-latex-options :scale 1.75) ; Larger inline org latex
-  (setq org-fontify-done-headline t))
+  (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
+
 #+END_SRC
 ** Org built-ins
 #+BEGIN_SRC emacs-lisp :results none
@@ -1298,12 +1290,12 @@ Entirely from Doom Emacs
 (use-package winner ; Undo and redo window configs
   :straight (:type built-in)
   :defer 0.3
-  :config
-  (winner-mode)
   :general
   ('evil-window-map
    "u" #'winner-undo
-   "r" #'winner-redo))
+   "r" #'winner-redo)
+  :config
+  (winner-mode))
 #+END_SRC
 * Editing
 ** Smartparens
@@ -1537,7 +1529,7 @@ Entirely from Doom Emacs
 (use-package pdf-tools
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :config
-  (pdf-tools-install :no-query)
+  (pdf-loader-install)
   (evil-collection-pdf-setup))
 #+END_SRC
 ** C family
