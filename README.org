@@ -828,6 +828,9 @@ Entirely from Doom Emacs
 ** Ivy
 #+BEGIN_SRC emacs-lisp :results none
 (use-package swiper
+  :custom
+  (swiper-use-visual-line nil)
+  (swiper-use-visual-line-p (lambda (a) nil))
   :general
   ('normal
    [remap evil-ex-search-forward]  #'swiper
@@ -930,17 +933,16 @@ Entirely from Doom Emacs
                       company-yasnippet))
   :general
   ('insert company-mode-map
+           "C-j" #'company-manual-begin
            [remap evil-complete-next] #'company-manual-begin) ; manual completion with C-n
-  :config
-  (global-company-mode)
-  (general-def 'company-active-map "TAB" nil) ; don't use tab to complete - buggy with company-yasnippet
+  ('company-active-map "TAB" nil) ; don't use tab to complete - buggy with company-yasnippet
 
-  (general-def 'company-active-map "C-w" nil ; don't override evil C-w
-    "C-j" #'company-select-next-or-abort
-    "C-k" #'company-select-previous-or-abort
-    "C-n" #'company-select-next-or-abort
-    "C-p" #'company-select-previous-or-abort
-    ";"   #'company-complete-selection)) ; choose a completion with ; instead of tab
+  ('company-active-map "C-w" nil ; don't override evil C-w
+                       "C-j" #'company-select-next-or-abort
+                       "C-k" #'company-select-previous-or-abort
+                       ";"   #'company-complete-selection) ; choose a completion with ; instead of tab
+  :config
+  (global-company-mode))
 
 (use-package company-flx ; fuzzy sorting for company completion options with company-capf
   :hook (company-mode . company-flx-mode))
@@ -1082,6 +1084,7 @@ Entirely from Doom Emacs
   (org-log-done 'time)
   (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
   (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
+  (org-latex-packages-alist '(("margin=1in" "geometry" nil)))
   :custom-face
   ;; No unnecessary background highlighting
   (org-block            ((t (:background "#282828"))))
@@ -1136,6 +1139,7 @@ Entirely from Doom Emacs
    "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below
    "M-:"   #'+org/insert-todo-above)
   :config
+  (plist-put org-format-latex-options :scale 1.75) ; Larger inline org latex
   (setq org-fontify-done-headline t))
 #+END_SRC
 ** Org built-ins
@@ -1540,12 +1544,27 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package cc-mode
   :straight (:type built-in)
+  :hook (c-mode-common . +cc/company-mode)
   :custom
   (c-basic-offset 4)
   (c-default-style "linux")
   :general
   ('c-mode-base-map
    "M-;" #'my/append-semicolon))
+#+END_SRC
+
+*** Functions
+#+BEGIN_SRC emacs-lisp :results none
+;;;###autoload
+(defun +cc/company-mode ()
+  (set (make-local-variable 'company-backends)
+       '((company-cmake
+          company-capf
+          company-clang
+          company-dabbrev-code
+          company-files
+          company-yasnippet
+          company-keywords))))
 #+END_SRC
 ** Statistics (R)
 #+BEGIN_SRC emacs-lisp :results none
@@ -1581,8 +1600,11 @@ Entirely from Doom Emacs
 ** Markdown
 #+BEGIN_SRC emacs-lisp :results none
 (use-package pandoc-mode
+  :diminish
   :hook (markdown-mode . pandoc-mode)
   :general
   ('markdown-mode-map :prefix "C-c"
-           "c" #'(pandoc-main-hydra/body :which-key "pandoc")))
+                      "c" #'(pandoc-main-hydra/body :which-key "pandoc"))
+
+  ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))
 #+END_SRC
