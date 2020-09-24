@@ -46,6 +46,7 @@
   - [[#c-family][C family]]
   - [[#statistics-r][Statistics (R)]]
   - [[#markdown][Markdown]]
+- [[#test][Test]]
 
 * Early-Init
 
@@ -1596,4 +1597,11 @@ Entirely from Doom Emacs
                       "c" #'(pandoc-main-hydra/body :which-key "pandoc"))
 
   ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))
+#+END_SRC
+* Test
+#+BEGIN_SRC emacs-lisp :results none
+(use-package exwm
+  :config
+  (require 'exwm-config)
+  (exwm-config-default))
 #+END_SRC
