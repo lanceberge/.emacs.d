@@ -227,7 +227,6 @@ Mostly taken from Doom Emacs
   (bidi-display-reordering 'left-to-right)
   (bidi-paragraph-direction 'left-to-right)
   (cursor-in-non-selected-windows nil)
-  (indent-tabs-mode nil)
 
   ;; Keeping ~/.emacs.d clean
   (my/etc-dir                  (expand-file-name "etc/" user-emacs-directory))
@@ -925,11 +924,10 @@ Entirely from Doom Emacs
                       company-yasnippet))
   :general
   ('insert company-mode-map
-           "C-j" #'company-manual-begin
-           [remap evil-complete-next] #'company-manual-begin) ; manual completion with C-n
-  ('company-active-map "TAB" nil) ; don't use tab to complete - buggy with company-yasnippet
+           "C-j" #'company-manual-begin)
 
   ('company-active-map "C-w" nil ; don't override evil C-w
+                       "TAB" nil ; don't use tab to complete - buggy with company-yasnippet
                        "C-j" #'company-select-next-or-abort
                        "C-k" #'company-select-previous-or-abort
                        ";"   #'company-complete-selection) ; choose a completion with ; instead of tab
@@ -976,7 +974,6 @@ Entirely from Doom Emacs
   :diminish
   :commands projectile-mode
   :custom
-  (projectile-auto-discover nil)
   (projectile-project-search-path '("~/code/"))
   (projectile-cache-file (expand-file-name "projectile/cache.el" my/etc-dir))
   (projectile-known-projects-file (expand-file-name "projectile/known-projects.el" my/etc-dir))
