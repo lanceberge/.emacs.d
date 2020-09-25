@@ -18,6 +18,7 @@
   - [[#evil-collection][Evil-Collection]]
   - [[#extra-operatorsmotion][Extra operators/motion]]
   - [[#miscellaneous][Miscellaneous]]
+- [[#exwm][EXWM]]
 - [[#completion][Completion]]
   - [[#ivy][Ivy]]
   - [[#yasnippet][Yasnippet]]
@@ -46,7 +47,6 @@
   - [[#c-family][C family]]
   - [[#statistics-r][Statistics (R)]]
   - [[#markdown][Markdown]]
-- [[#test][Test]]
 
 * Early-Init
 
@@ -815,6 +815,56 @@ Entirely from Doom Emacs
 
 (use-package goto-chg ; g; and g,
   :defer t)
+#+END_SRC
+* EXWM
+#+BEGIN_SRC emacs-lisp :results none
+  (use-package exwm
+    :config
+    ;; use emacs state as default for exwm; this allows my bindings
+    ;; in exwm-input-simulation-keys to not be overriden by evil bindings
+    (evil-set-initial-state 'exwm-mode 'emacs)
+    (require 'exwm-config)
+    (setq exwm-workspace-number 4)
+
+    ;; Make class name the buffer name, e.g. a firefox buffer will be named firefox
+    (add-hook 'exwm-update-class-hook
+              (lambda ()
+                (exwm-workspace-rename-buffer exwm-class-name)))
+
+    (add-hook 'exwm-manage-finish-hook (lambda () (call-interactively #'exwm-input-release-keyboard)))
+    (push ?\C-\s exwm-input-prefix-keys)
+    (push ?\C-, exwm-input-prefix-keys)
+
+    (exwm-input-set-key (kbd "s-i") #'exwm-input-release-keyboard) ; switch to char mode (application local bindings)
+    (exwm-input-set-key (kbd "s-[") #'exwm-reset)                  ; switch to line mode (global bindings)
+    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
+    (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move)
+
+    ;; open an application with s-;
+    (exwm-input-set-key (kbd "s-;") (lambda (command)
+                                             (interactive (list (read-shell-command "$ ")))
+                                             (start-process-shell-command command nil command)))
+
+    ;; bind s-{0-9} to that workspace
+    (dotimes (i 9)
+      (exwm-input-set-key (kbd (format "s-%d" i))
+                          `(lambda ()
+                             (interactive)
+                             (exwm-workspace-switch-create ,i))))
+
+    ;; Line-editing shortcuts
+    (setq exwm-input-simulation-keys
+          '(([?\C-b] . [left])
+            ([?\C-f] . [right])
+            ([?\C-p] . [up])
+            ([?\C-n] . [down])
+            ([?\C-a] . [home])
+            ([?\C-e] . [end])
+            ([?\M-v] . [prior])
+            ([?\C-v] . [next])
+            ([?\C-d] . [delete])
+            ([?\C-k] . [S-end delete])))
+    (exwm-enable))
 #+END_SRC
 * Completion
 ** Ivy
@@ -1597,11 +1647,4 @@ Entirely from Doom Emacs
                       "c" #'(pandoc-main-hydra/body :which-key "pandoc"))
 
   ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))
-#+END_SRC
-* Test
-#+BEGIN_SRC emacs-lisp :results none
-(use-package exwm
-  :config
-  (require 'exwm-config)
-  (exwm-config-default))
 #+END_SRC
