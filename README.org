@@ -19,6 +19,7 @@
   - [[#extra-operatorsmotion][Extra operators/motion]]
   - [[#miscellaneous][Miscellaneous]]
 - [[#exwm][EXWM]]
+  - [[#functions-1][Functions]]
 - [[#completion][Completion]]
   - [[#ivy][Ivy]]
   - [[#yasnippet][Yasnippet]]
@@ -31,7 +32,7 @@
   - [[#org-1][Org]]
   - [[#org-built-ins][Org built-ins]]
   - [[#non-built-ins][Non built-ins]]
-  - [[#functions-1][Functions]]
+  - [[#functions-2][Functions]]
 - [[#windows-buffers-directory-management][Windows, Buffers, Directory Management]]
   - [[#dired][Dired]]
   - [[#windows][Windows]]
@@ -860,13 +861,34 @@ Entirely from Doom Emacs
                         (start-process-shell-command command nil command)))
 
   ;; bind s-{0-9} to that workspace
-  (dotimes (i 9)
+  (dotimes (i 10)
     (exwm-input-set-key (kbd (format "s-%d" i))
                         `(lambda ()
                            (interactive)
                            (exwm-workspace-switch-create ,i))))
 
   (exwm-enable))
+
+#+END_SRC
+** Functions
+
+#+BEGIN_SRC emacs-lisp :results none
+;; taken from: https://github.com/tedroden/dot-files/blob/master/dot-emacs.el#L529
+(defun +exwm/goto-application (buffer-prefix &optional cmd)
+  (let ((existing-buffer
+         (cl-dolist (buffer (buffer-list))
+           (if (string-prefix-p buffer-prefix (buffer-name buffer))
+               (return buffer)))))
+    (if existing-buffer
+        ;; it's currently displayed, go to it
+        (if (get-buffer-window existing-buffer)
+            (message (format "%s" (pop-to-buffer existing-buffer)))
+          (exwm-workspace-switch-to-buffer existing-buffer))
+      (start-process-shell-command buffer-prefix nil cmd))))
+
+(defun +exwm/goto-firefox ()
+  (interactive)
+  (+exwm/goto-application "firefox" "/usr/bin/firefox"))
 #+END_SRC
 * Completion
 ** Ivy
