@@ -818,53 +818,53 @@ Entirely from Doom Emacs
 #+END_SRC
 * EXWM
 #+BEGIN_SRC emacs-lisp :results none
-  (use-package exwm
-    :config
-    ;; use emacs state as default for exwm; this allows my bindings
-    ;; in exwm-input-simulation-keys to not be overriden by evil bindings
-    (evil-set-initial-state 'exwm-mode 'emacs)
-    (require 'exwm-config)
-    (setq exwm-workspace-number 4)
+(use-package exwm
+  :config
+  ;; use emacs state as default for exwm; this allows my bindings
+  ;; in exwm-input-simulation-keys to not be overriden by evil bindings
+  (evil-set-initial-state 'exwm-mode 'emacs)
+  ;; (require 'exwm-config)
+  (setq exwm-workspace-number 4)
 
-    ;; Make class name the buffer name, e.g. a firefox buffer will be named firefox
-    (add-hook 'exwm-update-class-hook
-              (lambda ()
-                (exwm-workspace-rename-buffer exwm-class-name)))
+  ;; Make class name the buffer name, e.g. a firefox buffer will be named firefox
+  (add-hook 'exwm-update-class-hook
+            (lambda ()
+              (exwm-workspace-rename-buffer exwm-class-name)))
 
-    (add-hook 'exwm-manage-finish-hook (lambda () (call-interactively #'exwm-input-release-keyboard)))
-    (push ?\C-\s exwm-input-prefix-keys)
-    (push ?\C-, exwm-input-prefix-keys)
+  (add-hook 'exwm-manage-finish-hook (lambda () (call-interactively #'exwm-input-release-keyboard)))
+  (push ?\C-\s exwm-input-prefix-keys)
+  (push ?\C-, exwm-input-prefix-keys)
 
-    (exwm-input-set-key (kbd "s-i") #'exwm-input-release-keyboard) ; switch to char mode (application local bindings)
-    (exwm-input-set-key (kbd "s-[") #'exwm-reset)                  ; switch to line mode (global bindings)
-    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
-    (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move)
+  (exwm-input-set-key (kbd "s-i") #'exwm-input-release-keyboard) ; switch to char mode (application local bindings)
+  (exwm-input-set-key (kbd "s-[") #'exwm-reset)                  ; switch to line mode (global bindings)
+  (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
+  (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move)
 
-    ;; open an application with s-;
-    (exwm-input-set-key (kbd "s-;") (lambda (command)
-                                             (interactive (list (read-shell-command "$ ")))
-                                             (start-process-shell-command command nil command)))
+  ;; open an application with s-;
+  (exwm-input-set-key (kbd "s-;") (lambda (command)
+                                    (interactive (list (read-shell-command "$ ")))
+                                    (start-process-shell-command command nil command)))
 
-    ;; bind s-{0-9} to that workspace
-    (dotimes (i 9)
-      (exwm-input-set-key (kbd (format "s-%d" i))
-                          `(lambda ()
-                             (interactive)
-                             (exwm-workspace-switch-create ,i))))
+  ;; bind s-{0-9} to that workspace
+  (dotimes (i 9)
+    (exwm-input-set-key (kbd (format "s-%d" i))
+                        `(lambda ()
+                           (interactive)
+                           (exwm-workspace-switch-create ,i))))
 
-    ;; Line-editing shortcuts
-    (setq exwm-input-simulation-keys
-          '(([?\C-b] . [left])
-            ([?\C-f] . [right])
-            ([?\C-p] . [up])
-            ([?\C-n] . [down])
-            ([?\C-a] . [home])
-            ([?\C-e] . [end])
-            ([?\M-v] . [prior])
-            ([?\C-v] . [next])
-            ([?\C-d] . [delete])
-            ([?\C-k] . [S-end delete])))
-    (exwm-enable))
+  ;; Line-editing shortcuts
+  (setq exwm-input-simulation-keys
+        '(([?\C-b] . [left])
+          ([?\C-f] . [right])
+          ([?\C-p] . [up])
+          ([?\C-n] . [down])
+          ([?\C-a] . [home])
+          ([?\C-e] . [end])
+          ([?\M-v] . [prior])
+          ([?\C-v] . [next])
+          ([?\C-d] . [delete])
+          ([?\C-k] . [S-end delete])))
+  (exwm-enable))
 #+END_SRC
 * Completion
 ** Ivy
@@ -1323,11 +1323,15 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Windows
 #+BEGIN_SRC emacs-lisp :results none
-(use-package ace-window ; easily navigate windows with prefix M-o
+;; an alternative to ace-window. I use it because ace-widow counts exwm workspaces as windows,
+;; so I have to provide a key for the window even when there's only 2 windows
+(use-package switch-window
   :custom
-  (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
+  (switch-window-shortcut-style 'qwerty)
+  (switch-window-qwerty-shortcuts '("j" "k" "l" "s" "d" "h" "a"))
+  (switch-window-input-style 'minibuffer)
   :general
-  ("M-o" #'ace-window))
+  ("M-o" #'switch-window))
 
 (use-package golden-ratio
   :diminish
