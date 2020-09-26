@@ -42,6 +42,7 @@
 - [[#system][System]]
   - [[#vterm][vterm]]
   - [[#eshell][Eshell]]
+  - [[#tramp][Tramp]]
   - [[#miscellaneous-2][Miscellaneous]]
 - [[#filetype-specific][Filetype Specific]]
   - [[#pdf][PDF]]
@@ -819,56 +820,59 @@ Entirely from Doom Emacs
 #+END_SRC
 * EXWM
 #+BEGIN_SRC emacs-lisp :results none
-(use-package exwm
-  :custom
-  (exwm-workspace-number 4)
-  ;; Line-editing shortcuts
-  (exwm-input-simulation-keys
-   '(([?\C-b] . [left])
-     ([?\C-f] . [right])
-     ([?\C-p] . [up])
-     ([?\C-n] . [down])
-     ([?\C-a] . [home])
-     ([?\C-e] . [end])
-     ([?\M-v] . [prior])
-     ([?\C-v] . [next])
-     ([?\C-d] . [delete])
-     ([?\C-k] . [S-end delete])))
-  (exwm-input-prefix-keys ; let my C-SPC and C-, prefixes work in exwm mode
-   '(?\C-\s ?\C-,))
-  :config
-  ;; use emacs state as default for exwm; this allows my bindings
-  ;; in exwm-input-simulation-keys to not be overriden by evil bindings
-  (evil-set-initial-state 'exwm-mode 'emacs)
-  ;; (require 'exwm-config)
+(when IS-LINUX
+  (use-package exwm
+    :demand t
+    :custom
+    (exwm-workspace-number 4)
+    ;; Line-editing shortcuts
+    (exwm-input-simulation-keys
+     '(([?\C-b] . [left])
+       ([?\C-f] . [right])
+       ([?\C-p] . [up])
+       ([?\C-n] . [down])
+       ([?\C-a] . [home])
+       ([?\C-e] . [end])
+       ([?\M-v] . [prior])
+       ([?\C-v] . [next])
+       ([?\C-d] . [delete])
+       ([?\C-k] . [S-end delete])))
+    (exwm-input-prefix-keys ; let my C-SPC and C-, prefixes work in exwm mode
+     '(?\C-\s ?\C-,))
+    :general
+    ("s-f" #'+exwm/goto-firefox)
+    :config
+    ;; use emacs state as default for exwm; this allows my bindings
+    ;; in exwm-input-simulation-keys to not be overriden by evil bindings
+    (evil-set-initial-state 'exwm-mode 'emacs)
+    ;; (require 'exwm-config)
 
-  ;; Make class name the buffer name, e.g. a firefox buffer will be named firefox
-  (add-hook 'exwm-update-class-hook
-            (lambda ()
-              (exwm-workspace-rename-buffer exwm-class-name)))
+    ;; Make class name the buffer name, e.g. a firefox buffer will be named firefox
+    (add-hook 'exwm-update-class-hook
+              (lambda ()
+                (exwm-workspace-rename-buffer exwm-class-name)))
 
-  (add-hook 'exwm-manage-finish-hook (lambda () (call-interactively #'exwm-input-release-keyboard)))
+    (add-hook 'exwm-manage-finish-hook (lambda () (call-interactively #'exwm-input-release-keyboard)))
 
-  (exwm-input-set-key (kbd "s-i") #'exwm-input-release-keyboard) ; switch to char mode (application local bindings)
-  (exwm-input-set-key (kbd "s-[") #'exwm-reset)                  ; switch to line mode (global bindings)
-  (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
-  (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move)
+    (exwm-input-set-key (kbd "s-i") #'exwm-input-release-keyboard) ; switch to char mode (application local bindings)
+    (exwm-input-set-key (kbd "s-[") #'exwm-reset)                  ; switch to line mode (global bindings)
+    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
+    (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move)
 
-  ;; open an application with s-;
-  (exwm-input-set-key (kbd "s-;")
-                      (lambda (command)
-                        (interactive (list (read-shell-command "$ ")))
-                        (start-process-shell-command command nil command)))
+    ;; open an application with s-;
+    (exwm-input-set-key (kbd "s-;")
+                        (lambda (command)
+                          (interactive (list (read-shell-command "$ ")))
+                          (start-process-shell-command command nil command)))
 
-  ;; bind s-{0-9} to that workspace
-  (dotimes (i 10)
-    (exwm-input-set-key (kbd (format "s-%d" i))
-                        `(lambda ()
-                           (interactive)
-                           (exwm-workspace-switch-create ,i))))
+    ;; bind s-{0-9} to that workspace
+    (dotimes (i 10)
+      (exwm-input-set-key (kbd (format "s-%d" i))
+                          `(lambda ()
+                             (interactive)
+                             (exwm-workspace-switch-create ,i))))
 
-  (exwm-enable))
-
+    (exwm-enable)))
 #+END_SRC
 ** Functions
 
@@ -1538,6 +1542,34 @@ Entirely from Doom Emacs
     (erase-buffer)
     (eshell-send-input)))
 #+END_SRC
+** Tramp
+#+BEGIN_SRC emacs-lisp :results none
+(use-package tramp
+  :straight (:type built-in)
+  :general
+  (my-localleader-def
+    "s"  '(:ignore t            :which-key "ssh")
+    "sr" #'(+tramp/ssh-rlogin   :which-key "rlogin")
+    "sc" #'(+tramp/ssh-cascades :which-key "cascades"))
+  :custom
+  (tramp-autosave-directory    (expand-file-name "tramp/auto-save/" my/etc-dir))
+  (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir)))
+#+END_SRC
+*** Functions
+#+BEGIN_SRC emacs-lisp :results none
+;;;###autoload
+(defun +tramp/ssh-rlogin ()
+  (interactive)
+  (find-file "/sshx:lancebergeron@rlogin.cs.vt.edu:~/"))
+
+;;;###autoload
+(defun +tramp/ssh-cascades ()
+  (interactive)
+  (find-file "/sshx:lancebergeron@cascades1.arc.vt.edu:~/"))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp :results none
+
+#+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package restart-emacs
@@ -1591,13 +1623,6 @@ Entirely from Doom Emacs
   (dumb-jump-prefer-searcher 'rg)
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-
-(use-package tramp
-  :straight (:type built-in)
-  :defer t
-  :custom
-  (tramp-autosave-directory    (expand-file-name "tramp/auto-save/" my/etc-dir))
-  (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir)))
 #+END_SRC
 * Filetype Specific
 ** PDF
