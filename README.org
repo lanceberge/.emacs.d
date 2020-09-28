@@ -726,7 +726,7 @@ Entirely from Doom Emacs
   (evil-snipe-skip-leading-whitespace nil)
   :general
   ('motion evil-snipe-override-local-mode-map
-    "," nil) ; don't override , prefix
+           "," nil) ; don't override , prefix
   ('motion
    ":"   #'evil-snipe-repeat
    "M-," #'evil-snipe-repeat-reverse))
@@ -815,9 +815,6 @@ Entirely from Doom Emacs
 (use-package evil-mc ; multiple cursors
   :diminish
   :hook ((prog-mode text-mode) . evil-mc-mode))
-
-(use-package goto-chg ; g; and g,
-  :defer t)
 #+END_SRC
 * EXWM
 #+BEGIN_SRC emacs-lisp :results none
@@ -1134,7 +1131,11 @@ Entirely from Doom Emacs
   (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
   (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
   (org-fontify-done-headline t)
-  (org-latex-packages-alist '(("margin=1in" "geometry" nil)))
+  ;; (org-latex-listings 'minted)
+  ;; (org-latex-pdf-process
+  ;;   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+  ;;     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  (org-latex-packages-alist '(("margin=1in" "geometry" "minted" nil)))
   :custom-face
   ;; No unnecessary background highlighting
   (org-block            ((t (:background "#282828"))))
@@ -1256,10 +1257,6 @@ Entirely from Doom Emacs
   :general
   ('override :prefix "C-c"
              ",d" #'org-drill))
-
-(use-package org-pomodoro
-  :general
-  ('org-mode-map "C-c p" #'org-pomodoro))
 
 (use-package org-superstar
   :hook (org-mode . org-superstar-mode)
@@ -1417,10 +1414,6 @@ Entirely from Doom Emacs
 
 ;;   ("p" sp-add-to-previous-sexp "add to previous pair")
 ;;   ("n" sp-add-to-next-sexp "add to next pair")))
-
-(use-package evil-smartparens ; Make evil commands preserve balance of parentheses
-  :hook (prog-mode . evil-smartparens-mode)
-  :diminish)
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -1586,6 +1579,7 @@ Entirely from Doom Emacs
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
 (use-package keyfreq
+  :hook (pre-command . keyfreq-mode)
   :custom
   (keyfreq-excluded-commands
    '(org-self-insert-command
@@ -1594,7 +1588,6 @@ Entirely from Doom Emacs
   (my-leader-def
     "fc" #'(keyfreq-show :which-key "show command frequency"))
   :config
-  (keyfreq-mode 1)
   (keyfreq-autosave-mode 1))
 
 (use-package dumb-jump
