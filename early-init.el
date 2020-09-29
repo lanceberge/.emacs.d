@@ -88,7 +88,7 @@
                 mode-line-misc-info
                 mode-line-end-spaces))
 
-
+;; Background faces
 (custom-set-faces '(mode-line ((t (:background "#282828" :foreground "#928374"))))
                   '(mode-line-inactive ((t (:background "#282828"))))
                   '(mode-line-buffer-id ((t (:bold t)))))

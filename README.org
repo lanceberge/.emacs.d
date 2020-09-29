@@ -149,7 +149,7 @@ Tangles to early-init.el
                 mode-line-misc-info
                 mode-line-end-spaces))
 
-
+;; Background faces
 (custom-set-faces '(mode-line ((t (:background "#282828" :foreground "#928374"))))
                   '(mode-line-inactive ((t (:background "#282828"))))
                   '(mode-line-buffer-id ((t (:bold t)))))
@@ -585,7 +585,7 @@ Taken entirely from Doom Emacs
 Entirely from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
- ;;;###autoload
+;;;###autoload
 (defun +format--org-region (beg end)
   "Reformat the region within BEG and END.
      If nil, BEG and/or END will default to the boundaries of the src block at point."
@@ -606,7 +606,7 @@ Entirely from Doom Emacs
             (user-error "Cannot reformat an org src block in org-mode")
           (+format/region beg end))))))
 
- ;;;###autoload
+;;;###autoload
 (defun +format/buffer ()
   "Reformat the current buffer using LSP or `format-all-buffer'."
   (interactive)
@@ -620,7 +620,7 @@ Entirely from Doom Emacs
             #'lsp-format-buffer)
            (#'format-all-buffer)))))
 
- ;;;###autoload
+;;;###autoload
 (defun +format/region (beg end)
   "Runs the active formatter on the lines within BEG and END.
    WARNING: this may not work everywhere. It will throw errors if the region
@@ -663,7 +663,7 @@ Entirely from Doom Emacs
   (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
   :general
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
-   [remap evil-next-line] #'evil-next-visual-line
+   [remap evil-next-line]     #'evil-next-visual-line
    [remap evil-previous-line] #'evil-previous-visual-line)
 
   ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
@@ -691,9 +691,9 @@ Entirely from Doom Emacs
     "bl" #'(evil-switch-to-windows-last-buffer :which-key "last buffer"))
 
   ('evil-window-map
-   "d" #'evil-quit ; delete window
-   "q" #'evil-save-modified-and-close ; quit and save window
-   "SPC q" '(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
+   "d"     #'evil-quit ; delete window
+   "q"     #'evil-save-modified-and-close ; quit and save window
+   "SPC q" #'(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
 
   ('(normal insert)
    "C-l" #'evil-ex-nohighlight)
@@ -919,15 +919,21 @@ Entirely from Doom Emacs
   (counsel-describe-variable-function #'helpful-variable)
   :general
   (my-leader-def
-    "."   #'(counsel-find-file :which-key "find file")
-    "SPC" #'(ivy-switch-buffer :which-key "switch buffer")
-    "fr"  #'(counsel-recentf   :which-key "find recent files")
-    "fi"  #'(counsel-imenu     :which-key "imenu")
-    "fg"  #'(counsel-git       :which-key "git files")
-    "fG"  #'(counsel-git-grep  :which-key "git grep")
-    "ff"  #'(counsel-rg        :which-key "ripgrep"))
+    "."       #'(counsel-find-file :which-key "find file")
+    "SPC"     #'(ivy-switch-buffer :which-key "switch buffer")
+    "fr"      #'(counsel-recentf   :which-key "find recent files")
+    "fi"      #'(counsel-imenu     :which-key "imenu")
+    "fg"      #'(counsel-git       :which-key "git files")
+    "f SPC g" #'(counsel-git-grep  :which-key "git grep")
+    "ff"      #'(counsel-file-jump :which-key "fzf")
+    "fd"      #'(counsel-dired     :which-key "directory")
+    "f SPC f" #'(counsel-rg        :which-key "ripgrep"))
   (my-localleader-def
     "x" #'(counsel-M-x :which-key "M-x"))
+
+  ('(normal insert) org-mode-map
+   :prefix "C-c"
+   "f"  #'(counsel-org-goto-all :which-key "find org headline"))
   :config
   (counsel-mode))
 
@@ -1120,17 +1126,21 @@ Entirely from Doom Emacs
             org-footnote org-macro ob org org-clock org-agenda
             org-capture evil-org)
   :custom
+  ;; Directories
   (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
   (org-agenda-files '("~/org"))
   (org-directory "~/org")
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
-  (org-confirm-babel-evaluate nil)
+
+  ;; General settings
   (org-startup-folded t)
+  (org-fontify-done-headline t)
   (org-M-RET-may-split-line nil)
   (org-log-done 'time)
   (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
   (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
-  (org-fontify-done-headline t)
+
+  ;; Latex exports
   ;; (org-latex-listings 'minted)
   ;; (org-latex-pdf-process
   ;;   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
@@ -1156,10 +1166,7 @@ Entirely from Doom Emacs
    "s"  #'(org-sort             :which-key "sort")
    ",s" #'(org-schedule         :which-key "schedule")
    "d"  #'(org-deadline         :which-key "deadline")
-   "e"  #'(org-export-dispatch  :which-key "export")
-   "q"  #'(org-set-tags-command :which-key "add tags")
-   "b"  #'(org-babel-tangle     :which-key "tangle file")
-   "f"  #'(counsel-org-goto-all :which-key "find org headline"))
+   "q"  #'(org-set-tags-command :which-key "add tags"))
 
   ('normal org-mode-map
            "RET" #'org-open-at-point)
@@ -1210,6 +1217,23 @@ Entirely from Doom Emacs
   :diminish
   :custom
   (org-src-window-setup 'current-window))
+
+(use-package ob
+  :straight (:type built-in)
+  :defer t
+  :custom
+  (org-confirm-babel-evaluate nil)
+  :general
+  ('(normal insert) org-mode-map
+   :prefix "C-c"
+   "b"  #'(org-babel-tangle :which-key "tangle file")))
+
+(use-package ox
+  :straight (:type built-in)
+  :general
+  ('(normal insert) org-mode-map
+   :prefix "C-c"
+   "e" #'(org-export-dispatch :which-key "export")))
 
 (use-package org-capture
   :straight (:type built-in)
@@ -1319,8 +1343,6 @@ Entirely from Doom Emacs
   :general
   ('normal
    "-"  #'(dired-jump :which-key "open dired"))
-  (my-leader-def
-    "fd" #'(dired      :which-key "navigate to a directory"))
   :config
   (evil-collection-init 'dired))
 
@@ -1386,34 +1408,6 @@ Entirely from Doom Emacs
   (smartparens-global-mode)
   (require 'smartparens-config) ; config for many languages
   (sp-local-pair 'org-mode "'" nil :actions nil)) ; don't pair ' in elisp mode
-
-;; (defhydra hydra-smartparens () ; TODO delete and remap these for normal mode
-;;   ;; Movement
-;;   ("l" sp-forward-sexp "next pair")
-;;   ("h" sp-backward-sexp "previous pair")
-;;   ("j" sp-down-sexp "down")
-;;   ("J" sp-backward-down-sexp "backward down")
-;;   ("k" sp-up-sexp "up")
-;;   ("K" sp-backward-up-sexp "up")
-;;   ("n" sp-next-sexp "next")
-;;   ("p" sp-previous-sexp "previous")
-
-;;   ("H" sp-beginning-of-sexp "beginning")
-;;   ("L" sp-end-of-sexp "end")
-;;   ("d" sp-delete-sexp "delete")
-;;   ("D" sp-kill-whole-line "delete line")
-;;   ("t" sp-transpose-sexp "transpose")
-
-;;   ("s" sp-forward-slurp-sexp "slurp")
-;;   ("S" sp-backward-slurp-sexp "backward slurp")
-;;   ("b" sp-forward-barf-sexp "barf")
-;;   ("B" sp-backward-barf-sexp "backward barf")
-
-;;   ("v" sp-split-sexp "split pair")
-;;   ("u" sp-join-sexp "join pair")
-
-;;   ("p" sp-add-to-previous-sexp "add to previous pair")
-;;   ("n" sp-add-to-next-sexp "add to next pair")))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -1457,19 +1451,17 @@ Entirely from Doom Emacs
   (vterm-kill-buffer-on-exit t)
   :general
   (my-leader-def
-    "o"   '(:ignore t          :which-key "Open")
+    "o"    '(:ignore t          :which-key "Open")
     "ot"  #'(vterm              :which-key "open vterm")
     "ovt" #'(vterm-other-window :which-key "open vterm in vsplit")))
-
-
 #+END_SRC
 ** Eshell
 #+BEGIN_SRC emacs-lisp :results none
 (use-package eshell
   :straight (:type built-in)
-  :hook ((eshell-mode . smartparens-mode)
+  :hook ((eshell-mode            . smartparens-mode)
          (eshell-first-time-mode . +eshell/init-keymaps)
-         (eshell-post-command . +eshell/init-aliases-h))
+         (eshell-post-command    . +eshell/init-aliases-h))
   :custom
   (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
   :general
@@ -1486,8 +1478,8 @@ Entirely from Doom Emacs
 ;;;###autoload
 (defun +eshell/init-keymaps ()
   (general-def '(insert normal) eshell-mode-map
-    "C-j" #'eshell-next-matching-input-from-input
-    "C-k" #'eshell-previous-matching-input-from-input
+    "C-n" #'eshell-next-matching-input-from-input
+    "C-p" #'eshell-previous-matching-input-from-input
     "C-l" #'+eshell/clear
     "C-c" #'eshell-interrupt-process))
 
@@ -1496,18 +1488,18 @@ Entirely from Doom Emacs
   (dolist (var '(("s" "sudo")
 
                  ("l" "ls -AF")
-                 ("alias" "ll ls -lF")
-                 ("alias" "la ls -lAF")
+                 ("ll" "ls -lF")
+                 ("la" "ls -lAF")
 
-                 ("alias" "g git")
+                 ("g" "git")
                  ("gs" "git status")
-                 ("alias" "gl git log")
-                 ("alias" "ga git add")
-                 ("alias" "gaa git add -A")
-                 ("alias" "gcam git commit -a m")
-                 ("alias" "gr git reset")
-                 ("alias" "grs git reset --soft HEAD~1")
-                 ("alias" "gp git push -u origin master")))
+                 ("gl" "git log")
+                 ("ga" "git add")
+                 ("gaa" "git add -A")
+                 ("gcam" "git commit -a m")
+                 ("gr" "git reset")
+                 ("grs" "git reset --soft HEAD~1")
+                 ("gp" "git push -u origin master")))
     (add-to-list 'eshell-command-aliases-list var)))
 
 ;;;###autoload
@@ -1542,15 +1534,12 @@ Entirely from Doom Emacs
   (interactive)
   (find-file "/sshx:lancebergeron@cascades1.arc.vt.edu:~/"))
 #+END_SRC
-#+BEGIN_SRC emacs-lisp :results none
-
-#+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package restart-emacs
   :general
   (my-leader-def
-    "e"  '(:ignore t     :which-key "Emacs Commands")
+    "e"        '(:ignore t     :which-key "Emacs Commands")
     "e SPC r" #'(restart-emacs :which-key "restart emacs"))
   :custom
   (restart-emacs-restore-frames t)) ; Restore frames on restart
@@ -1671,8 +1660,9 @@ Entirely from Doom Emacs
   :diminish
   :hook (markdown-mode . pandoc-mode)
   :general
-  ('markdown-mode-map :prefix "C-c"
-                      "c" #'(pandoc-main-hydra/body :which-key "pandoc"))
+  ('markdown-mode-map
+   :prefix "C-c"
+   "c" #'(pandoc-main-hydra/body :which-key "pandoc"))
 
   ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))
 #+END_SRC
