@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: org-mode R src block
+# key: sr
+# --
+#+BEGIN_SRC R
+$0
+#+END_SRC
