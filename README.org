@@ -1193,9 +1193,28 @@ Entirely from Doom Emacs
    ;; TODOS with M-;, headlines with C-;, add shift to do those above
    "C-M-;" #'+org/insert-subheading
    "C-:"   #'+org/insert-heading-above
-   "C-;"   #'evil-org-org-insert-heading-respect-content-below
-   "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below
-   "M-:"   #'+org/insert-todo-above)
+   "M-:"   #'+org/insert-todo-above
+
+   ;; Vim keys > arrow keys
+   "M-h"   #'org-metaleft
+   "M-l"   #'org-metaright
+   "M-k"   #'org-metaup
+   "M-j"   #'org-metadown
+
+   "M-H"   #'org-shiftleft
+   "M-L"   #'org-shiftright
+   "M-K"   #'org-shiftup
+   "M-J"   #'org-shiftdown
+
+   "C-M-h" #'org-shiftmetaleft
+   "C-M-l" #'org-shiftmetaright
+   "C-M-k" #'org-shiftmetaup
+   "C-M-j" #'org-shiftmetadown
+
+   "C-S-h" #'org-shiftcontrolleft
+   "C-S-l" #'org-shiftcontrolright
+   "C-S-k" #'org-shiftcontrolup
+   "C-S-j" #'org-shiftcontroldown)
   :config
   (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 
@@ -1292,18 +1311,17 @@ Entirely from Doom Emacs
 
 (use-package evil-org
   :diminish
-  :hook (org-mode . evil-org-mode)
+  :after org
   :general
-  ('(normal insert) evil-org-mode-map
-   ;; Vim keys > arrow keys
-   "M-h"   #'org-metaleft
-   "M-l"   #'org-metaright
-   "M-j"   #'org-metadown
-   "M-k"   #'org-metaup
-   "M-L"   #'org-shiftright
-   "M-H"   #'org-shiftleft
-   "M-J"   #'org-shiftdown
-   "M-K"   #'org-shiftup))
+  ;; bind evil-org manually rather than using evil-org-mode, which has some
+  ;; conflicting bindings for my preferences
+  ('normal org-mode-map
+           "o" #'evil-org-open-below
+           "O" #'evil-org-open-above)
+
+  ('(normal insert) org-mode-map
+   "C-;"   #'evil-org-org-insert-heading-respect-content-below
+   "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below))
 #+END_SRC
 ** Functions
 #+BEGIN_SRC emacs-lisp :results none
@@ -1662,7 +1680,7 @@ Entirely from Doom Emacs
   :general
   ('markdown-mode-map
    :prefix "C-c"
-   "c" #'(pandoc-main-hydra/body :which-key "pandoc"))
+   "e" #'(pandoc-main-hydra/body :which-key "pandoc"))
 
   ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))
 #+END_SRC
