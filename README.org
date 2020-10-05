@@ -390,11 +390,14 @@ Taken entirely from Doom Emacs
     "f"   '(:ignore t                    :which-key "Find")
     "fm" #'(general-describe-keybindings :which-key "list keybindings")))
 
-(use-package diminish
-  :defer t)
+(use-package minions ; hide all minor modes in modeline
+  :custom
+  (minions-mode-line-lighter "")
+  (minions-mode-line-delimiters '("( " . ")"))
+  :config
+  (minions-mode 1))
 
 (use-package which-key ; show keybindings following when a prefix is pressed
-  :diminish
   :hook (pre-command . which-key-mode)
   :general
   (my-leader-def
@@ -417,8 +420,7 @@ Taken entirely from Doom Emacs
   (idle-update-delay 1.0) ; slow down how often emacs updates its ui
   (kill-do-not-save-duplicates t) ; no duplicates in kill ring
   :config
-  (global-visual-line-mode 1) ; makes wrapped lines easlier to work with
-  (diminish 'visual-line-mode))
+  (global-visual-line-mode 1)) ; makes wrapped lines easlier to work with
 
 (use-package advice
   :straight (:type built-in)
@@ -446,8 +448,7 @@ Taken entirely from Doom Emacs
 
 (use-package eldoc
   :straight (:type built-in)
-  :defer t
-  :diminish)
+  :defer t)
 
 (use-package savehist
   :straight (:type built-in)
@@ -471,14 +472,12 @@ Taken entirely from Doom Emacs
 (when IS-LINUX
   (use-package flyspell
     :straight (:type built-in)
-    :diminish
     :hook ((text-mode . flyspell-mode)
            (prog-mode . flyspell-prog-mode))))
 
 (use-package eldoc
   :straight (:type built-in)
-  :defer t
-  :diminish)
+  :defer t)
 
 (use-package bookmark
   :straight (:type built-in)
@@ -648,7 +647,6 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil ; vim bindings in emacs
   :demand t
-  :diminish
   :commands
   (evil-quit
    evil-save-modified-and-close)
@@ -698,8 +696,7 @@ Entirely from Doom Emacs
   ('(normal insert)
    "C-l" #'evil-ex-nohighlight)
   :config
-  (evil-mode)
-  (diminish 'defining-kbd-macro)) ; don't add DEF in modeline when writing a macro TODO change to :diminish
+  (evil-mode))
 #+END_SRC
 ** Evil-Collection
 #+BEGIN_SRC emacs-lisp :results none
@@ -718,7 +715,6 @@ Entirely from Doom Emacs
 ** Extra operators/motion
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
-  :diminish evil-snipe-local-mode
   :hook ((pre-command . evil-snipe-override-mode)
          (pre-command . evil-snipe-mode))
   :custom
@@ -732,11 +728,9 @@ Entirely from Doom Emacs
    "M-," #'evil-snipe-repeat-reverse))
 
 (use-package evil-surround ; s as an operator for surrounding
-  :diminish
   :hook ((prog-mode text-mode) . evil-surround-mode))
 
 (use-package evil-commentary ; gc as an operator to comment
-  :diminish
   :hook ((prog-mode org-mode) . evil-commentary-mode))
 
 (use-package evil-numbers ; increment/decrement numbers
@@ -747,11 +741,9 @@ Entirely from Doom Emacs
     "nd" #'(evil-numbers/dec-at-pt :which-key "decrement")))
 
 (use-package evil-lion ; gl as an operator to left-align, gL to right-align
-  :diminish
   :hook ((prog-mode text-mode) . evil-lion-mode))
 
 (use-package evil-matchit ; navigate matching blocks of code with %
-  :diminish
   :hook ((prog-mode text-mode) . evil-matchit-mode)
   :general
   ('motion
@@ -764,7 +756,6 @@ Entirely from Doom Emacs
    "gX" #'evil-exchange-cancel))
 
 (use-package evil-owl
-  :diminish
   :hook ((prog-mode text-mode) . evil-owl-mode))
 
 (use-package evil-textobj-anyblock
@@ -792,7 +783,6 @@ Entirely from Doom Emacs
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil-escape ; jk to leave insert mode
-  :diminish
   :hook (pre-command . evil-escape-mode)
   :custom
   (evil-escape-key-sequence "jk")
@@ -801,7 +791,6 @@ Entirely from Doom Emacs
   (evil-escape-excluded-states '(normal visual emacs)))
 
 (use-package origami ; code folding
-  :diminish
   :hook (prog-mode . origami-mode)
   :general
   ('normal origami-mode
@@ -813,7 +802,6 @@ Entirely from Doom Emacs
            "zr" #'origami-open-all-nodes))
 
 (use-package evil-mc ; multiple cursors
-  :diminish
   :hook ((prog-mode text-mode) . evil-mc-mode))
 #+END_SRC
 * EXWM
@@ -889,7 +877,6 @@ Entirely from Doom Emacs
     "fB" #'(swiper-all   :which-key "swiper in all buffers")))
 
 (use-package ivy ; narrowing framework
-  :diminish
   :hook (pre-command . ivy-mode)
   :general
   ('(normal insert) ivy-minibuffer-map
@@ -913,7 +900,6 @@ Entirely from Doom Emacs
   (evil-collection-init 'ivy))
 
 (use-package counsel ; ivy support for many functions
-  :diminish
   :custom
   (counsel-describe-function-function #'helpful-callable)
   (counsel-describe-variable-function #'helpful-variable)
@@ -949,7 +935,6 @@ Entirely from Doom Emacs
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp :results none
 (use-package yasnippet ; snippets
-  :diminish yas-minor-mode
   :defer 0.2
   :defer-incrementally (eldoc easymenu help-mode)
   :general
@@ -973,7 +958,6 @@ Entirely from Doom Emacs
 ** Company
 #+BEGIN_SRC emacs-lisp :results none
 (use-package company ; autocomplete
-  :diminish
   :defer 0.1
   :custom
   (company-idle-delay nil) ; manual completion only
@@ -1035,7 +1019,6 @@ Entirely from Doom Emacs
 * Project Management
 #+BEGIN_SRC emacs-lisp :results none
 (use-package projectile ; project management
-  :diminish
   :commands projectile-mode
   :custom
   (projectile-project-search-path '("~/code/"))
@@ -1047,14 +1030,12 @@ Entirely from Doom Emacs
 
 (use-package counsel-projectile
   :defer 0.1
-  :diminish
   :config
   (counsel-projectile-mode))
 #+END_SRC
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
 (use-package lsp-mode ; LSP
-  :diminish
   :hook (prog-mode . lsp-mode)
   :custom
   ;; Disable slow features
@@ -1077,7 +1058,6 @@ Entirely from Doom Emacs
   :after (lsp-mode))
 
 (use-package flycheck ; linting
-  :diminish
   :hook (prog-mode . flycheck-mode)
   :custom
   (flycheck-display-errors-delay 0.25)
@@ -1092,7 +1072,6 @@ Entirely from Doom Emacs
 * UI
 #+BEGIN_SRC emacs-lisp :results none
 (use-package rainbow-delimiters
-  :diminish
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package highlight-numbers
@@ -1102,7 +1081,6 @@ Entirely from Doom Emacs
   :hook (prog-mode . hl-todo-mode))
 
 (use-package highlight-symbol ; highlight the symbol under point
-  :diminish
   :hook (prog-mode . highlight-symbol-mode))
 
 (use-package highlight-escape-sequences
@@ -1233,7 +1211,6 @@ Entirely from Doom Emacs
 (use-package org-src
   :straight (:type built-in)
   :defer t
-  :diminish
   :custom
   (org-src-window-setup 'current-window))
 
@@ -1310,7 +1287,6 @@ Entirely from Doom Emacs
   :hook ((org-mode markdown-mode) . toc-org-mode))
 
 (use-package evil-org
-  :diminish
   :after org
   :general
   ;; bind evil-org manually rather than using evil-org-mode, which has some
@@ -1381,7 +1357,6 @@ Entirely from Doom Emacs
   ("M-o" #'switch-window))
 
 (use-package golden-ratio
-  :diminish
   :hook (window-setup . golden-ratio-mode)
   :custom
   (golden-ratio-auto-scale t))
@@ -1400,8 +1375,9 @@ Entirely from Doom Emacs
 ** Smartparens
 #+BEGIN_SRC emacs-lisp :results none
 (use-package smartparens
-  :diminish
   :defer 0.3
+  ;; enable smartparens in ivy-mode
+  :hook (ivy-mode . smartparens-mode)
   :custom
   (sp-highlight-pair-overlay nil)
   (sp-highlight-wrap-overlay nil)
@@ -1430,7 +1406,6 @@ Entirely from Doom Emacs
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package undo-tree ; Persistent Undos
-  :diminish
   :custom
   (undo-limit 10000)
   (undo-tree-auto-save-history t)
@@ -1517,7 +1492,9 @@ Entirely from Doom Emacs
                  ("gcam" "git commit -a m")
                  ("gr" "git reset")
                  ("grs" "git reset --soft HEAD~1")
-                 ("gp" "git push -u origin master")))
+
+                 ("gp" "git push -u origin master")
+                 ("gF" "git pull")))
     (add-to-list 'eshell-command-aliases-list var)))
 
 ;;;###autoload
@@ -1577,7 +1554,6 @@ Entirely from Doom Emacs
 (use-package gcmh ; Garbage collect in idle time
   :defer 0.4
   :commands gcmh-idle-garbage-collect
-  :diminish
   :custom
   (gcmh-idle-delay 10)
   (gcmh-high-cons-threshold 16777216)
@@ -1675,7 +1651,6 @@ Entirely from Doom Emacs
 ** Markdown
 #+BEGIN_SRC emacs-lisp :results none
 (use-package pandoc-mode
-  :diminish
   :hook (markdown-mode . pandoc-mode)
   :general
   ('markdown-mode-map
