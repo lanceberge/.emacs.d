@@ -393,20 +393,20 @@ Taken entirely from Doom Emacs
 (use-package minions ; hide all minor modes in modeline
   :custom
   (minions-mode-line-lighter "")
-  (minions-mode-line-delimiters '("( " . ")"))
+  (minions-mode-line-delimiters '(" " . ""))
   :config
   (minions-mode 1))
 
 (use-package which-key ; show keybindings following when a prefix is pressed
   :hook (pre-command . which-key-mode)
-  :general
-  (my-leader-def
-    "f SPC m" #'(which-key-show-top-level :which-key "keybinding"))
   :custom
   (which-key-sort-order #'which-key-prefix-then-key-order)
   (which-key-min-display-lines 6)
   (which-key-add-column-padding 1)
-  (which-key-sort-uppercase-first nil))
+  (which-key-sort-uppercase-first nil)
+  :general
+  (my-leader-def
+    "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
 
 (use-package hydra
   :defer t)
@@ -647,9 +647,6 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil ; vim bindings in emacs
   :demand t
-  :commands
-  (evil-quit
-   evil-save-modified-and-close)
   :custom
   ;; TODO nohl
   (evil-want-C-u-scroll t)
@@ -665,6 +662,7 @@ Entirely from Doom Emacs
    [remap evil-previous-line] #'evil-previous-visual-line)
 
   ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
+
   ('normal
    "zR" #'evil-open-folds
    "zM" #'evil-close-folds
@@ -823,6 +821,7 @@ Entirely from Doom Emacs
        ([?\C-v] . [next])
        ([?\C-d] . [delete])
        ([?\C-k] . [S-end delete])))
+
     (exwm-input-prefix-keys ; let my C-SPC and C-, prefixes work in exwm mode
      '(?\C-\s ?\C-,))
     :general
@@ -905,15 +904,16 @@ Entirely from Doom Emacs
   (counsel-describe-variable-function #'helpful-variable)
   :general
   (my-leader-def
-    "."       #'(counsel-find-file :which-key "find file")
+    "."       #'(counsel-find-file :which-key "file in directory")
     "SPC"     #'(ivy-switch-buffer :which-key "switch buffer")
     "fr"      #'(counsel-recentf   :which-key "find recent files")
     "fi"      #'(counsel-imenu     :which-key "imenu")
     "fg"      #'(counsel-git       :which-key "git files")
     "f SPC g" #'(counsel-git-grep  :which-key "git grep")
-    "ff"      #'(counsel-file-jump :which-key "fzf")
+    "ff"      #'(counsel-file-jump :which-key "file")
     "fd"      #'(counsel-dired     :which-key "directory")
     "f SPC f" #'(counsel-rg        :which-key "ripgrep"))
+
   (my-localleader-def
     "x" #'(counsel-M-x :which-key "M-x"))
 
@@ -1066,6 +1066,7 @@ Entirely from Doom Emacs
   ('normal
    "[q" #'flycheck-previous-error
    "]q" #'flycheck-next-error)
+
   (my-leader-def
     "fe" #'(flycheck-list-errors :which-key "list errors")))
 #+END_SRC
@@ -1095,107 +1096,105 @@ Entirely from Doom Emacs
 * Org
 ** Org
 #+BEGIN_SRC emacs-lisp :results none
-(use-package org
-  :straight (:type built-in)
-  :hook (kill-emacs . +org/tangle-config)
-  :defer-incrementally
-  (calendar find-func format-spec org-macs org-compat
-            org-faces org-entities org-list org-pcomplete org-src
-            org-footnote org-macro ob org org-clock org-agenda
-            org-capture evil-org)
-  :custom
-  ;; Directories
-  (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
-  (org-agenda-files '("~/org"))
-  (org-directory "~/org")
-  (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
+  (use-package org
+    :straight (:type built-in)
+    :hook (kill-emacs . +org/tangle-config)
+    :defer-incrementally
+    (calendar find-func format-spec org-macs org-compat
+              org-faces org-entities org-list org-pcomplete org-src
+              org-footnote org-macro ob org org-clock org-agenda
+              org-capture evil-org)
+    :custom
+    ;; Directories
+    (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
+    (org-agenda-files '("~/org"))
+    (org-directory "~/org")
+    (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
 
-  ;; General settings
-  (org-startup-folded t)
-  (org-fontify-done-headline t)
-  (org-M-RET-may-split-line nil)
-  (org-log-done 'time)
-  (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
-  (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
+    ;; General settings
+    (org-startup-folded t)
+    (org-fontify-done-headline t)
+    (org-M-RET-may-split-line nil)
+    (org-log-done 'time)
+    (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
+    (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
 
-  ;; Latex exports
-  ;; (org-latex-listings 'minted)
-  ;; (org-latex-pdf-process
-  ;;   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-  ;;     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-  (org-latex-packages-alist '(("margin=1in" "geometry" "minted" nil)))
-  :custom-face
-  ;; No unnecessary background highlighting
-  (org-block            ((t (:background "#282828"))))
-  (org-block-begin-line ((t (:background "#282828"))))
-  (org-block-end-line   ((t (:background "#282828"))))
-  (org-level-1          ((t (:background "#282828"))))
-  (org-quote            ((t (:background "#282828"))))
-  ;; Gray out done headlines and text; strike-through the text
-  (org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
-  (org-done             ((t (:foreground "#7C6f64"))))
-  :general
+    ;; Latex exports
+    ;; (org-latex-listings 'minted)
+    ;; (org-latex-pdf-process
+    ;;   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+    ;;     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+    (org-latex-packages-alist '(("margin=1in" "geometry" "minted" nil)))
+    :custom-face
+    ;; No unnecessary background highlighting
+    (org-block            ((t (:background "#282828"))))
+    (org-block-begin-line ((t (:background "#282828"))))
+    (org-block-end-line   ((t (:background "#282828"))))
+    (org-level-1          ((t (:background "#282828"))))
+    (org-quote            ((t (:background "#282828"))))
+    ;; Gray out done headlines and text; strike-through the text
+    (org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
+    (org-done             ((t (:foreground "#7C6f64"))))
+    :general
+    ('(normal insert) org-mode-map
+     :prefix "C-c"
+     ",v" #'org-redisplay-inline-images
+     "v"  #'org-toggle-inline-images
+     "t"  #'(org-todo             :which-key "todo")
+     "s"  #'(org-sort             :which-key "sort")
+     ",s" #'(org-schedule         :which-key "schedule")
+     "d"  #'(org-deadline         :which-key "deadline")
+     "q"  #'(org-set-tags-command :which-key "add tags"))
 
-  ('(normal insert) org-mode-map
-   :prefix "C-c"
-   ",v" #'org-redisplay-inline-images
-   "v"  #'org-toggle-inline-images
-   "t"  #'(org-todo             :which-key "todo")
-   "s"  #'(org-sort             :which-key "sort")
-   ",s" #'(org-schedule         :which-key "schedule")
-   "d"  #'(org-deadline         :which-key "deadline")
-   "q"  #'(org-set-tags-command :which-key "add tags"))
+    ('normal org-mode-map
+             "RET" #'org-open-at-point)
 
-  ('normal org-mode-map
-           "RET" #'org-open-at-point)
+    ;; Vim keys calendar maps
+    ('org-read-date-minibuffer-local-map
+     ";" #'exit-minibuffer
+     "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
+     "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
+     "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
+     "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
+     "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
+     "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1)))
+     "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
+     "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
 
-  ;; Vim keys calendar maps
-  ('org-read-date-minibuffer-local-map
-   ";" #'exit-minibuffer
-   "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
-   "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
-   "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
-   "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
-   "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
-   "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1)))
-   "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
-   "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
+    ;; Folding maps based on vim
+    ('normal org-mode-map
+             "zo" #'outline-show-subtree
+             "zk" #'org-backward-element
+             "zj" #'org-forward-element)
 
-  ;; Folding maps based on vim
-  ('normal org-mode-map
-           "zo" #'outline-show-subtree
-           "zk" #'org-backward-element
-           "zj" #'org-forward-element)
+    ('(normal insert) org-mode-map
+     ;; TODOS with M-;, headlines with C-;, add shift to do those above
+     "C-M-;" #'+org/insert-subheading
+     "C-:"   #'+org/insert-heading-above
+     "M-:"   #'+org/insert-todo-above
 
-  ('(normal insert) org-mode-map
-   ;; TODOS with M-;, headlines with C-;, add shift to do those above
-   "C-M-;" #'+org/insert-subheading
-   "C-:"   #'+org/insert-heading-above
-   "M-:"   #'+org/insert-todo-above
+     ;; Vim keys > arrow keys
+     "M-h"   #'org-metaleft
+     "M-l"   #'org-metaright
+     "M-k"   #'org-metaup
+     "M-j"   #'org-metadown
 
-   ;; Vim keys > arrow keys
-   "M-h"   #'org-metaleft
-   "M-l"   #'org-metaright
-   "M-k"   #'org-metaup
-   "M-j"   #'org-metadown
+     "M-H"   #'org-shiftleft
+     "M-L"   #'org-shiftright
+     "M-K"   #'org-shiftup
+     "M-J"   #'org-shiftdown
 
-   "M-H"   #'org-shiftleft
-   "M-L"   #'org-shiftright
-   "M-K"   #'org-shiftup
-   "M-J"   #'org-shiftdown
+     "C-M-h" #'org-shiftmetaleft
+     "C-M-l" #'org-shiftmetaright
+     "C-M-k" #'org-shiftmetaup
+     "C-M-j" #'org-shiftmetadown
 
-   "C-M-h" #'org-shiftmetaleft
-   "C-M-l" #'org-shiftmetaright
-   "C-M-k" #'org-shiftmetaup
-   "C-M-j" #'org-shiftmetadown
-
-   "C-S-h" #'org-shiftcontrolleft
-   "C-S-l" #'org-shiftcontrolright
-   "C-S-k" #'org-shiftcontrolup
-   "C-S-j" #'org-shiftcontroldown)
-  :config
-  (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
-
+     "C-S-h" #'org-shiftcontrolleft
+     "C-S-l" #'org-shiftcontrolright
+     "C-S-k" #'org-shiftcontrolup
+     "C-S-j" #'org-shiftcontroldown)
+    :config
+    (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
 ** Org built-ins
 #+BEGIN_SRC emacs-lisp :results none
@@ -1289,7 +1288,7 @@ Entirely from Doom Emacs
 (use-package evil-org
   :after org
   :general
-  ;; bind evil-org manually rather than using evil-org-mode, which has some
+  ;; bind evil-org functions manually rather than using evil-org-mode, which has some
   ;; conflicting bindings for my preferences
   ('normal org-mode-map
            "o" #'evil-org-open-below
@@ -1416,12 +1415,14 @@ Entirely from Doom Emacs
     "fu" #'(undo-tree-visualize :which-key "undo")))
 
 (use-package format-all
+
   :custom
   (+format-with-lsp t)
   :general
   (my-leader-def
     :states 'normal
     "=" #'(+format/buffer :which-key "format"))
+
   (my-leader-def
     :states 'visual
     "=" #'+format/region))
@@ -1508,14 +1509,14 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package tramp
   :straight (:type built-in)
+  :custom
+  (tramp-autosave-directory    (expand-file-name "tramp/auto-save/" my/etc-dir))
+  (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir))
   :general
   (my-localleader-def
     "s"  '(:ignore t            :which-key "ssh")
     "sr" #'(+tramp/ssh-rlogin   :which-key "rlogin")
-    "sc" #'(+tramp/ssh-cascades :which-key "cascades"))
-  :custom
-  (tramp-autosave-directory    (expand-file-name "tramp/auto-save/" my/etc-dir))
-  (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir)))
+    "sc" #'(+tramp/ssh-cascades :which-key "cascades")))
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp :results none
@@ -1532,12 +1533,12 @@ Entirely from Doom Emacs
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package restart-emacs
+  :custom
+  (restart-emacs-restore-frames t) ; Restore frames on restart
   :general
   (my-leader-def
     "e"        '(:ignore t     :which-key "Emacs Commands")
-    "e SPC r" #'(restart-emacs :which-key "restart emacs"))
-  :custom
-  (restart-emacs-restore-frames t)) ; Restore frames on restart
+    "e SPC r" #'(restart-emacs :which-key "restart emacs")))
 
 (use-package helpful
   :general
@@ -1545,6 +1546,7 @@ Entirely from Doom Emacs
    "gh" #'helpful-at-point)
   ('normal helpful-mode-map
            "q" #'quit-window)
+
   ([remap describe-command] #'helpful-command
    [remap describe-key]     #'helpful-key
    [remap describe-symbol]  #'helpful-symbol)
