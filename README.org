@@ -1146,6 +1146,10 @@ Entirely from Doom Emacs
      "d"  #'(org-deadline         :which-key "deadline")
      "q"  #'(org-set-tags-command :which-key "add tags"))
 
+    ; fixes my folding and unfolding levels getting messed up when I use a mix of tab and evil commands to fold
+    ('(normal insert) org-mode-map
+      [remap org-cycle] #'evil-toggle-fold)
+
     ('normal org-mode-map
              "RET" #'org-open-at-point)
 
@@ -1568,7 +1572,10 @@ Entirely from Doom Emacs
   :custom
   (keyfreq-excluded-commands
    '(org-self-insert-command
-     self-insert-command))
+     self-insert-command
+     vterm--self-insert
+     mwheel-scroll
+     eshell-send-input))
   :general
   (my-leader-def
     "fc" #'(keyfreq-show :which-key "show command frequency"))
