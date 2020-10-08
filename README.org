@@ -1147,7 +1147,7 @@ Entirely from Doom Emacs
      "q"  #'(org-set-tags-command :which-key "add tags"))
 
     ; fixes my folding and unfolding levels getting messed up when I use a mix of tab and evil commands to fold
-    ('(normal insert) org-mode-map
+    ('normal org-mode-map
       [remap org-cycle] #'evil-toggle-fold)
 
     ('normal org-mode-map
