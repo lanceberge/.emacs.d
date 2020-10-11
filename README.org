@@ -399,6 +399,7 @@ Taken entirely from Doom Emacs
 
 (use-package which-key ; show keybindings following when a prefix is pressed
   :hook (pre-command . which-key-mode)
+  :defer 0.1
   :custom
   (which-key-sort-order #'which-key-prefix-then-key-order)
   (which-key-min-display-lines 6)
@@ -528,7 +529,7 @@ Taken entirely from Doom Emacs
 #+END_SRC
 ** Hooks
 #+BEGIN_SRC emacs-lisp :results none
-(add-hook 'after-init-hook
+(add-hook 'after-init-hook ; show startup time
           (lambda ()
             (when (require 'time-date nil t)
               (message "Emacs init time: %.2f seconds."
@@ -726,10 +727,10 @@ Entirely from Doom Emacs
    "M-," #'evil-snipe-repeat-reverse))
 
 (use-package evil-surround ; s as an operator for surrounding
-  :hook ((prog-mode text-mode) . evil-surround-mode))
+  :hook (pre-command . evil-surround-mode))
 
 (use-package evil-commentary ; gc as an operator to comment
-  :hook ((prog-mode org-mode) . evil-commentary-mode))
+  :hook (find-file . evil-commentary-mode))
 
 (use-package evil-numbers ; increment/decrement numbers
   :general
@@ -742,7 +743,7 @@ Entirely from Doom Emacs
   :hook ((prog-mode text-mode) . evil-lion-mode))
 
 (use-package evil-matchit ; navigate matching blocks of code with %
-  :hook ((prog-mode text-mode) . evil-matchit-mode)
+  :hook (find-file . evil-matchit-mode)
   :general
   ('motion
    "%" #'evilmi-jump-items))
@@ -754,7 +755,7 @@ Entirely from Doom Emacs
    "gX" #'evil-exchange-cancel))
 
 (use-package evil-owl
-  :hook ((prog-mode text-mode) . evil-owl-mode))
+  :hook (find-file . evil-owl-mode))
 
 (use-package evil-textobj-anyblock
   :general
@@ -800,7 +801,7 @@ Entirely from Doom Emacs
            "zr" #'origami-open-all-nodes))
 
 (use-package evil-mc ; multiple cursors
-  :hook ((prog-mode text-mode) . evil-mc-mode))
+  :hook (find-file . evil-mc-mode))
 #+END_SRC
 * EXWM
 #+BEGIN_SRC emacs-lisp :results none
@@ -1076,7 +1077,7 @@ Entirely from Doom Emacs
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package highlight-numbers
-  :hook ((prog-mode text-mode) . highlight-numbers-mode))
+  :hook (find-file . highlight-numbers-mode))
 
 (use-package hl-todo
   :hook (prog-mode . hl-todo-mode))
@@ -1096,109 +1097,109 @@ Entirely from Doom Emacs
 * Org
 ** Org
 #+BEGIN_SRC emacs-lisp :results none
-  (use-package org
-    :straight (:type built-in)
-    :hook (kill-emacs . +org/tangle-config)
-    :defer-incrementally
-    (calendar find-func format-spec org-macs org-compat
-              org-faces org-entities org-list org-pcomplete org-src
-              org-footnote org-macro ob org org-clock org-agenda
-              org-capture evil-org)
-    :custom
-    ;; Directories
-    (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
-    (org-agenda-files '("~/org"))
-    (org-directory "~/org")
-    (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
+(use-package org
+  :straight (:type built-in)
+  :hook (kill-emacs . +org/tangle-config)
+  :defer-incrementally
+  (calendar find-func format-spec org-macs org-compat
+            org-faces org-entities org-list org-pcomplete org-src
+            org-footnote org-macro ob org org-clock org-agenda
+            org-capture evil-org)
+  :custom
+  ;; Directories
+  (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
+  (org-agenda-files '("~/org"))
+  (org-directory "~/org")
+  (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
 
-    ;; General settings
-    (org-startup-folded t)
-    (org-fontify-done-headline t)
-    (org-M-RET-may-split-line nil)
-    (org-log-done 'time)
-    (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
-    (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
+  ;; General settings
+  (org-startup-folded t)
+  (org-fontify-done-headline t)
+  (org-M-RET-may-split-line nil)
+  (org-log-done 'time)
+  (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
+  (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
 
-    ;; Latex exports
-    ;; (org-latex-listings 'minted)
-    ;; (org-latex-pdf-process
-    ;;   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-    ;;     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-    (org-latex-packages-alist '(("margin=1in" "geometry" "minted" nil)))
-    :custom-face
-    ;; No unnecessary background highlighting
-    (org-block            ((t (:background "#282828"))))
-    (org-block-begin-line ((t (:background "#282828"))))
-    (org-block-end-line   ((t (:background "#282828"))))
-    (org-level-1          ((t (:background "#282828"))))
-    (org-quote            ((t (:background "#282828"))))
-    ;; Gray out done headlines and text; strike-through the text
-    (org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
-    (org-done             ((t (:foreground "#7C6f64"))))
-    :general
-    ('(normal insert) org-mode-map
-     :prefix "C-c"
-     ",v" #'org-redisplay-inline-images
-     "v"  #'org-toggle-inline-images
-     "t"  #'(org-todo             :which-key "todo")
-     "s"  #'(org-sort             :which-key "sort")
-     ",s" #'(org-schedule         :which-key "schedule")
-     "d"  #'(org-deadline         :which-key "deadline")
-     "q"  #'(org-set-tags-command :which-key "add tags"))
+  ;; Latex exports
+  ;; (org-latex-listings 'minted)
+  ;; (org-latex-pdf-process
+  ;;   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+  ;;     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  (org-latex-packages-alist '(("margin=1in" "geometry" "minted" nil)))
+  :custom-face
+  ;; No unnecessary background highlighting
+  (org-block            ((t (:background "#282828"))))
+  (org-block-begin-line ((t (:background "#282828"))))
+  (org-block-end-line   ((t (:background "#282828"))))
+  (org-level-1          ((t (:background "#282828"))))
+  (org-quote            ((t (:background "#282828"))))
+  ;; Gray out done headlines and text; strike-through the text
+  (org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
+  (org-done             ((t (:foreground "#7C6f64"))))
+  :general
+  ('(normal insert) org-mode-map
+   :prefix "C-c"
+   ",v" #'org-redisplay-inline-images
+   "v"  #'org-toggle-inline-images
+   "t"  #'(org-todo             :which-key "todo")
+   "s"  #'(org-sort             :which-key "sort")
+   ",s" #'(org-schedule         :which-key "schedule")
+   "d"  #'(org-deadline         :which-key "deadline")
+   "q"  #'(org-set-tags-command :which-key "add tags"))
 
-    ; fixes my folding and unfolding levels getting messed up when I use a mix of tab and evil commands to fold
-    ('normal org-mode-map
-      [remap org-cycle] #'evil-toggle-fold)
+                                        ; fixes my folding and unfolding levels getting messed up when I use a mix of tab and evil commands to fold
+  ('normal org-mode-map
+           [remap org-cycle] #'evil-toggle-fold)
 
-    ('normal org-mode-map
-             "RET" #'org-open-at-point)
+  ('normal org-mode-map
+           "RET" #'org-open-at-point)
 
-    ;; Vim keys calendar maps
-    ('org-read-date-minibuffer-local-map
-     ";" #'exit-minibuffer
-     "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
-     "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
-     "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
-     "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
-     "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
-     "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1)))
-     "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
-     "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
+  ;; Vim keys calendar maps
+  ('org-read-date-minibuffer-local-map
+   ";" #'exit-minibuffer
+   "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
+   "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
+   "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
+   "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
+   "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
+   "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1)))
+   "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
+   "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
 
-    ;; Folding maps based on vim
-    ('normal org-mode-map
-             "zo" #'outline-show-subtree
-             "zk" #'org-backward-element
-             "zj" #'org-forward-element)
+  ;; Folding maps based on vim
+  ('normal org-mode-map
+           "zo" #'outline-show-subtree
+           "zk" #'org-backward-element
+           "zj" #'org-forward-element)
 
-    ('(normal insert) org-mode-map
-     ;; TODOS with M-;, headlines with C-;, add shift to do those above
-     "C-M-;" #'+org/insert-subheading
-     "C-:"   #'+org/insert-heading-above
-     "M-:"   #'+org/insert-todo-above
+  ('(normal insert) org-mode-map
+   ;; TODOS with M-;, headlines with C-;, add shift to do those above
+   "C-M-;" #'+org/insert-subheading
+   "C-:"   #'+org/insert-heading-above
+   "M-:"   #'+org/insert-todo-above
 
-     ;; Vim keys > arrow keys
-     "M-h"   #'org-metaleft
-     "M-l"   #'org-metaright
-     "M-k"   #'org-metaup
-     "M-j"   #'org-metadown
+   ;; Vim keys > arrow keys
+   "M-h"   #'org-metaleft
+   "M-l"   #'org-metaright
+   "M-k"   #'org-metaup
+   "M-j"   #'org-metadown
 
-     "M-H"   #'org-shiftleft
-     "M-L"   #'org-shiftright
-     "M-K"   #'org-shiftup
-     "M-J"   #'org-shiftdown
+   "M-H"   #'org-shiftleft
+   "M-L"   #'org-shiftright
+   "M-K"   #'org-shiftup
+   "M-J"   #'org-shiftdown
 
-     "C-M-h" #'org-shiftmetaleft
-     "C-M-l" #'org-shiftmetaright
-     "C-M-k" #'org-shiftmetaup
-     "C-M-j" #'org-shiftmetadown
+   "C-M-h" #'org-shiftmetaleft
+   "C-M-l" #'org-shiftmetaright
+   "C-M-k" #'org-shiftmetaup
+   "C-M-j" #'org-shiftmetadown
 
-     "C-S-h" #'org-shiftcontrolleft
-     "C-S-l" #'org-shiftcontrolright
-     "C-S-k" #'org-shiftcontrolup
-     "C-S-j" #'org-shiftcontroldown)
-    :config
-    (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
+   "C-S-h" #'org-shiftcontrolleft
+   "C-S-l" #'org-shiftcontrolright
+   "C-S-k" #'org-shiftcontrolup
+   "C-S-j" #'org-shiftcontroldown)
+  :config
+  (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
 ** Org built-ins
 #+BEGIN_SRC emacs-lisp :results none
@@ -1408,7 +1409,7 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
-(use-package undo-tree ; Persistent Undos
+(use-package undo-tree ; Persistent Undos, TODO
   :custom
   (undo-limit 10000)
   (undo-tree-auto-save-history t)
@@ -1475,9 +1476,22 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun +eshell/init-keymaps ()
-  (general-def '(insert normal) eshell-mode-map
+  (general-def 'normal eshell-mode-map
+    "C-n" (lambda ()
+            (interactive)
+            (evil-append-line 1)
+            (general-simulate-key "C-n"))
+
+    "C-p" (lambda ()
+            (interactive)
+            (evil-append-line 1)
+            (general-simulate-key "C-p")))
+
+  (general-def 'insert eshell-mode-map
     "C-n" #'eshell-next-matching-input-from-input
-    "C-p" #'eshell-previous-matching-input-from-input
+    "C-p" #'eshell-previous-matching-input-from-input)
+
+  (general-def '(insert normal) eshell-mode-map
     "C-l" #'+eshell/clear
     "C-c" #'eshell-interrupt-process))
 
@@ -1503,7 +1517,7 @@ Entirely from Doom Emacs
     (add-to-list 'eshell-command-aliases-list var)))
 
 ;;;###autoload
-(defun +eshell-clear ()
+(defun +eshell/clear ()
   (interactive)
   (let ((inhibit-read-only t))
     (erase-buffer)
