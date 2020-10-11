@@ -1099,7 +1099,9 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org
   :straight (:type built-in)
-  :hook (kill-emacs . +org/tangle-config)
+  :hook ((kill-emacs . +org/tangle-config)
+         ;; Latex-mode snippets in org
+         (org-mode . (lambda () (yas-activate-extra-mode 'latex-mode))))
   :defer-incrementally
   (calendar find-func format-spec org-macs org-compat
             org-faces org-entities org-list org-pcomplete org-src
@@ -1145,7 +1147,8 @@ Entirely from Doom Emacs
    "s"  #'(org-sort             :which-key "sort")
    ",s" #'(org-schedule         :which-key "schedule")
    "d"  #'(org-deadline         :which-key "deadline")
-   "q"  #'(org-set-tags-command :which-key "add tags"))
+   "q"  #'(org-set-tags-command :which-key "add tags")
+   "p"  #'(org-latex-preview    :which-key "preview latex"))
 
                                         ; fixes my folding and unfolding levels getting messed up when I use a mix of tab and evil commands to fold
   ('normal org-mode-map
@@ -1392,9 +1395,6 @@ Entirely from Doom Emacs
   (sp-show-pair-from-inside t)
   (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
   :general
-  ;; (my-localleader-def
-  ;;   "s" '(hydra-smartparens/body :which-key "Smartparens"))
-
   ('normal
    ">" (general-key-dispatch #'evil-shift-right
          ")" #'sp-forward-slurp-sexp
