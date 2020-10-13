@@ -48,6 +48,7 @@
   - [[#c-family][C family]]
   - [[#statistics-r][Statistics (R)]]
   - [[#markdown][Markdown]]
+  - [[#rust][Rust]]
 
 * Early-Init
 
@@ -877,6 +878,7 @@ Entirely from Doom Emacs
     "fB" #'(swiper-all   :which-key "swiper in all buffers")))
 
 (use-package ivy ; narrowing framework
+  :defer 0.1
   :hook (pre-command . ivy-mode)
   :general
   ('(normal insert) ivy-minibuffer-map
@@ -1382,7 +1384,7 @@ Entirely from Doom Emacs
 ** Smartparens
 #+BEGIN_SRC emacs-lisp :results none
 (use-package smartparens
-  :defer 0.3
+  :defer 0.1
   ;; enable smartparens in ivy-mode
   :hook (ivy-mode . smartparens-mode)
   :custom
@@ -1405,7 +1407,11 @@ Entirely from Doom Emacs
   :config
   (smartparens-global-mode)
   (require 'smartparens-config) ; config for many languages
-  (sp-local-pair 'org-mode "'" nil :actions nil)) ; don't pair ' in elisp mode
+
+  ;; Don't pair ', and = in org mode, and pair $
+  (sp-local-pair 'org-mode "'" nil :actions nil)
+  (eval-after-load 'smartparens-org '(sp-local-pair 'org-mode "=" nil :actions nil))
+  (sp-local-pair 'org-mode "$" "$"))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -1681,4 +1687,9 @@ Entirely from Doom Emacs
    "e" #'(pandoc-main-hydra/body :which-key "pandoc"))
 
   ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))
+#+END_SRC
+** Rust
+#+BEGIN_SRC emacs-lisp :results none
+(use-package rust-mode
+  :mode ("\\.rs\\'" . rust-mode))
 #+END_SRC
