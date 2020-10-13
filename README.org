@@ -1679,17 +1679,20 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Markdown
 #+BEGIN_SRC emacs-lisp :results none
+(use-package markdown-mode
+  :straight (:type built-in)
+  :general
+  ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))
+
 (use-package pandoc-mode
   :hook (markdown-mode . pandoc-mode)
   :general
   ('markdown-mode-map
    :prefix "C-c"
-   "e" #'(pandoc-main-hydra/body :which-key "pandoc"))
-
-  ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))
+   "e" #'(pandoc-main-hydra/body :which-key "pandoc")))
 #+END_SRC
 ** Rust
 #+BEGIN_SRC emacs-lisp :results none
 (use-package rust-mode
-  :mode ("\\.rs\\'" . rust-mode))
+  :defer t)
 #+END_SRC
