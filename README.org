@@ -387,6 +387,7 @@ Taken entirely from Doom Emacs
     :keymaps 'override
     :prefix ","
     :non-normal-prefix "C-,")
+
   (my-leader-def
     "f"   '(:ignore t                    :which-key "Find")
     "fm" #'(general-describe-keybindings :which-key "list keybindings")))
@@ -675,23 +676,14 @@ Entirely from Doom Emacs
    "H" #'evil-first-non-blank
    "L" #'evil-end-of-line)
 
-  ;; Evil-avy
-  ('normal
-   "go" #'(evil-avy-goto-char-2     :which-key "2-chars"))
-
   (my-leader-def
-    "go" #'evil-avy-goto-char-timer
-    "gl" #'evil-avy-goto-line)
-
-  (my-leader-def
-    "ft" #'(evil-avy-goto-char-timer           :which-key "avy timer")
     "bS" #'(evil-write-all                     :which-key "write all buffers")
     "bl" #'(evil-switch-to-windows-last-buffer :which-key "last buffer"))
 
   ('evil-window-map
-   "d"     #'evil-quit ; delete window
-   "q"     #'evil-save-modified-and-close ; quit and save window
-   "SPC q" #'(save-buffers-kill-emacs :which-key "save buffers & quit emacs"))
+   "d"     #'(evil-quit                    :which-key "delete window")
+   "q"     #'(evil-save-modified-and-close :which-key "quit and save window")
+   "SPC q" #'(save-buffers-kill-emacs      :which-key "save buffers & quit emacs"))
 
   ('(normal insert)
    "C-l" #'evil-ex-nohighlight)
@@ -1447,6 +1439,13 @@ Entirely from Doom Emacs
   ('normal
    "]e" #'move-text-down
    "[e" #'move-text-up))
+
+(use-package avy
+  :general
+  ('normal
+   "go" #'(avy-goto-char-2 :which-key "2-chars")
+   "g SPC o" #'(avy-goto-char-timer :which-key "timer")
+   "g SPC l" #'(avy-goto-line :which-key "line")))
 #+END_SRC
 * System
 ** Vterm
@@ -1693,6 +1692,7 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Rust
 #+BEGIN_SRC emacs-lisp :results none
+;; TODO - move to rustic and use cargo.el
 (use-package rust-mode
   :defer t)
 #+END_SRC
