@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: latex in set
+# key: inset
+# --
+\in\mathbb{$0}
