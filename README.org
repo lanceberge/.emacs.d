@@ -947,8 +947,8 @@ Entirely from Doom Emacs
 (use-package auto-yasnippet
   :general
   (my-leader-def
-    "yc" #'(aya-create :which-key "create aya snippet")
-    "ye" #'(aya-expand :which-key "expand aya snippet")))
+    "sc" #'(aya-create :which-key "create aya snippet")
+    "se" #'(aya-expand :which-key "expand aya snippet")))
 #+END_SRC
 ** Company
 #+BEGIN_SRC emacs-lisp :results none
@@ -1271,6 +1271,10 @@ Entirely from Doom Emacs
 (use-package ob-R
   :straight (:type built-in)
   :commands org-babel-execute:R)
+
+(use-package ob-python
+  :straight (:type built-in)
+  :commands org-babel-execute:python)
 #+END_SRC
 ** Non built-ins
 #+BEGIN_SRC emacs-lisp :results none
