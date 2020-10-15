@@ -76,7 +76,7 @@ Tangles to early-init.el
       frame-inhibit-implied-resize t
       inhibit-default-init t
       site-run-file nil
-      comp-deferred-compilation nil)
+      comp-deferred-compilation t)
 
 (set-face-attribute 'default nil
                     :family "DejaVu Sans Mono"
@@ -800,7 +800,8 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (when IS-LINUX
   (use-package exwm
-    :demand t
+    ;; :demand t
+    :disabled t
     :custom
     (exwm-workspace-number 4)
     ;; Line-editing shortcuts
@@ -1593,6 +1594,8 @@ Entirely from Doom Emacs
 (use-package keyfreq
   :hook (pre-command . keyfreq-mode)
   :custom
+  (keyfreq-file (expand-file-name "keyfreq" my/etc-dir))
+  (keyfreq-file-lock (expand-file-name "keyfreq-lock" my/etc-dir))
   (keyfreq-excluded-commands
    '(org-self-insert-command
      self-insert-command

@@ -18,7 +18,7 @@
       frame-inhibit-implied-resize t
       inhibit-default-init t
       site-run-file nil
-      comp-deferred-compilation nil)
+      comp-deferred-compilation t)
 
 (set-face-attribute 'default nil
                     :family "DejaVu Sans Mono"
