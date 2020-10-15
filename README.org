@@ -57,14 +57,15 @@ Tangles to early-init.el
 ** Initial Settings
 #+BEGIN_SRC emacs-lisp :results none :tangle ~/.emacs.d/early-init.el
 ;;; -*- lexical-binding: t -*-
-(setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-threshold most-positive-fixnum) ; increase GC threshold until startup (in Initial section under hooks)
 
 (defconst IS-LINUX (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
 
-(setq package-enable-at-startup nil)
+(setq package-enable-at-startup nil) ; disable package.el at startup
 (advice-add #'package--ensure-init-file :override #'ignore)
 
+;; No unnecessary noise: toolbar, menu-bar, and scroll-bar
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
@@ -75,10 +76,9 @@ Tangles to early-init.el
       scroll-bar-mode nil
       frame-inhibit-implied-resize t
       inhibit-default-init t
-      site-run-file nil
-      comp-deferred-compilation t)
+      site-run-file nil)
 
-(set-face-attribute 'default nil
+(set-face-attribute 'default nil ; font
                     :family "DejaVu Sans Mono"
                     :height 110
                     :weight 'normal
@@ -89,7 +89,7 @@ Tangles to early-init.el
 #+END_SRC
 ** Straight
 #+BEGIN_SRC emacs-lisp :results none :tangle ~/.emacs.d/early-init.el
-;; Bootstrap straight.el
+;; Bootstrap straight.el - my package manager
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
       (bootstrap-version 5))
@@ -107,18 +107,19 @@ Tangles to early-init.el
       straight-repository-branch "develop"
       straight-check-for-modifications nil
       straight-vc-git-default-clone-depth 1
-      straight-fix-org nil)
+      straight-fix-org nil
+      comp-deferred-compilation t) ; defer elisp compilation, great with native-comp branch
 
 (straight-use-package 'use-package)
 (setq use-package-verbose t) ; show which packages are being loaded on startup and when
 #+END_SRC
 ** UI
 #+BEGIN_SRC emacs-lisp :results none :tangle ~/.emacs.d/early-init.el
-(use-package gruvbox-theme
+(use-package gruvbox-theme ; theme
   :config
   (load-theme 'gruvbox t))
 
-(use-package display-line-numbers
+(use-package display-line-numbers ; line numbers
   :straight (:type built-in)
   :custom
   (display-line-numbers-width-start t)
@@ -128,7 +129,7 @@ Tangles to early-init.el
   :config
   (global-display-line-numbers-mode)
   (when IS-LINUX
-    (setq-default display-line-numbers-type 'visual)))
+    (setq-default display-line-numbers-type 'visual))) ; relative line numbers
 
 ;; Minimalistic mode-line
 (setq-default mode-line-format
@@ -142,7 +143,6 @@ Tangles to early-init.el
                 " "
                 mode-line-buffer-identification
                 "  "
-                ;; '(:eval (propertize (vc-mode) 'face '(:foreground "black") 'help-echo (vc-mode)))
                 vc-mode
                 " "
                 mode-line-modes
@@ -151,6 +151,7 @@ Tangles to early-init.el
                 mode-line-end-spaces))
 
 ;; Background faces
+;; TODO add variable for background color
 (custom-set-faces '(mode-line ((t (:background "#282828" :foreground "#928374"))))
                   '(mode-line-inactive ((t (:background "#282828"))))
                   '(mode-line-buffer-id ((t (:bold t)))))
@@ -168,11 +169,11 @@ Loads the file config.el on startup. Every time I exit emacs (if org has been lo
 (defconst config-org (expand-file-name "README.org" user-emacs-directory))
 (defconst config-el  (expand-file-name "config.el" user-emacs-directory))
 
-(unless (file-exists-p config-el)
+(unless (file-exists-p config-el) ; tangle config-org to config-el
   (require 'org)
   (org-babel-tangle-file config-org config-el))
 
-(load-file config-el)
+(load-file config-el) ; load tangled config file
 #+END_SRC
 * Initial
 
@@ -186,9 +187,11 @@ Mostly taken from Doom Emacs
 ;;; -*- lexical-binding: t -*-
 (use-package emacs
   :custom
+  ;; unset file-name-handler-alist until its set again in Hooks heading (improve startup time)
   (default-file-name-handler-alist file-name-handler-alist)
-
   (file-name-handler-alist nil)
+
+  ;; raise garbage collection threshold until its set again in Hooks heading
   (gc-cons-threshold most-positive-fixnum)
   (gc-cons-percentage 0.6)
 
@@ -203,16 +206,16 @@ Mostly taken from Doom Emacs
   (inhibit-startup-echo-area-message user-login-name)
 
   ;; inhibit-default-init t
-  (initial-scratch-message nil)
+  (initial-scratch-message nil)          ; empty scratch file
   (initial-major-mode 'fundamental-mode) ; start in an empty mode
   (user-mail-address "bergeron.lance6@gmail.com")
 
   (kill-buffer-query-functions nil)
   (inhibit-compacting-font-caches t) ; inhibit font compacting
   (highlight-nonselected-windows nil)
-  (ffap-machine-p-known 'reject) ; don't ping things that look like domain names
+  (ffap-machine-p-known 'reject)     ; don't ping things that look like domain names
   (bidi-inhibit-bpa t)
-  (fast-but-imprecise-scrolling t) ; faster scrolling over unfontified regions
+  (fast-but-imprecise-scrolling t)   ; faster scrolling over unfontified regions
 
   ;; User Settings
   (user-full-name "Lance Bergeron")
@@ -223,8 +226,8 @@ Mostly taken from Doom Emacs
   (scroll-step 1)
 
   ;; General
-  (indent-tabs-mode nil)
-  (apropos-do-all t) ; more extensive apropos searches
+  (indent-tabs-mode nil) ; tabs are converted to spaces
+  (apropos-do-all t)     ; more extensive apropos searches
 
   ;; Disable bidirectional text rendering for performance
   (bidi-display-reordering 'left-to-right)
@@ -248,6 +251,9 @@ Mostly taken from Doom Emacs
 (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
 #+END_SRC
 ** OS Specific
+
+Optimizations for different file types from Doom emacs
+
 #+BEGIN_SRC emacs-lisp :results none
 (unless IS-WINDOWS
   (setq selection-coding-system 'utf-8))
@@ -414,7 +420,7 @@ Taken entirely from Doom Emacs
 (use-package hydra
   :defer t)
 
-(use-package use-package-ensure-system-package
+(use-package use-package-ensure-system-package ; a way to manage dependencies within use-package
   :defer t)
 #+END_SRC
 ** Built-in Packages
@@ -442,7 +448,7 @@ Taken entirely from Doom Emacs
   (auto-mode-case-fold nil)
   (auto-save-default nil))
 
-(use-package saveplace
+(use-package saveplace ; save location in files
   :straight (:type built-in)
   :hook (pre-command . save-place-mode)
   :custom
@@ -450,13 +456,13 @@ Taken entirely from Doom Emacs
 
 (use-package whitespace
   :straight (:type built-in)
-  :hook (before-save . whitespace-cleanup))
+  :hook (before-save . whitespace-cleanup)) ; clean unnecessary whitespace before save
 
 (use-package eldoc
   :straight (:type built-in)
   :defer t)
 
-(use-package savehist
+(use-package savehist ; save command history
   :straight (:type built-in)
   :hook (pre-command . savehist-mode)
   :custom
@@ -475,7 +481,7 @@ Taken entirely from Doom Emacs
   (recentf-max-saved-items 200))
 
 (when IS-LINUX
-  (use-package flyspell
+  (use-package flyspell ; spellcheck
     :ensure-system-package ispell
     :straight (:type built-in)
     :hook ((text-mode . flyspell-mode)
@@ -493,7 +499,7 @@ Taken entirely from Doom Emacs
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
-(use-package emacs
+(use-package emacs ; initial keybindings of built-in functions
   :general
   (my-localleader-def
     "c" (general-simulate-key "C-c" :which-key "+Mode specific maps"))
@@ -543,7 +549,7 @@ Taken entirely from Doom Emacs
               (message "Emacs init time: %.2f seconds."
                        (time-to-seconds (time-since emacs-load-start-time))))))
 
-(add-hook 'emacs-startup-hook
+(add-hook 'emacs-startup-hook ; reset garbage collection settings and file-name-handler-alist
           (lambda ()
             (setq gc-cons-threshold 16777216
                   gc-cons-percentage 0.1
@@ -557,8 +563,9 @@ Taken entirely from Doom Emacs
   (run-at-time
    1 nil (lambda () (setq gc-cons-threshold 16777216))))
 
+;; decrease garbage collection when using minibuffer
 (add-hook 'minibuffer-setup-hook #'doom-defer-garbage-collection-h)
-(add-hook 'minibuffer-exit-hook #'doom-restore-garbage-collection-h)
+(add-hook 'minibuffer-exit-hook  #'doom-restore-garbage-collection-h)
 #+END_SRC
 ** Functions
 *** Miscellaneous
@@ -761,12 +768,12 @@ Entirely from Doom Emacs
   ('evil-inner-text-objects-map "c" #'evil-textobj-anyblock-inner-block)
   ('evil-outer-text-objects-map "c" #'evil-textobj-anyblock-a-block))
 
-(use-package evil-args
+(use-package evil-args ; argument text object: ex. arg1,ar|g2,arg2 - can delete with daa
   :general
   ('evil-inner-text-objects-map "a" #'evil-inner-arg)
   ('evil-outer-text-objects-map "a" #'evil-outer-arg))
 
-(use-package evil-indent-plus
+(use-package evil-indent-plus ; indent level text object
   :general
   ('evil-inner-text-objects-map
    "i" #'evil-indent-plus-i-indent
@@ -805,7 +812,7 @@ Entirely from Doom Emacs
 * EXWM
 #+BEGIN_SRC emacs-lisp :results none
 (when IS-LINUX
-  (use-package exwm
+  (use-package exwm ; emacs window manager for linux
     ;; :demand t
     :disabled t
     :custom
@@ -864,7 +871,7 @@ Entirely from Doom Emacs
 * Completion
 ** Ivy
 #+BEGIN_SRC emacs-lisp :results none
-(use-package swiper
+(use-package swiper ; ivy for searching through buffers
   :custom
   (swiper-use-visual-line nil)
   (swiper-use-visual-line-p (lambda (a) nil))
@@ -951,10 +958,10 @@ Entirely from Doom Emacs
   :config
   (yas-global-mode))
 
-(use-package yasnippet-snippets
+(use-package yasnippet-snippets ; a bunch of snippets to use
   :after yasnippet)
 
-(use-package auto-yasnippet
+(use-package auto-yasnippet ; create small snippets easily
   :general
   (my-leader-def
     "sc" #'(aya-create :which-key "create aya snippet")
@@ -1034,7 +1041,7 @@ Entirely from Doom Emacs
   (my-leader-def
     "p" #'(projectile-command-map :which-key "Projectile")))
 
-(use-package counsel-projectile
+(use-package counsel-projectile ; counsel support for projectile functions
   :ensure-system-package (rg . ripgrep)
   :defer 0.1
   :config
@@ -1095,7 +1102,7 @@ Entirely from Doom Emacs
 (use-package highlight-escape-sequences
   :hook (prog-mode . hes-mode))
 
-(use-package paren
+(use-package paren ; show matching parentheses
   :straight (:type built-in)
   :hook ((prog-mode text-mode) . show-paren-mode)
   :custom
@@ -1223,7 +1230,7 @@ Entirely from Doom Emacs
   :custom
   (org-src-window-setup 'current-window))
 
-(use-package ob
+(use-package ob ; org babel
   :straight (:type built-in)
   :defer t
   :custom
@@ -1233,7 +1240,7 @@ Entirely from Doom Emacs
    :prefix "C-c"
    "b"  #'(org-babel-tangle :which-key "tangle file")))
 
-(use-package ox
+(use-package ox ; org exports
   :ensure-system-package (pdflatex . texlive-latexextra)
   :straight (:type built-in)
   :general
@@ -1255,7 +1262,7 @@ Entirely from Doom Emacs
   (my-leader-def
     "oc" #'(org-capture :which-key "org capture")))
 
-(use-package ol
+(use-package ol ; org links
   :straight (:type built-in)
   :general
   ('(normal insert) org-mode-map
@@ -1265,6 +1272,7 @@ Entirely from Doom Emacs
    :prefix "C-c"
    "l"  #'(org-store-link  :which-key "store link")))
 
+;; autoload org babel functions for specific languages
 (use-package ob-haskell
   :straight (:type built-in)
   :commands org-babel-execute:haskell)
@@ -1287,20 +1295,20 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Non built-ins
 #+BEGIN_SRC emacs-lisp :results none
-(use-package org-drill
+(use-package org-drill ; spaced repetition flashcards within emacs
   :general
   ('override :prefix "C-c"
              ",d" #'org-drill))
 
-(use-package org-superstar
+(use-package org-superstar ; bullets in org mode
   :hook (org-mode . org-superstar-mode)
   :custom
   (org-hide-leading-stars t))
 
-(use-package toc-org
+(use-package toc-org ; auto-generate tables of contents w/in org and markdown with a :TOC: tag
   :hook ((org-mode markdown-mode) . toc-org-mode))
 
-(use-package evil-org
+(use-package evil-org ; functions to work with evil-mode in org-mode
   :after org
   :general
   ;; bind evil-org functions manually rather than using evil-org-mode, which has some
@@ -1370,7 +1378,7 @@ Entirely from Doom Emacs
   :general
   ("M-o" #'switch-window))
 
-(use-package golden-ratio
+(use-package golden-ratio ; auto resize windows
   :hook (window-setup . golden-ratio-mode)
   :custom
   (golden-ratio-auto-scale t))
@@ -1388,7 +1396,7 @@ Entirely from Doom Emacs
 * Editing
 ** Smartparens
 #+BEGIN_SRC emacs-lisp :results none
-(use-package smartparens
+(use-package smartparens ; pair delimiters automatically and functions to work with delimiters
   :defer 0.1
   ;; enable smartparens in ivy-mode
   :hook (ivy-mode . smartparens-mode)
@@ -1420,7 +1428,7 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
-(use-package format-all
+(use-package format-all ; format code functions
   :custom
   (+format-with-lsp t)
   :general
@@ -1432,7 +1440,7 @@ Entirely from Doom Emacs
     :states 'visual
     "=" #'+format/region))
 
-(use-package expand-region
+(use-package expand-region ; select a region
   :general
   ("M--" #'er/expand-region))
 
@@ -1442,17 +1450,17 @@ Entirely from Doom Emacs
    "]e" #'move-text-down
    "[e" #'move-text-up))
 
-(use-package avy
+(use-package avy ; jump to things in files similar to easymotion for vim
   :general
   ('normal
-   "go" #'(avy-goto-char-2 :which-key "2-chars")
+   "go"      #'(avy-goto-char-2     :which-key "2-chars")
    "g SPC o" #'(avy-goto-char-timer :which-key "timer")
-   "g SPC l" #'(avy-goto-line :which-key "line")))
+   "g SPC l" #'(avy-goto-line       :which-key "line")))
 #+END_SRC
 * System
 ** Vterm
 #+BEGIN_SRC emacs-lisp :results none
-(use-package vterm
+(use-package vterm ; terminal emulator
   :custom
   (vterm-kill-buffer-on-exit t)
   :general
@@ -1463,7 +1471,7 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Eshell
 #+BEGIN_SRC emacs-lisp :results none
-(use-package eshell
+(use-package eshell ; shell for elisp and regular shell commands
   :defer-incrementally (em-alias em-banner em-basic em-cmpl em-dirs em-glob em-hist em-ls em-script em-term)
   :straight (:type built-in)
   :hook ((eshell-mode            . smartparens-mode)
@@ -1540,7 +1548,7 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Tramp
 #+BEGIN_SRC emacs-lisp :results none
-(use-package tramp
+(use-package tramp ; access remote files within emacs
   :straight (:type built-in)
   :custom
   (tramp-autosave-directory    (expand-file-name "tramp/auto-save/" my/etc-dir))
@@ -1573,7 +1581,7 @@ Entirely from Doom Emacs
     "e"        '(:ignore t     :which-key "Emacs Commands")
     "e SPC r" #'(restart-emacs :which-key "restart emacs")))
 
-(use-package helpful
+(use-package helpful ; better help menu
   :general
   ('normal
    "gh" #'helpful-at-point)
@@ -1596,7 +1604,7 @@ Entirely from Doom Emacs
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
-(use-package keyfreq
+(use-package keyfreq ; save command frequency
   :hook (pre-command . keyfreq-mode)
   :custom
   (keyfreq-file (expand-file-name "keyfreq" my/etc-dir))
@@ -1613,7 +1621,7 @@ Entirely from Doom Emacs
   :config
   (keyfreq-autosave-mode 1))
 
-(use-package dumb-jump
+(use-package dumb-jump ; better way to search code
   :defer t
   :custom
   (dumb-jump-default-project "~/code")

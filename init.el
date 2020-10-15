@@ -2,8 +2,8 @@
 (defconst config-org (expand-file-name "README.org" user-emacs-directory))
 (defconst config-el  (expand-file-name "config.el" user-emacs-directory))
 
-(unless (file-exists-p config-el)
+(unless (file-exists-p config-el) ; tangle config-org to config-el
   (require 'org)
   (org-babel-tangle-file config-org config-el))
 
-(load-file config-el)
+(load-file config-el) ; load tangled config file
