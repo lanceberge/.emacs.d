@@ -1109,7 +1109,7 @@ Entirely from Doom Emacs
   (calendar find-func format-spec org-macs org-compat
             org-faces org-entities org-list org-pcomplete org-src
             org-footnote org-macro ob org org-clock org-agenda
-            org-capture evil-org)
+            org-capture evil-org flyspell)
   :custom
   ;; Directories
   (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
@@ -1624,6 +1624,7 @@ Entirely from Doom Emacs
 ** C family
 #+BEGIN_SRC emacs-lisp :results none
 (use-package cc-mode
+  :ensure-system-package (clang gcc)
   :straight (:type built-in)
   :hook (c-mode-common . +cc/company-mode)
   :custom
@@ -1650,7 +1651,7 @@ Entirely from Doom Emacs
 ** Statistics (R)
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ess
-  :ensure-system-package (r)
+  :ensure-system-package (R . r)
   :hook (ess-r-mode . +ess/company-mode)
   :general
   ('(normal insert) ess-mode-map
