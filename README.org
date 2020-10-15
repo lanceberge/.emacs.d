@@ -8,7 +8,7 @@
   - [[#settings][Settings]]
   - [[#os-specific][OS Specific]]
   - [[#defer-incrementally][Defer Incrementally]]
-  - [[#keymap-management][Keymap Management]]
+  - [[#keymappackage-management][Keymap/Package Management]]
   - [[#built-in-packages][Built-in Packages]]
   - [[#keybindings][Keybindings]]
   - [[#hooks][Hooks]]
@@ -371,7 +371,7 @@ Taken entirely from Doom Emacs
             (append targets (list name)))))
      (use-package-process-keywords name rest state))))
 #+END_SRC
-** Keymap Management
+** Keymap/Package Management
 #+BEGIN_SRC emacs-lisp :results none
 (use-package general ; unified way to map keybindings; works with :general in use-package
   :demand t
@@ -412,6 +412,9 @@ Taken entirely from Doom Emacs
     "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
 
 (use-package hydra
+  :defer t)
+
+(use-package use-package-ensure-system-package
   :defer t)
 #+END_SRC
 ** Built-in Packages
@@ -471,9 +474,9 @@ Taken entirely from Doom Emacs
   (recentf-save-file (expand-file-name "recentf" my/etc-dir))
   (recentf-max-saved-items 200))
 
-;; TODO change to :ensure-system-dependency
 (when IS-LINUX
   (use-package flyspell
+    :ensure-system-package ispell
     :straight (:type built-in)
     :hook ((text-mode . flyspell-mode)
            (prog-mode . flyspell-prog-mode))))
