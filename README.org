@@ -495,25 +495,30 @@ Taken entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package emacs
   :general
-  (my-leader-def
-    "h" (general-simulate-key "C-h"   :which-key "+Help")
-    ;; Windows
-    ";"  #'(shell-command             :which-key "shell command")
-    "w"   (general-simulate-key "C-w" :which-key "+Windows") ; window command
-    ;; Buffers
-    "b"   '(:ignore t                 :which-key "Buffers")
-    "bs" #'(save-buffer               :which-key "write file")
-    "bd" #'(kill-this-buffer          :which-key "delete buffer")
-    "bq" #'(my/save-and-kill-buffer   :which-key "kill window and buffer")
-    "b SPC d" #'my/kill-window-and-buffer
-    "br" #'revert-buffer
+  (my-localleader-def
+    "c" (general-simulate-key "C-c" :which-key "+Mode specific maps"))
 
-    "er" #'(eval-region               :which-key "execute elisp region")
-    "es" #'(eval-last-sexp            :which-key "execute elisp sexp")
-    "ee" #'(eval-expression           :which-key "evaluate elisp expression")
-    "eb" #'(eval-buffer               :which-key "evaluate elisp buffer")
-    "ef" #'(eval-defun                :which-key "evaluate elisp defun")
-    "'"    "C-c '")
+  (my-leader-def
+    "h"         (general-simulate-key "C-h"   :which-key "+Help")
+
+    ;; Windows
+    ";"       #'(shell-command                :which-key "shell command")
+    "w"         (general-simulate-key "C-w"   :which-key "+Windows") ; window command
+
+    ;; Buffers
+    "b"        '(:ignore t                    :which-key "Buffers")
+    "bs"      #'(save-buffer                  :which-key "write file")
+    "bd"      #'(kill-this-buffer             :which-key "delete buffer")
+    "bq"      #'(my/save-and-kill-buffer      :which-key "kill window and buffer")
+    "b SPC d" #'my/kill-window-and-buffer
+    "br"      #'revert-buffer
+
+    "er"      #'(eval-region                  :which-key "execute elisp region")
+    "es"      #'(eval-last-sexp               :which-key "execute elisp sexp")
+    "ee"      #'(eval-expression              :which-key "evaluate elisp expression")
+    "eb"      #'(eval-buffer                  :which-key "evaluate elisp buffer")
+    "ef"      #'(eval-defun                   :which-key "evaluate elisp defun")
+    "'"         (general-simulate-key "C-c '" :which-key "open src block"))
 
   ('normal
    "gs" #'my/split-line
@@ -522,8 +527,6 @@ Taken entirely from Doom Emacs
    "]b" #'(next-buffer     :which-key "next buffer")
    "[b" #'(previous-buffer :which-key "previous buffer"))
 
-  (my-localleader-def
-    "c" (general-simulate-key "C-c" :which-key "+Mode specific maps"))
 
   ('(normal insert)
    :prefix "C-c"
@@ -1053,6 +1056,7 @@ Entirely from Doom Emacs
   (lsp-enable-on-type-formatting nil)
   :general
   (my-localleader-def
+    "g"   '(:ignore t  :which-key "Miscellaneous")
     "gr" #'(lsp-rename :which-key "rename with lsp")))
 
 (use-package lsp-ui
@@ -1470,7 +1474,8 @@ Entirely from Doom Emacs
   (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
   :general
   (my-leader-def
-    "oe" #'eshell)
+    "oe"  #'eshell
+    "ove" #'+eshell/other-window)
   :config
   (evil-collection-init 'eshell)
 
@@ -1527,6 +1532,12 @@ Entirely from Doom Emacs
   (let ((inhibit-read-only t))
     (erase-buffer)
     (eshell-send-input)))
+
+;;;###autoload
+(defun +eshell/other-window ()
+  (interactive)
+  (evil-window-vsplit)
+  (eshell))
 #+END_SRC
 ** Tramp
 #+BEGIN_SRC emacs-lisp :results none
