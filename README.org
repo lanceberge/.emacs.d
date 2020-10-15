@@ -732,12 +732,11 @@ Entirely from Doom Emacs
 (use-package evil-commentary ; gc as an operator to comment
   :hook (find-file . evil-commentary-mode))
 
-(use-package evil-numbers ; increment/decrement numbers
+(use-package evil-numbers ; increment/decrement numbers w/ vim keys
   :general
-  (my-localleader-def
-    "n"   '(:ignore t              :which-key "Evil-Numbers")
-    "nu" #'(evil-numbers/inc-at-pt :which-key "increment")
-    "nd" #'(evil-numbers/dec-at-pt :which-key "decrement")))
+  ('(normal insert) override
+    "C-a" #'(evil-numbers/inc-at-pt :which-key "increment number")
+    "C-x" #'(evil-numbers/dec-at-pt :which-key "decrement number")))
 
 (use-package evil-lion ; gl as an operator to left-align, gL to right-align
   :hook ((prog-mode text-mode) . evil-lion-mode))
