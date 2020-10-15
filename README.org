@@ -662,6 +662,7 @@ Entirely from Doom Emacs
   (evil-search-wrap t)
   (evil-want-keybinding nil)
   (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
+  (evil-undo-system 'undo-redo)     ; built in undos with emacs 28
   :general
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
    [remap evil-next-line]     #'evil-next-visual-line
@@ -898,6 +899,7 @@ Entirely from Doom Emacs
   (evil-collection-init 'ivy))
 
 (use-package counsel ; ivy support for many functions
+  :ensure-system-package (rg . ripgrep)
   :custom
   (counsel-describe-function-function #'helpful-callable)
   (counsel-describe-variable-function #'helpful-variable)
@@ -934,6 +936,8 @@ Entirely from Doom Emacs
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp :results none
 (use-package yasnippet ; snippets
+  ;; Latex-mode snippets in org
+  :hook (org-mode . (lambda () (yas-activate-extra-mode 'latex-mode)))
   :defer 0.2
   :defer-incrementally (eldoc easymenu help-mode)
   :general
@@ -1097,9 +1101,7 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org
   :straight (:type built-in)
-  :hook ((kill-emacs . +org/tangle-config)
-         ;; Latex-mode snippets in org
-         (org-mode . (lambda () (yas-activate-extra-mode 'latex-mode))))
+  :hook (kill-emacs . +org/tangle-config)
   :defer-incrementally
   (calendar find-func format-spec org-macs org-compat
             org-faces org-entities org-list org-pcomplete org-src
@@ -1147,10 +1149,6 @@ Entirely from Doom Emacs
    "d"  #'(org-deadline         :which-key "deadline")
    "q"  #'(org-set-tags-command :which-key "add tags")
    "p"  #'(org-latex-preview    :which-key "preview latex"))
-
-                                        ; fixes my folding and unfolding levels getting messed up when I use a mix of tab and evil commands to fold
-  ('normal org-mode-map
-           [remap org-cycle] #'evil-toggle-fold)
 
   ('normal org-mode-map
            "RET" #'org-open-at-point)
@@ -1415,18 +1413,7 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
-(use-package undo-tree ; Persistent Undos, TODO
-  :custom
-  (undo-limit 10000)
-  (undo-tree-auto-save-history t)
-  ;; (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-  (undo-tree-history-directory-alist (list (cons "." (expand-file-name "undo/" my/etc-dir))))
-  :general
-  (my-leader-def
-    "fu" #'(undo-tree-visualize :which-key "undo")))
-
 (use-package format-all
-
   :custom
   (+format-with-lsp t)
   :general
