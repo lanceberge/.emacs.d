@@ -991,6 +991,7 @@ Entirely from Doom Emacs
 * Version Control
 #+BEGIN_SRC emacs-lisp :results none
 (use-package magit ; git client
+  :ensure-system-package (git)
   :defer-incrementally
   (dash f s with-editor git-commit package eieio lv transient evil-magit)
   :custom
@@ -1032,6 +1033,7 @@ Entirely from Doom Emacs
     "p" #'(projectile-command-map :which-key "Projectile")))
 
 (use-package counsel-projectile
+  :ensure-system-package (rg . ripgrep)
   :defer 0.1
   :config
   (counsel-projectile-mode))
@@ -1100,6 +1102,7 @@ Entirely from Doom Emacs
 ** Org
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org
+  :ensure-system-package (latex . texlive-core)
   :straight (:type built-in)
   :hook (kill-emacs . +org/tangle-config)
   :defer-incrementally
@@ -1228,6 +1231,7 @@ Entirely from Doom Emacs
    "b"  #'(org-babel-tangle :which-key "tangle file")))
 
 (use-package ox
+  :ensure-system-package (pdflatex . texlive-latexextra)
   :straight (:type built-in)
   :general
   ('(normal insert) org-mode-map
@@ -1457,6 +1461,7 @@ Entirely from Doom Emacs
 ** Eshell
 #+BEGIN_SRC emacs-lisp :results none
 (use-package eshell
+  :defer-incrementally (em-alias em-banner em-basic em-cmpl em-dirs em-glob em-hist em-ls em-script em-term)
   :straight (:type built-in)
   :hook ((eshell-mode            . smartparens-mode)
          (eshell-first-time-mode . +eshell/init-keymaps)
@@ -1645,6 +1650,7 @@ Entirely from Doom Emacs
 ** Statistics (R)
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ess
+  :ensure-system-package (r)
   :hook (ess-r-mode . +ess/company-mode)
   :general
   ('(normal insert) ess-mode-map
@@ -1689,7 +1695,7 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Rust
 #+BEGIN_SRC emacs-lisp :results none
-;; TODO - move to rustic and use cargo.el
+;; TODO - move to rustic and use cargo.el, ensure-system-package
 (use-package rust-mode
   :defer t)
 #+END_SRC
