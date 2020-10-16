@@ -742,8 +742,8 @@ Entirely from Doom Emacs
 (use-package evil-numbers ; increment/decrement numbers w/ vim keys
   :general
   ('(normal insert) override
-    "C-a" #'(evil-numbers/inc-at-pt :which-key "increment number")
-    "C-x" #'(evil-numbers/dec-at-pt :which-key "decrement number")))
+   "C-a" #'(evil-numbers/inc-at-pt :which-key "increment number")
+   "C-x" #'(evil-numbers/dec-at-pt :which-key "decrement number")))
 
 (use-package evil-lion ; gl as an operator to left-align, gL to right-align
   :hook ((prog-mode text-mode) . evil-lion-mode))
@@ -1112,7 +1112,7 @@ Entirely from Doom Emacs
 ** Org
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org
-  :ensure-system-package (latex . texlive-core)
+  :ensure-system-package ((latex . texlive-core))
   :straight (:type built-in)
   :hook (kill-emacs . +org/tangle-config)
   :defer-incrementally
@@ -1136,11 +1136,11 @@ Entirely from Doom Emacs
   (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
 
   ;; Latex exports
-  ;; (org-latex-listings 'minted)
-  ;; (org-latex-pdf-process
-  ;;   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-  ;;     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-  (org-latex-packages-alist '(("margin=1in" "geometry" "minted" nil)))
+  (org-latex-listings 'minted) ; syntax-highlighted code blocks
+  (org-latex-packages-alist '(("" "minted" "margin=1in" "geometry" "color" t)))
+  (org-latex-pdf-process ; required to use minted
+   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+  (org-latex-minted-options '(("linenos" "true"))) ; line numbers in expored src blocks
   :custom-face
   ;; No unnecessary background highlighting
   (org-block            ((t (:background "#282828"))))
@@ -1466,8 +1466,8 @@ Entirely from Doom Emacs
   :general
   (my-leader-def
     "o"    '(:ignore t          :which-key "Open")
-    "ot"  #'(vterm              :which-key "open vterm")
-    "ovt" #'(vterm-other-window :which-key "open vterm in vsplit")))
+    "ot"  #'vterm
+    "ovt" #'(vterm-other-window :which-key "vterm in vsplit")))
 #+END_SRC
 ** Eshell
 #+BEGIN_SRC emacs-lisp :results none
@@ -1482,7 +1482,7 @@ Entirely from Doom Emacs
   :general
   (my-leader-def
     "oe"  #'eshell
-    "ove" #'+eshell/other-window)
+    "ove" #'(+eshell/other-window :which-key "eshell in vsplit"))
   :config
   (evil-collection-init 'eshell)
 
