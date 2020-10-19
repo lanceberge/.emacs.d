@@ -1515,16 +1515,15 @@ Entirely from Doom Emacs
     "C-p" #'eshell-previous-matching-input-from-input)
 
   (general-def '(insert normal) eshell-mode-map
-    "C-l" #'+eshell/clear
-    "C-c" #'eshell-interrupt-process))
+    "C-l" #'+eshell/clear))
 
 ;;;###autoload
 (defun +eshell/init-aliases-h ()
   (dolist (var '(("s" "sudo")
 
-                 ("l" "ls -AF")
-                 ("ll" "ls -lF")
-                 ("la" "ls -lAF")
+                 ("l" "ls -A")
+                 ("ll" "ls -l")
+                 ("la" "ls -lA")
 
                  ("g" "git")
                  ("gs" "git status")
@@ -1556,7 +1555,7 @@ Entirely from Doom Emacs
 ;;;###autoload
 (defun curr-dir-git-branch-string (pwd)
   "Returns current git branch as a string, or the empty string if
-        PWD is not in a git repo (or the git command is not found)."
+          PWD is not in a git repo (or the git command is not found)."
   (interactive)
   (when (and (eshell-search-path "git")
              (locate-dominating-file pwd ".git"))
@@ -1581,8 +1580,8 @@ Entirely from Doom Emacs
 ;;;###autoload
 (defun eshell/eshell-local-prompt-function ()
   "A prompt for eshell that works locally (in that is assumes
-        that it could run certain commands) in order to make a prettier,
-        more-helpful local prompt."
+          that it could run certain commands) in order to make a prettier,
+          more-helpful local prompt."
   (interactive)
   (let* ((pwd       (eshell/pwd))
          (directory (pwd-repl-home pwd))
