@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: latex export for markdown
+# key: lex
+# --
+---
+fontsize: 10pt
+geometry: [margin=1in]
+---
