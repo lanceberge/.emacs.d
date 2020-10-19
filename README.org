@@ -1366,9 +1366,11 @@ Entirely from Doom Emacs
   :config
   (evil-collection-init 'dired))
 
-(use-package dired
+(use-package dired-x
   :straight (:type built-in)
-  :defer t) ; TODO hide ./ and ../
+  :hook (dired-mode . dired-omit-mode)
+  :custom
+  (dired-omit-files "^\\..$\\|^.$")) ; hide .. and ../ in dired
 #+END_SRC
 ** Windows
 #+BEGIN_SRC emacs-lisp :results none
