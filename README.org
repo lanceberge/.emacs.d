@@ -485,7 +485,10 @@ Taken entirely from Doom Emacs
     :ensure-system-package ispell
     :straight (:type built-in)
     :hook ((text-mode . flyspell-mode)
-           (prog-mode . flyspell-prog-mode))))
+           (prog-mode . flyspell-prog-mode))
+    :general
+    ('(normal insert)
+     "M-f" #'(flyspell-auto-correct-word :which-key "fix word"))))
 
 (use-package eldoc
   :straight (:type built-in)
@@ -1137,10 +1140,11 @@ Entirely from Doom Emacs
 
   ;; Latex exports
   (org-latex-listings 'minted) ; syntax-highlighted code blocks
-  (org-latex-packages-alist '(("" "minted" "margin=1in" "geometry" "color" t)))
+  (org-latex-packages-alist '(("margin=1in" "geometry" nil) (nil "minted" "color")))
   (org-latex-pdf-process ; required to use minted
    '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-  (org-latex-minted-options '(("linenos" "true"))) ; line numbers in expored src blocks
+  (org-latex-minted-options '(("linenos" "true") ; line numbers in expored src blocks
+                              ("style" "emacs")))
   :custom-face
   ;; No unnecessary background highlighting
   (org-block            ((t (:background "#282828"))))
@@ -1362,7 +1366,7 @@ Entirely from Doom Emacs
   :config
   (evil-collection-init 'dired))
 
-(use-package dired-x
+(use-package dired
   :straight (:type built-in)
   :defer t) ; TODO hide ./ and ../
 #+END_SRC
@@ -1461,6 +1465,7 @@ Entirely from Doom Emacs
 ** Vterm
 #+BEGIN_SRC emacs-lisp :results none
 (use-package vterm ; terminal emulator
+  :ensure-system-package (cmake)
   :custom
   (vterm-kill-buffer-on-exit t)
   :general
