@@ -53,6 +53,8 @@
 (straight-use-package 'use-package)
 (setq use-package-verbose t) ; show which packages are being loaded on startup and when
 
+(defconst bg-color "#282828")
+
 (use-package gruvbox-theme ; theme
   :config
   (load-theme 'gruvbox t))
@@ -61,10 +63,9 @@
   :straight (:type built-in)
   :custom
   (display-line-numbers-width-start t)
-  :custom-face
-  (line-number ((t (:background "#282828"))))
-  (line-number-current-line ((t (:background "#282828"))))
   :config
+  (custom-set-faces `(line-number ((t (:background ,bg-color))))
+                    `(line-number-current-line ((t (:background ,bg-color)))))
   (global-display-line-numbers-mode)
   (when IS-LINUX
     (setq-default display-line-numbers-type 'visual))) ; relative line numbers
@@ -89,9 +90,8 @@
                 mode-line-end-spaces))
 
 ;; Background faces
-;; TODO add variable for background color
-(custom-set-faces '(mode-line ((t (:background "#282828" :foreground "#928374"))))
-                  '(mode-line-inactive ((t (:background "#282828"))))
-                  '(mode-line-buffer-id ((t (:bold t)))))
+(custom-set-faces `(mode-line ((t (:background ,bg-color :foreground "#928374"))))
+                  `(mode-line-inactive ((t (:background ,bg-color))))
+                  `(mode-line-buffer-id ((t (:bold t)))))
 
-(set-face-foreground 'vertical-border "#282828")
+(set-face-foreground 'vertical-border bg-color)

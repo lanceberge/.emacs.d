@@ -115,6 +115,8 @@ Tangles to early-init.el
 #+END_SRC
 ** UI
 #+BEGIN_SRC emacs-lisp :results none :tangle ~/.emacs.d/early-init.el
+(defconst bg-color "#282828")
+
 (use-package gruvbox-theme ; theme
   :config
   (load-theme 'gruvbox t))
@@ -123,10 +125,9 @@ Tangles to early-init.el
   :straight (:type built-in)
   :custom
   (display-line-numbers-width-start t)
-  :custom-face
-  (line-number ((t (:background "#282828"))))
-  (line-number-current-line ((t (:background "#282828"))))
   :config
+  (custom-set-faces `(line-number ((t (:background ,bg-color))))
+                    `(line-number-current-line ((t (:background ,bg-color)))))
   (global-display-line-numbers-mode)
   (when IS-LINUX
     (setq-default display-line-numbers-type 'visual))) ; relative line numbers
@@ -151,12 +152,11 @@ Tangles to early-init.el
                 mode-line-end-spaces))
 
 ;; Background faces
-;; TODO add variable for background color
-(custom-set-faces '(mode-line ((t (:background "#282828" :foreground "#928374"))))
-                  '(mode-line-inactive ((t (:background "#282828"))))
-                  '(mode-line-buffer-id ((t (:bold t)))))
+(custom-set-faces `(mode-line ((t (:background ,bg-color :foreground "#928374"))))
+                  `(mode-line-inactive ((t (:background ,bg-color))))
+                  `(mode-line-buffer-id ((t (:bold t)))))
 
-(set-face-foreground 'vertical-border "#282828")
+(set-face-foreground 'vertical-border bg-color)
 #+END_SRC
 * Init
 
@@ -1145,12 +1145,6 @@ Entirely from Doom Emacs
   (org-latex-minted-options '(("linenos" "true") ; line numbers in expored src blocks
                               ("style" "emacs")))
   :custom-face
-  ;; No unnecessary background highlighting
-  (org-block            ((t (:background "#282828"))))
-  (org-block-begin-line ((t (:background "#282828"))))
-  (org-block-end-line   ((t (:background "#282828"))))
-  (org-level-1          ((t (:background "#282828"))))
-  (org-quote            ((t (:background "#282828"))))
   ;; Gray out done headlines and text; strike-through the text
   (org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
   (org-done             ((t (:foreground "#7C6f64"))))
@@ -1214,6 +1208,14 @@ Entirely from Doom Emacs
    "C-S-k" #'org-shiftcontrolup
    "C-S-j" #'org-shiftcontroldown)
   :config
+  ;; No unnecessary background highlighting
+  (custom-set-faces
+   `(org-block ((t (:background ,bg-color))))
+   `(org-block-begin-line ((t (:background ,bg-color))))
+   `(org-block-end-line ((t (:background ,bg-color))))
+   `(org-level-1 ((t (:background ,bg-color))))
+   `(org-quote ((t (:background ,bg-color)))))
+
   (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
 ** Org built-ins
