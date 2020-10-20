@@ -684,8 +684,8 @@ Entirely from Doom Emacs
   ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
   ('normal
-   "zR" #'evil-open-folds
-   "zM" #'evil-close-folds
+   "zr" #'evil-open-folds
+   "zm" #'evil-close-folds
    "gm" (general-simulate-key "@@")) ; last macro
 
   ('(normal visual motion)
@@ -961,7 +961,7 @@ Entirely from Doom Emacs
   :config
   (yas-global-mode))
 
-(use-package yasnippet-snippets ; a bunch of snippets to use
+(use-package yasnippet-snippets ; a bunch of snippets
   :after yasnippet)
 
 (use-package auto-yasnippet ; create small snippets easily
@@ -1003,7 +1003,7 @@ Entirely from Doom Emacs
 * Version Control
 #+BEGIN_SRC emacs-lisp :results none
 (use-package magit ; git client
-  :ensure-system-package (git)
+  :ensure-system-package git
   :defer-incrementally
   (dash f s with-editor git-commit package eieio lv transient evil-magit)
   :custom
@@ -1045,7 +1045,6 @@ Entirely from Doom Emacs
     "p" #'(projectile-command-map :which-key "Projectile")))
 
 (use-package counsel-projectile ; counsel support for projectile functions
-  :ensure-system-package (rg . ripgrep)
   :defer 0.1
   :config
   (counsel-projectile-mode))
@@ -1115,7 +1114,7 @@ Entirely from Doom Emacs
 ** Org
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org
-  :ensure-system-package ((latex . texlive-core))
+  :ensure-system-package (latex . texlive-core)
   :straight (:type built-in)
   :hook (kill-emacs . +org/tangle-config)
   :defer-incrementally
@@ -1374,15 +1373,11 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Windows
 #+BEGIN_SRC emacs-lisp :results none
-;; an alternative to ace-window. I use it because ace-widow counts exwm workspaces as windows,
-;; so I have to provide a key for the window even when there's only 2 windows
-(use-package switch-window
+(use-package ace-window
   :custom
-  (switch-window-shortcut-style 'qwerty)
-  (switch-window-qwerty-shortcuts '("j" "k" "l" "s" "d" "h" "a"))
-  (switch-window-input-style 'minibuffer)
+  (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
   :general
-  ("M-o" #'switch-window))
+  ("M-o" #'ace-window))
 
 (use-package golden-ratio ; auto resize windows
   :hook (window-setup . golden-ratio-mode)
@@ -1467,7 +1462,7 @@ Entirely from Doom Emacs
 ** Vterm
 #+BEGIN_SRC emacs-lisp :results none
 (use-package vterm ; terminal emulator
-  :ensure-system-package (cmake)
+  :ensure-system-package cmake
   :custom
   (vterm-kill-buffer-on-exit t)
   :general
@@ -1579,6 +1574,7 @@ Entirely from Doom Emacs
         (concat "~" (substring pwd home-len))
       pwd)))
 
+;; https://github.com/howardabrams/dot-files/blob/master/emacs-eshell.org
 ;;;###autoload
 (defun eshell/eshell-local-prompt-function ()
   "A prompt for eshell that works locally (in that is assumes
@@ -1763,7 +1759,7 @@ Entirely from Doom Emacs
   ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))
 
 (use-package pandoc-mode
-  :ensure-system-package (pandoc)
+  :ensure-system-package pandoc
   :hook (markdown-mode . pandoc-mode)
   :general
   ('markdown-mode-map
