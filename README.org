@@ -57,7 +57,8 @@ Tangles to early-init.el
 ** Initial Settings
 #+BEGIN_SRC emacs-lisp :results none :tangle ~/.emacs.d/early-init.el
 ;;; -*- lexical-binding: t -*-
-(setq gc-cons-threshold most-positive-fixnum) ; increase GC threshold until startup (in Initial section under hooks)
+;; increase GC threshold until startup (in Initial section under hooks)
+(setq gc-cons-threshold most-positive-fixnum)
 
 (defconst IS-LINUX (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
@@ -83,7 +84,6 @@ Tangles to early-init.el
                     :height 110
                     :weight 'normal
                     :width 'normal)
-
 
 (advice-add #'x-apply-session-resources :override #'ignore)
 #+END_SRC
@@ -151,7 +151,7 @@ Tangles to early-init.el
                 mode-line-misc-info
                 mode-line-end-spaces))
 
-;; Background faces
+;; Mode-line faces
 (custom-set-faces `(mode-line ((t (:background ,bg-color :foreground "#928374"))))
                   `(mode-line-inactive ((t (:background ,bg-color))))
                   `(mode-line-buffer-id ((t (:bold t)))))
@@ -246,7 +246,8 @@ Mostly taken from Doom Emacs
 
 (advice-add #'tty-run-terminal-initialization :override #'ignore)
 
-(advice-add #'display-startup-echo-area-message :override #'ignore) ; Get rid of For information about GNU Emacs message
+;; Get rid of For information about GNU Emacs message
+(advice-add #'display-startup-echo-area-message :override #'ignore)
 
 (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
 #+END_SRC
@@ -851,8 +852,9 @@ Entirely from Doom Emacs
 
     (add-hook 'exwm-manage-finish-hook (lambda () (call-interactively #'exwm-input-release-keyboard)))
 
-    (exwm-input-set-key (kbd "s-i") #'exwm-input-release-keyboard) ; switch to char mode (application local bindings)
-    (exwm-input-set-key (kbd "s-[") #'exwm-reset)                  ; switch to line mode (global bindings)
+    ;; switch to char mode (application local bindings)
+    (exwm-input-set-key (kbd "s-i") #'exwm-input-release-keyboard)
+    (exwm-input-set-key (kbd "s-[") #'exwm-reset) ; switch to line mode (global bindings)
     (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
     (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move)
 
@@ -1135,7 +1137,8 @@ Entirely from Doom Emacs
   (org-M-RET-may-split-line nil)
   (org-log-done 'time)
   (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
-  (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)" "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
+  (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)"
+                                 "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
 
   ;; Latex exports
   (org-latex-listings 'minted) ; syntax-highlighted code blocks
@@ -1476,7 +1479,8 @@ Entirely from Doom Emacs
 ** Eshell
 #+BEGIN_SRC emacs-lisp :results none
 (use-package eshell ; shell for elisp and regular shell commands
-  :defer-incrementally (em-alias em-banner em-basic em-cmpl em-dirs em-glob em-hist em-ls em-script em-term)
+  :defer-incrementally (em-alias em-banner em-basic em-cmpl
+                                 em-dirs em-glob em-hist em-ls em-script em-term)
   :straight (:type built-in)
   :hook ((eshell-mode            . smartparens-mode)
          (eshell-first-time-mode . +eshell/init-keymaps)
@@ -1558,7 +1562,8 @@ Entirely from Doom Emacs
   (interactive)
   (when (and (eshell-search-path "git")
              (locate-dominating-file pwd ".git"))
-    (let ((git-output (shell-command-to-string (concat "cd " pwd " && git branch | grep '\\*' | sed -e 's/^\\* //'"))))
+    (let ((git-output (shell-command-to-string
+                       (concat "cd " pwd " && git branch | grep '\\*' | sed -e 's/^\\* //'"))))
       (concat (if (> (length git-output) 0)
                   (substring git-output 0 -1)
                 "(no branch)")

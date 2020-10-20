@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-(setq gc-cons-threshold most-positive-fixnum) ; increase GC threshold until startup (in Initial section under hooks)
+;; increase GC threshold until startup (in Initial section under hooks)
+(setq gc-cons-threshold most-positive-fixnum)
 
 (defconst IS-LINUX (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
@@ -25,7 +26,6 @@
                     :height 110
                     :weight 'normal
                     :width 'normal)
-
 
 (advice-add #'x-apply-session-resources :override #'ignore)
 
@@ -89,7 +89,7 @@
                 mode-line-misc-info
                 mode-line-end-spaces))
 
-;; Background faces
+;; Mode-line faces
 (custom-set-faces `(mode-line ((t (:background ,bg-color :foreground "#928374"))))
                   `(mode-line-inactive ((t (:background ,bg-color))))
                   `(mode-line-buffer-id ((t (:bold t)))))
