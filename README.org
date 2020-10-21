@@ -738,7 +738,14 @@ Entirely from Doom Emacs
    "M-," #'evil-snipe-repeat-reverse))
 
 (use-package evil-surround ; s as an operator for surrounding
-  :hook (pre-command . evil-surround-mode))
+  :hook (pre-command . evil-surround-mode)
+  :config
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (dolist (var '((?\= "=" . "=")
+                             (?\* "*" . "*")
+                             (?\_ "_" . "_")))
+                (add-to-list 'evil-surround-pairs-alist var)))))
 
 (use-package evil-commentary ; gc as an operator to comment
   :hook (find-file . evil-commentary-mode))
