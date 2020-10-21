@@ -740,6 +740,7 @@ Entirely from Doom Emacs
 (use-package evil-surround ; s as an operator for surrounding
   :hook (pre-command . evil-surround-mode)
   :config
+  ;; use surround with =, *, and _ in org-mode
   (add-hook 'org-mode-hook
             (lambda ()
               (dolist (var '((?\= "=" . "=")
@@ -1374,6 +1375,13 @@ Entirely from Doom Emacs
   :general
   ('normal
    "-"  #'(dired-jump :which-key "open dired"))
+
+  ('normal dired-mode-map
+           ;; i in dired stays in normal mode to edit file names
+           "i" (lambda ()
+                 (interactive)
+                 (dired-toggle-read-only)
+                 (evil-normal-state)))
   :config
   (evil-collection-init 'dired))
 
