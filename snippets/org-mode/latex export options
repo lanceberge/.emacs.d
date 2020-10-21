@@ -2,7 +2,7 @@
 # name: latex export options
 # key: lex
 # --
-#+OPTIONS: toc:nil author:nil date:nil num:nil
+#+OPTIONS: toc:nil author:nil date:nil num:nil \n:t
 #+STARTUP: latexpreview
 #+latex_class_options: [10pt]
 #+latex_header: \usepackage{setspace}
