@@ -1154,6 +1154,7 @@ Entirely from Doom Emacs
   (org-latex-pdf-process ; required to use minted
    '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-latex-minted-options '(("linenos" "true") ; line numbers in expored src blocks
+                              ("frame" "lines")
                               ("style" "emacs")))
   :custom-face
   ;; Gray out done headlines and text; strike-through the text
@@ -1381,7 +1382,8 @@ Entirely from Doom Emacs
            "i" (lambda ()
                  (interactive)
                  (dired-toggle-read-only)
-                 (evil-normal-state)))
+                 (evil-normal-state)
+                 (evil-forward-char)))
   :config
   (evil-collection-init 'dired))
 
@@ -1402,7 +1404,13 @@ Entirely from Doom Emacs
 (use-package golden-ratio ; auto resize windows
   :hook (window-setup . golden-ratio-mode)
   :custom
-  (golden-ratio-auto-scale t))
+  (golden-ratio-auto-scale t)
+  :config
+  ;; works with ace-window
+  (define-advice select-window
+      (:after (window &optional no-record) golden-ratio-resize-window)
+    (golden-ratio)
+    nil))
 
 (use-package winner ; Undo and redo window configs
   :straight (:type built-in)
