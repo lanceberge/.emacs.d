@@ -947,6 +947,7 @@ Entirely from Doom Emacs
     "fic"       (lambda () (interactive) (counsel-file-jump "" "~/code"))
     "fio"       (lambda () (interactive) (counsel-file-jump "" "~/org"))
     "fie"       (lambda () (interactive) (counsel-file-jump "" "~/.emacs.d"))
+    "fid"       (lambda () (interactive) (counsel-file-jump "" "~/Downloads"))
     "fd"      #'(counsel-dired     :which-key "directory")
     "f SPC r" #'(counsel-rg        :which-key "ripgrep"))
 
@@ -1466,7 +1467,9 @@ Entirely from Doom Emacs
 
   ;; Don't pair ', and = in org mode, and pair $
   (sp-local-pair 'org-mode "'" nil :actions nil)
-  (eval-after-load 'smartparens-org '(sp-local-pair 'org-mode "=" nil :actions nil))
+  (eval-after-load 'smartparens-org '(progn
+                                       (sp-local-pair 'org-mode "=" nil :actions nil)
+                                       (sp-local-pair 'org-mode "~" nil :actions nil)))
   (sp-local-pair 'org-mode "$" "$"))
 #+END_SRC
 ** Miscellaneous
