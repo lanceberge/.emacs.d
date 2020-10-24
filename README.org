@@ -683,10 +683,10 @@ Entirely from Doom Emacs
    [remap evil-previous-line] #'evil-previous-visual-line)
 
   ('evil-window-map
-    "SPC h" #'(evil-window-move-far-left    :which-key "move window left")
-    "SPC j" #'(evil-window-move-very-bottom :which-key "move window down")
-    "SPC k" #'(evil-window-move-very-top    :which-key "move window up")
-    "SPC l" #'(evil-window-move-far-right   :which-key "move window right"))
+   "SPC h" #'(evil-window-move-far-left    :which-key "move window left")
+   "SPC j" #'(evil-window-move-very-bottom :which-key "move window down")
+   "SPC k" #'(evil-window-move-very-top    :which-key "move window up")
+   "SPC l" #'(evil-window-move-far-right   :which-key "move window right"))
 
   ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
@@ -927,7 +927,7 @@ Entirely from Doom Emacs
   (evil-collection-init 'ivy))
 
 (use-package counsel ; ivy support for many functions
-  :ensure-system-package (rg . ripgrep)
+  :ensure-system-package ((rg . ripgrep) fzf)
   :custom
   (counsel-describe-function-function #'helpful-callable)
   (counsel-describe-variable-function #'helpful-variable)
@@ -936,12 +936,19 @@ Entirely from Doom Emacs
     "."       #'(counsel-find-file :which-key "file in directory")
     "SPC"     #'(ivy-switch-buffer :which-key "switch buffer")
     "fr"      #'(counsel-recentf   :which-key "find recent files")
-    "fi"      #'(counsel-imenu     :which-key "imenu")
+    "fj"      #'(counsel-imenu     :which-key "imenu")
     "fg"      #'(counsel-git       :which-key "git files")
     "f SPC g" #'(counsel-git-grep  :which-key "git grep")
-    "ff"      #'(counsel-file-jump :which-key "file")
+    "f SPC f" #'(counsel-file-jump :which-key "file")
+    "ff"      #'(counsel-fzf       :which-key "fzf")
+    "fi"       '(:ignore t         :which-key "find in directory")
+    "fih"       (lambda () (interactive) (counsel-file-jump "" "~"))
+    "fis"       (lambda () (interactive) (counsel-file-jump "" "~/school"))
+    "fic"       (lambda () (interactive) (counsel-file-jump "" "~/code"))
+    "fio"       (lambda () (interactive) (counsel-file-jump "" "~/org"))
+    "fie"       (lambda () (interactive) (counsel-file-jump "" "~/.emacs.d"))
     "fd"      #'(counsel-dired     :which-key "directory")
-    "f SPC f" #'(counsel-rg        :which-key "ripgrep"))
+    "f SPC r" #'(counsel-rg        :which-key "ripgrep"))
 
   (my-localleader-def
     "x" #'(counsel-M-x :which-key "M-x"))
