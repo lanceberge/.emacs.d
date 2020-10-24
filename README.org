@@ -682,6 +682,12 @@ Entirely from Doom Emacs
    [remap evil-next-line]     #'evil-next-visual-line
    [remap evil-previous-line] #'evil-previous-visual-line)
 
+  ('evil-window-map
+    "SPC h" #'(evil-window-move-far-left    :which-key "move window left")
+    "SPC j" #'(evil-window-move-very-bottom :which-key "move window down")
+    "SPC k" #'(evil-window-move-very-top    :which-key "move window up")
+    "SPC l" #'(evil-window-move-far-right   :which-key "move window right"))
+
   ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
   ('normal
@@ -1087,6 +1093,7 @@ Entirely from Doom Emacs
 (use-package flycheck ; linting
   :hook (prog-mode . flycheck-mode)
   :custom
+  (flycheck-emacs-lisp-load-path 'inherit)
   (flycheck-display-errors-delay 0.25)
   (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
   :general
@@ -1179,13 +1186,13 @@ Entirely from Doom Emacs
   ('org-read-date-minibuffer-local-map
    ";" #'exit-minibuffer
    "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
-   "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
    "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
    "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
+   "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
    "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
-   "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1)))
    "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
-   "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
+   "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1)))
+   "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
 
   ;; Folding maps based on vim
   ('normal org-mode-map
@@ -1201,32 +1208,32 @@ Entirely from Doom Emacs
 
    ;; Vim keys > arrow keys
    "M-h"   #'org-metaleft
-   "M-l"   #'org-metaright
-   "M-k"   #'org-metaup
    "M-j"   #'org-metadown
+   "M-k"   #'org-metaup
+   "M-l"   #'org-metaright
 
    "M-H"   #'org-shiftleft
-   "M-L"   #'org-shiftright
-   "M-K"   #'org-shiftup
    "M-J"   #'org-shiftdown
+   "M-K"   #'org-shiftup
+   "M-L"   #'org-shiftright
 
    "C-M-h" #'org-shiftmetaleft
-   "C-M-l" #'org-shiftmetaright
-   "C-M-k" #'org-shiftmetaup
    "C-M-j" #'org-shiftmetadown
+   "C-M-k" #'org-shiftmetaup
+   "C-M-l" #'org-shiftmetaright
 
    "C-S-h" #'org-shiftcontrolleft
-   "C-S-l" #'org-shiftcontrolright
+   "C-S-j" #'org-shiftcontroldown
    "C-S-k" #'org-shiftcontrolup
-   "C-S-j" #'org-shiftcontroldown)
+   "C-S-l" #'org-shiftcontrolright)
   :config
   ;; No unnecessary background highlighting
   (custom-set-faces
-   `(org-block ((t (:background ,bg-color))))
+   `(org-block            ((t (:background ,bg-color))))
    `(org-block-begin-line ((t (:background ,bg-color))))
-   `(org-block-end-line ((t (:background ,bg-color))))
-   `(org-level-1 ((t (:background ,bg-color))))
-   `(org-quote ((t (:background ,bg-color)))))
+   `(org-block-end-line   ((t (:background ,bg-color))))
+   `(org-level-1          ((t (:background ,bg-color))))
+   `(org-quote            ((t (:background ,bg-color)))))
 
   (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
