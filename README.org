@@ -752,7 +752,8 @@ Entirely from Doom Emacs
             (lambda ()
               (dolist (var '((?\= "=" . "=")
                              (?\* "*" . "*")
-                             (?\_ "_" . "_")))
+                             (?\_ "_" . "_")
+                             (?s  "#+BEGIN_SRC" . "#+END_SRC")))
                 (add-to-list 'evil-surround-pairs-alist var)))))
 
 (use-package evil-commentary ; gc as an operator to comment
@@ -919,7 +920,7 @@ Entirely from Doom Emacs
    ";" #'exit-minibuffer)
 
   ('(normal insert) minibuffer-inactive-mode-map
-    ";" #'exit-minibuffer)
+   ";" #'exit-minibuffer)
   :custom
   (ivy-initial-inputs-alist nil) ; no initial ^, let flx do all the sorting work
   (ivy-re-builders-alist '((swiper                . ivy--regex-plus)
@@ -948,6 +949,7 @@ Entirely from Doom Emacs
     "fi"       '(:ignore t         :which-key "find in directory")
     "fih"       (lambda () (interactive) (counsel-file-jump "" "~"))
     "fis"       (lambda () (interactive) (counsel-file-jump "" "~/school"))
+    "fin"       (lambda () (interactive) (counsel-file-jump "" "~/school/notes"))
     "fic"       (lambda () (interactive) (counsel-file-jump "" "~/code"))
     "fio"       (lambda () (interactive) (counsel-file-jump "" "~/org"))
     "fie"       (lambda () (interactive) (counsel-file-jump "" "~/.emacs.d"))
@@ -1049,6 +1051,7 @@ Entirely from Doom Emacs
     "gnb" #'(magit-branch-and-checkout  :which-key "branch")
     "gnf" #'(magit-commit-fixup         :which-key "fixup commit")
     "gi"  #'(magit-init                 :which-key "init")
+    "gl"  #'(magit-log                  :which-key "log")
     "gf"   '(:ignore t                  :which-key "Find")
     "gfc" #'(magit-show-commit          :which-key "show commit")
     "gff" #'(magit-find-file            :which-key "file")
@@ -1159,6 +1162,7 @@ Entirely from Doom Emacs
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
 
   ;; General settings
+  (org-list-allow-alphabetical t)
   (org-startup-folded t)
   (org-fontify-done-headline t)
   (org-M-RET-may-split-line nil)
@@ -1764,6 +1768,9 @@ Entirely from Doom Emacs
   (dumb-jump-prefer-searcher 'rg)
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
+(use-package literate-calc-mode
+  :defer t)
 #+END_SRC
 * Filetype Specific
 ** PDF
