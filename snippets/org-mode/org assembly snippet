@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: org assembly snippet
+# key: sa
+# --
+#+BEGIN_SRC asm
+$0
+#+END_SRC
