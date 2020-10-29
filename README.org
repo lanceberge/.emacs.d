@@ -764,8 +764,8 @@ Entirely from Doom Emacs
 (use-package evil-numbers ; increment/decrement numbers w/ vim keys
   :general
   ('normal override
-   "C-a" #'(evil-numbers/inc-at-pt :which-key "increment number")
-   "C-x" #'(evil-numbers/dec-at-pt :which-key "decrement number")))
+           "C-a" #'(evil-numbers/inc-at-pt :which-key "increment number")
+           "C-x" #'(evil-numbers/dec-at-pt :which-key "decrement number")))
 
 (use-package evil-lion ; gl as an operator to left-align, gL to right-align
   :hook ((prog-mode text-mode) . evil-lion-mode))
@@ -1781,6 +1781,10 @@ Entirely from Doom Emacs
   :mode ("\\.pdf\\'" . pdf-view-mode)
   ;; no line numbers in pdfs
   :hook (pdf-view-mode . (lambda () (display-line-numbers-mode -1)))
+  :general
+  ('normal pdf-view-mode-map ; scroll with just d and u
+           "d" #'pdf-view-scroll-up-or-next-page
+           "u" #'pdf-view-scroll-down-or-previous-page)
   :config
   (pdf-loader-install :no-query)
   (evil-collection-pdf-setup)
