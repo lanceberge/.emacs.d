@@ -544,7 +544,9 @@ Taken entirely from Doom Emacs
    "SPC" (general-simulate-key "C-c C-c"))
 
   ('insert
-   "C-y" #'yank)) ; otherwise is overridden by evil
+   "C-y" #'yank ; otherwise is overridden by evil
+   "C-e" #'end-of-line
+   "C-a" #'beginning-of-line))
 #+END_SRC
 ** Hooks
 #+BEGIN_SRC emacs-lisp :results none
@@ -761,7 +763,7 @@ Entirely from Doom Emacs
 
 (use-package evil-numbers ; increment/decrement numbers w/ vim keys
   :general
-  ('(normal insert) override
+  ('normal override
    "C-a" #'(evil-numbers/inc-at-pt :which-key "increment number")
    "C-x" #'(evil-numbers/dec-at-pt :which-key "decrement number")))
 
@@ -1777,9 +1779,12 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package pdf-tools
   :mode ("\\.pdf\\'" . pdf-view-mode)
+  ;; no line numbers in pdfs
+  :hook (pdf-view-mode . (lambda () (display-line-numbers-mode -1)))
   :config
-  (pdf-loader-install)
-  (evil-collection-pdf-setup))
+  (pdf-loader-install :no-query)
+  (evil-collection-pdf-setup)
+  (setq-local make-pointer-invisible t)) ; no cursor in pdfs
 #+END_SRC
 ** C family
 #+BEGIN_SRC emacs-lisp :results none
