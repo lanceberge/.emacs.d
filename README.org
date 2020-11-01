@@ -424,6 +424,20 @@ Taken entirely from Doom Emacs
 
 (use-package use-package-ensure-system-package ; a way to manage dependencies within use-package
   :defer t)
+
+(use-package straight
+  :general
+  (my-localleader-def
+    "s" '(:ignore t :which-key "Straight")
+    "sr" #'(straight-rebuild-all :which-key "rebuild all")
+    "sf" #'(straight-fetch-all :which-key "fetch all")
+    "sp" #'(straight-pull-all :which-key "pull all")))
+
+(use-package straight-x
+  :straight straight
+  :general
+  (my-localleader-def
+    "sc" #'(straight-x-clean-unused-repos :which-key "clean unused")))
 #+END_SRC
 ** Built-in Packages
 #+BEGIN_SRC emacs-lisp :results none
@@ -671,7 +685,6 @@ Entirely from Doom Emacs
 (use-package evil ; vim bindings in emacs
   :demand t
   :custom
-  ;; TODO nohl
   (evil-want-C-u-scroll t)
   (evil-want-Y-yank-to-eol t)
   (evil-split-window-below t)
@@ -1405,16 +1418,15 @@ Entirely from Doom Emacs
   :general
   ('normal
    "-"  #'(dired-jump :which-key "open dired"))
-
-  ('normal dired-mode-map
-           ;; i in dired stays in normal mode to edit file names
-           "i" (lambda ()
-                 (interactive)
-                 (dired-toggle-read-only)
-                 (evil-normal-state)
-                 (evil-forward-char)))
   :config
-  (evil-collection-init 'dired))
+  (evil-collection-init 'dired)
+  ;; i in dired stays in normal mode to edit file names
+  (general-def 'normal dired-mode-map
+    "i" (lambda ()
+          (interactive)
+          (dired-toggle-read-only)
+          (evil-normal-state)
+          (evil-forward-char))))
 
 (use-package dired-x
   :straight (:type built-in)
@@ -1602,7 +1614,10 @@ Entirely from Doom Emacs
     "C-p" #'eshell-previous-matching-input-from-input)
 
   (general-def '(insert normal) eshell-mode-map
-    "C-l" #'+eshell/clear))
+    "C-l" #'+eshell/clear)
+
+  (general-def 'normal eshell-mode-map
+    "q" #'kill-this-buffer))
 
 ;;;###autoload
 (defun +eshell/init-aliases-h ()
@@ -1699,9 +1714,9 @@ Entirely from Doom Emacs
   (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir))
   :general
   (my-localleader-def
-    "s"  '(:ignore t            :which-key "ssh")
-    "sr" #'(+tramp/ssh-rlogin   :which-key "rlogin")
-    "sc" #'(+tramp/ssh-cascades :which-key "cascades")))
+    "t"  '(:ignore t            :which-key "ssh")
+    "tr" #'(+tramp/ssh-rlogin   :which-key "rlogin")
+    "tc" #'(+tramp/ssh-cascades :which-key "cascades")))
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp :results none
@@ -1773,9 +1788,6 @@ Entirely from Doom Emacs
   (dumb-jump-prefer-searcher 'rg)
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-
-(use-package literate-calc-mode
-  :defer t)
 #+END_SRC
 * Filetype Specific
 ** PDF
