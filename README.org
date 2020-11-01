@@ -1113,6 +1113,9 @@ Entirely from Doom Emacs
   (flycheck-emacs-lisp-load-path 'inherit)
   (flycheck-display-errors-delay 0.25)
   (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+
+  ;; language specific
+  (flycheck-clang-include-path '(".."))
   :general
   ('normal
    "[q" #'flycheck-previous-error
@@ -1471,12 +1474,12 @@ Entirely from Doom Emacs
     "tg"      #'(tab-bar-switch-to-tab        :which-key "choose tab by name")
     "tn"      #'(tab-bar-switch-to-next-tab   :which-key "next tab")
     "tp"      #'(tab-bar-switch-to-prev-tab   :which-key "previous tab")
-    "td"      #'(tab-bar-close-tab-by-name    :which-key "close tab by name")
+    "t SPC d" #'(tab-bar-close-tab-by-name    :which-key "close tab by name")
     "t,d"     #'(tab-bar-close-other-tabs     :which-key "close other tabs")
-    "t SPC d" #'(tab-bar-close-tab            :which-key "close tab")
+    "td"      #'(tab-bar-close-tab            :which-key "close tab")
     "tu"      #'(tab-bar-undo-close-tab       :which-key "undo close tab")
-    "tr"      #'(tab-bar-rename-tab-by-name   :which-key "rename tab by name")
-    "t SPC r" #'(tab-bar-rename-tab           :which-key "rename tab")))
+    "t SPC r" #'(tab-bar-rename-tab-by-name   :which-key "rename tab by name")
+    "tr"      #'(tab-bar-rename-tab           :which-key "rename tab")))
 #+END_SRC
 * Editing
 ** Smartparens
@@ -1778,17 +1781,27 @@ Entirely from Doom Emacs
 ** PDF
 #+BEGIN_SRC emacs-lisp :results none
 (use-package pdf-tools
+  ;; Fork that fixes an error I was getting only on gccemacs:
+  ;; "undefined function pdf-view-current-page"
+  :straight (:host github
+                   :repo "flatwhatson/pdf-tools"
+                   :branch "fix-macros"
+                   :flavor nil)
   :mode ("\\.pdf\\'" . pdf-view-mode)
   ;; no line numbers in pdfs
   :hook (pdf-view-mode . (lambda () (display-line-numbers-mode -1)))
+  :custom
+  ;; (pdf-view-display-size 'fit-page)
+  (pdf-view-use-scaling t)
   :general
   ('normal pdf-view-mode-map ; scroll with just d and u
            "d" #'pdf-view-scroll-up-or-next-page
            "u" #'pdf-view-scroll-down-or-previous-page)
   :config
-  (pdf-loader-install :no-query)
+  ;; no cursor in pdfs
+  (setq-local make-pointer-invisible t)
   (evil-collection-pdf-setup)
-  (setq-local make-pointer-invisible t)) ; no cursor in pdfs
+  (pdf-loader-install :no-query))
 #+END_SRC
 ** C family
 #+BEGIN_SRC emacs-lisp :results none
@@ -1802,8 +1815,15 @@ Entirely from Doom Emacs
   :general
   ('c-mode-base-map
    "M-;" #'my/append-semicolon))
-#+END_SRC
 
+(use-package gdb-mi
+  :straight (:type built-in)
+  :ensure-system-package gdb
+  :after cc-mode
+  :general
+  ('c-mode-map
+   "C-c g" #'gdb))
+#+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
