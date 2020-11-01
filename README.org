@@ -18,7 +18,6 @@
   - [[#evil-collection][Evil-Collection]]
   - [[#extra-operatorsmotion][Extra operators/motion]]
   - [[#miscellaneous][Miscellaneous]]
-- [[#exwm][EXWM]]
 - [[#completion][Completion]]
   - [[#ivy][Ivy]]
   - [[#yasnippet][Yasnippet]]
@@ -428,10 +427,10 @@ Taken entirely from Doom Emacs
 (use-package straight
   :general
   (my-localleader-def
-    "s" '(:ignore t :which-key "Straight")
+    "s"   '(:ignore t            :which-key "Straight")
     "sr" #'(straight-rebuild-all :which-key "rebuild all")
-    "sf" #'(straight-fetch-all :which-key "fetch all")
-    "sp" #'(straight-pull-all :which-key "pull all")))
+    "sf" #'(straight-fetch-all   :which-key "fetch all")
+    "sp" #'(straight-pull-all    :which-key "pull all")))
 
 (use-package straight-x
   :straight straight
@@ -709,7 +708,7 @@ Entirely from Doom Emacs
   ('normal
    "zr" #'evil-open-folds
    "zm" #'evil-close-folds
-   "gm" (general-simulate-key "@@")) ; last macro
+   "gm" (general-simulate-key "@@" :which-key "run last macro")) ; last macro
 
   ('(normal visual motion)
    ";" #'evil-ex ; switch ; and :
@@ -843,66 +842,6 @@ Entirely from Doom Emacs
 
 (use-package evil-mc ; multiple cursors
   :hook (find-file . evil-mc-mode))
-#+END_SRC
-* EXWM
-#+BEGIN_SRC emacs-lisp :results none
-(when IS-LINUX
-  (use-package exwm ; emacs window manager for linux
-    ;; :demand t
-    :disabled t
-    :custom
-    (exwm-workspace-number 4)
-    ;; Line-editing shortcuts
-    (exwm-input-simulation-keys
-     '(([?\C-b] . [left])
-       ([?\C-f] . [right])
-       ([?\C-p] . [up])
-       ([?\C-n] . [down])
-       ([?\C-a] . [home])
-       ([?\C-e] . [end])
-       ([?\M-v] . [prior])
-       ([?\C-v] . [next])
-       ([?\C-d] . [delete])
-       ([?\C-k] . [S-end delete])))
-
-    (exwm-input-prefix-keys ; let my C-SPC and C-, prefixes work in exwm mode
-     '(?\C-\s ?\C-,))
-    :general
-    ("s-f" (lambda ()
-             (interactive (start-process-shell-command "firefox" nil "firefox"))))
-    :config
-    ;; use emacs state as default for exwm; this allows my bindings
-    ;; in exwm-input-simulation-keys to not be overriden by evil bindings
-    (evil-set-initial-state 'exwm-mode 'emacs)
-    ;; (require 'exwm-config)
-
-    ;; Make class name the buffer name, e.g. a firefox buffer will be named firefox
-    (add-hook 'exwm-update-class-hook
-              (lambda ()
-                (exwm-workspace-rename-buffer exwm-class-name)))
-
-    (add-hook 'exwm-manage-finish-hook (lambda () (call-interactively #'exwm-input-release-keyboard)))
-
-    ;; switch to char mode (application local bindings)
-    (exwm-input-set-key (kbd "s-i") #'exwm-input-release-keyboard)
-    (exwm-input-set-key (kbd "s-[") #'exwm-reset) ; switch to line mode (global bindings)
-    (exwm-input-set-key (kbd "s-w") #'exwm-workspace-switch)
-    (exwm-input-set-key (kbd "s-m") #'exwm-workspace-move)
-
-    ;; open an application with s-;
-    (exwm-input-set-key (kbd "s-;")
-                        (lambda (command)
-                          (interactive (list (read-shell-command "$ ")))
-                          (start-process-shell-command command nil command)))
-
-    ;; bind s-{0-9} to that workspace
-    (dotimes (i 10)
-      (exwm-input-set-key (kbd (format "s-%d" i))
-                          `(lambda ()
-                             (interactive)
-                             (exwm-workspace-switch-create ,i))))
-
-    (exwm-enable)))
 #+END_SRC
 * Completion
 ** Ivy
@@ -1714,7 +1653,7 @@ Entirely from Doom Emacs
   (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir))
   :general
   (my-localleader-def
-    "t"  '(:ignore t            :which-key "ssh")
+    "t"  '(:ignore t            :which-key "Tramp ssh")
     "tr" #'(+tramp/ssh-rlogin   :which-key "rlogin")
     "tc" #'(+tramp/ssh-cascades :which-key "cascades")))
 #+END_SRC
