@@ -31,11 +31,9 @@
   - [[#org-built-ins][Org built-ins]]
   - [[#non-built-ins][Non built-ins]]
   - [[#functions-1][Functions]]
-- [[#windows-buffers-directories-tabs][Windows, Buffers, Directories, Tabs]]
-  - [[#dired][Dired]]
+- [[#windows-buffers-tabs][Windows, Buffers, Tabs]]
   - [[#windows][Windows]]
   - [[#tabs][Tabs]]
-  - [[#functions-2][Functions]]
 - [[#editing][Editing]]
   - [[#smartparens][Smartparens]]
   - [[#miscellaneous-1][Miscellaneous]]
@@ -43,7 +41,9 @@
   - [[#vterm][Vterm]]
   - [[#eshell][Eshell]]
   - [[#tramp][Tramp]]
+  - [[#dired][Dired]]
   - [[#miscellaneous-2][Miscellaneous]]
+  - [[#functions-2][Functions]]
 - [[#filetype-specific][Filetype Specific]]
   - [[#pdf][PDF]]
   - [[#c-family][C family]]
@@ -156,8 +156,8 @@ Tangles to early-init.el
                 mode-line-end-spaces))
 
 ;; Mode-line faces
-(custom-set-faces `(mode-line ((t (:background ,bg-color :foreground "#928374"))))
-                  `(mode-line-inactive ((t (:background ,bg-color))))
+(custom-set-faces `(mode-line           ((t (:background ,bg-color :foreground "#928374"))))
+                  `(mode-line-inactive  ((t (:background ,bg-color))))
                   `(mode-line-buffer-id ((t (:bold t)))))
 
 (set-face-foreground 'vertical-border bg-color)
@@ -542,8 +542,10 @@ Taken entirely from Doom Emacs
     "bd"      #'(kill-this-buffer             :which-key "delete buffer")
     "bq"      #'(my/save-and-kill-buffer      :which-key "save and kill buffer")
     "b SPC d" #'(my/kill-window-and-buffer    :which-key "kill window and buffer")
-    "br"      #'revert-buffer
+    "br"        (lambda () (interactive)
+                  (revert-buffer t t)         :which-key "rever-buffer")
 
+    ;; Eval elisp
     "er"      #'(eval-region                  :which-key "execute elisp region")
     "es"      #'(eval-last-sexp               :which-key "execute elisp sexp")
     "ee"      #'(eval-expression              :which-key "evaluate elisp expression")
@@ -1081,14 +1083,14 @@ Entirely from Doom Emacs
 (use-package lsp-ivy
   :after (lsp-mode))
 
-(use-package flycheck ; linting
+(use-package flycheck ; code syntax checking
   :hook (prog-mode . flycheck-mode)
   :custom
   (flycheck-emacs-lisp-load-path 'inherit)
   (flycheck-display-errors-delay 0.25)
   (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
-  ;; language specific
+  ;; Language specific
   (flycheck-clang-include-path '(".."))
   :general
   ('normal
@@ -1374,29 +1376,7 @@ Entirely from Doom Emacs
   (move-beginning-of-line nil)
   (org-insert-todo-heading 1))
 #+END_SRC
-* Windows, Buffers, Directories, Tabs
-** Dired
-#+BEGIN_SRC emacs-lisp :results none
-(use-package dired
-  :straight (:type built-in)
-  :custom
-  (dired-auto-revert-buffer) ; don't prompt to revert
-  (dired-recursive-copies 'always)
-  :general
-  ('normal
-   "-"  #'(dired-jump :which-key "open dired"))
-  :config
-  (evil-collection-init 'dired)
-
-  (general-def 'normal dired-mode-map
-    "i" #'+dired/edit))
-
-(use-package dired-x
-  :straight (:type built-in)
-  :hook (dired-mode . dired-omit-mode)
-  :custom
-  (dired-omit-files "^\\..$\\|^.$")) ; hide .. and ../ in dired
-#+END_SRC
+* Windows, Buffers, Tabs
 ** Windows
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ace-window
@@ -1455,16 +1435,6 @@ Entirely from Doom Emacs
     "tu"      #'(tab-bar-undo-close-tab       :which-key "undo close tab")
     "t SPC r" #'(tab-bar-rename-tab-by-name   :which-key "rename tab by name")
     "tr"      #'(tab-bar-rename-tab           :which-key "rename tab")))
-#+END_SRC
-** Functions
-
-#+BEGIN_SRC emacs-lisp :results none
-(defun +dired/edit ()
-  "stay in normal mode to edit dired file names"
-  (interactive)
-  (dired-toggle-read-only)
-  (evil-normal-state)
-  (evil-forward-char))
 #+END_SRC
 * Editing
 ** Smartparens
@@ -1712,6 +1682,28 @@ Entirely from Doom Emacs
   (interactive)
   (find-file "/sshx:lancebergeron@cascades1.arc.vt.edu:~/"))
 #+END_SRC
+** Dired
+#+BEGIN_SRC emacs-lisp :results none
+(use-package dired
+  :straight (:type built-in)
+  :custom
+  (dired-auto-revert-buffer) ; don't prompt to revert
+  (dired-recursive-copies 'always)
+  :general
+  ('normal
+   "-"  #'(dired-jump :which-key "open dired"))
+  :config
+  (evil-collection-init 'dired)
+
+  (general-def 'normal dired-mode-map
+    "i" #'+dired/edit))
+
+(use-package dired-x
+  :straight (:type built-in)
+  :hook (dired-mode . dired-omit-mode)
+  :custom
+  (dired-omit-files "^\\..$\\|^.$")) ; hide .. and ../ in dired
+#+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package restart-emacs
@@ -1770,6 +1762,15 @@ Entirely from Doom Emacs
   (dumb-jump-prefer-searcher 'rg)
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+#+END_SRC
+** Functions
+#+BEGIN_SRC emacs-lisp :results none
+(defun +dired/edit ()
+  "stay in normal mode to edit dired file names"
+  (interactive)
+  (dired-toggle-read-only)
+  (evil-normal-state)
+  (evil-forward-char))
 #+END_SRC
 * Filetype Specific
 ** PDF
