@@ -2,8 +2,10 @@
 ;; increase GC threshold until startup (in Initial section under hooks)
 (setq gc-cons-threshold most-positive-fixnum)
 
-(defconst IS-LINUX (eq system-type 'gnu/linux))
-(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+(defconst IS-LINUX (eq system-type 'gnu/linux)
+  "A Linux system")
+(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos))
+  "A windows system")
 
 (setq package-enable-at-startup nil) ; disable package.el at startup
 (advice-add #'package--ensure-init-file :override #'ignore)
@@ -53,7 +55,8 @@
 (straight-use-package 'use-package)
 (setq use-package-verbose t) ; show which packages are being loaded on startup and when
 
-(defconst bg-color "#282828")
+(defconst bg-color "#282828"
+  "gruvbox background color")
 
 (use-package gruvbox-theme ; theme
   :config

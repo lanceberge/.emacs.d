@@ -61,8 +61,10 @@ Tangles to early-init.el
 ;; increase GC threshold until startup (in Initial section under hooks)
 (setq gc-cons-threshold most-positive-fixnum)
 
-(defconst IS-LINUX (eq system-type 'gnu/linux))
-(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+(defconst IS-LINUX (eq system-type 'gnu/linux)
+  "A Linux system")
+(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos))
+  "A windows system")
 
 (setq package-enable-at-startup nil) ; disable package.el at startup
 (advice-add #'package--ensure-init-file :override #'ignore)
@@ -116,7 +118,8 @@ Tangles to early-init.el
 #+END_SRC
 ** UI
 #+BEGIN_SRC emacs-lisp :results none :tangle ~/.emacs.d/early-init.el
-(defconst bg-color "#282828")
+(defconst bg-color "#282828"
+  "gruvbox background color")
 
 (use-package gruvbox-theme ; theme
   :config
@@ -167,8 +170,11 @@ Loads the file config.el on startup. Every time I exit emacs (if org has been lo
 
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el :results none
 ;;; -*- lexical-binding: t -*-
-(defconst config-org (expand-file-name "README.org" user-emacs-directory))
-(defconst config-el  (expand-file-name "config.el" user-emacs-directory))
+(defconst config-org (expand-file-name "README.org" user-emacs-directory)
+  "org-mode config to tangle into config.el")
+
+(defconst config-el  (expand-file-name "config.el" user-emacs-directory)
+  "emacs-lisp tangled config file")
 
 (unless (file-exists-p config-el) ; tangle config-org to config-el
   (require 'org)
@@ -565,21 +571,26 @@ Taken entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (add-hook 'after-init-hook ; show startup time
           (lambda ()
+            "show the startup time"
             (when (require 'time-date nil t)
               (message "Emacs init time: %.2f seconds."
                        (time-to-seconds (time-since emacs-load-start-time))))))
 
 (add-hook 'emacs-startup-hook ; reset garbage collection settings and file-name-handler-alist
           (lambda ()
+            "raise the garbage collection threshold to defer garbage collection
+               and unset file-name-handler-alist"
             (setq gc-cons-threshold 16777216
                   gc-cons-percentage 0.1
                   file-name-handler-alist default-file-name-handler-alist)))
 
 ;; Raise gc threshold while minibuffer is active to not slow down ivy
 (defun doom-defer-garbage-collection-h ()
+  "Defer garbage collection by setting it to the largest possible number"
   (setq gc-cons-threshold most-positive-fixnum))
 
 (defun doom-restore-garbage-collection-h ()
+  "Restore the garbage collection threshold"
   (run-at-time
    1 nil (lambda () (setq gc-cons-threshold 16777216))))
 
@@ -592,30 +603,35 @@ Taken entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun my/save-and-kill-buffer ()
+  "save and kill buffer"
   (interactive)
   (save-buffer)
   (kill-this-buffer))
 
 ;;;###autoload
 (defun my/split-line-below ()
+  "split the line below at point"
   (interactive)
   (newline)
   (indent-according-to-mode))
 
 ;;;###autoload
 (defun my/split-line-above ()
+  "split the line above at point"
   (interactive)
   (my/split-line-below)
   (move-text-up))
 
 ;;;###autoload
 (defun my/kill-window-and-buffer ()
+  "kill window and buffer"
   (interactive)
   (kill-this-buffer)
   (evil-quit))
 
 ;;;###autoload
 (defun my/append-semicolon()
+  "append a semicolon to the end of the line"
   (interactive)
   (save-excursion
     (call-interactively 'move-end-of-line)
@@ -1330,18 +1346,21 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun +org/tangle-config ()
+  "tangle my org-mode config file to an elisp file"
   (interactive)
   (find-file config-org)
   (org-babel-tangle-file config-org config-el))
 
 ;;;###autoload
 (defun +org/insert-subheading ()
+  "insert a subheading in org mode and go to insert mode"
   (interactive)
   (evil-append-line 1)
   (org-insert-subheading 1))
 
 ;;;###autoload
 (defun +org/insert-heading-above ()
+  "insert an org heading above and jump into insert mode"
   (interactive)
   (evil-append-line 1)
   (move-beginning-of-line nil)
@@ -1349,6 +1368,7 @@ Entirely from Doom Emacs
 
 ;;;###autoload
 (defun +org/insert-todo-above ()
+  "insert an org todo above and jump into insert mode"
   (interactive)
   (evil-append-line 1)
   (move-beginning-of-line nil)
@@ -1440,6 +1460,7 @@ Entirely from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
 (defun +dired/edit ()
+  "stay in normal mode to edit dired file names"
   (interactive)
   (dired-toggle-read-only)
   (evil-normal-state)
@@ -1550,13 +1571,16 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun +eshell/init-keymaps ()
+  "initialize eshell keybindings"
   (general-def 'normal eshell-mode-map
     "C-n" (lambda ()
+            "jump into insert mode before finding the next match in eshell"
             (interactive)
             (evil-append-line 1)
             (general-simulate-key "C-n"))
 
     "C-p" (lambda ()
+            "jump into insert mode before finding the previous match in eshell"
             (interactive)
             (evil-append-line 1)
             (general-simulate-key "C-p")))
@@ -1573,6 +1597,7 @@ Entirely from Doom Emacs
 
 ;;;###autoload
 (defun +eshell/init-aliases-h ()
+  "initialize eshell aliases"
   (dolist (var '(("s" "sudo")
 
                  ("l" "ls -A")
@@ -1594,6 +1619,7 @@ Entirely from Doom Emacs
 
 ;;;###autoload
 (defun +eshell/clear ()
+  "eshell clear screen"
   (interactive)
   (let ((inhibit-read-only t))
     (erase-buffer)
@@ -1601,6 +1627,7 @@ Entirely from Doom Emacs
 
 ;;;###autoload
 (defun +eshell/other-window ()
+  "open eshell in a vsplit"
   (interactive)
   (evil-window-vsplit)
   (eshell))
@@ -1609,7 +1636,7 @@ Entirely from Doom Emacs
 ;;;###autoload
 (defun curr-dir-git-branch-string (pwd)
   "Returns current git branch as a string, or the empty string if
-          PWD is not in a git repo (or the git command is not found)."
+            PWD is not in a git repo (or the git command is not found)."
   (interactive)
   (when (and (eshell-search-path "git")
              (locate-dominating-file pwd ".git"))
@@ -1623,6 +1650,7 @@ Entirely from Doom Emacs
 ;; https://blog.liangzan.net/blog/2012/12/12/customizing-your-emacs-eshell-prompt/
 ;;;###autoload
 (defun pwd-repl-home (pwd)
+  "shortened version of /home/ex/* for eshell prompt"
   (interactive)
   (let* ((home (expand-file-name (getenv "HOME")))
          (home-len (length home)))
@@ -1636,8 +1664,8 @@ Entirely from Doom Emacs
 ;;;###autoload
 (defun eshell/eshell-local-prompt-function ()
   "A prompt for eshell that works locally (in that is assumes
-          that it could run certain commands) in order to make a prettier,
-          more-helpful local prompt."
+            that it could run certain commands) in order to make a prettier,
+            more-helpful local prompt."
   (interactive)
   (let* ((pwd       (eshell/pwd))
          (directory (pwd-repl-home pwd))
@@ -1674,11 +1702,13 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun +tramp/ssh-rlogin ()
+  "ssh into rlogin through tramp"
   (interactive)
   (find-file "/sshx:lancebergeron@rlogin.cs.vt.edu:~/"))
 
 ;;;###autoload
 (defun +tramp/ssh-cascades ()
+  "ssh into cascades through tramp"
   (interactive)
   (find-file "/sshx:lancebergeron@cascades1.arc.vt.edu:~/"))
 #+END_SRC
@@ -1792,14 +1822,15 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun +cc/company-mode ()
-  (set (make-local-variable 'company-backends)
-       '((company-cmake
-          company-capf
-          company-clang
-          company-dabbrev-code
-          company-files
-          company-yasnippet
-          company-keywords))))
+  "company backends for c-mode"
+  (setq-local company-backends
+              '((company-cmake
+                 company-capf
+                 company-clang
+                 company-dabbrev-code
+                 company-files
+                 company-yasnippet
+                 company-keywords))))
 #+END_SRC
 ** Statistics (R)
 #+BEGIN_SRC emacs-lisp :results none
@@ -1826,12 +1857,13 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun +ess/company-mode ()
-  (set (make-local-variable 'company-backends)
-       '((company-R-args
-          company-R-objects
-          company-dabbrev-code
-          company-files
-          company-yasnippet))))
+  "company backends for r mode"
+  (setq-local company-backends
+              '((company-R-args
+                 company-R-objects
+                 company-dabbrev-code
+                 company-files
+                 company-yasnippet))))
 #+END_SRC
 ** Markdown
 #+BEGIN_SRC emacs-lisp :results none

@@ -1,6 +1,9 @@
 ;;; -*- lexical-binding: t -*-
-(defconst config-org (expand-file-name "README.org" user-emacs-directory))
-(defconst config-el  (expand-file-name "config.el" user-emacs-directory))
+(defconst config-org (expand-file-name "README.org" user-emacs-directory)
+  "org-mode config to tangle into config.el")
+
+(defconst config-el  (expand-file-name "config.el" user-emacs-directory)
+  "emacs-lisp tangled config file")
 
 (unless (file-exists-p config-el) ; tangle config-org to config-el
   (require 'org)
