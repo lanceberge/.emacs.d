@@ -35,6 +35,7 @@
   - [[#dired][Dired]]
   - [[#windows][Windows]]
   - [[#tabs][Tabs]]
+  - [[#functions-2][Functions]]
 - [[#editing][Editing]]
   - [[#smartparens][Smartparens]]
   - [[#miscellaneous-1][Miscellaneous]]
@@ -533,8 +534,8 @@ Taken entirely from Doom Emacs
     "b"        '(:ignore t                    :which-key "Buffers")
     "bs"      #'(save-buffer                  :which-key "write file")
     "bd"      #'(kill-this-buffer             :which-key "delete buffer")
-    "bq"      #'(my/save-and-kill-buffer      :which-key "kill window and buffer")
-    "b SPC d" #'my/kill-window-and-buffer
+    "bq"      #'(my/save-and-kill-buffer      :which-key "save and kill buffer")
+    "b SPC d" #'(my/kill-window-and-buffer    :which-key "kill window and buffer")
     "br"      #'revert-buffer
 
     "er"      #'(eval-region                  :which-key "execute elisp region")
@@ -545,11 +546,10 @@ Taken entirely from Doom Emacs
     "'"         (general-simulate-key "C-c '" :which-key "open src block"))
 
   ('normal
-   "gs" #'my/split-line
-   "gS" (lambda () (interactive) (my/split-line) (move-text-up)) ; split line above
-   "gC" #'my/comment-until-end-of-line
-   "]b" #'(next-buffer     :which-key "next buffer")
-   "[b" #'(previous-buffer :which-key "previous buffer"))
+   "gs" #'(my/split-line-below :which-key "split line below")
+   "gS" #'(my/split-line-above :which-key "split line above")
+   "]b" #'(next-buffer         :which-key "next buffer")
+   "[b" #'(previous-buffer     :which-key "previous buffer"))
 
 
   ('(normal insert)
@@ -597,10 +597,16 @@ Taken entirely from Doom Emacs
   (kill-this-buffer))
 
 ;;;###autoload
-(defun my/split-line ()
+(defun my/split-line-below ()
   (interactive)
   (newline)
   (indent-according-to-mode))
+
+;;;###autoload
+(defun my/split-line-above ()
+  (interactive)
+  (my/split-line-below)
+  (move-text-up))
 
 ;;;###autoload
 (defun my/kill-window-and-buffer ()
@@ -1150,7 +1156,8 @@ Entirely from Doom Emacs
    ",s" #'(org-schedule         :which-key "schedule")
    "d"  #'(org-deadline         :which-key "deadline")
    "q"  #'(org-set-tags-command :which-key "add tags")
-   "p"  #'(org-latex-preview    :which-key "preview latex"))
+   "p"  #'(org-latex-preview    :which-key "preview latex")
+   ",t" #'(+org/tangle-config   :which-key "tangle config"))
 
   ('normal org-mode-map
            "RET" #'org-open-at-point)
@@ -1323,6 +1330,7 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun +org/tangle-config ()
+  (interactive)
   (find-file config-org)
   (org-babel-tangle-file config-org config-el))
 
@@ -1359,13 +1367,9 @@ Entirely from Doom Emacs
    "-"  #'(dired-jump :which-key "open dired"))
   :config
   (evil-collection-init 'dired)
-  ;; i in dired stays in normal mode to edit file names
+
   (general-def 'normal dired-mode-map
-    "i" (lambda ()
-          (interactive)
-          (dired-toggle-read-only)
-          (evil-normal-state)
-          (evil-forward-char))))
+    "i" #'+dired/edit))
 
 (use-package dired-x
   :straight (:type built-in)
@@ -1431,6 +1435,15 @@ Entirely from Doom Emacs
     "tu"      #'(tab-bar-undo-close-tab       :which-key "undo close tab")
     "t SPC r" #'(tab-bar-rename-tab-by-name   :which-key "rename tab by name")
     "tr"      #'(tab-bar-rename-tab           :which-key "rename tab")))
+#+END_SRC
+** Functions
+
+#+BEGIN_SRC emacs-lisp :results none
+(defun +dired/edit ()
+  (interactive)
+  (dired-toggle-read-only)
+  (evil-normal-state)
+  (evil-forward-char))
 #+END_SRC
 * Editing
 ** Smartparens
