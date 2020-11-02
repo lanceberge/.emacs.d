@@ -3,9 +3,9 @@
 (setq gc-cons-threshold most-positive-fixnum)
 
 (defconst IS-LINUX (eq system-type 'gnu/linux)
-  "A Linux system")
+  "Are we currently on a Linux OS")
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos))
-  "A windows system")
+  "Are we currently on a windows OS")
 
 (setq package-enable-at-startup nil) ; disable package.el at startup
 (advice-add #'package--ensure-init-file :override #'ignore)

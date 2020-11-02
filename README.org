@@ -62,9 +62,9 @@ Tangles to early-init.el
 (setq gc-cons-threshold most-positive-fixnum)
 
 (defconst IS-LINUX (eq system-type 'gnu/linux)
-  "A Linux system")
+  "Are we currently on a Linux OS")
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos))
-  "A windows system")
+  "Are we currently on a windows OS")
 
 (setq package-enable-at-startup nil) ; disable package.el at startup
 (advice-add #'package--ensure-init-file :override #'ignore)
@@ -730,8 +730,8 @@ Entirely from Doom Emacs
   ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
   ('normal
-   "zr" #'evil-open-folds
-   "zm" #'evil-close-folds
+   "zr" #'(evil-open-folds  :which-key "open folds recursively")
+   "zm" #'(evil-close-folds :which-key "close folds recursively")
    "gm" (general-simulate-key "@@" :which-key "run last macro")) ; last macro
 
   ('(normal visual motion)
@@ -749,7 +749,7 @@ Entirely from Doom Emacs
    "SPC q" #'(save-buffers-kill-emacs      :which-key "save buffers & quit emacs"))
 
   ('(normal insert)
-   "C-l" #'evil-ex-nohighlight)
+   "C-l" #'(evil-ex-nohighlight :which-key "clear highlight"))
   :config
   (evil-mode))
 #+END_SRC
@@ -779,8 +779,8 @@ Entirely from Doom Emacs
   ('motion evil-snipe-override-local-mode-map
            "," nil) ; don't override , prefix
   ('motion
-   ":"   #'evil-snipe-repeat
-   "M-," #'evil-snipe-repeat-reverse))
+   ":"   #'(evil-snipe-repeat         :which-key "repeat last search")
+   "M-," #'(evil-snipe-repeat-reverse :which-key "repeat last search backwards")))
 
 (use-package evil-surround ; s as an operator for surrounding
   :hook (pre-command . evil-surround-mode)
@@ -810,38 +810,38 @@ Entirely from Doom Emacs
   :hook (find-file . evil-matchit-mode)
   :general
   ('motion
-   "%" #'evilmi-jump-items))
+   "%" #'(evilmi-jump-items :which-key "jump to matching pair")))
 
 (use-package evil-exchange ; exchange text selected with gx
   :general
   ('(normal visual)
-   "gx" #'evil-exchange
-   "gX" #'evil-exchange-cancel))
+   "gx" #'(evil-exchange        :which-key "exchange operator")
+   "gX" #'(evil-exchange-cancel :which-key "cancel exchange")))
 
 (use-package evil-owl
   :hook (find-file . evil-owl-mode))
 
 (use-package evil-textobj-anyblock
   :general
-  ('evil-inner-text-objects-map "c" #'evil-textobj-anyblock-inner-block)
-  ('evil-outer-text-objects-map "c" #'evil-textobj-anyblock-a-block))
+  ('evil-inner-text-objects-map "c" #'(evil-textobj-anyblock-inner-block :which-key "nearest text object"))
+  ('evil-outer-text-objects-map "c" #'(evil-textobj-anyblock-a-block     :which-key "nearest text object")))
 
 (use-package evil-args ; argument text object: ex. arg1,ar|g2,arg2 - can delete with daa
   :general
-  ('evil-inner-text-objects-map "a" #'evil-inner-arg)
-  ('evil-outer-text-objects-map "a" #'evil-outer-arg))
+  ('evil-inner-text-objects-map "a" #'(evil-inner-arg :which-key "inner arg"))
+  ('evil-outer-text-objects-map "a" #'(evil-outer-arg :which-key "outer arg")))
 
 (use-package evil-indent-plus ; indent level text object
   :general
   ('evil-inner-text-objects-map
-   "i" #'evil-indent-plus-i-indent
-   "I" #'evil-indent-plus-i-indent-up
-   "J" #'evil-indent-plus-i-indent-up-down)
+   "i" #'(evil-indent-plus-i-indent         :which-key "indent level")
+   "I" #'(evil-indent-plus-i-indent-up      :which-key "indent level and up")
+   "J" #'(evil-indent-plus-i-indent-up-down :which-key "indent level up and down"))
 
   ('evil-outer-text-objects-map
-   "i" #'evil-indent-plus-a-indent
-   "I" #'evil-indent-plus-a-indent-up
-   "J" #'evil-indent-plus-a-indent-up-down))
+   "i" #'(evil-indent-plus-a-indent         :which-key "indent level")
+   "I" #'(evil-indent-plus-a-indent-up      :which-key "indent level and up")
+   "J" #'(evil-indent-plus-a-indent-up-down :which-key "indent level up and down")))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -857,12 +857,12 @@ Entirely from Doom Emacs
   :hook (prog-mode . origami-mode)
   :general
   ('normal origami-mode
-           "zc" #'origami-close-node-recursively
-           "zo" #'origami-open-node-recursively
-           "zj" #'origami-next-fold
-           "zk" #'origami-previous-fold
-           "zm" #'origami-close-all-nodes
-           "zr" #'origami-open-all-nodes))
+           "zc" #'(origami-close-node-recursively :which-key "close fold recursively")
+           "zo" #'(origami-open-node-recursively :which-key "open fold recursively")
+           "zj" #'(origami-next-fold             :which-key "next fold")
+           "zk" #'(origami-previous-fold         :which-key "previous fold")
+           "zm" #'(origami-close-all-nodes       :which-key "close all folds recursively")
+           "zr" #'(origami-open-all-nodes        :which-key "open all folds recursively")))
 
 (use-package evil-mc ; multiple cursors
   :hook (find-file . evil-mc-mode))
@@ -1094,8 +1094,8 @@ Entirely from Doom Emacs
   (flycheck-clang-include-path '(".."))
   :general
   ('normal
-   "[q" #'flycheck-previous-error
-   "]q" #'flycheck-next-error)
+   "[q" #'(flycheck-previous-error :which-key "previous error")
+   "]q" #'(flycheck-next-error :which-key "next error"))
 
   (my-leader-def
     "fe" #'(flycheck-list-errors :which-key "list errors")))
@@ -1167,15 +1167,15 @@ Entirely from Doom Emacs
   :general
   ('(normal insert) org-mode-map
    :prefix "C-c"
-   ",v" #'org-redisplay-inline-images
-   "v"  #'org-toggle-inline-images
-   "t"  #'(org-todo             :which-key "todo")
-   "s"  #'(org-sort             :which-key "sort")
-   ",s" #'(org-schedule         :which-key "schedule")
-   "d"  #'(org-deadline         :which-key "deadline")
-   "q"  #'(org-set-tags-command :which-key "add tags")
-   "p"  #'(org-latex-preview    :which-key "preview latex")
-   ",t" #'(+org/tangle-config   :which-key "tangle config"))
+   ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
+   "v"  #'(org-toggle-inline-images    :which-key "toggle inline images")
+   "t"  #'(org-todo                    :which-key "todo")
+   "s"  #'(org-sort                    :which-key "sort")
+   ",s" #'(org-schedule                :which-key "schedule")
+   "d"  #'(org-deadline                :which-key "deadline")
+   "q"  #'(org-set-tags-command        :which-key "add tags")
+   "p"  #'(org-latex-preview           :which-key "preview latex")
+   ",t" #'(+org/tangle-config          :which-key "tangle config"))
 
   ('normal org-mode-map
            "RET" #'org-open-at-point)
@@ -1321,7 +1321,7 @@ Entirely from Doom Emacs
 (use-package org-drill ; spaced repetition flashcards within emacs
   :general
   ('override :prefix "C-c"
-             ",d" #'org-drill))
+             ",d" #'(org-drill :which-key "org drill")))
 
 (use-package org-superstar ; bullets in org mode
   :hook (org-mode . org-superstar-mode)
@@ -1401,8 +1401,8 @@ Entirely from Doom Emacs
   :defer 0.3
   :general
   ('evil-window-map
-   "u" #'winner-undo
-   "r" #'winner-redo)
+   "u" #'(winner-undo :which-key "undo window operation")
+   "r" #'(winner-redo :which-key "redo window operation"))
   :config
   (winner-mode))
 #+END_SRC
@@ -1455,11 +1455,11 @@ Entirely from Doom Emacs
   :general
   ('normal
    ">" (general-key-dispatch #'evil-shift-right
-         ")" #'sp-forward-slurp-sexp
-         "(" #'sp-backward-barf-sexp)
+         ")" #'(sp-forward-slurp-sexp :which-key "forward slurp")
+         "(" #'(sp-backward-barf-sexp :which-key "backward barf"))
    "<" (general-key-dispatch #'evil-shift-left
-         ")" #'sp-forward-barf-sexp
-         "(" #'sp-backward-barf-sexp))
+         ")" #'(sp-forward-barf-sexp   :which-key "forward barf")
+         "(" #'(sp-backward-slurp-sexp :which-key "backward slurp")))
   :config
   (smartparens-global-mode)
   (require 'smartparens-config) ; config for many languages
@@ -1492,8 +1492,8 @@ Entirely from Doom Emacs
 (use-package move-text
   :general
   ('normal
-   "]e" #'move-text-down
-   "[e" #'move-text-up))
+   "]e" #'(move-text-down :which-key "move text down")
+   "[e" #'(move-text-up   :which-key "move text up")))
 
 (use-package avy ; jump to things in files similar to easymotion for vim
   :general
@@ -1817,7 +1817,7 @@ Entirely from Doom Emacs
   :after cc-mode
   :general
   ('c-mode-map
-   "C-c g" #'gdb))
+   "C-c g" #'(gdb :which-key "gdb")))
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp :results none
