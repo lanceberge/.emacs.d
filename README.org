@@ -8,7 +8,7 @@
   - [[#settings][Settings]]
   - [[#os-specific][OS Specific]]
   - [[#defer-incrementally][Defer Incrementally]]
-  - [[#keymappackage-management][Keymap/Package Management]]
+  - [[#keybindingpackage-management][Keybinding/Package Management]]
   - [[#built-in-packages][Built-in Packages]]
   - [[#keybindings][Keybindings]]
   - [[#hooks][Hooks]]
@@ -385,7 +385,7 @@ Taken entirely from Doom Emacs
             (append targets (list name)))))
      (use-package-process-keywords name rest state))))
 #+END_SRC
-** Keymap/Package Management
+** Keybinding/Package Management
 #+BEGIN_SRC emacs-lisp :results none
 (use-package general ; unified way to map keybindings; works with :general in use-package
   :demand t
@@ -568,6 +568,9 @@ Taken entirely from Doom Emacs
    "C-y" #'yank ; otherwise is overridden by evil
    "C-e" #'end-of-line
    "C-a" #'beginning-of-line))
+  :config
+  (which-key-add-key-based-replacements
+    "SPC br" "revert buffer")
 #+END_SRC
 ** Hooks
 #+BEGIN_SRC emacs-lisp :results none
@@ -942,6 +945,14 @@ Entirely from Doom Emacs
    :prefix "C-c"
    "f"  #'(counsel-org-goto-all :which-key "find org headline"))
   :config
+  (which-key-add-key-based-replacements
+    "SPC fih" "find in ~"
+    "SPC fis" "find in school"
+    "SPC fin" "find in notes"
+    "SPC fic" "find in code"
+    "SPC fio" "find in org"
+    "SPC fie" "find in dotemacs"
+    "SPC fid" "find in downloads")
   (counsel-mode))
 
 (use-package amx ; show recently used commands
@@ -1046,9 +1057,10 @@ Entirely from Doom Emacs
 (use-package projectile ; project management
   :commands projectile-mode
   :custom
-  (projectile-project-search-path '("~/code/"))
+  (projectile-project-search-path '("~/code/" "~/school/" "~/school/fall2020/cmda3634/"))
   (projectile-cache-file (expand-file-name "projectile/cache.el" my/etc-dir))
   (projectile-known-projects-file (expand-file-name "projectile/known-projects.el" my/etc-dir))
+  (projectile-auto-discover t)
   :general
   (my-leader-def
     "p" #'(projectile-command-map :which-key "Projectile")))
