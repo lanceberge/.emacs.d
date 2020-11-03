@@ -1539,6 +1539,20 @@ Entirely from Doom Emacs
   :custom
   (eshell-prompt-function #'eshell/eshell-local-prompt-function)
   (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
+  :custom-face
+  ;; Gruvbox colors, weren't getting set properly by gruvbox.el
+  (eshell-prompt        ((t (:foreground "#8ec07c"))))
+  (eshell-ls-archive    ((t (:foreground "#bdae93"))))
+  (eshell-ls-backup     ((t (:foreground "#a89984"))))
+  (eshell-ls-clutter    ((t (:foreground "#fe8019" :bold t))))
+  (eshell-ls-directory  ((t (:foreground "#fabd2f"))))
+  (eshell-ls-executable ((t (:bold t))))
+  (eshell-ls-missing    ((t (:foreground "fb4933" :bold t))))
+  (eshell-ls-product    ((t (:foreground "#9d0006"))))
+  (eshell-ls-readonly   ((t (:foreground "#d5c4a1"))))
+  (eshell-ls-special    ((t (:foreground "#fabd2f" :bold t))))
+  (eshell-ls-symlink    ((t (:foreground "#fb4933"))))
+  (eshell-ls-unreadable ((t (:foreground "#fb4933" :bold t))))
   :general
   (my-leader-def
     "oe"  #'eshell
