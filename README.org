@@ -568,9 +568,9 @@ Taken entirely from Doom Emacs
    "C-y" #'yank ; otherwise is overridden by evil
    "C-e" #'end-of-line
    "C-a" #'beginning-of-line))
-  :config
-  (which-key-add-key-based-replacements
-    "SPC br" "revert buffer")
+:config
+(which-key-add-key-based-replacements
+  "SPC br" "revert buffer")
 #+END_SRC
 ** Hooks
 #+BEGIN_SRC emacs-lisp :results none
@@ -1796,26 +1796,40 @@ Entirely from Doom Emacs
                    :flavor nil)
   :mode ("\\.pdf\\'" . pdf-view-mode)
   ;; no line numbers in pdfs
-  :hook (pdf-view-mode . (lambda () (display-line-numbers-mode -1)))
+  ;; :hook (pdf-view-mode . (lambda () (pdf-view-midnight-minor-mode)
+  ;; (display-line-numbers-mode -1)))
+  :hook (pdf-view-mode . my/pdf-mode)
   :custom
-  ;; (pdf-view-display-size 'fit-page)
   (pdf-view-use-scaling t)
+  (pdf-view-midnight-colors '("#fdf4c1" . "#282828")) ; gruvbox fg and bg
   :general
   ('normal pdf-view-mode-map ; scroll with just d and u
            "d" #'pdf-view-scroll-up-or-next-page
            "u" #'pdf-view-scroll-down-or-previous-page)
   :config
-  ;; no cursor in pdfs
-  (setq-local make-pointer-invisible t)
   (evil-collection-pdf-setup)
   (pdf-loader-install :no-query))
+#+END_SRC
+
+*** Functions
+#+BEGIN_SRC emacs-lisp :results none
+;;;###autoload
+(defun my/pdf-mode ()
+  (pdf-view-midnight-minor-mode +1)
+
+  ;; no cursor or line numbers in pdfs
+  (setq-local make-pointer-invisible t
+              evil-normal-state-cursor '(nil))
+  (blink-cursor-mode -1)
+  (display-line-numbers-mode -1))
+
 #+END_SRC
 ** C family
 #+BEGIN_SRC emacs-lisp :results none
 (use-package cc-mode
   :ensure-system-package (clang gcc)
   :straight (:type built-in)
-  :hook (c-mode-common . +cc/company-mode)
+  :hook (c-mode . +cc/company-mode)
   :custom
   (c-basic-offset 4)
   (c-default-style "linux")
@@ -1837,13 +1851,13 @@ Entirely from Doom Emacs
 (defun +cc/company-mode ()
   "company backends for c-mode"
   (setq-local company-backends
-              '((company-cmake
+              '((company-clang
+                 company-cmake
                  company-capf
-                 company-clang
-                 company-dabbrev-code
-                 company-files
-                 company-yasnippet
-                 company-keywords))))
+                 company-files))))
+;; company-dabbrev-code
+;; company-keywords
+;; company-yasnippet
 #+END_SRC
 ** Statistics (R)
 #+BEGIN_SRC emacs-lisp :results none
