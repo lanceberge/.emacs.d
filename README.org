@@ -1541,7 +1541,7 @@ Entirely from Doom Emacs
   (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
   :custom-face
   ;; Gruvbox colors, weren't getting set properly by gruvbox.el
-  (eshell-prompt        ((t (:foreground "#8ec07c"))))
+  ;; (eshell-prompt        ((t (:foreground "#8ec07c"))))
   (eshell-ls-archive    ((t (:foreground "#bdae93"))))
   (eshell-ls-backup     ((t (:foreground "#a89984"))))
   (eshell-ls-clutter    ((t (:foreground "#fe8019" :bold t))))
@@ -1630,21 +1630,6 @@ Entirely from Doom Emacs
 
 ;; https://blog.liangzan.net/blog/2012/12/12/customizing-your-emacs-eshell-prompt/
 ;;;###autoload
-(defun curr-dir-git-branch-string (pwd)
-  "Returns current git branch as a string, or the empty string if
-            PWD is not in a git repo (or the git command is not found)."
-  (interactive)
-  (when (and (eshell-search-path "git")
-             (locate-dominating-file pwd ".git"))
-    (let ((git-output (shell-command-to-string
-                       (concat "cd " pwd " && git branch | grep '\\*' | sed -e 's/^\\* //'"))))
-      (concat (if (> (length git-output) 0)
-                  (substring git-output 0 -1)
-                "(no branch)")
-              ))))
-
-;; https://blog.liangzan.net/blog/2012/12/12/customizing-your-emacs-eshell-prompt/
-;;;###autoload
 (defun pwd-repl-home (pwd)
   "shortened version of /home/ex/* for eshell prompt"
   (interactive)
@@ -1660,26 +1645,20 @@ Entirely from Doom Emacs
 ;;;###autoload
 (defun eshell/eshell-local-prompt-function ()
   "A prompt for eshell that works locally (in that is assumes
-            that it could run certain commands) in order to make a prettier,
-            more-helpful local prompt."
+              that it could run certain commands) in order to make a prettier,
+              more-helpful local prompt."
   (interactive)
   (let* ((pwd       (eshell/pwd))
          (directory (pwd-repl-home pwd))
-         (branch    (curr-dir-git-branch-string pwd))
 
          (dark-env  (eq 'dark (frame-parameter nil 'background-mode)))
          (for-bars               `(:foreground "#98971a" :weight bold))
          (for-dir   (if dark-env `(:foreground "#8ec07c" :weight bold)
-                      `(:foreground "blue" :weight bold)))
-         (for-git                `(:foreground "#fabd2f" :weight bold)))
+                      `(:foreground "blue" :weight bold))))
 
-    (concat
-     (propertize directory        'face for-dir)
-     (when branch
-       (concat (propertize " on " 'face for-bars)
-               (propertize branch 'face for-git)))
-
-     (propertize " # " 'face `(:foreground "#ebdbb2")))))
+         (concat
+          (propertize directory 'face for-dir)
+          (propertize " # " 'face `(:foreground "#ebdbb2")))))
 #+END_SRC
 ** Tramp
 #+BEGIN_SRC emacs-lisp :results none
