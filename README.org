@@ -892,7 +892,8 @@ Entirely from Doom Emacs
   ('(normal insert) ivy-minibuffer-map
    ";"   #'exit-minibuffer
    "C-j" #'ivy-next-line
-   "C-k" #'ivy-previous-line)
+   "C-k" #'ivy-previous-line
+   "C-w" #'counsel-up-directory)
 
   ('normal ivy-minibuffer-map
            "q" #'minibuffer-keyboard-quit)
@@ -1044,7 +1045,12 @@ Entirely from Doom Emacs
     "gf"   '(:ignore t                  :which-key "Find")
     "gfc" #'(magit-show-commit          :which-key "show commit")
     "gff" #'(magit-find-file            :which-key "file")
-    "gfg" #'(magit-find-git-config-file :which-key "git config file")))
+    "gfg" #'(magit-find-git-config-file :which-key "git config file"))
+
+  ;; scroll in magit-diff-mode with u and d
+  ('normal magit-diff-mode-map
+    [remap magit-diff]         #'(evil-scroll-down :which-key "scroll down")
+    [remap magit-unstage-file] #'(evil-scroll-up   :which-key "scroll up")))
 
 (use-package evil-magit ; evil bindings for magit
   :after magit
@@ -1700,7 +1706,10 @@ Entirely from Doom Emacs
   :config
   (evil-collection-init 'dired)
 
+  (put 'dired-find-alternate-file 'disabled nil)
+
   (general-def 'normal dired-mode-map
+    ";" #'dired-find-alternate-file ; select a directory in the same buffer
     "i" #'+dired/edit))
 
 (use-package dired-x
