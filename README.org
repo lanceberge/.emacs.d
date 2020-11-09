@@ -569,7 +569,8 @@ Taken entirely from Doom Emacs
   ('insert
    "C-y" #'yank ; otherwise is overridden by evil
    "C-e" #'end-of-line
-   "C-a" #'beginning-of-line)
+   "C-a" #'beginning-of-line
+   "C-w" (general-simulate-key "M-DEL"))
   :config
   (which-key-add-key-based-replacements
     "SPC br" "revert buffer"))
@@ -794,10 +795,11 @@ Entirely from Doom Emacs
   ;; use surround with =, *, and _ in org-mode
   (add-hook 'org-mode-hook
             (lambda ()
-              (dolist (var '((?\= "=" . "=")
-                             (?\* "*" . "*")
-                             (?\_ "_" . "_")
-                             (?s  "#+BEGIN_SRC" . "#+END_SRC")))
+              (dolist (var '((?\= "="           . "=")
+                             (?\* "*"           . "*")
+                             (?\_ "_"           . "_")
+                             (?s  "#+BEGIN_SRC" . "#+END_SRC")
+                             (?$  "$"           . "$")))
                 (add-to-list 'evil-surround-pairs-alist var)))))
 
 (use-package evil-commentary ; gc as an operator to comment
@@ -896,7 +898,8 @@ Entirely from Doom Emacs
    ";"   #'exit-minibuffer
    "C-j" #'ivy-next-line
    "C-k" #'ivy-previous-line
-   "C-w" #'counsel-up-directory)
+   ;; Navigate to home directory; 126 => '~' in ASCII
+   "C-b" (lambda () (interactive) (self-insert-command 1 126)))
 
   ('normal ivy-minibuffer-map
            "q" #'minibuffer-keyboard-quit)
@@ -927,7 +930,7 @@ Entirely from Doom Emacs
     "SPC"     #'(ivy-switch-buffer :which-key "switch buffer")
     "fr"      #'(counsel-recentf   :which-key "find recent files")
     "fj"      #'(counsel-imenu     :which-key "imenu")
-    "fg"      #'(counsel-git       :which-key "git files")
+    "gff"      #'(counsel-git      :which-key "git files")
     "f SPC g" #'(counsel-git-grep  :which-key "git grep")
     "f SPC f" #'(counsel-file-jump :which-key "file")
     "ff"      #'(counsel-fzf       :which-key "fzf")
@@ -940,6 +943,8 @@ Entirely from Doom Emacs
     "fie"       (lambda () (interactive) (counsel-file-jump "" "~/.emacs.d"))
     "fid"       (lambda () (interactive) (counsel-file-jump "" "~/Downloads"))
     "fd"      #'(counsel-dired     :which-key "directory")
+    "fg"       '(:ignore t         :which-key "find and goto")
+    "fgc"       (lambda () (interactive) (find-file (expand-file-name "README.org" user-emacs-directory)))
     "f SPC r" #'(counsel-rg        :which-key "ripgrep"))
 
   (my-localleader-def
@@ -956,7 +961,8 @@ Entirely from Doom Emacs
     "SPC fic" "find in code"
     "SPC fio" "find in org"
     "SPC fie" "find in dotemacs"
-    "SPC fid" "find in downloads")
+    "SPC fid" "find in downloads"
+    "SPC fgc" "config")
   (counsel-mode))
 
 (use-package amx ; show recently used commands
@@ -1047,7 +1053,6 @@ Entirely from Doom Emacs
     "gl"  #'(magit-log                  :which-key "log")
     "gf"   '(:ignore t                  :which-key "Find")
     "gfc" #'(magit-show-commit          :which-key "show commit")
-    "gff" #'(magit-find-file            :which-key "file")
     "gfg" #'(magit-find-git-config-file :which-key "git config file"))
 
   ;; scroll in magit-diff-mode with u and d
