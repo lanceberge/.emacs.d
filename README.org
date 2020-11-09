@@ -543,7 +543,9 @@ Taken entirely from Doom Emacs
     "bq"      #'(my/save-and-kill-buffer      :which-key "save and kill buffer")
     "b SPC d" #'(my/kill-window-and-buffer    :which-key "kill window and buffer")
     "br"        (lambda () (interactive)
-                  (revert-buffer t t)         :which-key "rever-buffer")
+                  (revert-buffer t t)         :which-key "revert-buffer")
+    "bn"      #'(next-buffer                  :which-key "next buffer")
+    "bp"      #'(previous-buffer              :which-key "previous buffer")
 
     ;; Eval elisp
     "er"      #'(eval-region                  :which-key "execute elisp region")
@@ -567,10 +569,10 @@ Taken entirely from Doom Emacs
   ('insert
    "C-y" #'yank ; otherwise is overridden by evil
    "C-e" #'end-of-line
-   "C-a" #'beginning-of-line))
-:config
-(which-key-add-key-based-replacements
-  "SPC br" "revert buffer")
+   "C-a" #'beginning-of-line)
+  :config
+  (which-key-add-key-based-replacements
+    "SPC br" "revert buffer"))
 #+END_SRC
 ** Hooks
 #+BEGIN_SRC emacs-lisp :results none
@@ -744,7 +746,8 @@ Entirely from Doom Emacs
 
   (my-leader-def
     "bS" #'(evil-write-all                     :which-key "write all buffers")
-    "bl" #'(evil-switch-to-windows-last-buffer :which-key "last buffer"))
+    "bl" #'(evil-switch-to-windows-last-buffer :which-key "last buffer")
+    "bo" #'(evil-buffer-new                    :which-key "new buffer"))
 
   ('evil-window-map
    "d"     #'(evil-quit                    :which-key "delete window")
@@ -1049,8 +1052,8 @@ Entirely from Doom Emacs
 
   ;; scroll in magit-diff-mode with u and d
   ('normal magit-diff-mode-map
-    [remap magit-diff]         #'(evil-scroll-down :which-key "scroll down")
-    [remap magit-unstage-file] #'(evil-scroll-up   :which-key "scroll up")))
+           [remap magit-diff]         #'(evil-scroll-down :which-key "scroll down")
+           [remap magit-unstage-file] #'(evil-scroll-up   :which-key "scroll up")))
 
 (use-package evil-magit ; evil bindings for magit
   :after magit
@@ -1662,9 +1665,9 @@ Entirely from Doom Emacs
          (for-dir   (if dark-env `(:foreground "#8ec07c" :weight bold)
                       `(:foreground "blue" :weight bold))))
 
-         (concat
-          (propertize directory 'face for-dir)
-          (propertize " # " 'face `(:foreground "#ebdbb2")))))
+    (concat
+     (propertize directory 'face for-dir)
+     (propertize " # " 'face `(:foreground "#ebdbb2")))))
 #+END_SRC
 ** Tramp
 #+BEGIN_SRC emacs-lisp :results none
