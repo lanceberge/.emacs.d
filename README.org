@@ -43,7 +43,6 @@
   - [[#tramp][Tramp]]
   - [[#dired][Dired]]
   - [[#miscellaneous-2][Miscellaneous]]
-  - [[#functions-2][Functions]]
 - [[#filetype-specific][Filetype Specific]]
   - [[#pdf][PDF]]
   - [[#c-family][C family]]
@@ -1735,13 +1734,28 @@ Entirely from Doom Emacs
 
   (general-def 'normal dired-mode-map
     ";" #'dired-find-alternate-file ; select a directory in the same buffer
-    "i" #'+dired/edit))
+    "i" #'+dired/edit
+    "-" #'+dired/up-dir))
 
 (use-package dired-x
   :straight (:type built-in)
   :hook (dired-mode . dired-omit-mode)
   :custom
   (dired-omit-files "^\\..$\\|^.$")) ; hide .. and ../ in dired
+#+END_SRC
+*** Functions
+#+BEGIN_SRC emacs-lisp :results none
+(defun +dired/edit ()
+  "stay in normal mode to edit dired file names"
+  (interactive)
+  (dired-toggle-read-only)
+  (evil-normal-state)
+  (evil-forward-char))
+
+(defun +dired/up-dir ()
+  "navigate up a directory in dired in the same buffer"
+  (interactive)
+  (find-alternate-file ".."))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -1784,15 +1798,6 @@ Entirely from Doom Emacs
   (dumb-jump-prefer-searcher 'rg)
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-#+END_SRC
-** Functions
-#+BEGIN_SRC emacs-lisp :results none
-(defun +dired/edit ()
-  "stay in normal mode to edit dired file names"
-  (interactive)
-  (dired-toggle-read-only)
-  (evil-normal-state)
-  (evil-forward-char))
 #+END_SRC
 * Filetype Specific
 ** PDF
