@@ -50,6 +50,7 @@
   - [[#statistics-r][Statistics (R)]]
   - [[#markdown][Markdown]]
   - [[#rust][Rust]]
+- [[#test][Test]]
 
 * Early-Init
 
@@ -1301,9 +1302,18 @@ Entirely from Doom Emacs
   :straight (:type built-in)
   :custom
   (org-capture-templates
-   '(("t" "TODO entry"
-      entry (file+headline "~/org/todo.org" "Miscellaneous")
+   '(("l" "Life TODO entry"
+      entry (file+headline "~/org/todo.org" "Life")
       "* TODO %?\n %i\n %a")
+
+     ("e" "Emacs TODO entry"
+      entry (file+headline "~/org/todo.org" "Emacs")
+      "* TODO %?\n %i\n %a")
+
+     ("t" "TODO today"
+      entry (file+headline "~/org/todo.org" "Today")
+      "* TODO %?\n %i\n %a")
+
      ("d" "org drill"
       entry (file+headline "~/org/notes.org" "Miscellaneous")
       "* %? :drill:")))
@@ -1922,4 +1932,10 @@ Entirely from Doom Emacs
 ;; TODO - move to rustic and use cargo.el, ensure-system-package
 (use-package rust-mode
   :defer t)
+#+END_SRC
+* Test
+#+BEGIN_SRC emacs-lisp :results none
+(use-package org-journal
+  :custom
+  (org-journal-dir "~/org/journal"))
 #+END_SRC
