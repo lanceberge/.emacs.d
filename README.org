@@ -873,7 +873,7 @@ Entirely from Doom Emacs
            "zm" #'(origami-close-all-nodes       :which-key "close all folds recursively")
            "zr" #'(origami-open-all-nodes        :which-key "open all folds recursively")))
 
-(use-package evil-mc ; multiple cursors
+(use-package evil-mc ; multiple cursors TODO
   :hook (find-file . evil-mc-mode))
 #+END_SRC
 * Completion
@@ -994,7 +994,7 @@ Entirely from Doom Emacs
 (use-package yasnippet-snippets ; a bunch of snippets
   :after yasnippet)
 
-(use-package auto-yasnippet ; create small snippets easily
+(use-package auto-yasnippet ; create small snippets easily TODO
   :general
   (my-leader-def
     "sc" #'(aya-create :which-key "create aya snippet")
@@ -1107,7 +1107,7 @@ Entirely from Doom Emacs
   :hook (lsp-mode . lsp-ui-mode)
   :custom (lsp-ui-doc-position 'bottom))
 
-(use-package lsp-ivy
+(use-package lsp-ivy ; TODO
   :after (lsp-mode))
 
 (use-package flycheck ; code syntax checking
@@ -1528,7 +1528,7 @@ Entirely from Doom Emacs
     :states 'visual
     "=" #'+format/region))
 
-(use-package expand-region ; select a region
+(use-package expand-region ; select a region TODO
   :general
   ("M--" #'er/expand-region))
 
@@ -1776,24 +1776,7 @@ Entirely from Doom Emacs
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
-(use-package keyfreq ; save command frequency
-  :hook (pre-command . keyfreq-mode)
-  :custom
-  (keyfreq-file (expand-file-name "keyfreq" my/etc-dir))
-  (keyfreq-file-lock (expand-file-name "keyfreq-lock" my/etc-dir))
-  (keyfreq-excluded-commands
-   '(org-self-insert-command
-     self-insert-command
-     vterm--self-insert
-     mwheel-scroll
-     eshell-send-input))
-  :general
-  (my-leader-def
-    "fc" #'(keyfreq-show :which-key "show command frequency"))
-  :config
-  (keyfreq-autosave-mode 1))
-
-(use-package dumb-jump ; better way to search code
+(use-package dumb-jump ; better way to search code TODO
   :defer t
   :custom
   (dumb-jump-default-project "~/code")
@@ -1864,7 +1847,7 @@ Entirely from Doom Emacs
   ('c-mode-base-map
    "M-;" #'my/append-semicolon))
 
-(use-package gdb-mi
+(use-package gdb-mi ; TODO
   :straight (:type built-in)
   :ensure-system-package gdb
   :after cc-mode
