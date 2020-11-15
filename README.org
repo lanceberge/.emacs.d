@@ -1459,7 +1459,7 @@ Entirely from Doom Emacs
 
   (my-leader-def
     "t"        '(:ignore t                    :which-key "Tab")
-    "to"      #'(tab-bar-new-tab              :which-key "new tab")
+    "to"      #'(+tab-bar/open-and-rename     :which-key "new tab")
     "tl"      #'(tab-bar-switch-to-recent-tab :which-key "last tab")
     "t SPC g" #'(tab-bar-select-tab           :which-key "choose tab")
     "tg"      #'(tab-bar-switch-to-tab        :which-key "choose tab by name")
@@ -1471,6 +1471,13 @@ Entirely from Doom Emacs
     "tu"      #'(tab-bar-undo-close-tab       :which-key "undo close tab")
     "t SPC r" #'(tab-bar-rename-tab-by-name   :which-key "rename tab by name")
     "tr"      #'(tab-bar-rename-tab           :which-key "rename tab")))
+#+END_SRC
+*** Functions
+#+BEGIN_SRC emacs-lisp :results none
+(defun +tab-bar/open-and-rename ()
+  (interactive)
+  (tab-bar-new-tab)
+  (call-interactively #'tab-bar-rename-tab))
 #+END_SRC
 * Editing
 ** Smartparens
@@ -1936,6 +1943,7 @@ Entirely from Doom Emacs
 * Test
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org-journal
+  :disabled t
   :custom
   (org-journal-dir "~/org/journal"))
 #+END_SRC
