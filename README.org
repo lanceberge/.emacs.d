@@ -129,6 +129,10 @@ Tangles to early-init.el
   :straight (:type built-in)
   :custom
   (display-line-numbers-width-start t)
+  :general
+  ('normal
+    "[n" (lambda () (interactive) (display-line-numbers-mode -1))
+    "]n" (lambda () (interactive) (display-line-numbers-mode +1)))
   :config
   (custom-set-faces `(line-number ((t (:background ,bg-color))))
                     `(line-number-current-line ((t (:background ,bg-color)))))
@@ -573,7 +577,9 @@ Taken entirely from Doom Emacs
    "C-w" (general-simulate-key "M-DEL"))
   :config
   (which-key-add-key-based-replacements
-    "SPC br" "revert buffer"))
+    "SPC br" "revert buffer"
+    "[n" "toggle line numbers off"
+    "]n" "toggle line numbers on"))
 #+END_SRC
 ** Hooks
 #+BEGIN_SRC emacs-lisp :results none
