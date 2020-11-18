@@ -908,7 +908,7 @@ Entirely from Doom Emacs
    ";" #'exit-minibuffer)
 
   ('(normal insert) minibuffer-inactive-mode-map
-   ";" #'exit-minibuffer)
+   ";" #'ivy-done)
   :custom
   (ivy-initial-inputs-alist nil) ; no initial ^, let flx do all the sorting work
   (ivy-re-builders-alist '((swiper                . ivy--regex-plus)
@@ -1586,6 +1586,7 @@ Entirely from Doom Emacs
   :general
   (my-leader-def
     "oe"  #'eshell
+    "ov"   '(:ignore t            :which-key "Vertical")
     "ove" #'(+eshell/other-window :which-key "eshell in vsplit"))
   :config
   (evil-collection-init 'eshell)
@@ -1931,7 +1932,14 @@ Entirely from Doom Emacs
 * Test
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org-journal
-  :disabled t
   :custom
-  (org-journal-dir "~/org/journal"))
+  (org-journal-dir "~/org/journal")
+  :general
+  (my-leader-def
+    "oj" '(:ignore t :which-key "Org journal")
+    "ojn" #'(org-journal-new-entry :which-key "new"))
+
+  ('normal org-journal-mode-map
+    "za" #'(org-cycle    :which-key "open fold")
+    "zc" #'(org-shifttab :which-key "close fold")))
 #+END_SRC
