@@ -129,10 +129,6 @@ Tangles to early-init.el
   :straight (:type built-in)
   :custom
   (display-line-numbers-width-start t)
-  :general
-  ('normal
-    "[n" (lambda () (interactive) (display-line-numbers-mode -1))
-    "]n" (lambda () (interactive) (display-line-numbers-mode +1)))
   :config
   (custom-set-faces `(line-number ((t (:background ,bg-color))))
                     `(line-number-current-line ((t (:background ,bg-color)))))
@@ -563,7 +559,9 @@ Taken entirely from Doom Emacs
    "gs" #'(my/split-line-below :which-key "split line below")
    "gS" #'(my/split-line-above :which-key "split line above")
    "]b" #'(next-buffer         :which-key "next buffer")
-   "[b" #'(previous-buffer     :which-key "previous buffer"))
+   "[b" #'(previous-buffer     :which-key "previous buffer")
+   "[n" (lambda () (interactive) (display-line-numbers-mode -1))
+   "]n" (lambda () (interactive) (display-line-numbers-mode +1)))
 
 
   ('(normal insert)
@@ -1946,6 +1944,6 @@ Entirely from Doom Emacs
     "ojn" #'(org-journal-new-entry :which-key "new"))
 
   ('normal org-journal-mode-map
-    "za" #'(org-cycle    :which-key "open fold")
-    "zc" #'(org-shifttab :which-key "close fold")))
+           "za" #'(org-cycle    :which-key "open fold")
+           "zc" #'(org-shifttab :which-key "close fold")))
 #+END_SRC
