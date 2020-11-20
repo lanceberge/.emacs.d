@@ -49,7 +49,6 @@
   - [[#statistics-r][Statistics (R)]]
   - [[#markdown][Markdown]]
   - [[#rust][Rust]]
-- [[#test][Test]]
 
 * Early-Init
 
@@ -1382,6 +1381,19 @@ Entirely from Doom Emacs
   ('(normal insert) org-mode-map
    "C-;"   #'evil-org-org-insert-heading-respect-content-below
    "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below))
+
+(use-package org-journal
+  :custom
+  (org-journal-dir "~/org/journal")
+  (org-journal-file-format "%m%d%Y")
+  :general
+  (my-leader-def
+    "oj" '(:ignore t :which-key "Org journal")
+    "ojn" #'(org-journal-new-entry :which-key "new"))
+
+  ('normal org-journal-mode-map
+           "za" #'(org-cycle    :which-key "open fold")
+           "zc" #'(org-shifttab :which-key "close fold")))
 #+END_SRC
 ** Functions
 #+BEGIN_SRC emacs-lisp :results none
@@ -1932,18 +1944,4 @@ Entirely from Doom Emacs
 ;; TODO - move to rustic and use cargo.el, ensure-system-package
 (use-package rust-mode
   :defer t)
-#+END_SRC
-* Test
-#+BEGIN_SRC emacs-lisp :results none
-(use-package org-journal
-  :custom
-  (org-journal-dir "~/org/journal")
-  :general
-  (my-leader-def
-    "oj" '(:ignore t :which-key "Org journal")
-    "ojn" #'(org-journal-new-entry :which-key "new"))
-
-  ('normal org-journal-mode-map
-           "za" #'(org-cycle    :which-key "open fold")
-           "zc" #'(org-shifttab :which-key "close fold")))
 #+END_SRC
