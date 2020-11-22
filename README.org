@@ -741,7 +741,9 @@ Entirely from Doom Emacs
   ('normal
    "zr" #'(evil-open-folds  :which-key "open folds recursively")
    "zm" #'(evil-close-folds :which-key "close folds recursively")
-   "gm" (general-simulate-key "@@" :which-key "run last macro")) ; last macro
+   "gm" (general-simulate-key "@@" :which-key "run last macro") ; last macro
+   "C-M-d" #'scroll-other-window
+   "C-M-u" #'scroll-other-window-down)
 
   ('(normal visual motion)
    ";" #'evil-ex ; switch ; and :
@@ -774,7 +776,7 @@ Entirely from Doom Emacs
    '(minibuffer
      ivy
      dired
-     eshell
+     eshel
      (pdf pdf-tools))))
 #+END_SRC
 ** Extra operators/motion
@@ -1269,9 +1271,7 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org-agenda
   :straight (:type built-in)
-  :general
-  (my-leader-def
-    "oa" #'(org-agenda :which-key "agenda"))
+  :defer t
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
@@ -1388,19 +1388,26 @@ Entirely from Doom Emacs
   (org-journal-file-format "%m%d%Y")
   :general
   (my-leader-def
-    "oj" '(:ignore t :which-key "Org journal")
-    "ojn" #'(org-journal-new-entry :which-key "new"))
+    "oj"   '(:ignore t :which-key "Org journal")
+    "ojn" #'(org-journal-new-entry :which-key "new")
+    "zc"  #'(org-shifttab :which-key "close fold"))
 
   ('normal org-journal-mode-map
-           "za" #'(org-cycle    :which-key "open fold")
+           "za" #'(org-cycle    :which-key "open fold")))
 
-           (use-package org-super-agenda
-             :custom
-             (org-super-agenda-groups
-              '((:name "Today"
-                       :todo "TODAY")
-                (:name "Important"
-                       :priority "A"))))          "zc" #'(org-shifttab :which-key "close fold")))
+(use-package org-super-agenda
+  :hook (org-agenda-hook . org-super-agenda-mode)
+  :custom
+  (org-super-agenda-groups
+   '((:name "Today"
+            :todo "TODAY")
+     (:name "Important"
+            :priority "A")))
+  :general
+  (my-leader-def
+    "oa" (lambda () (interactive)
+           (org-super-agenda-mode +1)
+           (org-agenda))))
 #+END_SRC
 ** Functions
 #+BEGIN_SRC emacs-lisp :results none
@@ -1636,8 +1643,9 @@ Entirely from Doom Emacs
             (general-simulate-key "C-p")))
 
   (general-def 'insert eshell-mode-map
-    "C-n" #'eshell-next-matching-input-from-input
-    "C-p" #'eshell-previous-matching-input-from-input)
+    "C-n"                        #'eshell-next-matching-input-from-input
+    "C-p"                        #'eshell-previous-matching-input-from-input
+    [remap company-manual-begin] #'completion-at-point)
 
   (general-def '(insert normal) eshell-mode-map
     "C-l" #'+eshell/clear)
