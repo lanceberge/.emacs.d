@@ -1177,9 +1177,9 @@ Entirely from Doom Emacs
   (org-fontify-done-headline t)
   (org-M-RET-may-split-line nil)
   (org-log-done 'time)
-  (org-tag-alist '(("@school" . ?s) ("@personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
-  (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p!)"
-                                 "WAITING(w!)" "|" "CANCELLED(c@/!)" "DONE(d)")))
+  (org-tag-alist '(("school" . ?s) ("personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
+  (org-todo-keywords '((sequence "TODO(t)" "TODAY(T)"
+                                 "|"  "DONE(d)")))
 
   ;; Latex exports
   (org-latex-listings 'minted) ; syntax-highlighted code blocks
@@ -1393,7 +1393,14 @@ Entirely from Doom Emacs
 
   ('normal org-journal-mode-map
            "za" #'(org-cycle    :which-key "open fold")
-           "zc" #'(org-shifttab :which-key "close fold")))
+
+           (use-package org-super-agenda
+             :custom
+             (org-super-agenda-groups
+              '((:name "Today"
+                       :todo "TODAY")
+                (:name "Important"
+                       :priority "A"))))          "zc" #'(org-shifttab :which-key "close fold")))
 #+END_SRC
 ** Functions
 #+BEGIN_SRC emacs-lisp :results none
