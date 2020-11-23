@@ -730,7 +730,6 @@ Entirely from Doom Emacs
   (evil-search-wrap t)
   (evil-want-keybinding nil)
   (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
-  (evil-undo-system 'undo-redo)     ; built in undos with emacs 28
   :general
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
    [remap evil-next-line]     #'evil-next-visual-line
@@ -1280,7 +1279,10 @@ Entirely from Doom Emacs
   :defer t
   :config
   (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
+  (evil-org-agenda-set-keys)
+  :config
+  (which-key-add-key-based-replacements
+    "SPC oa" "agenda"))
 
 (use-package org-src
   :straight (:type built-in)
@@ -1836,6 +1838,17 @@ Entirely from Doom Emacs
   (dumb-jump-prefer-searcher 'rg)
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
+
+(use-package undo-tree ; Persistent Undos
+  :hook (after-init . global-undo-tree-mode)
+  :custom
+  (undo-limit 10000)
+  (undo-tree-history-directory-alist (list (cons "." (expand-file-name "undo/" my/etc-dir))))
+  (undo-tree-auto-save-history t)
+  (evil-undo-system 'undo-tree)
+  :general
+  (my-leader-def
+    "fu" #'(undo-tree-visualize :which-key "undo")))
 #+END_SRC
 * Filetype Specific
 ** PDF
