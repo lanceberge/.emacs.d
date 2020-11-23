@@ -826,7 +826,7 @@ Entirely from Doom Emacs
 (use-package evil-nerd-commenter ; comment lines like in tpope's commentary
   :general
   ('normal
-    "gc" #'(evilnc-comment-operator :which-key "comment")))
+   "gc" #'(evilnc-comment-operator :which-key "comment")))
 
 (use-package evil-numbers ; increment/decrement numbers w/ vim keys
   :general
@@ -1274,7 +1274,11 @@ Entirely from Doom Emacs
    "C-S-k" #'org-shiftcontrolup
    "C-S-l" #'org-shiftcontrolright)
   :config
-  (add-hook 'org-mode-hook (lambda () (setq-local evil-auto-indent nil)))
+  ;; Org-mode local settings
+  (add-hook 'org-mode-hook (lambda ()
+                             (setq-local evil-auto-indent nil
+                                         evil-shift-width 2)))
+
   ;; No unnecessary background highlighting
   (custom-set-faces
    `(org-block            ((t (:background ,bg-color))))
