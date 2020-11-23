@@ -1314,19 +1314,19 @@ Entirely from Doom Emacs
   (org-capture-templates
    '(("l" "Life TODO entry"
       entry (file+headline "~/org/todo.org" "Life")
-      "* TODO %?\n %i\n %a")
+      "* TODO %?\n %i\n %a" :prepend t)
 
      ("e" "Emacs TODO entry"
       entry (file+headline "~/org/todo.org" "Emacs")
-      "* TODO %?\n %i\n %a")
+      "* TODO %?\n %i\n %a" :prepend t)
 
      ("t" "TODO today"
       entry (file+headline "~/org/todo.org" "Today")
-      "* TODO %?\n %i\n %a")
+      "* TODO %?\n %i\n %a" :prepend t)
 
      ("d" "org drill"
       entry (file+headline "~/org/notes.org" "Miscellaneous")
-      "* %? :drill:")))
+      "* %? :drill:" :prepend t)))
   :general
   (my-leader-def
     "on" #'(org-capture :which-key "org capture")))
