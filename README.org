@@ -520,6 +520,12 @@ Taken entirely from Doom Emacs
   :defer t
   :custom
   (bookmark-default-file (expand-file-name "bookarks" my/etc-dir)))
+
+(use-package calc
+  :straight (:type built-in)
+  :general
+  (my-leader-def
+    "oc" #'(calc :which-key "calc")))
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -1180,8 +1186,8 @@ Entirely from Doom Emacs
   (org-M-RET-may-split-line nil)
   (org-log-done 'time)
   (org-tag-alist '(("school" . ?s) ("personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
-  (org-todo-keywords '((sequence "TODO(t)" "TODAY(T)"
-                                 "|"  "DONE(d)")))
+  (org-todo-keywords '((sequence "TODO(t)" "TODAY(T)" "IN PROGRESS(p!)"
+                                 "WAITING(w!)""|"  "CANCELLED(c!)" "DONE(d)")))
 
   ;; Latex exports
   (org-latex-listings 'minted) ; syntax-highlighted code blocks
@@ -1321,7 +1327,7 @@ Entirely from Doom Emacs
       "* %? :drill:")))
   :general
   (my-leader-def
-    "oc" #'(org-capture :which-key "org capture")))
+    "on" #'(org-capture :which-key "org capture")))
 
 (use-package ol ; org links
   :straight (:type built-in)
