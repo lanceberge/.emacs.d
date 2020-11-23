@@ -787,14 +787,15 @@ Entirely from Doom Emacs
 ** Extra operators/motion
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
-  :hook ((pre-command . evil-snipe-override-mode)
-         (pre-command . evil-snipe-mode))
+  :hook (pre-command . evil-snipe-mode)
   :custom
   (evil-snipe-show-prompt nil)
   (evil-snipe-skip-leading-whitespace nil)
   :general
-  ('motion evil-snipe-override-local-mode-map
-           "," nil) ; don't override , prefix
+  ('normal
+   [remap evil-find-char] #'evil-snipe-f
+   [remap evil-find-char-backward] #'evil-snipe-F)
+
   ('motion
    ":"   #'(evil-snipe-repeat         :which-key "repeat last search")
    "M-," #'(evil-snipe-repeat-reverse :which-key "repeat last search backwards")))
