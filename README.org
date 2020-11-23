@@ -16,7 +16,7 @@
 - [[#evil-mode][Evil Mode]]
   - [[#evil][Evil]]
   - [[#evil-collection][Evil-Collection]]
-  - [[#extra-operatorsmotion][Extra operators/motion]]
+  - [[#extra-operatorsmotions][Extra operators/motions]]
   - [[#miscellaneous][Miscellaneous]]
 - [[#completion][Completion]]
   - [[#ivy][Ivy]]
@@ -532,7 +532,7 @@ Taken entirely from Doom Emacs
   :custom
   (desktop-path (list (expand-file-name "desktop/" my/etc-dir)))
   :config
-  (desktop-save-mode 1))
+  (desktop-save-mode 1)) ; TODO manual?
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -791,7 +791,7 @@ Entirely from Doom Emacs
      eshel
      (pdf pdf-tools))))
 #+END_SRC
-** Extra operators/motion
+** Extra operators/motions
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
   :hook (pre-command . evil-snipe-mode)
@@ -808,20 +808,25 @@ Entirely from Doom Emacs
    "M-," #'(evil-snipe-repeat-reverse :which-key "repeat last search backwards")))
 
 (use-package evil-surround ; s as an operator for surrounding
-  :hook (pre-command . evil-surround-mode)
+  :hook (pre-command . evil-surround-mode))
+
+(use-package evil-embrace ; custom surround pairs
+  :after evil-surround
+  :custom
+  (evil-embrace-show-help-p nil)
   :config
-  ;; use surround with =, *, and _ in org-mode
+  (add-hook 'org-mode-hook 'embrace-org-mode-hook)
+  (evil-embrace-enable-evil-surround-integration)
   (add-hook 'org-mode-hook
             (lambda ()
-              (dolist (var '((?\= "="           . "=")
-                             (?\* "*"           . "*")
-                             (?\_ "_"           . "_")
-                             (?s  "#+BEGIN_SRC" . "#+END_SRC")
-                             (?$  "$"           . "$")))
-                (add-to-list 'evil-surround-pairs-alist var)))))
+              (dolist (var '((?s "#+BEGIN_SRC" . "#+END_SRC")
+                             (?$ "$" . "$")))
+                (embrace-add-pair (car var) (cadr var) (cddr var))))))
 
-(use-package evil-commentary ; gc as an operator to comment
-  :hook (find-file . evil-commentary-mode))
+(use-package evil-nerd-commenter ; comment lines like in tpope's commentary
+  :general
+  ('normal
+    "gc" #'(evilnc-comment-operator :which-key "comment")))
 
 (use-package evil-numbers ; increment/decrement numbers w/ vim keys
   :general
@@ -1386,7 +1391,6 @@ Entirely from Doom Emacs
   :hook ((org-mode markdown-mode) . toc-org-mode))
 
 (use-package evil-org ; functions to work with evil-mode in org-mode
-  :after org
   :general
   ;; bind evil-org functions manually rather than using evil-org-mode, which has some
   ;; conflicting bindings for my preferences
@@ -1906,7 +1910,6 @@ Entirely from Doom Emacs
 (use-package gdb-mi ; TODO
   :straight (:type built-in)
   :ensure-system-package gdb
-  :after cc-mode
   :general
   ('c-mode-map
    "C-c g" #'(gdb :which-key "gdb")))
