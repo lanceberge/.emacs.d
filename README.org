@@ -526,6 +526,13 @@ Taken entirely from Doom Emacs
   :general
   (my-leader-def
     "oc" #'(calc :which-key "calc")))
+
+(use-package desktop ; save sessions to a file
+  :straight (:type built-in)
+  :custom
+  (desktop-path (list (expand-file-name "desktop/" my/etc-dir)))
+  :config
+  (desktop-save-mode 1))
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -1800,14 +1807,6 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
-(use-package restart-emacs
-  :custom
-  (restart-emacs-restore-frames t) ; Restore frames on restart
-  :general
-  (my-leader-def
-    "e"        '(:ignore t     :which-key "Emacs Commands")
-    "e SPC r" #'(restart-emacs :which-key "restart emacs")))
-
 (use-package helpful ; better help menu
   :general
   ('normal
