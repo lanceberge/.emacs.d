@@ -1857,6 +1857,9 @@ Entirely from Doom Emacs
   :general
   (my-leader-def
     "fu" #'(undo-tree-visualize :which-key "undo")))
+
+(use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
+  :hook (after-init . (lambda () (exec-path-from-shell-initialize))))
 #+END_SRC
 * Filetype Specific
 ** PDF
