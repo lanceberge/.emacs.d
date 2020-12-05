@@ -585,6 +585,9 @@ Taken entirely from Doom Emacs
    "C-e" #'end-of-line
    "C-a" #'beginning-of-line
    "C-w" (general-simulate-key "M-DEL"))
+
+  ('insert '(prog-mode-map text-mode-map)
+    "C-w" #'evil-delete-backward-word)
   :config
   (which-key-add-key-based-replacements
     "SPC br" "revert buffer"
