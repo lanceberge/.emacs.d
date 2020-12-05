@@ -829,7 +829,8 @@ Entirely from Doom Emacs
 (use-package evil-nerd-commenter ; comment lines like in tpope's commentary
   :general
   ('normal
-   "gc" #'(evilnc-comment-operator :which-key "comment")))
+   "gc" #'(evilnc-comment-operator          :which-key "comment")
+   "gy" #'(evilnc-copy-and-comment-operator :which-key "copy and comment")))
 
 (use-package evil-numbers ; increment/decrement numbers w/ vim keys
   :general
