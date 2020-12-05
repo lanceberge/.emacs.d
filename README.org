@@ -1083,7 +1083,7 @@ Entirely from Doom Emacs
            [remap magit-diff]         #'(evil-scroll-down :which-key "scroll down")
            [remap magit-unstage-file] #'(evil-scroll-up   :which-key "scroll up")))
 
-(use-package evil-magit ; evil bindings for magit
+(use-package evil-magit ; evil bindings for magit TODO in evil-collection
   :after magit
   :custom
   (evil-magit-state 'normal)
@@ -1224,6 +1224,7 @@ Entirely from Doom Emacs
    "d"  #'(org-deadline                :which-key "deadline")
    "q"  #'(org-set-tags-command        :which-key "add tags")
    "p"  #'(org-latex-preview           :which-key "preview latex")
+   ",p" #'(org-set-property            :which-key "set property")
    ",t" #'(+org/tangle-config          :which-key "tangle config"))
 
   ('normal org-mode-map
@@ -1286,6 +1287,8 @@ Entirely from Doom Emacs
    `(org-block-end-line   ((t (:background ,bg-color))))
    `(org-level-1          ((t (:background ,bg-color))))
    `(org-quote            ((t (:background ,bg-color)))))
+
+  (add-to-list 'org-modules 'habits)
 
   (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
