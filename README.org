@@ -1206,6 +1206,7 @@ Entirely from Doom Emacs
                                  "WAITING(w!)""|"  "CANCELLED(c!)" "DONE(d)")))
 
   ;; Latex exports
+  (org-export-backends '(html latex md))
   (org-latex-listings 'minted) ; syntax-highlighted code blocks
   (org-latex-packages-alist '(("margin=1in" "geometry" nil) (nil "minted" "color")))
   (org-latex-pdf-process ; required to use minted
@@ -1914,6 +1915,7 @@ Entirely from Doom Emacs
   :ensure-system-package (clang gcc)
   :straight (:type built-in)
   :hook (c-mode . +cc/company-mode)
+  :mode ("\\.cu\\'" . c-mode)
   :custom
   (c-basic-offset 4)
   (c-default-style "linux")
