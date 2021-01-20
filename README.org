@@ -49,6 +49,7 @@
   - [[#statistics-r][Statistics (R)]]
   - [[#markdown][Markdown]]
   - [[#rust][Rust]]
+  - [[#python][Python]]
 
 * Early-Init
 
@@ -2004,4 +2005,26 @@ Entirely from Doom Emacs
 ;; TODO - move to rustic and use cargo.el, ensure-system-package
 (use-package rust-mode
   :defer t)
+#+END_SRC
+** Python
+#+BEGIN_SRC emacs-lisp :results none
+(use-package ein ; work with ipynb files
+  :mode ("\\.ipynb\\'" . ipynb-mode)
+  :general
+  ('ein:notebook-mode-map
+    "C-j" #'ein:worksheet-goto-next-input-km
+    "C-k" #'ein:worksheet-goto-prev-input-km
+    "M-:" #'ein:worksheet-execute-cell-and-insert-below-km
+    "M-j" #'ein:worksheet-move-cell-down-km
+    "M-k" #'ein:worksheet-move-cell-up-km
+    "M-:" #'ein:worksheet-insert-cell-above-km
+    "M-;" #'ein:worksheet-insert-cell-below-km
+    "C-;" #'ein:worksheet-execute-cell-km)
+
+  ('normal ein:notebook-mode-map
+    :prefix "C-c"
+    "w" #'ein:notebook-save-notebook-command-km
+    "k" #'ein:worksheet-kill-cell-km
+    "c" #'ein:worksheet-clear-all-output-km
+    "q" #'ein:notebook-close-km))
 #+END_SRC
