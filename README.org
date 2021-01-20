@@ -1348,13 +1348,13 @@ Entirely from Doom Emacs
       entry (file+headline "~/org/todo.org" "Emacs")
       "* TODO %?\n %i\n %a" :prepend t)
 
-     ("t" "TODO today"
+     ("t" "today TODO entry"
       entry (file+headline "~/org/todo.org" "Today")
-      "* TODO %?\n %i\n %a" :prepend t)
+      "* TODAY %?\n %i\n %a" :prepend t)
 
-     ("s" "TODO today"
+     ("s" "school TODO"
       entry (file+headline "~/org/todo.org" "School")
-      "* TODO %?\n %i\n %a" :prepend t)
+      "* TODO %?\n %i\n" :prepend t)
 
      ("d" "org drill"
       entry (file+headline "~/org/notes.org" "Miscellaneous")
