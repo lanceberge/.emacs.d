@@ -964,7 +964,6 @@ Entirely from Doom Emacs
     "fi"       '(:ignore t         :which-key "find in directory")
     "fih"       (lambda () (interactive) (counsel-file-jump "" "~"))
     "fis"       (lambda () (interactive) (counsel-file-jump "" "~/school"))
-    "fin"       (lambda () (interactive) (counsel-file-jump "" "~/school/notes"))
     "fic"       (lambda () (interactive) (counsel-file-jump "" "~/code"))
     "fio"       (lambda () (interactive) (counsel-file-jump "" "~/org"))
     "fie"       (lambda () (interactive) (counsel-file-jump "" "~/.emacs.d"))
@@ -1008,6 +1007,8 @@ Entirely from Doom Emacs
   :hook (org-mode . (lambda () (yas-activate-extra-mode 'latex-mode)))
   :defer 0.2
   :defer-incrementally (eldoc easymenu help-mode)
+  :custom
+  (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
   :general
   (my-leader-def
     "s"   '(:ignore t           :which-key "Yasnippet")
@@ -1192,6 +1193,8 @@ Entirely from Doom Emacs
   ;; Directories
   (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
   (org-agenda-files '("~/org"))
+  ;; (org-agenda-files (append (directory-files-recursively "~/school" "\.org$") '("~/org")))
+
   (org-directory "~/org")
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
 
@@ -1347,6 +1350,10 @@ Entirely from Doom Emacs
 
      ("t" "TODO today"
       entry (file+headline "~/org/todo.org" "Today")
+      "* TODO %?\n %i\n %a" :prepend t)
+
+     ("s" "TODO today"
+      entry (file+headline "~/org/todo.org" "School")
       "* TODO %?\n %i\n %a" :prepend t)
 
      ("d" "org drill"
