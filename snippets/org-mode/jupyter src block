@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: jupyter src block
+# key: sj
+# --
+#+BEGIN_SRC jupyter-python :session py :async yes
+$0
+#+END_SRC

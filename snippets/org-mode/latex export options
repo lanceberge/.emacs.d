@@ -7,4 +7,7 @@
 #+LATEX: \setlength\parindent{0pt}
 #+latex_class_options: [10pt]
 #+latex_header: \usepackage{setspace}
-#+latex_header: \onespacing$0
+#+latex_header: \onespacing
+#+latex_header: \usepackage{enumitem}
+#+latex_header: \setlist{noitemsep}
+#+latex_header: \usepackage{nopageno}$0

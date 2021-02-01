@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: org letter list
+# key: let
+# --
+
+#+ATTR_LATEX: :options [(a)]$0
