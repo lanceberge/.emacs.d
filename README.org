@@ -50,6 +50,8 @@
   - [[#markdown][Markdown]]
   - [[#rust][Rust]]
   - [[#python][Python]]
+  - [[#matlab][Matlab]]
+  - [[#latex][Latex]]
 
 * Early-Init
 
@@ -1305,7 +1307,9 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org-agenda
   :straight (:type built-in)
-  :defer t
+  :general
+  (my-leader-def
+    "oa" #'org-agenda)
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys)
@@ -1394,6 +1398,10 @@ Entirely from Doom Emacs
 (use-package ob-python
   :straight (:type built-in)
   :commands org-babel-execute:python)
+
+(use-package ob-matlab
+  :straight (:type built-in)
+  :commands org-babel-execute:matlab)
 #+END_SRC
 ** Non built-ins
 #+BEGIN_SRC emacs-lisp :results none
@@ -1436,6 +1444,7 @@ Entirely from Doom Emacs
            "za" #'(org-cycle    :which-key "open fold")))
 
 (use-package org-super-agenda
+  :disabled t
   :hook (org-agenda-hook . org-super-agenda-mode)
   :custom
   (org-super-agenda-groups
@@ -1903,7 +1912,6 @@ Entirely from Doom Emacs
   (evil-collection-pdf-setup)
   (pdf-loader-install :no-query))
 #+END_SRC
-
 *** Functions
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
@@ -2023,8 +2031,33 @@ Entirely from Doom Emacs
 
   ('normal ein:notebook-mode-map
     :prefix "C-c"
-    "w" #'ein:notebook-save-notebook-command-km
-    "k" #'ein:worksheet-kill-cell-km
-    "c" #'ein:worksheet-clear-all-output-km
-    "q" #'ein:notebook-close-km))
+    "w"   #'ein:notebook-save-notebook-command
+    "k"   #'ein:worksheet-kill-cell-km
+    "c"   #'ein:worksheet-clear-all-output-km
+    "q"   #'ein:notebook-close-km
+    "SPC" #'ein:worksheet-execute-all-cells
+    "r"   #'ein:notebook-restart-session-command))
+
+(use-package jupyter
+  :defer t)
+
+(use-package ob-jupyter
+  :straight jupyter
+  :commands org-babel-execute:jupyter-python)
+#+END_SRC
+** Matlab
+#+BEGIN_SRC emacs-lisp :results none
+(use-package matlab-mode
+  :mode ("\\.m\\'" . matlab-mode))
+
+(use-package ob-matlab
+  :straight (:type built-in)
+  :defer t)
+#+END_SRC
+** Latex
+
+#+BEGIN_SRC emacs-lisp :results none
+(use-package auctex
+  :defer t
+  :ensure-system-package (latex . texlive-core))
 #+END_SRC
