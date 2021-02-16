@@ -1595,8 +1595,10 @@ Entirely from Doom Emacs
   (sp-local-pair 'org-mode "'" nil :actions nil)
   (eval-after-load 'smartparens-org '(progn
                                        (sp-local-pair 'org-mode "=" nil :actions nil)
-                                       (sp-local-pair 'org-mode "~" nil :actions nil)))
-  (sp-local-pair 'org-mode "$" "$"))
+                                       (sp-local-pair 'org-mode "~" nil :actions nil)
+                                       (sp-local-pair 'org-mode "/" nil :actions nil)
+                                       (sp-local-pair 'org-mode "*" nil :actions nil))))
+  ;; (sp-local-pair 'org-mode "$" "$"))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
