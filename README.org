@@ -536,6 +536,12 @@ Taken entirely from Doom Emacs
   (desktop-path (list (expand-file-name "desktop/" my/etc-dir)))
   :config
   (desktop-save-mode 1)) ; TODO manual?
+
+(use-package request
+  :straight (:type built-in)
+  :defer t
+  :custom
+  (request-storage-directory (expand-file-name "request/" my/etc-dir)))
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
