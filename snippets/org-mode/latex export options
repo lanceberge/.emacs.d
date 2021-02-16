@@ -9,5 +9,6 @@
 #+latex_header: \usepackage{setspace}
 #+latex_header: \onespacing
 #+latex_header: \usepackage{enumitem}
+#+latex_header: \usepackage{enumerate}
 #+latex_header: \setlist{noitemsep}
 #+latex_header: \usepackage{nopageno}$0
