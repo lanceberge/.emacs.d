@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Matlab src block
+# key: sm
+# --
+#+BEGIN_SRC matlab :session
+$0
+#+END_SRC

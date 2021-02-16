@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Matlab plot src block
+# key: smp
+# --
+#+BEGIN_SRC matlab :session :file thing.png :results file graphics
+$0
+#+END_SRC
