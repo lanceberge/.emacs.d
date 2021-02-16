@@ -2027,16 +2027,26 @@ Entirely from Doom Emacs
     "M-k" #'ein:worksheet-move-cell-up-km
     "M-:" #'ein:worksheet-insert-cell-above-km
     "M-;" #'ein:worksheet-insert-cell-below-km
-    "C-;" #'ein:worksheet-execute-cell-km)
+    "C-;" #'ein:worksheet-execute-cell-km
+    [remap evil-write] #'ein:notebook-save-notebook-command)
 
   ('normal ein:notebook-mode-map
     :prefix "C-c"
     "w"   #'ein:notebook-save-notebook-command
     "k"   #'ein:worksheet-kill-cell-km
     "c"   #'ein:worksheet-clear-all-output-km
-    "q"   #'ein:notebook-close-km
+    "q"   #'ein:notebook-close
     "SPC" #'ein:worksheet-execute-all-cells
-    "r"   #'ein:notebook-restart-session-command))
+    "r"   #'ein:notebook-restart-session-command)
+
+  (my-leader-def
+   "ei"   '(:ignore t :which-key "Ein")
+   "eir" #'(ein:run   :which-key "run")
+   "eis" #'(ein:stop  :which-key "stop"))
+
+  ('normal
+    [remap evil-undo] #'undo
+    [remap evil-redo] #'undo-redo))
 
 (use-package jupyter
   :defer t)
@@ -2048,14 +2058,12 @@ Entirely from Doom Emacs
 ** Matlab
 #+BEGIN_SRC emacs-lisp :results none
 (use-package matlab-mode
-  :mode ("\\.m\\'" . matlab-mode))
-
-(use-package ob-matlab
-  :straight (:type built-in)
-  :defer t)
+  :mode ("\\.m\\'" . matlab-mode)
+  :general
+  ('normal matlab-shell-mode-map
+     "C-d" #'evil-scroll-down))
 #+END_SRC
 ** Latex
-
 #+BEGIN_SRC emacs-lisp :results none
 (use-package auctex
   :defer t
