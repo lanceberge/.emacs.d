@@ -536,12 +536,6 @@ Taken entirely from Doom Emacs
   (desktop-path (list (expand-file-name "desktop/" my/etc-dir)))
   :config
   (desktop-save-mode 1)) ; TODO manual?
-
-(use-package request
-  :straight (:type built-in)
-  :defer t
-  :custom
-  (request-storage-directory (expand-file-name "request/" my/etc-dir)))
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -1893,6 +1887,11 @@ Entirely from Doom Emacs
 
 (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
   :hook (after-init . (lambda () (exec-path-from-shell-initialize))))
+
+(use-package request
+  :defer t
+  :custom
+  (request-storage-directory (expand-file-name "request/" my/etc-dir)))
 #+END_SRC
 * Filetype Specific
 ** PDF
@@ -2026,6 +2025,8 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ein ; work with ipynb files
   :mode ("\\.ipynb\\'" . ipynb-mode)
+  :custom
+  (ein:output-area-inlined-images t)
   :general
   ('ein:notebook-mode-map
     "C-j" #'ein:worksheet-goto-next-input-km
