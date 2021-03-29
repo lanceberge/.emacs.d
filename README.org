@@ -531,6 +531,7 @@ Taken entirely from Doom Emacs
     "oc" #'(calc :which-key "calc")))
 
 (use-package desktop ; save sessions to a file
+  :disabled t
   :straight (:type built-in)
   :custom
   (desktop-path (list (expand-file-name "desktop/" my/etc-dir)))
@@ -590,7 +591,7 @@ Taken entirely from Doom Emacs
    "C-w" (general-simulate-key "M-DEL"))
 
   ('insert '(prog-mode-map text-mode-map)
-    "C-w" #'evil-delete-backward-word)
+           "C-w" #'evil-delete-backward-word)
   :config
   (which-key-add-key-based-replacements
     "SPC br" "revert buffer"
@@ -1289,7 +1290,8 @@ Entirely from Doom Emacs
   ;; Org-mode local settings
   (add-hook 'org-mode-hook (lambda ()
                              (setq-local evil-auto-indent nil
-                                         evil-shift-width 2)))
+                                         evil-shift-width 2)
+                             (add-to-list 'org-modules 'habits)))
 
   ;; No unnecessary background highlighting
   (custom-set-faces
@@ -1298,8 +1300,6 @@ Entirely from Doom Emacs
    `(org-block-end-line   ((t (:background ,bg-color))))
    `(org-level-1          ((t (:background ,bg-color))))
    `(org-quote            ((t (:background ,bg-color)))))
-
-  (add-to-list 'org-modules 'habits)
 
   (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
@@ -1592,7 +1592,7 @@ Entirely from Doom Emacs
                                        (sp-local-pair 'org-mode "~" nil :actions nil)
                                        (sp-local-pair 'org-mode "/" nil :actions nil)
                                        (sp-local-pair 'org-mode "*" nil :actions nil))))
-  ;; (sp-local-pair 'org-mode "$" "$"))
+;; (sp-local-pair 'org-mode "$" "$"))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
@@ -1886,7 +1886,8 @@ Entirely from Doom Emacs
     "fu" #'(undo-tree-visualize :which-key "undo")))
 
 (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
-  :hook (after-init . (lambda () (exec-path-from-shell-initialize))))
+  :hook (after-init . (lambda () (setq exec-path-from-shell-arguments nil)
+                        (exec-path-from-shell-initialize))))
 
 (use-package request
   :defer t
@@ -2029,33 +2030,33 @@ Entirely from Doom Emacs
   (ein:output-area-inlined-images t)
   :general
   ('ein:notebook-mode-map
-    "C-j" #'ein:worksheet-goto-next-input-km
-    "C-k" #'ein:worksheet-goto-prev-input-km
-    "M-:" #'ein:worksheet-execute-cell-and-insert-below-km
-    "M-j" #'ein:worksheet-move-cell-down-km
-    "M-k" #'ein:worksheet-move-cell-up-km
-    "M-:" #'ein:worksheet-insert-cell-above-km
-    "M-;" #'ein:worksheet-insert-cell-below-km
-    "C-;" #'ein:worksheet-execute-cell-km
-    [remap evil-write] #'ein:notebook-save-notebook-command)
+   "C-j" #'ein:worksheet-goto-next-input-km
+   "C-k" #'ein:worksheet-goto-prev-input-km
+   "M-:" #'ein:worksheet-execute-cell-and-insert-below-km
+   "M-j" #'ein:worksheet-move-cell-down-km
+   "M-k" #'ein:worksheet-move-cell-up-km
+   "M-:" #'ein:worksheet-insert-cell-above-km
+   "M-;" #'ein:worksheet-insert-cell-below-km
+   "C-;" #'ein:worksheet-execute-cell-km
+   [remap evil-write] #'ein:notebook-save-notebook-command)
 
   ('normal ein:notebook-mode-map
-    :prefix "C-c"
-    "w"   #'ein:notebook-save-notebook-command
-    "k"   #'ein:worksheet-kill-cell-km
-    "c"   #'ein:worksheet-clear-all-output-km
-    "q"   #'ein:notebook-close
-    "SPC" #'ein:worksheet-execute-all-cells
-    "r"   #'ein:notebook-restart-session-command)
+           :prefix "C-c"
+           "w"   #'ein:notebook-save-notebook-command
+           "k"   #'ein:worksheet-kill-cell-km
+           "c"   #'ein:worksheet-clear-all-output-km
+           "q"   #'ein:notebook-close
+           "SPC" #'ein:worksheet-execute-all-cells
+           "r"   #'ein:notebook-restart-session-command)
 
   (my-leader-def
-   "ei"   '(:ignore t :which-key "Ein")
-   "eir" #'(ein:run   :which-key "run")
-   "eis" #'(ein:stop  :which-key "stop"))
+    "ei"   '(:ignore t :which-key "Ein")
+    "eir" #'(ein:run   :which-key "run")
+    "eis" #'(ein:stop  :which-key "stop"))
 
   ('normal
-    [remap evil-undo] #'undo
-    [remap evil-redo] #'undo-redo))
+   [remap evil-undo] #'undo
+   [remap evil-redo] #'undo-redo))
 
 (use-package jupyter
   :defer t)
@@ -2070,7 +2071,7 @@ Entirely from Doom Emacs
   :mode ("\\.m\\'" . matlab-mode)
   :general
   ('normal matlab-shell-mode-map
-     "C-d" #'evil-scroll-down))
+           "C-d" #'evil-scroll-down))
 #+END_SRC
 ** Latex
 #+BEGIN_SRC emacs-lisp :results none
