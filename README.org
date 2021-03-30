@@ -1886,7 +1886,7 @@ Entirely from Doom Emacs
     "fu" #'(undo-tree-visualize :which-key "undo")))
 
 (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
-  :hook (after-init . (lambda () (setq exec-path-from-shell-arguments nil)
+  :hook (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
                         (exec-path-from-shell-initialize))))
 
 (use-package request
