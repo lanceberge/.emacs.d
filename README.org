@@ -595,6 +595,7 @@ Taken entirely from Doom Emacs
   :config
   (which-key-add-key-based-replacements
     "SPC br" "revert buffer"
+    "SPC omi" "matlab inferior"
     "[n" "toggle line numbers off"
     "]n" "toggle line numbers on"))
 #+END_SRC
@@ -2071,7 +2072,13 @@ Entirely from Doom Emacs
   :mode ("\\.m\\'" . matlab-mode)
   :general
   ('normal matlab-shell-mode-map
-           "C-d" #'evil-scroll-down))
+           "C-d" #'evil-scroll-down)
+
+  (my-leader-def
+    "oms" #'(matlab-shell :which-key "matlab shell")
+    "omt" #'(matlab-shell-tab :which-key "matlab shell tab")
+    "omi" (lambda () (interactive)
+            (switch-to-buffer "*Inferior Matlab*"))))
 #+END_SRC
 ** Latex
 #+BEGIN_SRC emacs-lisp :results none
