@@ -1288,6 +1288,10 @@ Entirely from Doom Emacs
    "C-S-k" #'org-shiftcontrolup
    "C-S-l" #'org-shiftcontrolright)
   :config
+  ;; Don't execute org-babel blocks on export
+  (add-to-list 'org-babel-default-header-args
+               '(:eval . "never-export"))
+
   ;; Org-mode local settings
   (add-hook 'org-mode-hook (lambda ()
                              (setq-local evil-auto-indent nil
@@ -1586,12 +1590,14 @@ Entirely from Doom Emacs
   (smartparens-global-mode)
   (require 'smartparens-config) ; config for many languages
 
-  ;; Don't pair ', and = in org mode, and pair $
-  (sp-local-pair 'org-mode "'" nil :actions nil)
+  ;; characters to not pair in org mode
+  ;; (sp-local-pair 'org-mode "'" nil :actions nil)
   (eval-after-load 'smartparens-org '(progn
                                        (sp-local-pair 'org-mode "=" nil :actions nil)
                                        (sp-local-pair 'org-mode "~" nil :actions nil)
                                        (sp-local-pair 'org-mode "/" nil :actions nil)
+                                       (sp-local-pair 'org-mode "_" nil :actions nil)
+                                       (sp-local-pair 'org-mode "'" nil :actions nil)
                                        (sp-local-pair 'org-mode "*" nil :actions nil))))
 ;; (sp-local-pair 'org-mode "$" "$"))
 #+END_SRC

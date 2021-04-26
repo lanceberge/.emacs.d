@@ -11,6 +11,6 @@
 #+latex_header: \usepackage{enumitem}
 #+latex_header: \usepackage{enumerate}
 #+latex_header: \setlist{noitemsep}
-#+latex_header: \usepackage{nopageno}$0
+#+latex_header: \usepackage{nopageno}
 #+latex_header: \usepackage{parskip}
-#+latex_header: \setlength{\parindent}{20pt}
+#+latex_header: \setlength{\parindent}{20pt}$0
