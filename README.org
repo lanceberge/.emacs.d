@@ -572,12 +572,14 @@ Taken entirely from Doom Emacs
     "'"         (general-simulate-key "C-c '" :which-key "open src block"))
 
   ('normal
-   "gs" #'(my/split-line-below :which-key "split line below")
-   "gS" #'(my/split-line-above :which-key "split line above")
-   "]b" #'(next-buffer         :which-key "next buffer")
-   "[b" #'(previous-buffer     :which-key "previous buffer")
-   "[n" (lambda () (interactive) (display-line-numbers-mode -1))
-   "]n" (lambda () (interactive) (display-line-numbers-mode +1)))
+   "gs" #'(my/split-line-below      :which-key "split line below")
+   "gS" #'(my/split-line-above      :which-key "split line above")
+   "]b" #'(next-buffer              :which-key "next buffer")
+   "[b" #'(previous-buffer          :which-key "previous buffer")
+   "[n"   (lambda () (interactive) (display-line-numbers-mode -1))
+   "]n"   (lambda () (interactive) (display-line-numbers-mode +1))
+   "g C-l" #'(end-of-visual-line       :which-key "end of visual line")
+   "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line"))
 
 
   ('(normal insert)
@@ -1169,9 +1171,6 @@ Entirely from Doom Emacs
 
 (use-package hl-todo
   :hook (prog-mode . hl-todo-mode))
-
-(use-package highlight-symbol ; highlight the symbol under point
-  :hook (prog-mode . highlight-symbol-mode))
 
 (use-package highlight-escape-sequences
   :hook (prog-mode . hes-mode))
@@ -1852,7 +1851,7 @@ Entirely from Doom Emacs
 (use-package helpful ; better help menu
   :general
   ('normal
-   "gh" #'helpful-at-point)
+   "gp" #'helpful-at-point)
   ('normal helpful-mode-map
            "q" #'quit-window)
 
@@ -2033,6 +2032,7 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ein ; work with ipynb files
   :mode ("\\.ipynb\\'" . ipynb-mode)
+  :hook (ipynb-mode . display-line-numbers-mode)
   :custom
   (ein:output-area-inlined-images t)
   :general
@@ -2049,6 +2049,7 @@ Entirely from Doom Emacs
 
   ('normal ein:notebook-mode-map
            :prefix "C-c"
+           "d"   #'ein:worksheet-delete-cell
            "w"   #'ein:notebook-save-notebook-command
            "k"   #'ein:worksheet-kill-cell-km
            "c"   #'ein:worksheet-clear-all-output-km
