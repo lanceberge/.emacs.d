@@ -52,6 +52,7 @@
   - [[#python][Python]]
   - [[#matlab][Matlab]]
   - [[#latex][Latex]]
+  - [[#html][HTML]]
 
 * Early-Init
 
@@ -1207,7 +1208,8 @@ Entirely from Doom Emacs
   (org-startup-folded t)
   (org-fontify-done-headline t)
   (org-M-RET-may-split-line nil)
-  (org-log-done 'time)
+                                        ; TODO
+  ;; (org-log-done 'time)
   (org-tag-alist '(("school" . ?s) ("personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
   (org-todo-keywords '((sequence "TODO(t)" "TODAY(T)" "IN PROGRESS(p!)"
                                  "WAITING(w!)""|"  "CANCELLED(c!)" "DONE(d)")))
@@ -1790,7 +1792,8 @@ Entirely from Doom Emacs
   (my-localleader-def
     "t"  '(:ignore t            :which-key "Tramp ssh")
     "tr" #'(+tramp/ssh-rlogin   :which-key "rlogin")
-    "tc" #'(+tramp/ssh-cascades :which-key "cascades")))
+    "tc" #'(+tramp/ssh-cascades :which-key "cascades")
+    "tp" #'(+tramp/ssh-pascal   :which-key "pascal")))
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp :results none
@@ -1805,6 +1808,12 @@ Entirely from Doom Emacs
   "ssh into cascades through tramp"
   (interactive)
   (find-file "/sshx:lancebergeron@cascades1.arc.vt.edu:~/"))
+
+;;;###autoload
+(defun +tramp/ssh-pascal ()
+  "ssh into pascal through tramp"
+  (interactive)
+  (find-file "/sshx:cmda02@pascal.math.vt.edu|sshx:cmda02@node02:~/"))
 #+END_SRC
 ** Dired
 #+BEGIN_SRC emacs-lisp :results none
@@ -2031,7 +2040,7 @@ Entirely from Doom Emacs
 ** Python
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ein ; work with ipynb files
-  :mode ("\\.ipynb\\'" . ipynb-mode)
+  :mode ("\\.ipynb\\'" . ein:ipynb-mode)
   :hook (ipynb-mode . display-line-numbers-mode)
   :custom
   (ein:output-area-inlined-images t)
@@ -2092,4 +2101,12 @@ Entirely from Doom Emacs
 (use-package auctex
   :defer t
   :ensure-system-package (latex . texlive-core))
+#+END_SRC
+** HTML
+
+#+BEGIN_SRC emacs-lisp :results none
+(use-package shr
+  :general
+  ('normal mhtml-mode-map
+           "C-c p" #'(shr-render-buffer :which-key "render html")))
 #+END_SRC
