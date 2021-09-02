@@ -53,6 +53,7 @@
   - [[#matlab][Matlab]]
   - [[#latex][Latex]]
   - [[#html][HTML]]
+  - [[#java][Java]]
 
 * Early-Init
 
@@ -195,10 +196,13 @@ Mostly taken from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
 ;;; -*- lexical-binding: t -*-
+
+(setq my/etc-dir (expand-file-name "etc/" user-emacs-directory)
+      default-file-name-handler-alist file-name-handler-alist)
+
 (use-package emacs
   :custom
   ;; unset file-name-handler-alist until its set again in Hooks heading (improve startup time)
-  (default-file-name-handler-alist file-name-handler-alist)
   (file-name-handler-alist nil)
 
   ;; raise garbage collection threshold until its set again in Hooks heading
@@ -218,7 +222,6 @@ Mostly taken from Doom Emacs
   ;; inhibit-default-init t
   (initial-scratch-message nil)          ; empty scratch file
   (initial-major-mode 'fundamental-mode) ; start in an empty mode
-  (user-mail-address "bergeron.lance6@gmail.com")
 
   (kill-buffer-query-functions nil)
   (inhibit-compacting-font-caches t) ; inhibit font compacting
@@ -226,9 +229,6 @@ Mostly taken from Doom Emacs
   (ffap-machine-p-known 'reject)     ; don't ping things that look like domain names
   (bidi-inhibit-bpa t)
   (fast-but-imprecise-scrolling t)   ; faster scrolling over unfontified regions
-
-  ;; User Settings
-  (user-full-name "Lance Bergeron")
 
   ;; Scrolling
   (scroll-conservatively 1000)
@@ -245,7 +245,7 @@ Mostly taken from Doom Emacs
   (cursor-in-non-selected-windows nil)
 
   ;; Keeping ~/.emacs.d clean
-  (my/etc-dir                  (expand-file-name "etc/" user-emacs-directory))
+  ;; (my/etc-dir                  (expand-file-name "etc/" user-emacs-directory))
   (custom-file                 (expand-file-name "custom.el" my/etc-dir))
   (custom-theme-directory      (expand-file-name "themes/" my/etc-dir))
   (url-configuration-directory (expand-file-name "url/" my/etc-dir))
@@ -933,7 +933,7 @@ Entirely from Doom Emacs
    ";"   #'exit-minibuffer
    "C-j" #'ivy-next-line
    "C-k" #'ivy-previous-line
-   ;; Navigate to home directory; 126 => '~' in ASCII
+   ;; Navigate to home directory; 126 = '~' in ASCII
    "C-b" (lambda () (interactive) (self-insert-command 1 126)))
 
   ('normal ivy-minibuffer-map
@@ -946,11 +946,11 @@ Entirely from Doom Emacs
    ";" #'ivy-done)
   :custom
   (ivy-initial-inputs-alist nil) ; no initial ^, let flx do all the sorting work
-  (ivy-re-builders-alist '((swiper                . ivy--regex-plus)
-                           (counsel-rg            . ivy--regex-plus)
-                           (counsel-projectile-rg . ivy-regex-plus)
-                           (t                     . ivy--regex-fuzzy)))
   :config
+  (setq ivy-re-builders-alist '((swiper                . ivy--regex-plus)
+                                (counsel-rg            . ivy--regex-plus)
+                                (counsel-projectile-rg . ivy-regex-plus)
+                                (t                     . ivy--regex-fuzzy)))
   (evil-collection-init 'minibuffer)
   (evil-collection-init 'ivy))
 
@@ -1006,7 +1006,8 @@ Entirely from Doom Emacs
   (amx-history-length 50))
 
 (use-package flx
-  :after counsel) ; fuzzy sorting for ivy
+  :defer t)
+;; :after (ivy counsel)) ; fuzzy sorting for ivy
 #+END_SRC
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp :results none
@@ -1072,7 +1073,6 @@ Entirely from Doom Emacs
   :defer-incrementally
   (dash f s with-editor git-commit package eieio lv transient evil-magit)
   :custom
-  (magit-auto-revert-mode nil)
   (magit-save-repository-buffers nil)
   :general
   (my-leader-def
@@ -1094,10 +1094,12 @@ Entirely from Doom Emacs
   ;; scroll in magit-diff-mode with u and d
   ('normal magit-diff-mode-map
            [remap magit-diff]         #'(evil-scroll-down :which-key "scroll down")
-           [remap magit-unstage-file] #'(evil-scroll-up   :which-key "scroll up")))
+           [remap magit-unstage-file] #'(evil-scroll-up   :which-key "scroll up"))
+  :config
+  (setq magit-aut-revert-mode nil))
 
 (use-package evil-magit ; evil bindings for magit TODO in evil-collection
-  :after magit
+  :defer t
   :custom
   (evil-magit-state 'normal)
   (evil-magit-use-z-for-folds t))
@@ -1605,16 +1607,17 @@ Entirely from Doom Emacs
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package format-all ; format code functions
-  :custom
-  (+format-with-lsp t)
   :general
   (my-leader-def
     :states 'normal
-    "=" #'(+format/buffer :which-key "format"))
+    "=" #'(+format/buffer :which-key "format")
 
-  (my-leader-def
-    :states 'visual
-    "=" #'+format/region))
+    (my-leader-def
+      :states 'visual
+      "=" #'+format/region))
+
+  :config
+  (setq +format-with-lsp t))
 
 (use-package expand-region ; select a region TODO
   :general
@@ -2109,4 +2112,16 @@ Entirely from Doom Emacs
   :general
   ('normal mhtml-mode-map
            "C-c p" #'(shr-render-buffer :which-key "render html")))
+#+END_SRC
+** Java
+
+#+BEGIN_SRC emacs-lisp :results none
+(use-package lsp-java
+  :after lsp-mode
+  :custom
+  (lsp-java-server-install-dir "~/jdt_server")
+  (lsp-java-java-path          "/usr/bin/java")
+  :config
+  (add-hook 'java-mode 'lsp))
+;; :hook (java-mode . lsp))
 #+END_SRC
