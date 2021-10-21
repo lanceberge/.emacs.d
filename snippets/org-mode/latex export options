@@ -2,7 +2,7 @@
 # name: latex export options
 # key: lex
 # --
-#+OPTIONS: toc:nil author:nil date:nil num:nil
+#+OPTIONS: toc:nil date:nil num:nil
 #+STARTUP: latexpreview
 #+LATEX: \setlength\parindent{0pt}
 #+latex_class_options: [10pt]

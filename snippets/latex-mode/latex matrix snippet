@@ -2,4 +2,4 @@
 # name: latex matrix snippet
 # key: bm
 # --
-\begin{bmatrix} $0 \end{bmatrix}
+begin{bmatrix} $0 \end{bmatrix}
