@@ -1291,6 +1291,8 @@ Entirely from Doom Emacs
    "C-S-k" #'org-shiftcontrolup
    "C-S-l" #'org-shiftcontrolright)
   :config
+  (setq org-adapt-indentation nil)
+
   ;; Don't execute org-babel blocks on export
   (add-to-list 'org-babel-default-header-args
                '(:eval . "never-export"))

@@ -1,7 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(if (version< emacs-version "27.1")
-  (load-file (expand-file-name "early-init.el" user-emacs-directory)))
-
 (defconst config-org (expand-file-name "README.org" user-emacs-directory)
   "org-mode config to tangle into config.el")
 
