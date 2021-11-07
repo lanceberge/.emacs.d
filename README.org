@@ -46,7 +46,7 @@
 - [[#filetype-specific][Filetype Specific]]
   - [[#pdf][PDF]]
   - [[#c-family][C family]]
-  - [[#statistics-r][Statistics (R)]]
+  - [[#r][R]]
   - [[#markdown][Markdown]]
   - [[#rust][Rust]]
   - [[#python][Python]]
@@ -434,7 +434,7 @@ Taken entirely from Doom Emacs
 (use-package use-package-ensure-system-package ; a way to manage dependencies within use-package
   :defer t)
 
-(use-package straight
+(use-package straight ; package manager
   :general
   (my-localleader-def
     "s"   '(:ignore t            :which-key "Straight")
@@ -532,11 +532,15 @@ Taken entirely from Doom Emacs
     "oc" #'(calc :which-key "calc")))
 
 (use-package desktop ; save sessions to a file
-  :disabled t
   :straight (:type built-in)
   :custom
-  (desktop-path (list (expand-file-name "desktop/" my/etc-dir)))
+  ; (desktop-dirname (expand-file-name "desktop/" my/etc-dir))
+  ; (desktop-path (list desktop-dirname))
+  (desktop-save t)
+  (desktop-base-file-name "emacs.desktop")
   :config
+  (setq desktop-dirname (expand-file-name "desktop/" my/etc-dir)
+        desktop-path (list desktop-dirname))
   (desktop-save-mode 1)) ; TODO manual?
 #+END_SRC
 ** Keybindings
@@ -823,9 +827,8 @@ Entirely from Doom Emacs
 
 (use-package evil-embrace ; custom surround pairs
   :after evil-surround
-  :custom
-  (evil-embrace-show-help-p nil)
   :config
+  (setq evil-embrace-show-help-p nil)
   (add-hook 'org-mode-hook 'embrace-org-mode-hook)
   (evil-embrace-enable-evil-surround-integration)
   (add-hook 'org-mode-hook
@@ -1096,13 +1099,13 @@ Entirely from Doom Emacs
            [remap magit-diff]         #'(evil-scroll-down :which-key "scroll down")
            [remap magit-unstage-file] #'(evil-scroll-up   :which-key "scroll up"))
   :config
-  (setq magit-aut-revert-mode nil))
+  (setq magit-auto-revert-mode nil))
 
 (use-package evil-magit ; evil bindings for magit TODO in evil-collection
-  :defer t
+  :after magit
   :custom
-  (evil-magit-state 'normal)
-  (evil-magit-use-z-for-folds t))
+  (setq evil-magit-state 'normal
+        evil-magit-use-z-for-folds t))
 #+END_SRC
 * Project Management
 #+BEGIN_SRC emacs-lisp :results none
@@ -1190,7 +1193,10 @@ Entirely from Doom Emacs
 (use-package org
   :ensure-system-package (latex . texlive-core)
   :straight (:type built-in)
-  :hook (kill-emacs . +org/tangle-config)
+  :hook
+  (kill-emacs . +org/tangle-config)
+  (org-mode . (lambda () electric-local-indent-mode -1))
+
   :defer-incrementally
   (calendar find-func format-spec org-macs org-compat
             org-faces org-entities org-list org-pcomplete org-src
@@ -1200,7 +1206,6 @@ Entirely from Doom Emacs
   ;; Directories
   (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
   (org-agenda-files '("~/org"))
-  ;; (org-agenda-files (append (directory-files-recursively "~/school" "\.org$") '("~/org")))
 
   (org-directory "~/org")
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
@@ -1210,18 +1215,21 @@ Entirely from Doom Emacs
   (org-startup-folded t)
   (org-fontify-done-headline t)
   (org-M-RET-may-split-line nil)
-                                        ; TODO
+
   ;; (org-log-done 'time)
   (org-tag-alist '(("school" . ?s) ("personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
-  (org-todo-keywords '((sequence "TODO(t)" "TODAY(T)" "IN PROGRESS(p!)"
-                                 "WAITING(w!)""|"  "CANCELLED(c!)" "DONE(d)")))
+
+  ;; exclamation points after ?
+  (org-todo-keywords '((sequence "TODO(t)" "TODAY(T)" "IN PROGRESS(p)"
+                                 "WAITING(w)" "|" "OPTIONAL(o)"
+                                 "CANCELLED(c)" "DONE(d)")))
 
   ;; Latex exports
   (org-export-backends '(html latex md))
   (org-latex-listings 'minted) ; syntax-highlighted code blocks
   (org-latex-packages-alist '(("margin=1in" "geometry" nil) (nil "minted" "color")))
   (org-latex-pdf-process ; required to use minted
-   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+    '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-latex-minted-options '(("linenos" "true") ; line numbers in expored src blocks
                               ("frame" "lines")
                               ("style" "emacs")))
@@ -1231,32 +1239,32 @@ Entirely from Doom Emacs
   (org-done             ((t (:foreground "#7C6f64"))))
   :general
   ('(normal insert) org-mode-map
-   :prefix "C-c"
-   ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
-   "v"  #'(org-toggle-inline-images    :which-key "toggle inline images")
-   "t"  #'(org-todo                    :which-key "todo")
-   "s"  #'(org-sort                    :which-key "sort")
-   ",s" #'(org-schedule                :which-key "schedule")
-   "d"  #'(org-deadline                :which-key "deadline")
-   "q"  #'(org-set-tags-command        :which-key "add tags")
-   "p"  #'(org-latex-preview           :which-key "preview latex")
-   ",p" #'(org-set-property            :which-key "set property")
-   ",t" #'(+org/tangle-config          :which-key "tangle config"))
+    :prefix "C-c"
+    ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
+    "v"  #'(org-toggle-inline-images    :which-key "toggle inline images")
+    "t"  #'(org-todo                    :which-key "todo")
+    "s"  #'(org-sort                    :which-key "sort")
+    ",s" #'(org-schedule                :which-key "schedule")
+    "d"  #'(org-deadline                :which-key "deadline")
+    "q"  #'(org-set-tags-command        :which-key "add tags")
+    "p"  #'(org-latex-preview           :which-key "preview latex")
+    ",p" #'(org-set-property            :which-key "set property")
+    ",t" #'(+org/tangle-config          :which-key "tangle config"))
 
   ('normal org-mode-map
-           "RET" #'org-open-at-point)
+            "RET" #'org-open-at-point)
 
   ;; Vim keys calendar maps
   ('org-read-date-minibuffer-local-map
-   ";" #'exit-minibuffer
-   "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
-   "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
-   "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
-   "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
-   "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
-   "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
-   "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1)))
-   "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
+    ";" #'exit-minibuffer
+    "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
+    "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
+    "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
+    "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
+    "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
+    "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
+    "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1)))
+    "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
 
   ;; Folding maps based on vim
   ('normal org-mode-map
@@ -1265,53 +1273,53 @@ Entirely from Doom Emacs
            "zj" #'org-forward-element)
 
   ('(normal insert) org-mode-map
-   ;; TODOS with M-;, headlines with C-;, add shift to do those above
-   "C-M-;" #'+org/insert-subheading
-   "C-:"   #'+org/insert-heading-above
-   "M-:"   #'+org/insert-todo-above
+    ;; TODOS with M-;, headlines with C-;, add shift to do those above
+    "C-M-;" #'+org/insert-subheading
+    "C-:"   #'+org/insert-heading-above
+    "M-:"   #'+org/insert-todo-above
 
-   ;; Vim keys > arrow keys
-   "M-h"   #'org-metaleft
-   "M-j"   #'org-metadown
-   "M-k"   #'org-metaup
-   "M-l"   #'org-metaright
+    ;; Vim keys > arrow keys
+    "M-h"   #'org-metaleft
+    "M-j"   #'org-metadown
+    "M-k"   #'org-metaup
+    "M-l"   #'org-metaright
 
-   "M-H"   #'org-shiftleft
-   "M-J"   #'org-shiftdown
-   "M-K"   #'org-shiftup
-   "M-L"   #'org-shiftright
+    "M-H"   #'org-shiftleft
+    "M-J"   #'org-shiftdown
+    "M-K"   #'org-shiftup
+    "M-L"   #'org-shiftright
 
-   "C-M-h" #'org-shiftmetaleft
-   "C-M-j" #'org-shiftmetadown
-   "C-M-k" #'org-shiftmetaup
-   "C-M-l" #'org-shiftmetaright
+    "C-M-h" #'org-shiftmetaleft
+    "C-M-j" #'org-shiftmetadown
+    "C-M-k" #'org-shiftmetaup
+    "C-M-l" #'org-shiftmetaright
 
-   "C-S-h" #'org-shiftcontrolleft
-   "C-S-j" #'org-shiftcontroldown
-   "C-S-k" #'org-shiftcontrolup
-   "C-S-l" #'org-shiftcontrolright)
+    "C-S-h" #'org-shiftcontrolleft
+    "C-S-j" #'org-shiftcontroldown
+    "C-S-k" #'org-shiftcontrolup
+    "C-S-l" #'org-shiftcontrolright)
   :config
   (setq org-adapt-indentation nil)
 
   ;; Don't execute org-babel blocks on export
   (add-to-list 'org-babel-default-header-args
-               '(:eval . "never-export"))
+                '(:eval . "never-export"))
 
   ;; Org-mode local settings
   (add-hook 'org-mode-hook (lambda ()
-                             (setq-local evil-auto-indent nil
-                                         evil-shift-width 2)
-                             (add-to-list 'org-modules 'habits)))
+                              (setq-local evil-auto-indent nil
+                                          evil-shift-width 2)
+                              (add-to-list 'org-modules 'habits)))
 
   ;; No unnecessary background highlighting
   (custom-set-faces
-   `(org-block            ((t (:background ,bg-color))))
-   `(org-block-begin-line ((t (:background ,bg-color))))
-   `(org-block-end-line   ((t (:background ,bg-color))))
-   `(org-level-1          ((t (:background ,bg-color))))
-   `(org-quote            ((t (:background ,bg-color)))))
+    `(org-block            ((t (:background ,bg-color))))
+    `(org-block-begin-line ((t (:background ,bg-color))))
+    `(org-block-end-line   ((t (:background ,bg-color))))
+    `(org-level-1          ((t (:background ,bg-color))))
+    `(org-quote            ((t (:background ,bg-color)))))
 
-  (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
+(plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
 ** Org built-ins
 #+BEGIN_SRC emacs-lisp :results none
@@ -1357,15 +1365,15 @@ Entirely from Doom Emacs
   (org-capture-templates
    '(("l" "Life TODO entry"
       entry (file+headline "~/org/todo.org" "Life")
-      "* TODO %?\n %i\n %a" :prepend t)
+      "* TODO %?\n %i\n" :prepend t)
 
      ("e" "Emacs TODO entry"
       entry (file+headline "~/org/todo.org" "Emacs")
-      "* TODO %?\n %i\n %a" :prepend t)
+      "* TODO %?\n %i\n" :prepend t)
 
      ("t" "today TODO entry"
       entry (file+headline "~/org/todo.org" "Today")
-      "* TODAY %?\n %i\n %a" :prepend t)
+      "* TODAY %?\n %i\n" :prepend t)
 
      ("s" "school TODO"
       entry (file+headline "~/org/todo.org" "School")
@@ -1988,7 +1996,7 @@ Entirely from Doom Emacs
 ;; company-keywords
 ;; company-yasnippet
 #+END_SRC
-** Statistics (R)
+** R
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ess
   :ensure-system-package (R . r)
