@@ -432,7 +432,7 @@ Taken entirely from Doom Emacs
   :defer t)
 
 (use-package use-package-ensure-system-package ; a way to manage dependencies within use-package
-  :defer t)
+  :disabled t)
 
 (use-package straight ; package manager
   :general
@@ -507,7 +507,7 @@ Taken entirely from Doom Emacs
 
 (when IS-LINUX
   (use-package flyspell ; spellcheck
-    :ensure-system-package ispell
+    ;; :ensure-system-package ispell
     :straight (:type built-in)
     :hook ((text-mode . flyspell-mode)
            (prog-mode . flyspell-prog-mode))
@@ -958,7 +958,7 @@ Entirely from Doom Emacs
   (evil-collection-init 'ivy))
 
 (use-package counsel ; ivy support for many functions
-  :ensure-system-package ((rg . ripgrep) fzf)
+  ;; :ensure-system-package ((rg . ripgrep) fzf)
   :custom
   (counsel-describe-function-function #'helpful-callable)
   (counsel-describe-variable-function #'helpful-variable)
@@ -1072,7 +1072,7 @@ Entirely from Doom Emacs
 * Version Control
 #+BEGIN_SRC emacs-lisp :results none
 (use-package magit ; git client
-  :ensure-system-package git
+  ;; :ensure-system-package git
   :defer-incrementally
   (dash f s with-editor git-commit package eieio lv transient evil-magit)
   :custom
@@ -1191,11 +1191,11 @@ Entirely from Doom Emacs
 ** Org
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org
-  :ensure-system-package (latex . texlive-core)
+  ;; :ensure-system-package (latex . texlive-core)
   :straight (:type built-in)
   :hook
   (kill-emacs . +org/tangle-config)
-  (org-mode . (lambda () electric-local-indent-mode -1))
+  (org-mode . (lambda () (electric-indent-local-mode -1)))
 
   :defer-incrementally
   (calendar find-func format-spec org-macs org-compat
@@ -1352,7 +1352,7 @@ Entirely from Doom Emacs
    "b"  #'(org-babel-tangle :which-key "tangle file")))
 
 (use-package ox ; org exports
-  :ensure-system-package (pdflatex . texlive-latexextra)
+  ;; :ensure-system-package (pdflatex . texlive-latexextra)
   :straight (:type built-in)
   :general
   ('(normal insert) org-mode-map
@@ -1650,7 +1650,7 @@ Entirely from Doom Emacs
 ** Vterm
 #+BEGIN_SRC emacs-lisp :results none
 (use-package vterm ; terminal emulator
-  :ensure-system-package cmake
+  ;; :ensure-system-package cmake
   :custom
   (vterm-kill-buffer-on-exit t)
   :general
@@ -1964,7 +1964,7 @@ Entirely from Doom Emacs
 ** C family
 #+BEGIN_SRC emacs-lisp :results none
 (use-package cc-mode
-  :ensure-system-package (clang gcc)
+  ;; :ensure-system-package (clang gcc)
   :straight (:type built-in)
   :hook (c-mode . +cc/company-mode)
   :mode ("\\.cu\\'" . c-mode)
@@ -1977,7 +1977,7 @@ Entirely from Doom Emacs
 
 (use-package gdb-mi ; TODO
   :straight (:type built-in)
-  :ensure-system-package gdb
+  ;; :ensure-system-package gdb
   :general
   ('c-mode-map
    "C-c g" #'(gdb :which-key "gdb")))
@@ -1999,7 +1999,7 @@ Entirely from Doom Emacs
 ** R
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ess
-  :ensure-system-package (R . r)
+  ;; :ensure-system-package (R . r)
   :hook (ess-r-mode . +ess/company-mode)
   :general
   ('(normal insert) ess-mode-map
@@ -2037,7 +2037,7 @@ Entirely from Doom Emacs
   ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))
 
 (use-package pandoc-mode
-  :ensure-system-package pandoc
+  ;; :ensure-system-package pandoc
   :hook (markdown-mode . pandoc-mode)
   :general
   ('markdown-mode-map
@@ -2112,8 +2112,8 @@ Entirely from Doom Emacs
 ** Latex
 #+BEGIN_SRC emacs-lisp :results none
 (use-package auctex
-  :defer t
-  :ensure-system-package (latex . texlive-core))
+  :defer t)
+  ;; :ensure-system-package (latex . texlive-core))
 #+END_SRC
 ** HTML
 
