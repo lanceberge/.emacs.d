@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: shell script source block
-# key: ss
+# key: sb
 # --
 #+BEGIN_SRC sh
 $0
