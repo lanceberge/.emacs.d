@@ -803,8 +803,9 @@ Entirely from Doom Emacs
    '(minibuffer
      ivy
      dired
-     eshel
-     (pdf pdf-tools))))
+     eshell
+     (pdf pdf-tools)
+     magit)))
 #+END_SRC
 ** Extra operators/motions
 #+BEGIN_SRC emacs-lisp :results none
@@ -1014,30 +1015,32 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp :results none
-(use-package yasnippet ; snippets
-  ;; Latex-mode snippets in org
-  :hook (org-mode . (lambda () (yas-activate-extra-mode 'latex-mode)))
-  :defer 0.2
-  :defer-incrementally (eldoc easymenu help-mode)
-  :custom
-  (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
-  :general
-  (my-leader-def
-    "s"   '(:ignore t           :which-key "Yasnippet")
-    "si" #'(yas-insert-snippet  :which-key "insert snippet")
-    "sn" #'(yas-new-snippet     :which-key "new snippet")
-    "sl" #'(yas-describe-tables :which-key "list snippets"))
-  :config
-  (yas-global-mode))
+  (use-package yasnippet ; snippets
+    ;; Latex-mode snippets in org
+    :defer 0.2
+    :defer-incrementally (eldoc easymenu help-mode)
+    :custom
+    (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
+    :general
+    (my-leader-def
+      "s"   '(:ignore t           :which-key "Yasnippet")
+      "si" #'(yas-insert-snippet  :which-key "insert snippet")
+      "sn" #'(yas-new-snippet     :which-key "new snippet")
+      "sl" #'(yas-describe-tables :which-key "list snippets"))
+    :config
+    (add-hook 'org-mode-hook (lambda ()
+      (yas-activate-extra-mode 'latex-mode)))
 
-(use-package yasnippet-snippets ; a bunch of snippets
-  :after yasnippet)
+    (yas-global-mode))
 
-(use-package auto-yasnippet ; create small snippets easily TODO
-  :general
-  (my-leader-def
-    "sc" #'(aya-create :which-key "create aya snippet")
-    "se" #'(aya-expand :which-key "expand aya snippet")))
+  (use-package yasnippet-snippets ; a bunch of snippets
+    :after yasnippet)
+
+  (use-package auto-yasnippet ; create small snippets easily TODO
+    :general
+    (my-leader-def
+      "sc" #'(aya-create :which-key "create aya snippet")
+      "se" #'(aya-expand :which-key "expand aya snippet")))
 #+END_SRC
 ** Company
 #+BEGIN_SRC emacs-lisp :results none
@@ -1099,13 +1102,17 @@ Entirely from Doom Emacs
            [remap magit-diff]         #'(evil-scroll-down :which-key "scroll down")
            [remap magit-unstage-file] #'(evil-scroll-up   :which-key "scroll up"))
   :config
-  (setq magit-auto-revert-mode nil))
+  (evil-collection-init 'magit)
 
-(use-package evil-magit ; evil bindings for magit TODO in evil-collection
-  :after magit
-  :custom
-  (setq evil-magit-state 'normal
-        evil-magit-use-z-for-folds t))
+  (setq evil-collection-magit-state 'normal
+        evil-collection-magit-use-z-for-folds t
+        magit-auto-revert-mode nil))
+
+;; (use-package evil-magit ; evil bindings for magit TODO in evil-collection
+;;   :after magit
+;;   :custom
+;;   (setq evil-magit-state 'normal
+;;         evil-magit-use-z-for-folds t))
 #+END_SRC
 * Project Management
 #+BEGIN_SRC emacs-lisp :results none
@@ -1306,6 +1313,7 @@ Entirely from Doom Emacs
                 '(:eval . "never-export"))
 
   ;; Org-mode local settings
+  ;; TODO make a state
   (add-hook 'org-mode-hook (lambda ()
                               (setq-local evil-auto-indent nil
                                           evil-shift-width 2)
@@ -1518,6 +1526,7 @@ Entirely from Doom Emacs
   ("M-o" #'ace-window))
 
 (use-package golden-ratio ; auto resize windows
+  :disabled t ; TODO
   :hook (window-setup . golden-ratio-mode)
   :custom
   (golden-ratio-auto-scale t)
@@ -1908,10 +1917,15 @@ Entirely from Doom Emacs
   (undo-limit 10000)
   (undo-tree-history-directory-alist (list (cons "." (expand-file-name "undo/" my/etc-dir))))
   (undo-tree-auto-save-history t)
-  (evil-undo-system 'undo-tree)
   :general
+  ('normal
+    "C-r" 'undo-tree-redo
+    "u"   'undo-tree-undo)
   (my-leader-def
-    "fu" #'(undo-tree-visualize :which-key "undo")))
+    "fu" #'(undo-tree-visualize :which-key "undo"))
+  :config
+  (if (version= emacs-version "28")
+    (setq evil-undo-system 'undo-tree)))
 
 (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
   :hook (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
@@ -1935,7 +1949,6 @@ Entirely from Doom Emacs
   :mode ("\\.pdf\\'" . pdf-view-mode)
   ;; no line numbers in pdfs
   ;; :hook (pdf-view-mode . (lambda () (pdf-view-midnight-minor-mode)
-  ;; (display-line-numbers-mode -1)))
   :hook (pdf-view-mode . my/pdf-mode)
   :custom
   (pdf-view-use-scaling t)
@@ -1952,7 +1965,7 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun my/pdf-mode ()
-  (pdf-view-midnight-minor-mode +1)
+  ;; (pdf-view-midnight-minor-mode +1)
 
   ;; no cursor or line numbers in pdfs
   (setq-local make-pointer-invisible t
@@ -2084,9 +2097,11 @@ Entirely from Doom Emacs
     "eir" #'(ein:run   :which-key "run")
     "eis" #'(ein:stop  :which-key "stop"))
 
-  ('normal
-   [remap evil-undo] #'undo
-   [remap evil-redo] #'undo-redo))
+  :config
+  (if (version= emacs-version "28")
+   (general-def 'normal
+    [remap evil-undo] #'undo
+    [remap evil-redo] #'undo-redo)))
 
 (use-package jupyter
   :defer t)
@@ -2127,6 +2142,7 @@ Entirely from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
 (use-package lsp-java
+  :disabled t
   :after lsp-mode
   :custom
   (lsp-java-server-install-dir "~/jdt_server")
