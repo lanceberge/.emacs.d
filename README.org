@@ -926,7 +926,7 @@ Entirely from Doom Emacs
   (swiper-use-visual-line-p (lambda (a) nil))
   :general
   ('normal
-   [remap evil-ex-search-forward]  #'swiper
+   [remap evil-ex-search-forward]  #'swiper-isearch
    [remap evil-ex-search-backward] #'swiper-backward)
   (my-leader-def
     "fb" #'(swiper-multi :which-key "swiper in buffer")
@@ -1019,7 +1019,6 @@ Entirely from Doom Emacs
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp :results none
   (use-package yasnippet ; snippets
-    ;; Latex-mode snippets in org
     :defer 0.2
     :defer-incrementally (eldoc easymenu help-mode)
     :custom
@@ -1031,10 +1030,11 @@ Entirely from Doom Emacs
       "sn" #'(yas-new-snippet     :which-key "new snippet")
       "sl" #'(yas-describe-tables :which-key "list snippets"))
     :config
+    ;; Latex-mode snippets in org
     (add-hook 'org-mode-hook (lambda ()
       (yas-activate-extra-mode 'latex-mode)))
 
-    (yas-global-mode))
+    (yas-global-mode 1))
 
   (use-package yasnippet-snippets ; a bunch of snippets
     :after yasnippet)
@@ -1230,8 +1230,8 @@ Entirely from Doom Emacs
   (org-tag-alist '(("school" . ?s) ("personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
 
   ;; exclamation points after ?
-  (org-todo-keywords '((sequence "TODO(t)" "TODAY(T)" "IN PROGRESS(p)"
-                                 "WAITING(w)" "|" "OPTIONAL(o)"
+  (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p)"
+                                 "WAITING(w)"  "OPTIONAL(o)" "|"
                                  "CANCELLED(c)" "DONE(d)")))
 
   ;; Latex exports
@@ -1243,10 +1243,10 @@ Entirely from Doom Emacs
   (org-latex-minted-options '(("linenos" "true") ; line numbers in expored src blocks
                               ("frame" "lines")
                               ("style" "emacs")))
-  :custom-face
+  ;; :custom-face
   ;; Gray out done headlines and text; strike-through the text
-  (org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
-  (org-done             ((t (:foreground "#7C6f64"))))
+  ;; (org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
+  ;; (org-done             ((t (:foreground "#7C6f64"))))
   :general
   ('(normal insert) org-mode-map
     :prefix "C-c"
@@ -1309,7 +1309,6 @@ Entirely from Doom Emacs
     "C-S-k" #'org-shiftcontrolup
     "C-S-l" #'org-shiftcontrolright)
   :config
-  (setq org-adapt-indentation nil)
 
   ;; Don't execute org-babel blocks on export
   (add-to-list 'org-babel-default-header-args
@@ -1328,9 +1327,14 @@ Entirely from Doom Emacs
     `(org-block-begin-line ((t (:background ,bg-color))))
     `(org-block-end-line   ((t (:background ,bg-color))))
     `(org-level-1          ((t (:background ,bg-color))))
-    `(org-quote            ((t (:background ,bg-color)))))
+    `(org-quote            ((t (:background ,bg-color))))
+    `(org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
+    `(org-done             ((t (:foreground "#7C6f64")))))
 
-(plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
+  (setq org-todo-keyword-faces '(("WAITING"  . (:foreground "#7C6f64" :strikethrough t))
+                                 ("OPTIONAL" . (:foreground "#7C6f64" :strikethrough t))))
+
+  (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
 ** Org built-ins
 #+BEGIN_SRC emacs-lisp :results none
@@ -1350,7 +1354,14 @@ Entirely from Doom Emacs
   :straight (:type built-in)
   :defer t
   :custom
-  (org-src-window-setup 'current-window))
+  (org-edit-src-content-indentation 0)
+  (org-src-tab-acts-natively t)
+  (org-src-preserve-indentation t)
+  (org-src-window-setup 'current-window)
+  (org-adapt-indentation nil)) ; TODO
+  ;; :general
+  ;; ('insert org-mode-map
+  ;;          "<tab>" 'indent-for-tab-command))
 
 (use-package ob ; org babel
   :straight (:type built-in)
@@ -1593,7 +1604,8 @@ Entirely from Doom Emacs
 (use-package smartparens ; pair delimiters automatically and functions to work with delimiters
   :defer 0.1
   ;; enable smartparens in ivy-mode
-  :hook (ivy-mode . smartparens-mode)
+  :hook
+  (ivy-mode . (lambda () (smartparens-mode -1)))
   :custom
   (sp-highlight-pair-overlay nil)
   (sp-highlight-wrap-overlay nil)
@@ -1751,6 +1763,7 @@ Entirely from Doom Emacs
                  ("gl" "git log")
                  ("ga" "git add")
                  ("gaa" "git add -A")
+                 ("gcm" "git commit -m")
                  ("gcam" "git commit -a m")
                  ("gr" "git reset")
                  ("grs" "git reset --soft HEAD~1")
