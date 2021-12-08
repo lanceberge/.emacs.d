@@ -48,12 +48,10 @@
   - [[#c-family][C family]]
   - [[#r][R]]
   - [[#markdown][Markdown]]
-  - [[#rust][Rust]]
   - [[#python][Python]]
   - [[#matlab][Matlab]]
   - [[#latex][Latex]]
   - [[#html][HTML]]
-  - [[#java][Java]]
 
 * Early-Init
 
@@ -431,9 +429,6 @@ Taken entirely from Doom Emacs
   (my-leader-def
     "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
 
-(use-package hydra
-  :defer t)
-
 (use-package use-package-ensure-system-package ; a way to manage dependencies within use-package
   :disabled t)
 
@@ -541,6 +536,9 @@ Taken entirely from Doom Emacs
   ; (desktop-path (list desktop-dirname))
   (desktop-save t)
   (desktop-base-file-name "emacs.desktop")
+  :general
+  ('normal
+    "C-w w" #'(desktop-save-in-desktop-dir :which-key "save desktop"))
   :config
   (setq desktop-dirname (expand-file-name "desktop/" my/etc-dir)
         desktop-path (list desktop-dirname))
@@ -869,6 +867,7 @@ Entirely from Doom Emacs
    "gX" #'(evil-exchange-cancel :which-key "cancel exchange")))
 
 (use-package evil-owl
+  :disabled t
   :hook (find-file . evil-owl-mode))
 
 (use-package evil-textobj-anyblock
@@ -915,6 +914,7 @@ Entirely from Doom Emacs
            "zr" #'(origami-open-all-nodes        :which-key "open all folds recursively")))
 
 (use-package evil-mc ; multiple cursors TODO
+  :disabled t
   :hook (find-file . evil-mc-mode))
 #+END_SRC
 * Completion
@@ -1110,12 +1110,6 @@ Entirely from Doom Emacs
   (setq evil-collection-magit-state 'normal
         evil-collection-magit-use-z-for-folds t
         magit-auto-revert-mode nil))
-
-;; (use-package evil-magit ; evil bindings for magit TODO in evil-collection
-;;   :after magit
-;;   :custom
-;;   (setq evil-magit-state 'normal
-;;         evil-magit-use-z-for-folds t))
 #+END_SRC
 * Project Management
 #+BEGIN_SRC emacs-lisp :results none
@@ -1138,6 +1132,7 @@ Entirely from Doom Emacs
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
 (use-package lsp-mode ; LSP
+  :disabled t
   :hook (prog-mode . lsp-mode)
   :custom
   ;; Disable slow features
@@ -1158,6 +1153,7 @@ Entirely from Doom Emacs
   :custom (lsp-ui-doc-position 'bottom))
 
 (use-package lsp-ivy ; TODO
+  :disabled t
   :after (lsp-mode))
 
 (use-package flycheck ; code syntax checking
@@ -1168,7 +1164,7 @@ Entirely from Doom Emacs
   (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
   ;; Language specific
-  (flycheck-clang-include-path '(".."))
+  (flycheck-clang-include-path '("..")) ; TODO
   :general
   ('normal
    "[q" #'(flycheck-previous-error :which-key "previous error")
@@ -1228,11 +1224,6 @@ Entirely from Doom Emacs
 
   ;; (org-log-done 'time)
   (org-tag-alist '(("school" . ?s) ("personal" . ?p) ("drill" . ?d) ("TOC" . ?t)))
-
-  ;; exclamation points after ?
-  (org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p)"
-                                 "WAITING(w)"  "OPTIONAL(o)" "|"
-                                 "CANCELLED(c)" "DONE(d)")))
 
   ;; Latex exports
   (org-export-backends '(html latex md))
@@ -1309,7 +1300,6 @@ Entirely from Doom Emacs
     "C-S-k" #'org-shiftcontrolup
     "C-S-l" #'org-shiftcontrolright)
   :config
-
   ;; Don't execute org-babel blocks on export
   (add-to-list 'org-babel-default-header-args
                 '(:eval . "never-export"))
@@ -1332,7 +1322,11 @@ Entirely from Doom Emacs
     `(org-done             ((t (:foreground "#7C6f64")))))
 
   (setq org-todo-keyword-faces '(("WAITING"  . (:foreground "#7C6f64" :strikethrough t))
-                                 ("OPTIONAL" . (:foreground "#7C6f64" :strikethrough t))))
+                                 ("OPTIONAL" . (:foreground "#7C6f64" :strikethrough t)))
+
+        org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p)"
+                                      "WAITING(w)"  "OPTIONAL(o)" "|"
+                                      "CANCELLED(c)" "DONE(d)")))
 
   (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
@@ -1395,7 +1389,7 @@ Entirely from Doom Emacs
 
      ("t" "today TODO entry"
       entry (file+headline "~/org/todo.org" "Today")
-      "* TODAY %?\n %i\n" :prepend t)
+      "* TODO %?\n %i\n" :prepend t)
 
      ("s" "school TODO"
       entry (file+headline "~/org/todo.org" "School")
@@ -1446,6 +1440,7 @@ Entirely from Doom Emacs
 ** Non built-ins
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org-drill ; spaced repetition flashcards within emacs
+  :disabled t
   :general
   ('override :prefix "C-c"
              ",d" #'(org-drill :which-key "org drill")))
@@ -1667,8 +1662,7 @@ Entirely from Doom Emacs
   :general
   ('normal
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
-   "g SPC o" #'(avy-goto-char-timer :which-key "timer")
-   "g SPC l" #'(avy-goto-line       :which-key "line")))
+   "g SPC o" #'(avy-goto-char-timer :which-key "timer")))
 #+END_SRC
 * System
 ** Vterm
@@ -1758,18 +1752,18 @@ Entirely from Doom Emacs
                  ("ll" "ls -l")
                  ("la" "ls -lA")
 
-                 ("g" "git")
-                 ("gs" "git status")
-                 ("gl" "git log")
-                 ("ga" "git add")
-                 ("gaa" "git add -A")
-                 ("gcm" "git commit -m")
+                 ("g"    "git")
+                 ("gs"   "git status")
+                 ("gl"   "git log")
+                 ("ga"   "git add")
+                 ("gaa"  "git add -A")
+                 ("gcm"  "git commit -m")
                  ("gcam" "git commit -a m")
-                 ("gr" "git reset")
-                 ("grs" "git reset --soft HEAD~1")
+                 ("gr"   "git reset")
+                 ("grs"  "git reset --soft HEAD~1")
 
-                 ("gp" "git push -u origin master")
-                 ("gF" "git pull")))
+                 ("gp"   "git push -u origin master")
+                 ("gF"   "git pull")))
     (add-to-list 'eshell-command-aliases-list var)))
 
 ;;;###autoload
@@ -2073,12 +2067,6 @@ Entirely from Doom Emacs
    :prefix "C-c"
    "e" #'(pandoc-main-hydra/body :which-key "pandoc")))
 #+END_SRC
-** Rust
-#+BEGIN_SRC emacs-lisp :results none
-;; TODO - move to rustic and use cargo.el, ensure-system-package
-(use-package rust-mode
-  :defer t)
-#+END_SRC
 ** Python
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ein ; work with ipynb files
@@ -2153,17 +2141,4 @@ Entirely from Doom Emacs
   :general
   ('normal mhtml-mode-map
            "C-c p" #'(shr-render-buffer :which-key "render html")))
-#+END_SRC
-** Java
-
-#+BEGIN_SRC emacs-lisp :results none
-(use-package lsp-java
-  :disabled t
-  :after lsp-mode
-  :custom
-  (lsp-java-server-install-dir "~/jdt_server")
-  (lsp-java-java-path          "/usr/bin/java")
-  :config
-  (add-hook 'java-mode 'lsp))
-;; :hook (java-mode . lsp))
 #+END_SRC
