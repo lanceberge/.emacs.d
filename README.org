@@ -532,17 +532,13 @@ Taken entirely from Doom Emacs
 (use-package desktop ; save sessions to a file
   :straight (:type built-in)
   :custom
-  ; (desktop-dirname (expand-file-name "desktop/" my/etc-dir))
-  ; (desktop-path (list desktop-dirname))
-  (desktop-save t)
+  (desktop-dirname (expand-file-name "desktop/" my/etc-dir))
+  (desktop-path (list desktop-dirname))
+  (desktop-save-mode t)
   (desktop-base-file-name "emacs.desktop")
   :general
   ('normal
-    "C-w w" #'(desktop-save-in-desktop-dir :which-key "save desktop"))
-  :config
-  (setq desktop-dirname (expand-file-name "desktop/" my/etc-dir)
-        desktop-path (list desktop-dirname))
-  (desktop-save-mode 1)) ; TODO manual?
+    "C-w w" #'(desktop-save-in-desktop-dir :which-key "save desktop")))
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -552,22 +548,22 @@ Taken entirely from Doom Emacs
     "c" (general-simulate-key "C-c" :which-key "+Mode specific maps"))
 
   (my-leader-def
-    "h"         (general-simulate-key "C-h"   :which-key "+Help")
+    "h"         (general-simulate-key "C-h" :which-key "+Help")
 
     ;; Windows
-    ";"       #'(shell-command                :which-key "shell command")
-    "w"         (general-simulate-key "C-w"   :which-key "+Windows") ; window command
+    ";"       #'(shell-command              :which-key "shell command")
+    "w"         (general-simulate-key "C-w" :which-key "+Windows") ; window command
 
     ;; Buffers
-    "b"        '(:ignore t                    :which-key "Buffers")
-    "bs"      #'(save-buffer                  :which-key "write file")
-    "bd"      #'(kill-this-buffer             :which-key "delete buffer")
-    "bq"      #'(my/save-and-kill-buffer      :which-key "save and kill buffer")
-    "b SPC d" #'(my/kill-window-and-buffer    :which-key "kill window and buffer")
+    "b"        '(:ignore t                 :which-key "Buffers")
+    "bs"      #'(save-buffer               :which-key "write file")
+    "bd"      #'(kill-this-buffer          :which-key "delete buffer")
+    "bq"      #'(my/save-and-kill-buffer   :which-key "save and kill buffer")
+    "b SPC d" #'(my/kill-window-and-buffer :which-key "kill window and buffer")
     "br"        (lambda () (interactive)
-                  (revert-buffer t t)         :which-key "revert-buffer")
-    "bn"      #'(next-buffer                  :which-key "next buffer")
-    "bp"      #'(previous-buffer              :which-key "previous buffer")
+                  (revert-buffer t t)      :which-key "revert-buffer")
+    "bn"      #'(next-buffer               :which-key "next buffer")
+    "bp"      #'(previous-buffer           :which-key "previous buffer")
 
     ;; Eval elisp
     "er"      #'(eval-region                  :which-key "execute elisp region")
@@ -575,7 +571,20 @@ Taken entirely from Doom Emacs
     "ee"      #'(eval-expression              :which-key "evaluate elisp expression")
     "eb"      #'(eval-buffer                  :which-key "evaluate elisp buffer")
     "ef"      #'(eval-defun                   :which-key "evaluate elisp defun")
-    "'"         (general-simulate-key "C-c '" :which-key "open src block"))
+    "'"         (general-simulate-key "C-c '" :which-key "open src block")
+
+    ;; Find specific files
+    "of" '(:ignore t :which-key "File")
+    "ofc" (lambda () (interactive)
+            (tab-bar-switch-to-tab "org")
+            (find-file "~/.emacs.d/README.org") :which-key "config")
+
+    "ofs" (lambda () (interactive)
+            (find-file "~/school/fall2021") :which-key "school")
+
+    "oft" (lambda () (interactive)
+            (tab-bar-switch-to-tab "org")
+            (find-file "~/org/todo.org") :which-key "todo"))
 
   ('normal
    "gs" #'(my/split-line-below      :which-key "split line below")
@@ -786,7 +795,11 @@ Entirely from Doom Emacs
   ('evil-window-map
    "d"     #'(evil-quit                    :which-key "delete window")
    "q"     #'(evil-save-modified-and-close :which-key "quit and save window")
-   "SPC q" #'(save-buffers-kill-emacs      :which-key "save buffers & quit emacs"))
+   "SPC q" #'(save-buffers-kill-emacs      :which-key "save buffers & quit emacs")
+   "a"       (lambda () (interactive)
+               (evil-window-increase-width 5))
+   "x"       (lambda () (interactive)
+               (evil-window-decrease-width 5)))
 
   ('(normal insert)
    "C-l" #'(evil-ex-nohighlight :which-key "clear highlight"))
@@ -954,7 +967,7 @@ Entirely from Doom Emacs
   :custom
   (ivy-initial-inputs-alist nil) ; no initial ^, let flx do all the sorting work
   :config
-  (setq ivy-re-builders-alist '((swiper                . ivy--regex-plus)
+  (setq ivy-re-builders-alist '((swiper-isearch        . ivy--regex-plus)
                                 (counsel-rg            . ivy--regex-plus)
                                 (counsel-projectile-rg . ivy-regex-plus)
                                 (t                     . ivy--regex-fuzzy)))
@@ -1532,7 +1545,10 @@ Entirely from Doom Emacs
   :custom
   (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
   :general
-  ("M-o" #'ace-window))
+  ("M-o" #'ace-window)
+
+  ('evil-window-map
+    "m" #'(ace-swap-window :which-key "move")))
 
 (use-package golden-ratio ; auto resize windows
   :disabled t ; TODO
