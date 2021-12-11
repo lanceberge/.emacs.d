@@ -173,7 +173,7 @@ Loads the file config.el on startup. Every time I exit emacs (if org has been lo
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el :results none
 ;;; -*- lexical-binding: t -*-
 (if (version< emacs-version "27.1")
-  (load-file (expand-file-name "early-init.el" user-emacs-directory)))
+    (load-file (expand-file-name "early-init.el" user-emacs-directory)))
 
 (defconst config-org (expand-file-name "README.org" user-emacs-directory)
   "org-mode config to tangle into config.el")
@@ -538,7 +538,7 @@ Taken entirely from Doom Emacs
   (desktop-base-file-name "emacs.desktop")
   :general
   ('normal
-    "C-w w" #'(desktop-save-in-desktop-dir :which-key "save desktop")))
+   "C-w w" #'(desktop-save-in-desktop-dir :which-key "save desktop")))
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -709,6 +709,7 @@ Entirely from Doom Emacs
             (user-error "Cannot reformat an org src block in org-mode")
           (+format/region beg end))))))
 
+                                        ; TODO
 ;;;###autoload
 (defun +format/buffer ()
   "Reformat the current buffer using LSP or `format-all-buffer'."
@@ -1036,32 +1037,32 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp :results none
-  (use-package yasnippet ; snippets
-    :defer 0.2
-    :defer-incrementally (eldoc easymenu help-mode)
-    :custom
-    (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
-    :general
-    (my-leader-def
-      "s"   '(:ignore t           :which-key "Yasnippet")
-      "si" #'(yas-insert-snippet  :which-key "insert snippet")
-      "sn" #'(yas-new-snippet     :which-key "new snippet")
-      "sl" #'(yas-describe-tables :which-key "list snippets"))
-    :config
-    ;; Latex-mode snippets in org
-    (add-hook 'org-mode-hook (lambda ()
-      (yas-activate-extra-mode 'latex-mode)))
+(use-package yasnippet ; snippets
+  :defer 0.2
+  :defer-incrementally (eldoc easymenu help-mode)
+  :custom
+  (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
+  :general
+  (my-leader-def
+    "s"   '(:ignore t           :which-key "Yasnippet")
+    "si" #'(yas-insert-snippet  :which-key "insert snippet")
+    "sn" #'(yas-new-snippet     :which-key "new snippet")
+    "sl" #'(yas-describe-tables :which-key "list snippets"))
+  :config
+  ;; Latex-mode snippets in org
+  (add-hook 'org-mode-hook (lambda ()
+                             (yas-activate-extra-mode 'latex-mode)))
 
-    (yas-global-mode 1))
+  (yas-global-mode 1))
 
-  (use-package yasnippet-snippets ; a bunch of snippets
-    :after yasnippet)
+(use-package yasnippet-snippets ; a bunch of snippets
+  :after yasnippet)
 
-  (use-package auto-yasnippet ; create small snippets easily TODO
-    :general
-    (my-leader-def
-      "sc" #'(aya-create :which-key "create aya snippet")
-      "se" #'(aya-expand :which-key "expand aya snippet")))
+(use-package auto-yasnippet ; create small snippets easily TODO
+  :general
+  (my-leader-def
+    "sc" #'(aya-create :which-key "create aya snippet")
+    "se" #'(aya-expand :which-key "expand aya snippet")))
 #+END_SRC
 ** Company
 #+BEGIN_SRC emacs-lisp :results none
@@ -1248,7 +1249,7 @@ Entirely from Doom Emacs
   (org-latex-listings 'minted) ; syntax-highlighted code blocks
   (org-latex-packages-alist '(("margin=1in" "geometry" nil) (nil "minted" "color")))
   (org-latex-pdf-process ; required to use minted
-    '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-latex-minted-options '(("linenos" "true") ; line numbers in expored src blocks
                               ("frame" "lines")
                               ("style" "emacs")))
@@ -1258,32 +1259,32 @@ Entirely from Doom Emacs
   ;; (org-done             ((t (:foreground "#7C6f64"))))
   :general
   ('(normal insert) org-mode-map
-    :prefix "C-c"
-    ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
-    "v"  #'(org-toggle-inline-images    :which-key "toggle inline images")
-    "t"  #'(org-todo                    :which-key "todo")
-    "s"  #'(org-sort                    :which-key "sort")
-    ",s" #'(org-schedule                :which-key "schedule")
-    "d"  #'(org-deadline                :which-key "deadline")
-    "q"  #'(org-set-tags-command        :which-key "add tags")
-    "p"  #'(org-latex-preview           :which-key "preview latex")
-    ",p" #'(org-set-property            :which-key "set property")
-    ",t" #'(+org/tangle-config          :which-key "tangle config"))
+   :prefix "C-c"
+   ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
+   "v"  #'(org-toggle-inline-images    :which-key "toggle inline images")
+   "t"  #'(org-todo                    :which-key "todo")
+   "s"  #'(org-sort                    :which-key "sort")
+   ",s" #'(org-schedule                :which-key "schedule")
+   "d"  #'(org-deadline                :which-key "deadline")
+   "q"  #'(org-set-tags-command        :which-key "add tags")
+   "p"  #'(org-latex-preview           :which-key "preview latex")
+   ",p" #'(org-set-property            :which-key "set property")
+   ",t" #'(+org/tangle-config          :which-key "tangle config"))
 
   ('normal org-mode-map
-            "RET" #'org-open-at-point)
+           "RET" #'org-open-at-point)
 
   ;; Vim keys calendar maps
   ('org-read-date-minibuffer-local-map
-    ";" #'exit-minibuffer
-    "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
-    "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
-    "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
-    "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
-    "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
-    "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
-    "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1)))
-    "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
+   ";" #'exit-minibuffer
+   "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
+   "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
+   "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
+   "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
+   "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
+   "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
+   "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1)))
+   "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
 
   ;; Folding maps based on vim
   ('normal org-mode-map
@@ -1292,52 +1293,52 @@ Entirely from Doom Emacs
            "zj" #'org-forward-element)
 
   ('(normal insert) org-mode-map
-    ;; TODOS with M-;, headlines with C-;, add shift to do those above
-    "C-M-;" #'+org/insert-subheading
-    "C-:"   #'+org/insert-heading-above
-    "M-:"   #'+org/insert-todo-above
+   ;; TODOS with M-;, headlines with C-;, add shift to do those above
+   "C-M-;" #'+org/insert-subheading
+   "C-:"   #'+org/insert-heading-above
+   "M-:"   #'+org/insert-todo-above
 
-    ;; Vim keys > arrow keys
-    "M-h"   #'org-metaleft
-    "M-j"   #'org-metadown
-    "M-k"   #'org-metaup
-    "M-l"   #'org-metaright
+   ;; Vim keys > arrow keys
+   "M-h"   #'org-metaleft
+   "M-j"   #'org-metadown
+   "M-k"   #'org-metaup
+   "M-l"   #'org-metaright
 
-    "M-H"   #'org-shiftleft
-    "M-J"   #'org-shiftdown
-    "M-K"   #'org-shiftup
-    "M-L"   #'org-shiftright
+   "M-H"   #'org-shiftleft
+   "M-J"   #'org-shiftdown
+   "M-K"   #'org-shiftup
+   "M-L"   #'org-shiftright
 
-    "C-M-h" #'org-shiftmetaleft
-    "C-M-j" #'org-shiftmetadown
-    "C-M-k" #'org-shiftmetaup
-    "C-M-l" #'org-shiftmetaright
+   "C-M-h" #'org-shiftmetaleft
+   "C-M-j" #'org-shiftmetadown
+   "C-M-k" #'org-shiftmetaup
+   "C-M-l" #'org-shiftmetaright
 
-    "C-S-h" #'org-shiftcontrolleft
-    "C-S-j" #'org-shiftcontroldown
-    "C-S-k" #'org-shiftcontrolup
-    "C-S-l" #'org-shiftcontrolright)
+   "C-S-h" #'org-shiftcontrolleft
+   "C-S-j" #'org-shiftcontroldown
+   "C-S-k" #'org-shiftcontrolup
+   "C-S-l" #'org-shiftcontrolright)
   :config
   ;; Don't execute org-babel blocks on export
   (add-to-list 'org-babel-default-header-args
-                '(:eval . "never-export"))
+               '(:eval . "never-export"))
 
   ;; Org-mode local settings
   ;; TODO make a state
   (add-hook 'org-mode-hook (lambda ()
-                              (setq-local evil-auto-indent nil
-                                          evil-shift-width 2)
-                              (add-to-list 'org-modules 'habits)))
+                             (setq-local evil-auto-indent nil
+                                         evil-shift-width 2)
+                             (add-to-list 'org-modules 'habits)))
 
   ;; No unnecessary background highlighting
   (custom-set-faces
-    `(org-block            ((t (:background ,bg-color))))
-    `(org-block-begin-line ((t (:background ,bg-color))))
-    `(org-block-end-line   ((t (:background ,bg-color))))
-    `(org-level-1          ((t (:background ,bg-color))))
-    `(org-quote            ((t (:background ,bg-color))))
-    `(org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
-    `(org-done             ((t (:foreground "#7C6f64")))))
+   `(org-block            ((t (:background ,bg-color))))
+   `(org-block-begin-line ((t (:background ,bg-color))))
+   `(org-block-end-line   ((t (:background ,bg-color))))
+   `(org-level-1          ((t (:background ,bg-color))))
+   `(org-quote            ((t (:background ,bg-color))))
+   `(org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
+   `(org-done             ((t (:foreground "#7C6f64")))))
 
   (setq org-todo-keyword-faces '(("WAITING"  . (:foreground "#7C6f64" :strikethrough t))
                                  ("OPTIONAL" . (:foreground "#7C6f64" :strikethrough t)))
@@ -1371,9 +1372,9 @@ Entirely from Doom Emacs
   (org-src-preserve-indentation t)
   (org-src-window-setup 'current-window)
   (org-adapt-indentation nil)) ; TODO
-  ;; :general
-  ;; ('insert org-mode-map
-  ;;          "<tab>" 'indent-for-tab-command))
+;; :general
+;; ('insert org-mode-map
+;;          "<tab>" 'indent-for-tab-command))
 
 (use-package ob ; org babel
   :straight (:type built-in)
@@ -1553,7 +1554,7 @@ Entirely from Doom Emacs
   ("M-o" #'ace-window)
 
   ('evil-window-map
-    "m" #'(ace-swap-window :which-key "move")))
+   "m" #'(ace-swap-window :which-key "move")))
 
 (use-package golden-ratio ; auto resize windows
   :disabled t ; TODO
@@ -1664,10 +1665,7 @@ Entirely from Doom Emacs
 
     (my-leader-def
       :states 'visual
-      "=" #'+format/region))
-
-  :config
-  (setq +format-with-lsp t))
+      "=" #'+format/region)))
 
 (use-package expand-region ; select a region TODO
   :general
@@ -1950,13 +1948,13 @@ Entirely from Doom Emacs
   (undo-tree-auto-save-history t)
   :general
   ('normal
-    "C-r" 'undo-tree-redo
-    "u"   'undo-tree-undo)
+   "C-r" 'undo-tree-redo
+   "u"   'undo-tree-undo)
   (my-leader-def
     "fu" #'(undo-tree-visualize :which-key "undo"))
   :config
   (if (version= emacs-version "28")
-    (setq evil-undo-system 'undo-tree)))
+      (setq evil-undo-system 'undo-tree)))
 
 (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
   :hook (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
@@ -2124,9 +2122,9 @@ Entirely from Doom Emacs
 
   :config
   (if (version= emacs-version "28")
-   (general-def 'normal
-    [remap evil-undo] #'undo
-    [remap evil-redo] #'undo-redo)))
+      (general-def 'normal
+        [remap evil-undo] #'undo
+        [remap evil-redo] #'undo-redo)))
 
 (use-package jupyter
   :defer t)
@@ -2153,7 +2151,7 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package auctex
   :defer t)
-  ;; :ensure-system-package (latex . texlive-core))
+;; :ensure-system-package (latex . texlive-core))
 #+END_SRC
 ** HTML
 
