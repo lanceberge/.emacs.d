@@ -579,9 +579,6 @@ Taken entirely from Doom Emacs
             (tab-bar-switch-to-tab "org")
             (find-file "~/.emacs.d/README.org") :which-key "config")
 
-    "ofs" (lambda () (interactive)
-            (find-file "~/school/fall2021") :which-key "school")
-
     "oft" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
             (find-file "~/org/todo.org") :which-key "todo"))
@@ -999,7 +996,15 @@ Entirely from Doom Emacs
     "fd"      #'(counsel-dired     :which-key "directory")
     "fg"       '(:ignore t         :which-key "find and goto")
     "fgc"       (lambda () (interactive) (find-file (expand-file-name "README.org" user-emacs-directory)))
-    "f SPC r" #'(counsel-rg        :which-key "ripgrep"))
+    "f SPC r" #'(counsel-rg        :which-key "ripgrep")
+
+    "ofo" (lambda () (interactive)
+            (tab-bar-switch-to-tab "org")
+            (counsel-find-file "~/org") :which-key "org")
+
+    "ofs" (lambda () (interactive)
+            (counsel-find-file "~/school/fall2021") :which-key "school"))
+
 
   (my-localleader-def
     "x" #'(counsel-M-x :which-key "M-x"))
