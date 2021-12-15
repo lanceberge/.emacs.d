@@ -14,3 +14,5 @@
 #+latex_header: \usepackage{nopageno}
 #+latex_header: \usepackage{parskip}
 #+latex_header: \setlength{\parindent}{20pt}$0
+#+latex_header: \usepackage[margin=1in]{geometry}
+#+latex_header: \usepackage[nil]{minted}

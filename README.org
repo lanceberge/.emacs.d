@@ -23,7 +23,6 @@
   - [[#yasnippet][Yasnippet]]
   - [[#company][Company]]
 - [[#version-control][Version Control]]
-- [[#project-management][Project Management]]
 - [[#lsp-related][LSP-Related]]
 - [[#ui-1][UI]]
 - [[#org][Org]]
@@ -36,6 +35,7 @@
   - [[#tabs][Tabs]]
 - [[#editing][Editing]]
   - [[#smartparens][Smartparens]]
+  - [[#projectile][Projectile]]
   - [[#miscellaneous-1][Miscellaneous]]
 - [[#system][System]]
   - [[#vterm][Vterm]]
@@ -575,13 +575,16 @@ Taken entirely from Doom Emacs
 
     ;; Find specific files
     "of" '(:ignore t :which-key "File")
-    "ofc" (lambda () (interactive)
+    "ofr" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
             (find-file "~/.emacs.d/README.org") :which-key "config")
 
     "oft" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
-            (find-file "~/org/todo.org") :which-key "todo"))
+            (find-file "~/org/todo.org") :which-key "todo")
+
+    "ofc" (lambda () (interactive)
+            (counsel-find-file "~/code/") :which-key "todo"))
 
   ('normal
    "gs" #'(my/split-line-below      :which-key "split line below")
@@ -1004,7 +1007,7 @@ Entirely from Doom Emacs
             (counsel-find-file "~/org") :which-key "org")
 
     "ofs" (lambda () (interactive)
-            (counsel-find-file "~/school/fall2021") :which-key "school"))
+            (counsel-find-file "~/school/spring2022") :which-key "school"))
 
 
   (my-localleader-def
@@ -1130,24 +1133,6 @@ Entirely from Doom Emacs
         evil-collection-magit-use-z-for-folds t
         magit-auto-revert-mode nil))
 #+END_SRC
-* Project Management
-#+BEGIN_SRC emacs-lisp :results none
-(use-package projectile ; project management
-  :commands projectile-mode
-  :custom
-  (projectile-project-search-path '("~/code/" "~/school/" "~/school/fall2020/cmda3634/"))
-  (projectile-cache-file (expand-file-name "projectile/cache.el" my/etc-dir))
-  (projectile-known-projects-file (expand-file-name "projectile/known-projects.el" my/etc-dir))
-  (projectile-auto-discover t)
-  :general
-  (my-leader-def
-    "p" #'(projectile-command-map :which-key "Projectile")))
-
-(use-package counsel-projectile ; counsel support for projectile functions
-  :defer 0.1
-  :config
-  (counsel-projectile-mode))
-#+END_SRC
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
 (use-package lsp-mode ; LSP
@@ -1220,7 +1205,7 @@ Entirely from Doom Emacs
   :straight (:type built-in)
   :hook
   (kill-emacs . +org/tangle-config)
-  (org-mode . (lambda () (electric-indent-local-mode -1)))
+  ;; (org-mode . (lambda () (electric-indent-local-mode -1)))
 
   :defer-incrementally
   (calendar find-func format-spec org-macs org-compat
@@ -1247,7 +1232,7 @@ Entirely from Doom Emacs
   ;; Latex exports
   (org-export-backends '(html latex md))
   (org-latex-listings 'minted) ; syntax-highlighted code blocks
-  (org-latex-packages-alist '(("margin=1in" "geometry" nil) (nil "minted" "color")))
+  ;; (org-latex-packages-alist '(("margin=0.5in" "geometry" nil) (nil "minted" "color")))
   (org-latex-pdf-process ; required to use minted
    '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-latex-minted-options '(("linenos" "true") ; line numbers in expored src blocks
@@ -1340,12 +1325,12 @@ Entirely from Doom Emacs
    `(org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
    `(org-done             ((t (:foreground "#7C6f64")))))
 
-  (setq org-todo-keyword-faces '(("WAITING"  . (:foreground "#7C6f64" :strikethrough t))
-                                 ("OPTIONAL" . (:foreground "#7C6f64" :strikethrough t)))
+  (setq org-todo-keyword-faces '((" WAITING" . (:foreground "#7C6f64" :weight bold))
+                                 ("OPTIONAL" . (:foreground "#fe8019" :weight bold)))
 
-        org-todo-keywords '((sequence "TODO(t)" "IN PROGRESS(p)"
-                                      "WAITING(w)"  "OPTIONAL(o)" "|"
-                                      "CANCELLED(c)" "DONE(d)")))
+        org-todo-keywords '((sequence "    TODO(t)" " WORKING(p)"
+                                      " WAITING(w)" "OPTIONAL(o)" "|"
+                                      "    DONE(d)")))
 
   (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
@@ -1654,6 +1639,24 @@ Entirely from Doom Emacs
                                        (sp-local-pair 'org-mode "'" nil :actions nil)
                                        (sp-local-pair 'org-mode "*" nil :actions nil))))
 ;; (sp-local-pair 'org-mode "$" "$"))
+#+END_SRC
+** Projectile
+#+BEGIN_SRC emacs-lisp :results none
+(use-package projectile ; project management
+  :commands projectile-mode
+  :custom
+  (projectile-project-search-path '("~/code/" "~/school/" "~/school/fall2020/cmda3634/"))
+  (projectile-cache-file (expand-file-name "projectile/cache.el" my/etc-dir))
+  (projectile-known-projects-file (expand-file-name "projectile/known-projects.el" my/etc-dir))
+  (projectile-auto-discover t)
+  :general
+  (my-leader-def
+    "p" #'(projectile-command-map :which-key "Projectile")))
+
+(use-package counsel-projectile ; counsel support for projectile functions
+  :defer 0.1
+  :config
+  (counsel-projectile-mode))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
