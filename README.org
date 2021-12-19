@@ -51,7 +51,6 @@
   - [[#python][Python]]
   - [[#matlab][Matlab]]
   - [[#latex][Latex]]
-  - [[#html][HTML]]
 
 * Early-Init
 
@@ -1245,6 +1244,7 @@ Entirely from Doom Emacs
   :general
   ('(normal insert) org-mode-map
    :prefix "C-c"
+   "e"  #'(org-latex-export-to-pdf     :which-key "export to pdf")
    ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
    "v"  #'(org-toggle-inline-images    :which-key "toggle inline images")
    "t"  #'(org-todo                    :which-key "todo")
@@ -1329,7 +1329,7 @@ Entirely from Doom Emacs
                                  ("OPTIONAL" . (:foreground "#fe8019" :weight bold)))
 
         org-todo-keywords '((sequence "    TODO(t)" " WORKING(p)"
-                                      " WAITING(w)" "OPTIONAL(o)" "|"
+                                      "OPTIONAL(o)" " WAITING(w)" "|"
                                       "    DONE(d)")))
 
   (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
@@ -1661,14 +1661,15 @@ Entirely from Doom Emacs
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package format-all ; format code functions
+  :init
+  (defvar +format-with-lsp nil)
   :general
   (my-leader-def
     :states 'normal
     "=" #'(+format/buffer :which-key "format")
 
-    (my-leader-def
-      :states 'visual
-      "=" #'+format/region)))
+    :states 'visual
+    "=" #'+format/region))
 
 (use-package expand-region ; select a region TODO
   :general
@@ -2044,6 +2045,7 @@ Entirely from Doom Emacs
 ** R
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ess
+  :disabled t
   ;; :ensure-system-package (R . r)
   :hook (ess-r-mode . +ess/company-mode)
   :general
@@ -2153,14 +2155,11 @@ Entirely from Doom Emacs
 ** Latex
 #+BEGIN_SRC emacs-lisp :results none
 (use-package auctex
-  :defer t)
-;; :ensure-system-package (latex . texlive-core))
-#+END_SRC
-** HTML
-
-#+BEGIN_SRC emacs-lisp :results none
-(use-package shr
+  :defer t
   :general
-  ('normal mhtml-mode-map
-           "C-c p" #'(shr-render-buffer :which-key "render html")))
+  ('TeX-mode-map
+   :prefix "C-c"
+   "e" (lambda () (interactive)
+         (save-buffer) (TeX-command-master) :which-key "export")))
+;; :ensure-system-package (latex . texlive-core))
 #+END_SRC
