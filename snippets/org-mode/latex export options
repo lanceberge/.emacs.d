@@ -2,17 +2,22 @@
 # name: latex export options
 # key: lex
 # --
+** Header                                                          :noexport:
+#+EXCLUDE_TAGS: noexport
 #+OPTIONS: toc:nil date:nil num:nil
 #+STARTUP: latexpreview
+
 #+LATEX: \setlength\parindent{0pt}
 #+latex_class_options: [10pt]
+
 #+latex_header: \usepackage{setspace}
 #+latex_header: \onespacing
 #+latex_header: \usepackage{enumitem}
+#+latex_header: \setlist[itemize]{noitemsep}
 #+latex_header: \usepackage{enumerate}
 #+latex_header: \setlist{noitemsep}
 #+latex_header: \usepackage{nopageno}
 #+latex_header: \usepackage{parskip}
 #+latex_header: \setlength{\parindent}{20pt}$0
-#+latex_header: \usepackage[margin=1in]{geometry}
+#+latex_header: \usepackage[top=0.75in, left=1in, right=1in, bottom=0.75in]{geometry}
 #+latex_header: \usepackage[nil]{minted}

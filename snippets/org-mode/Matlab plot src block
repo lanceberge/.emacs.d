@@ -2,6 +2,6 @@
 # name: Matlab plot src block
 # key: smp
 # --
-#+BEGIN_SRC matlab :session :file $1.png :results file graphics
+#+BEGIN_SRC matlab :session :file ${1:file}.png :results file graphics
 $0
 #+END_SRC
