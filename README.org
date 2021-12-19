@@ -533,11 +533,19 @@ Taken entirely from Doom Emacs
   :custom
   (desktop-dirname (expand-file-name "desktop/" my/etc-dir))
   (desktop-path (list desktop-dirname))
-  (desktop-save-mode t)
+  (desktop-save-mode 1)
   (desktop-base-file-name "emacs.desktop")
   :general
   ('normal
-   "C-w w" #'(desktop-save-in-desktop-dir :which-key "save desktop")))
+   "C-w w" #'(desktop-save-in-desktop-dir :which-key "save desktop"))
+  :config
+  (unless (file-exists-p "~/.emacs.d/etc/desktop")
+    (make-directory "~/.emacs.d/etc/desktop" t)))
+
+;; TODO
+(use-package project
+  :straight (:type built-in)
+  :disabled t)
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -1385,19 +1393,19 @@ Entirely from Doom Emacs
   (org-capture-templates
    '(("l" "Life TODO entry"
       entry (file+headline "~/org/todo.org" "Life")
-      "* TODO %?\n %i\n" :prepend t)
+      "*     TODO %?\n %i\n" :prepend t)
 
      ("e" "Emacs TODO entry"
       entry (file+headline "~/org/todo.org" "Emacs")
-      "* TODO %?\n %i\n" :prepend t)
+      "*     TODO %?\n %i\n" :prepend t)
 
      ("t" "today TODO entry"
       entry (file+headline "~/org/todo.org" "Today")
-      "* TODO %?\n %i\n" :prepend t)
+      "*     TODO %?\n %i\n" :prepend t)
 
      ("s" "school TODO"
       entry (file+headline "~/org/todo.org" "School")
-      "* TODO %?\n %i\n" :prepend t)
+      "*     TODO %?\n %i\n" :prepend t)
 
      ("d" "org drill"
       entry (file+headline "~/org/notes.org" "Miscellaneous")
@@ -1643,6 +1651,7 @@ Entirely from Doom Emacs
 ** Projectile
 #+BEGIN_SRC emacs-lisp :results none
 (use-package projectile ; project management
+  :disabled t
   :commands projectile-mode
   :custom
   (projectile-project-search-path '("~/code/" "~/school/" "~/school/fall2020/cmda3634/"))
@@ -1655,6 +1664,7 @@ Entirely from Doom Emacs
 
 (use-package counsel-projectile ; counsel support for projectile functions
   :defer 0.1
+  :disabled t
   :config
   (counsel-projectile-mode))
 #+END_SRC
