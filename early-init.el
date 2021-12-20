@@ -24,7 +24,7 @@
       site-run-file nil)
 
 (set-face-attribute 'default nil ; font
-                    :family "DejaVu Sans Mono"
+                    :family "Monospace"
                     :height 110
                     :weight 'normal
                     :width 'normal)

@@ -84,7 +84,7 @@ Tangles to early-init.el
       site-run-file nil)
 
 (set-face-attribute 'default nil ; font
-                    :family "DejaVu Sans Mono"
+                    :family "Monospace"
                     :height 110
                     :weight 'normal
                     :width 'normal)
@@ -1130,9 +1130,10 @@ Entirely from Doom Emacs
     "gfg" #'(magit-find-git-config-file :which-key "git config file"))
 
   ;; scroll in magit-diff-mode with u and d
-  ('normal magit-diff-mode-map
-           [remap magit-diff]         #'(evil-scroll-down :which-key "scroll down")
-           [remap magit-unstage-file] #'(evil-scroll-up   :which-key "scroll up"))
+  ;; ('normal magit-diff-mode-map
+  ;;          [remap magit-diff]         #'(evil-scroll-down :which-key "scroll down")
+  ;;          [remap magit-unstage]      #'(evil-scroll-up   :which-key "scroll up")
+  ;;          [remap magit-unstage-file] #'(evil-scroll-up   :which-key "scroll up"))
   :config
   (evil-collection-init 'magit)
 
