@@ -548,7 +548,7 @@ Taken entirely from Doom Emacs
   :general
   (my-leader-def
     "p"   '(:ignore t         :which-key "Project")
-    "s"  #'(project-search    :which-key "search")
+    "ps" #'(project-search    :which-key "search")
     "pf" #'(project-find-file :which-key "find file")));
 #+END_SRC
 ** Keybindings
