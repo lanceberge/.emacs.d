@@ -545,7 +545,11 @@ Taken entirely from Doom Emacs
 ;; TODO
 (use-package project
   :straight (:type built-in)
-  :disabled t)
+  :general
+  (my-leader-def
+    "p"   '(:ignore t         :which-key "Project")
+    "s"  #'(project-search    :which-key "search")
+    "pf" #'(project-find-file :which-key "find file")));
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -770,6 +774,7 @@ Entirely from Doom Emacs
   (evil-search-wrap t)
   (evil-want-keybinding nil)
   (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
+  (evil-want-fine-undo 'fine)       ; save inserts as undo units more often
   :general
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
    [remap evil-next-line]     #'evil-next-visual-line
