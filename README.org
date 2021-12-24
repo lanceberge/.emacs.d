@@ -35,7 +35,6 @@
   - [[#tabs][Tabs]]
 - [[#editing][Editing]]
   - [[#smartparens][Smartparens]]
-  - [[#projectile][Projectile]]
   - [[#miscellaneous-1][Miscellaneous]]
 - [[#system][System]]
   - [[#vterm][Vterm]]
@@ -427,9 +426,6 @@ Taken entirely from Doom Emacs
   :general
   (my-leader-def
     "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
-
-(use-package use-package-ensure-system-package ; a way to manage dependencies within use-package
-  :disabled t)
 
 (use-package straight ; package manager
   :general
@@ -892,10 +888,6 @@ Entirely from Doom Emacs
    "gx" #'(evil-exchange        :which-key "exchange operator")
    "gX" #'(evil-exchange-cancel :which-key "cancel exchange")))
 
-(use-package evil-owl
-  :disabled t
-  :hook (find-file . evil-owl-mode))
-
 (use-package evil-textobj-anyblock
   :general
   ('evil-inner-text-objects-map "c" #'(evil-textobj-anyblock-inner-block :which-key "nearest text object"))
@@ -938,10 +930,6 @@ Entirely from Doom Emacs
            "zk" #'(origami-previous-fold         :which-key "previous fold")
            "zm" #'(origami-close-all-nodes       :which-key "close all folds recursively")
            "zr" #'(origami-open-all-nodes        :which-key "open all folds recursively")))
-
-(use-package evil-mc ; multiple cursors TODO
-  :disabled t
-  :hook (find-file . evil-mc-mode))
 #+END_SRC
 * Completion
 ** Ivy
@@ -1457,12 +1445,6 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Non built-ins
 #+BEGIN_SRC emacs-lisp :results none
-(use-package org-drill ; spaced repetition flashcards within emacs
-  :disabled t
-  :general
-  ('override :prefix "C-c"
-             ",d" #'(org-drill :which-key "org drill")))
-
 (use-package org-superstar ; bullets in org mode
   :hook (org-mode . org-superstar-mode)
   :custom
@@ -1495,21 +1477,6 @@ Entirely from Doom Emacs
 
   ('normal org-journal-mode-map
            "za" #'(org-cycle    :which-key "open fold")))
-
-(use-package org-super-agenda
-  :disabled t
-  :hook (org-agenda-hook . org-super-agenda-mode)
-  :custom
-  (org-super-agenda-groups
-   '((:name "Today"
-            :todo "TODAY")
-     (:name "Important"
-            :priority "A")))
-  :general
-  (my-leader-def
-    "oa" (lambda () (interactive)
-           (org-super-agenda-mode +1)
-           (org-agenda))))
 #+END_SRC
 ** Functions
 #+BEGIN_SRC emacs-lisp :results none
@@ -1554,18 +1521,6 @@ Entirely from Doom Emacs
 
   ('evil-window-map
    "m" #'(ace-swap-window :which-key "move")))
-
-(use-package golden-ratio ; auto resize windows
-  :disabled t ; TODO
-  :hook (window-setup . golden-ratio-mode)
-  :custom
-  (golden-ratio-auto-scale t)
-  :config
-  ;; works with ace-window
-  (define-advice select-window
-      (:after (window &optional no-record) golden-ratio-resize-window)
-    (golden-ratio)
-    nil))
 
 (use-package winner ; Undo and redo window configs
   :straight (:type built-in)
@@ -1654,26 +1609,6 @@ Entirely from Doom Emacs
                                        (sp-local-pair 'org-mode "*" nil :actions nil))))
 ;; (sp-local-pair 'org-mode "$" "$"))
 #+END_SRC
-** Projectile
-#+BEGIN_SRC emacs-lisp :results none
-(use-package projectile ; project management
-  :disabled t
-  :commands projectile-mode
-  :custom
-  (projectile-project-search-path '("~/code/" "~/school/" "~/school/fall2020/cmda3634/"))
-  (projectile-cache-file (expand-file-name "projectile/cache.el" my/etc-dir))
-  (projectile-known-projects-file (expand-file-name "projectile/known-projects.el" my/etc-dir))
-  (projectile-auto-discover t)
-  :general
-  (my-leader-def
-    "p" #'(projectile-command-map :which-key "Projectile")))
-
-(use-package counsel-projectile ; counsel support for projectile functions
-  :defer 0.1
-  :disabled t
-  :config
-  (counsel-projectile-mode))
-#+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package format-all ; format code functions
@@ -1686,10 +1621,6 @@ Entirely from Doom Emacs
 
     :states 'visual
     "=" #'+format/region))
-
-(use-package expand-region ; select a region TODO
-  :general
-  ("M--" #'er/expand-region))
 
 (use-package move-text
   :general
