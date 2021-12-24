@@ -531,6 +531,7 @@ Taken entirely from Doom Emacs
 (use-package desktop ; save sessions to a file
   :straight (:type built-in)
   :custom
+  (desktop-load-locked-desktop t) ; ignore desktop-lock files
   (desktop-dirname (expand-file-name "desktop/" my/etc-dir))
   (desktop-path (list desktop-dirname))
   (desktop-save-mode 1)
@@ -542,7 +543,6 @@ Taken entirely from Doom Emacs
   (unless (file-exists-p "~/.emacs.d/etc/desktop")
     (make-directory "~/.emacs.d/etc/desktop" t)))
 
-;; TODO
 (use-package project
   :straight (:type built-in)
   :general
