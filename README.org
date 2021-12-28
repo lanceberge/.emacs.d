@@ -61,10 +61,9 @@ Tangles to early-init.el
 ;; increase GC threshold until startup (in Initial section under hooks)
 (setq gc-cons-threshold most-positive-fixnum)
 
-(defconst IS-LINUX (eq system-type 'gnu/linux)
-  "Are we currently on a Linux OS")
-(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos))
-  "Are we currently on a windows OS")
+(defconst IS-LINUX   (eq system-type   'gnu/linux))
+(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+(defconst IS-MAC     (eq system-type   'darwin))
 
 (setq package-enable-at-startup nil) ; disable package.el at startup
 (advice-add #'package--ensure-init-file :override #'ignore)
@@ -245,13 +244,13 @@ Mostly taken from Doom Emacs
 
   ;; Keeping ~/.emacs.d clean
   ;; (my/etc-dir                  (expand-file-name "etc/" user-emacs-directory))
-  (custom-file                 (expand-file-name "custom.el" my/etc-dir))
-  (custom-theme-directory      (expand-file-name "themes/" my/etc-dir))
-  (url-configuration-directory (expand-file-name "url/" my/etc-dir))
-  (url-cache-directory         (expand-file-name "url/" my/etc-dir))
-  (persist--directory-location (expand-file-name "persist/" my/etc-dir))
+  (custom-file                 (expand-file-name "custom.el"            my/etc-dir))
+  (custom-theme-directory      (expand-file-name "themes/"              my/etc-dir))
+  (url-configuration-directory (expand-file-name "url/"                 my/etc-dir))
+  (url-cache-directory         (expand-file-name "url/"                 my/etc-dir))
+  (persist--directory-location (expand-file-name "persist/"             my/etc-dir))
   (transient-history-file      (expand-file-name "transient/history.el" my/etc-dir))
-  (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions" my/etc-dir)))
+  (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions"   my/etc-dir)))
 
 (advice-add #'tty-run-terminal-initialization :override #'ignore)
 
@@ -924,11 +923,11 @@ Entirely from Doom Emacs
   :general
   ('normal origami-mode
            "zc" #'(origami-close-node-recursively :which-key "close fold recursively")
-           "zo" #'(origami-open-node-recursively :which-key "open fold recursively")
-           "zj" #'(origami-next-fold             :which-key "next fold")
-           "zk" #'(origami-previous-fold         :which-key "previous fold")
-           "zm" #'(origami-close-all-nodes       :which-key "close all folds recursively")
-           "zr" #'(origami-open-all-nodes        :which-key "open all folds recursively")))
+           "zo" #'(origami-open-node-recursively  :which-key "open fold recursively")
+           "zj" #'(origami-next-fold              :which-key "next fold")
+           "zk" #'(origami-previous-fold          :which-key "previous fold")
+           "zm" #'(origami-close-all-nodes        :which-key "close all folds recursively")
+           "zr" #'(origami-open-all-nodes         :which-key "open all folds recursively")))
 #+END_SRC
 * Completion
 ** Ivy
@@ -1060,6 +1059,7 @@ Entirely from Doom Emacs
   :after yasnippet)
 
 (use-package auto-yasnippet ; create small snippets easily TODO
+  :disabled t
   :general
   (my-leader-def
     "sc" #'(aya-create :which-key "create aya snippet")
@@ -1151,6 +1151,7 @@ Entirely from Doom Emacs
     "gr" #'(lsp-rename :which-key "rename with lsp")))
 
 (use-package lsp-ui
+  :disabled t
   :hook (lsp-mode . lsp-ui-mode)
   :custom (lsp-ui-doc-position 'bottom))
 
@@ -1336,6 +1337,9 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org-agenda
   :straight (:type built-in)
+  :custom
+  (org-agenda-span 14)              ; show 14 days
+  (org-agenda-start-on-weekday nil) ; start on today
   :general
   (my-leader-def
     "oa" #'org-agenda)
@@ -1877,6 +1881,7 @@ Entirely from Doom Emacs
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
 (use-package dumb-jump ; better way to search code TODO
+  :disabled t
   :defer t
   :custom
   (dumb-jump-default-project "~/code")
@@ -1905,7 +1910,9 @@ Entirely from Doom Emacs
   :hook (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
                         (exec-path-from-shell-initialize))))
 
+;; TODO
 (use-package request
+  :disabled t
   :defer t
   :custom
   (request-storage-directory (expand-file-name "request/" my/etc-dir)))

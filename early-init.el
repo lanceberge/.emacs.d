@@ -2,10 +2,9 @@
 ;; increase GC threshold until startup (in Initial section under hooks)
 (setq gc-cons-threshold most-positive-fixnum)
 
-(defconst IS-LINUX (eq system-type 'gnu/linux)
-  "Are we currently on a Linux OS")
-(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos))
-  "Are we currently on a windows OS")
+(defconst IS-LINUX   (eq system-type   'gnu/linux))
+(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
+(defconst IS-MAC     (eq system-type   'darwin))
 
 (setq package-enable-at-startup nil) ; disable package.el at startup
 (advice-add #'package--ensure-init-file :override #'ignore)
