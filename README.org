@@ -120,6 +120,8 @@ Tangles to early-init.el
 (defconst bg-color "#282828"
   "gruvbox background color")
 
+(use-package autothemer :defer t)
+
 (use-package gruvbox-theme ; theme
   :config
   (load-theme 'gruvbox t))
@@ -915,7 +917,7 @@ Entirely from Doom Emacs
   :custom
   (evil-escape-key-sequence "jk")
   (evil-escape-delay 0.25)
-  (evil-escape-excluded-major-modes '(evil-magit-mode org-agenda-mode))
+  (evil-escape-excluded-major-modes '(org-agenda-mode))
   (evil-escape-excluded-states '(normal visual emacs)))
 
 (use-package origami ; code folding
@@ -1031,8 +1033,7 @@ Entirely from Doom Emacs
   (amx-save-file (expand-file-name "amx-history" my/etc-dir))
   (amx-history-length 50))
 
-(use-package flx
-  :defer t)
+(use-package flx :defer t)
 ;; :after (ivy counsel)) ; fuzzy sorting for ivy
 #+END_SRC
 ** Yasnippet
@@ -1097,9 +1098,13 @@ Entirely from Doom Emacs
 #+END_SRC
 * Version Control
 #+BEGIN_SRC emacs-lisp :results none
+(use-package git-commit    :defer t)
+(use-package transient     :defer t)
+(use-package magit-section :defer t
+
 (use-package magit ; git client
   :defer-incrementally
-  (dash f s with-editor git-commit package eieio lv transient evil-magit)
+  (magit-section dash f s with-editor git-commit package eieio lv transient)
   :custom
   (magit-save-repository-buffers nil)
   :general
@@ -2081,8 +2086,7 @@ Entirely from Doom Emacs
         [remap evil-undo] #'undo
         [remap evil-redo] #'undo-redo)))
 
-(use-package jupyter
-  :defer t)
+(use-package jupyter :defer t)
 
 (use-package ob-jupyter
   :straight jupyter

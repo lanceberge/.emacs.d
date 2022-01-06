@@ -57,6 +57,8 @@
 (defconst bg-color "#282828"
   "gruvbox background color")
 
+(use-package autothemer :defer t)
+
 (use-package gruvbox-theme ; theme
   :config
   (load-theme 'gruvbox t))
