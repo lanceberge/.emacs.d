@@ -1100,7 +1100,7 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package git-commit    :defer t)
 (use-package transient     :defer t)
-(use-package magit-section :defer t
+(use-package magit-section :defer t)
 
 (use-package magit ; git client
   :defer-incrementally
@@ -2029,7 +2029,6 @@ Entirely from Doom Emacs
 ** Markdown
 #+BEGIN_SRC emacs-lisp :results none
 (use-package markdown-mode
-  :straight (:type built-in)
   :general
   ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))
 
