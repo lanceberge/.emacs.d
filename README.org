@@ -1046,9 +1046,10 @@ Entirely from Doom Emacs
   :general
   (my-leader-def
     "s"   '(:ignore t           :which-key "Yasnippet")
-    "si" #'(yas-insert-snippet  :which-key "insert snippet")
-    "sn" #'(yas-new-snippet     :which-key "new snippet")
-    "sl" #'(yas-describe-tables :which-key "list snippets"))
+    "si" #'(yas-insert-snippet  :which-key "insert")
+    "sn" #'(yas-new-snippet     :which-key "new")
+    "sl" #'(yas-describe-tables :which-key "list")
+    "sr" #'(yas-reload-all      :which-key "reload"))
   :config
   ;; Latex-mode snippets in org
   (add-hook 'org-mode-hook (lambda ()
