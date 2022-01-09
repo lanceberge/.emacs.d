@@ -719,7 +719,6 @@ Entirely from Doom Emacs
             (user-error "Cannot reformat an org src block in org-mode")
           (+format/region beg end))))))
 
-                                        ; TODO
 ;;;###autoload
 (defun +format/buffer ()
   "Reformat the current buffer using LSP or `format-all-buffer'."
@@ -985,7 +984,7 @@ Entirely from Doom Emacs
     "SPC"     #'(ivy-switch-buffer :which-key "switch buffer")
     "fr"      #'(counsel-recentf   :which-key "find recent files")
     "fj"      #'(counsel-imenu     :which-key "imenu")
-    "gff"      #'(counsel-git      :which-key "git files")
+    "gff"     #'(counsel-git      :which-key "git files")
     "f SPC g" #'(counsel-git-grep  :which-key "git grep")
     "f SPC f" #'(counsel-file-jump :which-key "file")
     "ff"      #'(counsel-fzf       :which-key "fzf")
@@ -1059,13 +1058,6 @@ Entirely from Doom Emacs
 
 (use-package yasnippet-snippets ; a bunch of snippets
   :after yasnippet)
-
-(use-package auto-yasnippet ; create small snippets easily TODO
-  :disabled t
-  :general
-  (my-leader-def
-    "sc" #'(aya-create :which-key "create aya snippet")
-    "se" #'(aya-expand :which-key "expand aya snippet")))
 #+END_SRC
 ** Company
 #+BEGIN_SRC emacs-lisp :results none
@@ -1248,41 +1240,6 @@ Entirely from Doom Emacs
   ;; (org-done             ((t (:foreground "#7C6f64"))))
   :general
   ('(normal insert) org-mode-map
-   :prefix "C-c"
-   "e"  #'(org-latex-export-to-pdf     :which-key "export to pdf")
-   ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
-   "v"  #'(org-toggle-inline-images    :which-key "toggle inline images")
-   "t"  #'(org-todo                    :which-key "todo")
-   "s"  #'(org-sort                    :which-key "sort")
-   ",s" #'(org-schedule                :which-key "schedule")
-   "d"  #'(org-deadline                :which-key "deadline")
-   "q"  #'(org-set-tags-command        :which-key "add tags")
-   "p"  #'(org-latex-preview           :which-key "preview latex")
-   ",p" #'(org-set-property            :which-key "set property")
-   ",t" #'(+org/tangle-config          :which-key "tangle config"))
-
-  ('normal org-mode-map
-           "RET" #'org-open-at-point)
-
-  ;; Vim keys calendar maps
-  ('org-read-date-minibuffer-local-map
-   ";" #'exit-minibuffer
-   "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
-   "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
-   "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
-   "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
-   "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
-   "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
-   "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1)))
-   "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
-
-  ;; Folding maps based on vim
-  ('normal org-mode-map
-           "zo" #'outline-show-subtree
-           "zk" #'org-backward-element
-           "zj" #'org-forward-element)
-
-  ('(normal insert) org-mode-map
    ;; TODOS with M-;, headlines with C-;, add shift to do those above
    "C-M-;" #'+org/insert-subheading
    "C-:"   #'+org/insert-heading-above
@@ -1307,17 +1264,49 @@ Entirely from Doom Emacs
    "C-S-h" #'org-shiftcontrolleft
    "C-S-j" #'org-shiftcontroldown
    "C-S-k" #'org-shiftcontrolup
-   "C-S-l" #'org-shiftcontrolright)
+   "C-S-l" #'org-shiftcontrolright
+
+   :prefix "C-c"
+   "e"  #'(org-latex-export-to-pdf     :which-key "export to pdf")
+   ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
+   "v"  #'(org-toggle-inline-images    :which-key "toggle inline images")
+   "t"  #'(org-todo                    :which-key "todo")
+   "s"  #'(org-sort                    :which-key "sort")
+   ",s" #'(org-schedule                :which-key "schedule")
+   "d"  #'(org-deadline                :which-key "deadline")
+   "q"  #'(org-set-tags-command        :which-key "add tags")
+   "p"  #'(org-latex-preview           :which-key "preview latex")
+   ",p" #'(org-set-property            :which-key "set property")
+   ",t" #'(+org/tangle-config          :which-key "tangle config"))
+
+  ('normal org-mode-map
+           "zo" #'outline-show-subtree
+           "zk" #'org-backward-element
+           "zj" #'org-forward-element)
+
+  ('insert org-mode-map
+           "S-RET" (lambda () (interactive)
+                   (org-return)
+                   (+org-indent)))
+
+  ;; Vim keys calendar maps
+  ('org-read-date-minibuffer-local-map
+   ";" #'exit-minibuffer
+   "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
+   "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
+   "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
+   "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
+   "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
+   "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
+   "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1)))
+   "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
   :config
   ;; Don't execute org-babel blocks on export
   (add-to-list 'org-babel-default-header-args
                '(:eval . "never-export"))
 
   ;; Org-mode local settings
-  ;; TODO make a state
   (add-hook 'org-mode-hook (lambda ()
-                             (setq-local evil-auto-indent nil
-                                         evil-shift-width 2)
                              (add-to-list 'org-modules 'habits)))
 
   ;; No unnecessary background highlighting
@@ -1360,14 +1349,14 @@ Entirely from Doom Emacs
   :straight (:type built-in)
   :defer t
   :custom
-  (org-edit-src-content-indentation 0)
-  (org-src-tab-acts-natively t)
-  (org-src-preserve-indentation t)
-  (org-src-window-setup 'current-window)
-  (org-adapt-indentation nil)) ; TODO
-;; :general
-;; ('insert org-mode-map
-;;          "<tab>" 'indent-for-tab-command))
+  (org-edit-src-content-indentation 0) ; leading spaces before the #+begin line
+  (org-src-tab-acts-natively nil)
+  (org-src-preserve-indentation t)     ; don't preserve leading whitespace on export
+  (org-adapt-indentation nil)          ; don't indent under headlines
+  (org-src-window-setup 'split-window-right)
+  :general
+  ('insert org-mode-map
+           "<backtab>" '+org-indent))
 
 (use-package ob ; org babel
   :straight (:type built-in)
@@ -1514,6 +1503,18 @@ Entirely from Doom Emacs
   (evil-append-line 1)
   (move-beginning-of-line nil)
   (org-insert-todo-heading 1))
+
+;;;###autoload
+(defun +org-indent ()
+  "indent in major mode - org-src-tab-acts-natively gave me issues"
+  (interactive)
+  (if (org-in-src-block-p)
+      ;; (org-babel-do-in-edit-buffer
+      ;;  (call-interactively #'indent-for-tab-command))
+      (progn (org-edit-src-code)
+             (indent-for-tab-command)
+             (org-edit-src-exit))
+    (indent-for-tab-command)))
 #+END_SRC
 * Windows, Buffers, Tabs
 ** Windows
