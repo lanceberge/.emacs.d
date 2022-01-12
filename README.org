@@ -1264,9 +1264,9 @@ Entirely from Doom Emacs
    "C-S-h" #'org-shiftcontrolleft
    "C-S-j" #'org-shiftcontroldown
    "C-S-k" #'org-shiftcontrolup
-   "C-S-l" #'org-shiftcontrolright
+   "C-S-l" #'org-shiftcontrolright)
 
-   :prefix "C-c"
+   ('(normal insert) :prefix "C-c"
    "e"  #'(org-latex-export-to-pdf     :which-key "export to pdf")
    ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
    "v"  #'(org-toggle-inline-images    :which-key "toggle inline images")
@@ -1353,7 +1353,7 @@ Entirely from Doom Emacs
   (org-src-tab-acts-natively nil)
   (org-src-preserve-indentation t)     ; don't preserve leading whitespace on export
   (org-adapt-indentation nil)          ; don't indent under headlines
-  (org-src-window-setup 'split-window-right)
+  (org-src-window-setup 'current-window)
   :general
   ('insert org-mode-map
            "<backtab>" '+org-indent))
