@@ -147,11 +147,11 @@ Tangles to early-init.el
                 mode-line-remote
                 mode-line-frame-indentifcation
                 " "
-                mode-line-buffer-identification
+                mode-line-buffer-identification ; buffer name
                 "  "
-                vc-mode
+                vc-mode                         ; show git branch
                 " "
-                mode-line-modes
+                mode-line-modes                 ; show current mode
                 " "
                 mode-line-misc-info
                 mode-line-end-spaces))
@@ -1680,9 +1680,10 @@ Entirely from Doom Emacs
   (eshell-ls-unreadable ((t (:foreground "#fb4933" :bold t))))
   :general
   (my-leader-def
-    "oe"  #'eshell
-    "ov"   '(:ignore t            :which-key "Vertical")
-    "ove" #'(+eshell/other-window :which-key "eshell in vsplit"))
+    "oe"      #'eshell
+    "o SPC e" #'(lambda () (interactive) (eshell t) :which-key "new eshell")
+    "ov"       '(:ignore t                          :which-key "Vertical")
+    "ove"     #'(+eshell/other-window               :which-key "eshell in vsplit"))
   :config
   (evil-collection-init 'eshell)
 
@@ -1754,7 +1755,7 @@ Entirely from Doom Emacs
   "open eshell in a vsplit"
   (interactive)
   (evil-window-vsplit)
-  (eshell))
+  (eshell t))
 
 ;; https://blog.liangzan.net/blog/2012/12/12/customizing-your-emacs-eshell-prompt/
 ;;;###autoload
