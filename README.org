@@ -588,7 +588,10 @@ Taken entirely from Doom Emacs
 
     "oft" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
-            (find-file "~/Dropbox/org/todo.org") :which-key "todo")
+            (find-file "~/Dropbox/org/todo.org") :which-key "todo"
+            (evil-window-vsplit)
+            (org-agenda-list)
+            (evil-window-left 1))
 
     "ofc" (lambda () (interactive)
             (counsel-find-file "~/code/") :which-key "todo"))
