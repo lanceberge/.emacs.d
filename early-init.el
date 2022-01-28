@@ -84,11 +84,11 @@
                 mode-line-remote
                 mode-line-frame-indentifcation
                 " "
-                mode-line-buffer-identification
+                mode-line-buffer-identification ; buffer name
                 "  "
-                vc-mode
+                vc-mode                         ; show git branch
                 " "
-                mode-line-modes
+                mode-line-modes                 ; show current mode
                 " "
                 mode-line-misc-info
                 mode-line-end-spaces))

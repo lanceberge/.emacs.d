@@ -588,7 +588,7 @@ Taken entirely from Doom Emacs
 
     "oft" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
-            (find-file "~/org/todo.org") :which-key "todo")
+            (find-file "~/Dropbox/org/todo.org") :which-key "todo")
 
     "ofc" (lambda () (interactive)
             (counsel-find-file "~/code/") :which-key "todo"))
@@ -1002,7 +1002,7 @@ Entirely from Doom Emacs
 
     "ofo" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
-            (counsel-find-file "~/org") :which-key "org")
+            (counsel-find-file "~/Dropbox/org") :which-key "org")
 
     "ofs" (lambda () (interactive)
             (counsel-find-file "~/school/spring2022") :which-key "school"))
@@ -1211,7 +1211,7 @@ Entirely from Doom Emacs
   :custom
   ;; Directories
   (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
-  (org-agenda-files '("~/org"))
+  (org-agenda-files '("~/org" "~/Dropbox/org"))
 
   (org-directory "~/org")
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
@@ -1319,12 +1319,11 @@ Entirely from Doom Emacs
    `(org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
    `(org-done             ((t (:foreground "#7C6f64")))))
 
-  (setq org-todo-keyword-faces '((" WAITING" . (:foreground "#7C6f64" :weight bold))
-                                 ("OPTIONAL" . (:foreground "#fe8019" :weight bold)))
+  (setq org-todo-keyword-faces '(("WAIT" . (:foreground "#7C6f64" :weight bold))
+                                 ("OPT." . (:foreground "#fe8019" :weight bold)))
 
-        org-todo-keywords '((sequence "    TODO(t)" " WORKING(p)"
-                                      "OPTIONAL(o)" " WAITING(w)" "|"
-                                      "    DONE(d)")))
+        org-todo-keywords '((sequence "TODO(t)" "WAIT(w)"
+                                      "OPT.(o)" "~WIP(p)" "|" "DONE")))
 
   (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
