@@ -1201,7 +1201,6 @@ Entirely from Doom Emacs
   :straight (:type built-in)
   :hook
   (kill-emacs . +org/tangle-config)
-  ;; (org-mode . (lambda () (electric-indent-local-mode -1)))
 
   :defer-incrementally
   (calendar find-func format-spec org-macs org-compat
@@ -1211,9 +1210,9 @@ Entirely from Doom Emacs
   :custom
   ;; Directories
   (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
-  (org-agenda-files '("~/org" "~/Dropbox/org"))
+  (org-agenda-files '("~/Dropbox/org"))
 
-  (org-directory "~/org")
+  (org-directory "~/Dropbox/org")
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
 
   ;; General settings
