@@ -992,7 +992,7 @@ Entirely from Doom Emacs
     "fih"       (lambda () (interactive) (counsel-file-jump "" "~"))
     "fis"       (lambda () (interactive) (counsel-file-jump "" "~/school"))
     "fic"       (lambda () (interactive) (counsel-file-jump "" "~/code"))
-    "fio"       (lambda () (interactive) (counsel-file-jump "" "~/org"))
+    "fio"       (lambda () (interactive) (counsel-file-jump "" "~/Dropbox/org"))
     "fie"       (lambda () (interactive) (counsel-file-jump "" "~/.emacs.d"))
     "fid"       (lambda () (interactive) (counsel-file-jump "" "~/Downloads"))
     "fd"      #'(counsel-dired     :which-key "directory")
@@ -1041,7 +1041,7 @@ Entirely from Doom Emacs
   :defer 0.2
   :defer-incrementally (eldoc easymenu help-mode)
   :custom
-  (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
+  (yas-snippet-dirs '("~/.emacs.d/snippets" "~/Dropbox/org/snippets"))
   :general
   (my-leader-def
     "s"   '(:ignore t           :which-key "Yasnippet")
@@ -1378,23 +1378,23 @@ Entirely from Doom Emacs
   :custom
   (org-capture-templates
    '(("l" "Life TODO entry"
-      entry (file+headline "~/org/todo.org" "Life")
+      entry (file+headline "~/Dropbox/org/todo.org" "Life")
       "*     TODO %?\n %i\n" :prepend t)
 
      ("e" "Emacs TODO entry"
-      entry (file+headline "~/org/todo.org" "Emacs")
+      entry (file+headline "~/Dropbox/org/todo.org" "Emacs")
       "*     TODO %?\n %i\n" :prepend t)
 
      ("t" "today TODO entry"
-      entry (file+headline "~/org/todo.org" "Today")
+      entry (file+headline "~/Dropbox/org/todo.org" "Today")
       "*     TODO %?\n %i\n" :prepend t)
 
      ("s" "school TODO"
-      entry (file+headline "~/org/todo.org" "School")
+      entry (file+headline "~/Dropbox/org/todo.org" "School")
       "*     TODO %?\n %i\n" :prepend t)
 
      ("d" "org drill"
-      entry (file+headline "~/org/notes.org" "Miscellaneous")
+      entry (file+headline "~/Dropbox/org/notes.org" "Miscellaneous")
       "* %? :drill:" :prepend t)))
   :general
   (my-leader-def
@@ -1459,7 +1459,7 @@ Entirely from Doom Emacs
 
 (use-package org-journal
   :custom
-  (org-journal-dir "~/org/journal")
+  (org-journal-dir "~/Dropbox/org/journal")
   (org-journal-file-format "%m%d%Y")
   :general
   (my-leader-def
