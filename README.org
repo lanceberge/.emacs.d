@@ -588,10 +588,7 @@ Taken entirely from Doom Emacs
 
     "oft" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
-            (find-file "~/Dropbox/org/todo.org") :which-key "todo"
-            (evil-window-vsplit)
-            (org-agenda-list)
-            (evil-window-left 1))
+            (find-file "~/Dropbox/org/todo.org") :which-key "todo")
 
     "ofc" (lambda () (interactive)
             (counsel-find-file "~/code/") :which-key "todo"))
@@ -1338,7 +1335,10 @@ Entirely from Doom Emacs
   (org-agenda-start-on-weekday nil) ; start on today
   :general
   (my-leader-def
-    "oa" #'org-agenda)
+    "oa" #'org-agenda-list
+    "ova" (lambda () (interactive)
+                     (evil-window-vsplit)
+                     (org-agenda-list)))
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys)
@@ -1581,9 +1581,6 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package smartparens ; pair delimiters automatically and functions to work with delimiters
   :defer 0.1
-  ;; enable smartparens in ivy-mode
-  :hook
-  (ivy-mode . (lambda () (smartparens-mode -1)))
   :custom
   (sp-highlight-pair-overlay nil)
   (sp-highlight-wrap-overlay nil)
@@ -1606,7 +1603,6 @@ Entirely from Doom Emacs
   (require 'smartparens-config) ; config for many languages
 
   ;; characters to not pair in org mode
-  ;; (sp-local-pair 'org-mode "'" nil :actions nil)
   (eval-after-load 'smartparens-org '(progn
                                        (sp-local-pair 'org-mode "=" nil :actions nil)
                                        (sp-local-pair 'org-mode "~" nil :actions nil)
@@ -1614,7 +1610,6 @@ Entirely from Doom Emacs
                                        (sp-local-pair 'org-mode "_" nil :actions nil)
                                        (sp-local-pair 'org-mode "'" nil :actions nil)
                                        (sp-local-pair 'org-mode "*" nil :actions nil))))
-;; (sp-local-pair 'org-mode "$" "$"))
 #+END_SRC
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
