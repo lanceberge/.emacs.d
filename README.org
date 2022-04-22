@@ -280,6 +280,9 @@ Optimizations for different file types from Doom emacs
 (when (and IS-WINDOWS (null (getenv "HOME")))
   (setenv "HOME" (getenv "USERPROFILE")))
 
+(unless IS-MAC
+  (setq command-line-ns-option-alist nil))
+
 (unless IS-LINUX
   (setq command-line-x-option-alist nil))
 
@@ -493,7 +496,7 @@ Taken entirely from Doom Emacs
 (use-package recentf
   :straight (:type built-in)
   :defer-incrementally (easymenu tree-widget timer)
-  :defer t
+  :hook (pre-command . recentf-mode)
   :custom
   (recentf-auto-cleanup 'never)
   (recentf-save-file (expand-file-name "recentf" my/etc-dir))
@@ -1322,7 +1325,7 @@ Entirely from Doom Emacs
                                  ("OPT." . (:foreground "#fe8019" :weight bold)))
 
         org-todo-keywords '((sequence "TODO(t)" "WAIT(w)"
-                                      "OPT.(o)" "~WIP(p)" "|" "DONE")))
+                                      "OPT.(o)" "WIP.(p)" "|" "DONE")))
 
   (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
 #+END_SRC
