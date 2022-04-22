@@ -502,7 +502,7 @@ Taken entirely from Doom Emacs
   (recentf-save-file (expand-file-name "recentf" my/etc-dir))
   (recentf-max-saved-items 200))
 
-(when IS-LINUX
+(when (or IS-LINUX IS-MAC)
   (use-package flyspell ; spellcheck
     :straight (:type built-in)
     :hook ((text-mode . flyspell-mode)
