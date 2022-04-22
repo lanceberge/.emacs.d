@@ -591,7 +591,7 @@ Taken entirely from Doom Emacs
 
     "oft" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
-            (find-file "~/Dropbox/org/todo.org") :which-key "todo")
+            (find-file "~/org/todo.org") :which-key "todo")
 
     "ofc" (lambda () (interactive)
             (counsel-find-file "~/code/") :which-key "todo"))
@@ -995,7 +995,7 @@ Entirely from Doom Emacs
     "fih"       (lambda () (interactive) (counsel-file-jump "" "~"))
     "fis"       (lambda () (interactive) (counsel-file-jump "" "~/school"))
     "fic"       (lambda () (interactive) (counsel-file-jump "" "~/code"))
-    "fio"       (lambda () (interactive) (counsel-file-jump "" "~/Dropbox/org"))
+    "fio"       (lambda () (interactive) (counsel-file-jump "" "~/org"))
     "fie"       (lambda () (interactive) (counsel-file-jump "" "~/.emacs.d"))
     "fid"       (lambda () (interactive) (counsel-file-jump "" "~/Downloads"))
     "fd"      #'(counsel-dired     :which-key "directory")
@@ -1005,7 +1005,7 @@ Entirely from Doom Emacs
 
     "ofo" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
-            (counsel-find-file "~/Dropbox/org") :which-key "org")
+            (counsel-find-file "~/org") :which-key "org")
 
     "ofs" (lambda () (interactive)
             (counsel-find-file "~/school/spring2022") :which-key "school"))
@@ -1044,7 +1044,7 @@ Entirely from Doom Emacs
   :defer 0.2
   :defer-incrementally (eldoc easymenu help-mode)
   :custom
-  (yas-snippet-dirs '("~/.emacs.d/snippets" "~/Dropbox/org/snippets"))
+  (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
   :general
   (my-leader-def
     "s"   '(:ignore t           :which-key "Yasnippet")
@@ -1213,9 +1213,9 @@ Entirely from Doom Emacs
   :custom
   ;; Directories
   (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
-  (org-agenda-files '("~/Dropbox/org"))
+  (org-agenda-files '("~/org"))
 
-  (org-directory "~/Dropbox/org")
+  (org-directory "~/org")
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
 
   ;; General settings
@@ -1384,23 +1384,23 @@ Entirely from Doom Emacs
   :custom
   (org-capture-templates
    '(("l" "Life TODO entry"
-      entry (file+headline "~/Dropbox/org/todo.org" "Life")
+      entry (file+headline "~/org/todo.org" "Life")
       "*     TODO %?\n %i\n" :prepend t)
 
      ("e" "Emacs TODO entry"
-      entry (file+headline "~/Dropbox/org/todo.org" "Emacs")
+      entry (file+headline "~/org/todo.org" "Emacs")
       "*     TODO %?\n %i\n" :prepend t)
 
      ("t" "today TODO entry"
-      entry (file+headline "~/Dropbox/org/todo.org" "Today")
+      entry (file+headline "~/org/todo.org" "Today")
       "*     TODO %?\n %i\n" :prepend t)
 
      ("s" "school TODO"
-      entry (file+headline "~/Dropbox/org/todo.org" "School")
+      entry (file+headline "~/org/todo.org" "School")
       "*     TODO %?\n %i\n" :prepend t)
 
      ("d" "org drill"
-      entry (file+headline "~/Dropbox/org/notes.org" "Miscellaneous")
+      entry (file+headline "~/org/notes.org" "Miscellaneous")
       "* %? :drill:" :prepend t)))
   :general
   (my-leader-def
@@ -1465,7 +1465,7 @@ Entirely from Doom Emacs
 
 (use-package org-journal
   :custom
-  (org-journal-dir "~/Dropbox/org/journal")
+  (org-journal-dir "~/org/journal")
   (org-journal-file-format "%m%d%Y")
   :general
   (my-leader-def
