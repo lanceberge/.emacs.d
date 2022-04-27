@@ -23,8 +23,8 @@
       site-run-file nil)
 
 (set-face-attribute 'default nil ; font
-                    :family "Monospace"
-                    :height 110
+                    :family "Inconsolata"
+                    :height 125
                     :weight 'normal
                     :width 'normal)
 
@@ -71,7 +71,7 @@
   (custom-set-faces `(line-number ((t (:background ,bg-color))))
                     `(line-number-current-line ((t (:background ,bg-color)))))
   (global-display-line-numbers-mode)
-  (when IS-LINUX
+  (unless IS-WINDOWS
     (setq-default display-line-numbers-type 'visual))) ; relative line numbers
 
 ;; Minimalistic mode-line
