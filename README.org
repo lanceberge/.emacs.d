@@ -82,8 +82,8 @@ Tangles to early-init.el
       site-run-file nil)
 
 (set-face-attribute 'default nil ; font
-                    :family "Inconsolata"
-                    :height 125
+                    :family "DejaVu Sans Mono"
+                    :height 120
                     :weight 'normal
                     :width 'normal)
 
@@ -126,16 +126,19 @@ Tangles to early-init.el
   :config
   (load-theme 'gruvbox t))
 
-(use-package display-line-numbers ; line numbers
+(use-package display-line-numbers
   :straight (:type built-in)
-  :custom
-  (display-line-numbers-width-start t)
   :config
   (custom-set-faces `(line-number ((t (:background ,bg-color))))
                     `(line-number-current-line ((t (:background ,bg-color)))))
-  (global-display-line-numbers-mode)
+
   (unless IS-WINDOWS
-    (setq-default display-line-numbers-type 'visual))) ; relative line numbers
+    (setq-default display-line-numbers-type 'visual
+                  display-line-numbers-width-start t ; auto count number of lines to start numbers
+                  display-line-numbers-grow-only t ; don't shrink line number width
+                  ))
+
+  (global-display-line-numbers-mode))
 
 ;; Minimalistic mode-line
 (setq-default mode-line-format
@@ -942,8 +945,8 @@ Entirely from Doom Emacs
   (swiper-use-visual-line-p (lambda (a) nil))
   :general
   ('normal
-   [remap evil-ex-search-forward]  #'swiper-isearch
-   [remap evil-ex-search-backward] #'swiper-backward)
+   [remap evil-search-forward]  #'swiper-isearch
+   [remap evil-search-backward] #'swiper-backward)
   (my-leader-def
     "fb" #'(swiper-multi :which-key "swiper in buffer")
     "fB" #'(swiper-all   :which-key "swiper in all buffers")))
@@ -1268,7 +1271,7 @@ Entirely from Doom Emacs
    "C-S-k" #'org-shiftcontrolup
    "C-S-l" #'org-shiftcontrolright)
 
-   ('(normal insert) :prefix "C-c"
+  ('(normal insert) :prefix "C-c"
    "e"  #'(org-latex-export-to-pdf     :which-key "export to pdf")
    ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
    "v"  #'(org-toggle-inline-images    :which-key "toggle inline images")
@@ -1288,8 +1291,8 @@ Entirely from Doom Emacs
 
   ('insert org-mode-map
            "S-RET" (lambda () (interactive)
-                   (org-return)
-                   (+org-indent)))
+                     (org-return)
+                     (+org-indent)))
 
   ;; Vim keys calendar maps
   ('org-read-date-minibuffer-local-map
@@ -1340,8 +1343,8 @@ Entirely from Doom Emacs
   (my-leader-def
     "oa" #'org-agenda-list
     "ova" (lambda () (interactive)
-                     (evil-window-vsplit)
-                     (org-agenda-list)))
+            (evil-window-vsplit)
+            (org-agenda-list)))
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys)

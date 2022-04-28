@@ -23,8 +23,8 @@
       site-run-file nil)
 
 (set-face-attribute 'default nil ; font
-                    :family "Inconsolata"
-                    :height 125
+                    :family "DejaVu Sans Mono"
+                    :height 120
                     :weight 'normal
                     :width 'normal)
 
@@ -63,16 +63,19 @@
   :config
   (load-theme 'gruvbox t))
 
-(use-package display-line-numbers ; line numbers
+(use-package display-line-numbers
   :straight (:type built-in)
-  :custom
-  (display-line-numbers-width-start t)
   :config
   (custom-set-faces `(line-number ((t (:background ,bg-color))))
                     `(line-number-current-line ((t (:background ,bg-color)))))
-  (global-display-line-numbers-mode)
+
   (unless IS-WINDOWS
-    (setq-default display-line-numbers-type 'visual))) ; relative line numbers
+    (setq-default display-line-numbers-type 'visual
+                  display-line-numbers-width-start t ; auto count number of lines to start numbers
+                  display-line-numbers-grow-only t ; don't shrink line number width
+                  ))
+
+  (global-display-line-numbers-mode))
 
 ;; Minimalistic mode-line
 (setq-default mode-line-format
