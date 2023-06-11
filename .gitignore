@@ -2,3 +2,5 @@ config.el
 straight
 etc
 eln-cache
+projects
+request

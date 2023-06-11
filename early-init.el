@@ -24,7 +24,7 @@
 
 (set-face-attribute 'default nil ; font
                     :family "DejaVu Sans Mono"
-                    :height 120
+                    :height 130
                     :weight 'normal
                     :width 'normal)
 
