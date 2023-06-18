@@ -528,7 +528,8 @@ Taken entirely from Doom Emacs
   :straight (:type built-in)
   :general
   (my-leader-def
-    "oc" #'(calc :which-key "calc")))
+    "o"   '(:ignore t :which-key "Open")
+    "oc" #'(calc      :which-key "calc")))
 
 (use-package desktop ; save sessions to a file
   :straight (:type built-in)
@@ -579,6 +580,7 @@ Taken entirely from Doom Emacs
     "bp"      #'(previous-buffer           :which-key "previous buffer")
 
     ;; Eval elisp
+    "e"        '(:ignore t                    :which-key "Elisp")
     "er"      #'(eval-region                  :which-key "execute elisp region")
     "es"      #'(eval-last-sexp               :which-key "execute elisp sexp")
     "ee"      #'(eval-expression              :which-key "evaluate elisp expression")
@@ -1039,7 +1041,6 @@ Entirely from Doom Emacs
   (amx-history-length 50))
 
 (use-package flx :defer t)
-;; :after (ivy counsel)) ; fuzzy sorting for ivy
 #+END_SRC
 ** Yasnippet
 #+BEGIN_SRC emacs-lisp :results none
@@ -1122,12 +1123,6 @@ Entirely from Doom Emacs
     "gf"   '(:ignore t                  :which-key "Find")
     "gfc" #'(magit-show-commit          :which-key "show commit")
     "gfg" #'(magit-find-git-config-file :which-key "git config file"))
-
-  ;; scroll in magit-diff-mode with u and d
-  ;; ('normal magit-diff-mode-map
-  ;;          [remap magit-diff]         #'(evil-scroll-down :which-key "scroll down")
-  ;;          [remap magit-unstage]      #'(evil-scroll-up   :which-key "scroll up")
-  ;;          [remap magit-unstage-file] #'(evil-scroll-up   :which-key "scroll up"))
   :config
   (evil-collection-init 'magit)
 
@@ -1239,10 +1234,6 @@ Entirely from Doom Emacs
   (org-latex-minted-options '(("linenos" "true") ; line numbers in expored src blocks
                               ("frame" "lines")
                               ("style" "emacs")))
-  ;; :custom-face
-  ;; Gray out done headlines and text; strike-through the text
-  ;; (org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
-  ;; (org-done             ((t (:foreground "#7C6f64"))))
   :general
   ('(normal insert) org-mode-map
    ;; TODOS with M-;, headlines with C-;, add shift to do those above
@@ -1474,7 +1465,6 @@ Entirely from Doom Emacs
   (my-leader-def
     "oj"   '(:ignore t :which-key "Org journal")
     "ojn" #'(org-journal-new-entry :which-key "new")
-    "zc"  #'(org-shifttab :which-key "close fold"))
 
   ('normal org-journal-mode-map
            "za" #'(org-cycle    :which-key "open fold")))
@@ -1641,6 +1631,14 @@ Entirely from Doom Emacs
   ('normal
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
    "g SPC o" #'(avy-goto-char-timer :which-key "timer")))
+
+(use-package titlecase ; title case a line
+  :general
+  ('normal
+   "gu" #'(titlecase-line :which-key "titlecase line"))
+
+  ('visual
+   "gu" #'titlecase-region :which-key "titlecase region"))
 #+END_SRC
 * System
 ** Vterm
@@ -1667,8 +1665,6 @@ Entirely from Doom Emacs
   (eshell-prompt-function #'eshell/eshell-local-prompt-function)
   (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
   :custom-face
-  ;; Gruvbox colors, weren't getting set properly by gruvbox.el
-  ;; (eshell-prompt        ((t (:foreground "#8ec07c"))))
   (eshell-ls-archive    ((t (:foreground "#bdae93"))))
   (eshell-ls-backup     ((t (:foreground "#a89984"))))
   (eshell-ls-clutter    ((t (:foreground "#fe8019" :bold t))))
@@ -1931,15 +1927,7 @@ Entirely from Doom Emacs
 ** PDF
 #+BEGIN_SRC emacs-lisp :results none
 (use-package pdf-tools
-  ;; Fork that fixes an error I was getting only on gccemacs:
-  ;; "undefined function pdf-view-current-page"
-  :straight (:host github
-                   :repo "flatwhatson/pdf-tools"
-                   :branch "fix-macros"
-                   :flavor nil)
   :mode ("\\.pdf\\'" . pdf-view-mode)
-  ;; no line numbers in pdfs
-  ;; :hook (pdf-view-mode . (lambda () (pdf-view-midnight-minor-mode)
   :hook (pdf-view-mode . my/pdf-mode)
   :custom
   (pdf-view-use-scaling t)
@@ -1956,8 +1944,6 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 ;;;###autoload
 (defun my/pdf-mode ()
-  ;; (pdf-view-midnight-minor-mode +1)
-
   ;; no cursor or line numbers in pdfs
   (setq-local make-pointer-invisible t
               evil-normal-state-cursor '(nil))
@@ -1994,9 +1980,6 @@ Entirely from Doom Emacs
                  company-cmake
                  company-capf
                  company-files))))
-;; company-dabbrev-code
-;; company-keywords
-;; company-yasnippet
 #+END_SRC
 ** R
 #+BEGIN_SRC emacs-lisp :results none
