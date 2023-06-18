@@ -508,8 +508,7 @@ Taken entirely from Doom Emacs
 (when (or IS-LINUX IS-MAC)
   (use-package flyspell ; spellcheck
     :straight (:type built-in)
-    :hook ((text-mode . flyspell-mode)
-           (prog-mode . flyspell-prog-mode))
+    :hook (prog-mode . flyspell-prog-mode)
     :general
     ('(normal insert)
      "M-f" #'(flyspell-auto-correct-word :which-key "fix word"))))
@@ -1464,7 +1463,7 @@ Entirely from Doom Emacs
   :general
   (my-leader-def
     "oj"   '(:ignore t :which-key "Org journal")
-    "ojn" #'(org-journal-new-entry :which-key "new")
+    "ojn" #'(org-journal-new-entry :which-key "new"))
 
   ('normal org-journal-mode-map
            "za" #'(org-cycle    :which-key "open fold")))
