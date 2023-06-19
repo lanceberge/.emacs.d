@@ -1634,10 +1634,10 @@ Entirely from Doom Emacs
 (use-package titlecase ; title case a line
   :general
   ('normal
-   "gu" #'(titlecase-line :which-key "titlecase line"))
+   "g^" #'(titlecase-line :which-key "titlecase line"))
 
   ('visual
-   "gu" #'titlecase-region :which-key "titlecase region"))
+   "g^" #'titlecase-region :which-key "titlecase region"))
 #+END_SRC
 * System
 ** Vterm
