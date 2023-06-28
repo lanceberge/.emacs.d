@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: jupyter src block
+# key: sjs
+# --
+#+BEGIN_SRC javascript
+$0
+#+END_SRC
