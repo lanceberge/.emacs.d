@@ -601,14 +601,20 @@ Taken entirely from Doom Emacs
             (counsel-find-file "~/code/") :which-key "todo"))
 
   ('normal
-   "gs" #'(my/split-line-below      :which-key "split line below")
-   "gS" #'(my/split-line-above      :which-key "split line above")
-   "]b" #'(next-buffer              :which-key "next buffer")
-   "[b" #'(previous-buffer          :which-key "previous buffer")
+   "gs" #'(my/split-line-below         :which-key "split line below")
+   "gS" #'(my/split-line-above         :which-key "split line above")
+   "]b" #'(next-buffer                 :which-key "next buffer")
+   "[b" #'(previous-buffer             :which-key "previous buffer")
    "[n"   (lambda () (interactive) (display-line-numbers-mode -1))
    "]n"   (lambda () (interactive) (display-line-numbers-mode +1))
    "g C-l" #'(end-of-visual-line       :which-key "end of visual line")
    "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line"))
+
+   ('normal
+     "s-;" #'(comment-line :which-key "comment"))
+
+   ('visual
+     "s-;" #'(comment-region :which-key "comment"))
 
 
   ('(normal insert)
