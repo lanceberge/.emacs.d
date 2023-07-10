@@ -50,6 +50,7 @@
   - [[#python][Python]]
   - [[#matlab][Matlab]]
   - [[#latex][Latex]]
+  - [[#javascript][Javascript]]
 
 * Early-Init
 
@@ -2107,4 +2108,11 @@ Entirely from Doom Emacs
    :prefix "C-c"
    "e" (lambda () (interactive)
          (save-buffer) (TeX-command-master) :which-key "export")))
+#+END_SRC
+** Javascript
+#+BEGIN_SRC emacs-lisp :results none
+(use-package js
+  :straight (:type built-in)
+  :custom
+  (js-indent-level 2))
 #+END_SRC
