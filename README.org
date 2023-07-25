@@ -615,7 +615,7 @@ Taken entirely from Doom Emacs
      "s-/" #'(comment-line :which-key "comment"))
 
    ('visual
-     "s-/" #'(comment-region :which-key "comment"))
+     "s-/" #'(comment-dwim :which-key "comment"))
 
 
   ('(normal insert)
