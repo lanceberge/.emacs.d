@@ -954,7 +954,9 @@ Entirely from Doom Emacs
   :general
   ('normal
    [remap evil-search-forward]  #'swiper-isearch
-   [remap evil-search-backward] #'swiper-backward)
+   [remap evil-search-backward] #'swiper-backward
+   [remap evil-ex-search-forward]  #'swiper-isearch
+   [remap evil-ex-search-backward] #'swiper-backward)
   (my-leader-def
     "fb" #'(swiper-multi :which-key "swiper in buffer")
     "fB" #'(swiper-all   :which-key "swiper in all buffers")))
