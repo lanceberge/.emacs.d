@@ -51,6 +51,7 @@
   - [[#matlab][Matlab]]
   - [[#latex][Latex]]
   - [[#javascript][Javascript]]
+  - [[#scala][Scala]]
 
 * Early-Init
 
@@ -611,11 +612,11 @@ Taken entirely from Doom Emacs
    "g C-l" #'(end-of-visual-line       :which-key "end of visual line")
    "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line"))
 
-   ('normal
-     "s-/" #'(comment-line :which-key "comment"))
+  ('normal
+   "s-/" #'(comment-line :which-key "comment"))
 
-   ('visual
-     "s-/" #'(comment-dwim :which-key "comment"))
+  ('visual
+   "s-/" #'(comment-dwim :which-key "comment"))
 
 
   ('(normal insert)
@@ -831,7 +832,6 @@ Entirely from Doom Emacs
 ** Evil-Collection
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil-collection ; evil bindings for many modes
-  :defer t
   :custom
   (evil-collection-want-unimpaired-p t)
   (evil-collection-setup-minibuffer t)
@@ -1121,7 +1121,8 @@ Entirely from Doom Emacs
     "gs"  #'(magit-status               :which-key "status")
     "gb"  #'(magit-branch-checkout      :which-key "checkout branch")
     "gc"  #'(magit-clone                :which-key "clone")
-    "gd"  #'(magit-file-delete          :which-key "delete file")
+    "gd"
+    #'(magit-file-delete          :which-key "delete file")
     "gF"  #'(magit-fetch                :which-key "fetch")
     "gn"   '(:ignore t                  :which-key "New")
     "gnb" #'(magit-branch-and-checkout  :which-key "branch")
@@ -1210,6 +1211,7 @@ Entirely from Doom Emacs
   :straight (:type built-in)
   :hook
   (kill-emacs . +org/tangle-config)
+  (org-tab-first . yas-expand)
 
   :defer-incrementally
   (calendar find-func format-spec org-macs org-compat
@@ -2117,4 +2119,17 @@ Entirely from Doom Emacs
   :straight (:type built-in)
   :custom
   (js-indent-level 2))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :results none
+(use-package js
+  :straight (:type built-in)
+  :custom
+  (js-indent-level 2))
+#+END_SRC
+** Scala
+
+#+BEGIN_SRC emacs-lisp :results none
+(use-package scala-mode
+  :defer t)
 #+END_SRC

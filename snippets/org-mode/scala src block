@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: scala src block
+# key: ssc
+# --
+#+BEGIN_SRC scala
+$0
+#+END_SRC
