@@ -612,11 +612,11 @@ Taken entirely from Doom Emacs
    "g C-l" #'(end-of-visual-line       :which-key "end of visual line")
    "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line"))
 
-  ('normal
-   "s-/" #'(comment-line :which-key "comment"))
+  ('(normal insert)
+   "C-/" #'(comment-line :which-key "comment"))
 
   ('visual
-   "s-/" #'(comment-dwim :which-key "comment"))
+   "C-/" #'(comment-dwim :which-key "comment"))
 
 
   ('(normal insert)
