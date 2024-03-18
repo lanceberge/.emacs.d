@@ -613,10 +613,10 @@ Taken entirely from Doom Emacs
    "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line"))
 
   ('normal
-   "s-/" #'(comment-line :which-key "comment"))
+   "C-/" #'(comment-line :which-key "comment"))
 
   ('visual
-   "s-/" #'(comment-dwim :which-key "comment"))
+   "C-/" #'(comment-dwim :which-key "comment"))
 
 
   ('(normal insert)
@@ -1247,9 +1247,15 @@ Entirely from Doom Emacs
   :general
   ('(normal insert) org-mode-map
    ;; TODOS with M-;, headlines with C-;, add shift to do those above
-   "C-M-;" #'+org/insert-subheading
-   "C-:"   #'+org/insert-heading-above
-   "M-:"   #'+org/insert-todo-above
+   "C-M-;"        #'+org/insert-subheading
+   "C-;"          #'+org/insert-heading
+   "C-:"          #'+org/insert-heading-above
+   "M-;"          #'+org/insert-todo
+   "M-:"          #'+org/insert-todo-above
+   "M-<return>"   #'+org/insert-todo
+   "M-S-<return>" #'+org/insert-todo-above
+   "C-<return>"   #'+org/insert-heading
+   "C-S-<return>"   #'+org/insert-heading-above
 
    ;; Vim keys > arrow keys
    "M-h"   #'org-metaleft
@@ -1494,6 +1500,27 @@ Entirely from Doom Emacs
   (interactive)
   (evil-append-line 1)
   (org-insert-subheading 1))
+
+;;;###autoload
+(defun +org/insert-heading ()
+  "insert a subheading in org mode and go to insert mode"
+  (interactive)
+  (org-insert-heading-respect-content)
+  (evil-insert 1))
+
+;;;###autoload
+(defun +org/insert-todo ()
+  "insert a subheading in org mode and go to insert mode"
+  (interactive)
+  (org-insert-todo-heading-respect-content)
+  (evil-insert 1))
+
+;;;###autoload
+(defun +org/insert-heading-above ()
+  "insert a subheading in org mode and go to insert mode"
+  (interactive)
+  (org-insert-heading-respect-content)
+  (evil-insert 1))
 
 ;;;###autoload
 (defun +org/insert-heading-above ()
