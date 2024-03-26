@@ -790,6 +790,7 @@ Entirely from Doom Emacs
    "SPC k" #'(evil-window-move-very-top    :which-key "move window up")
    "SPC l" #'(evil-window-move-far-right   :which-key "move window right"))
 
+  ('evil-ex-completion-map "C-g" 'exit-minibuffer) ; use ; to complete : vim commands
   ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
   ('normal
@@ -1895,6 +1896,7 @@ Entirely from Doom Emacs
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package helpful ; better help menu
+  :defer 0.3
   :general
   ('normal
    "gp" #'helpful-at-point)
