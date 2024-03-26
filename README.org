@@ -454,12 +454,10 @@ Taken entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package simple
   :straight (:type built-in)
-  :defer t
+  :hook (after-init . global-visual-line-mode)
   :custom
   (idle-update-delay 1.0) ; slow down how often emacs updates its ui
-  (kill-do-not-save-duplicates t) ; no duplicates in kill ring
-  :config
-  (global-visual-line-mode 1)) ; makes wrapped lines easlier to work with
+  (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
 
 (use-package advice
   :straight (:type built-in)
@@ -533,19 +531,14 @@ Taken entirely from Doom Emacs
     "oc" #'(calc      :which-key "calc")))
 
 (use-package desktop ; save sessions to a file
+  :defer t
   :straight (:type built-in)
   :custom
   (desktop-load-locked-desktop t) ; ignore desktop-lock files
   (desktop-dirname (expand-file-name "desktop/" my/etc-dir))
   (desktop-path (list desktop-dirname))
   (desktop-save-mode 1)
-  (desktop-base-file-name "emacs.desktop")
-  :general
-  ('normal
-   "C-w w" #'(desktop-save-in-desktop-dir :which-key "save desktop"))
-  :config
-  (unless (file-exists-p "~/.emacs.d/etc/desktop")
-    (make-directory "~/.emacs.d/etc/desktop" t)))
+  (desktop-base-file-name "emacs.desktop"))
 
 (use-package project
   :straight (:type built-in)
@@ -612,11 +605,12 @@ Taken entirely from Doom Emacs
    "g C-l" #'(end-of-visual-line       :which-key "end of visual line")
    "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line"))
 
+  ; TODO change for if mac vs linux
   ('(normal insert)
-   "C-/" #'(comment-line :which-key "comment"))
+   "M-/" #'(comment-line :which-key "comment"))
 
   ('visual
-   "C-/" #'(comment-dwim :which-key "comment"))
+   "M-/" #'(comment-dwim :which-key "comment"))
 
 
   ('(normal insert)
@@ -1934,20 +1928,15 @@ Entirely from Doom Emacs
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (use-package undo-tree ; Persistent Undos
+  :hook (after-init . global-undo-tree-mode)
   :custom
   (undo-limit 10000)
   (undo-tree-history-directory-alist (list (cons "." (expand-file-name "undo/" my/etc-dir))))
   (undo-tree-auto-save-history t)
+  (evil-undo-system 'undo-tree)
   :general
-  ('normal
-   "C-r" 'undo-tree-redo
-   "u"   'undo-tree-undo)
   (my-leader-def
-    "fu" #'(undo-tree-visualize :which-key "undo"))
-  :config
-  (if (version= emacs-version "28")
-      (setq evil-undo-system 'undo-tree))
-  (global-undo-tree-mode))
+    "fu" #'(undo-tree-visualize :which-key "undo")))
 
 (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
   :hook (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
@@ -2102,13 +2091,7 @@ Entirely from Doom Emacs
   (my-leader-def
     "ei"   '(:ignore t :which-key "Ein")
     "eir" #'(ein:run   :which-key "run")
-    "eis" #'(ein:stop  :which-key "stop"))
-
-  :config
-  (if (version= emacs-version "28")
-      (general-def 'normal
-        [remap evil-undo] #'undo
-        [remap evil-redo] #'undo-redo)))
+    "eis" #'(ein:stop  :which-key "stop")))
 
 (use-package jupyter :defer t)
 
@@ -2143,16 +2126,11 @@ Entirely from Doom Emacs
 ** Javascript
 #+BEGIN_SRC emacs-lisp :results none
 (use-package js
+  :defer t
   :straight (:type built-in)
   :custom
   (js-indent-level 2))
 #+END_SRC
-
-#+BEGIN_SRC emacs-lisp :results none
-(use-package js
-  :straight (:type built-in)
-  :custom
-  (js-indent-level 2))
 #+END_SRC
 ** Scala
 
