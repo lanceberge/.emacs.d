@@ -1934,7 +1934,6 @@ Entirely from Doom Emacs
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (use-package undo-tree ; Persistent Undos
-  :hook (after-init . global-undo-tree-mode)
   :custom
   (undo-limit 10000)
   (undo-tree-history-directory-alist (list (cons "." (expand-file-name "undo/" my/etc-dir))))
@@ -1947,7 +1946,8 @@ Entirely from Doom Emacs
     "fu" #'(undo-tree-visualize :which-key "undo"))
   :config
   (if (version= emacs-version "28")
-      (setq evil-undo-system 'undo-tree)))
+      (setq evil-undo-system 'undo-tree))
+  (global-undo-tree-mode))
 
 (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
   :hook (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
