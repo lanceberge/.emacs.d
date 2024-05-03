@@ -52,6 +52,8 @@
   - [[#latex][Latex]]
   - [[#javascript][Javascript]]
   - [[#scala][Scala]]
+  - [[#go][Go]]
+  - [[#yaml][Yaml]]
 
 * Early-Init
 
@@ -779,6 +781,8 @@ Entirely from Doom Emacs
   (evil-want-keybinding nil)
   (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
   (evil-want-fine-undo 'fine)       ; save inserts as undo units more often
+  (evil-ex-search-persist-highlight nil)
+  (evil-ex-substitute-highlight-all nil)
   :general
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
    [remap evil-next-line]     #'evil-next-visual-line
@@ -2138,5 +2142,16 @@ Entirely from Doom Emacs
 
 #+BEGIN_SRC emacs-lisp :results none
 (use-package scala-mode
+  :defer t)
+#+END_SRC
+** Go
+#+BEGIN_SRC emacs-lisp :results none
+(use-package go-mode
+  :defer t)
+#+END_SRC
+** Yaml
+#+BEGIN_SRC emacs-lisp :results none
+(use-package yaml-mode
+  :mode ("\\.gotmpl\\'" . yaml-mode)
   :defer t)
 #+END_SRC
