@@ -1035,7 +1035,7 @@ Entirely from Doom Emacs
     "SPC fic" "find in code"
     "SPC fio" "find in org"
     "SPC fie" "find in dotemacs"
-    "SPC fid" "find in downloads"
+    "SPC fid" "find in downloads")
   (counsel-mode))
 
 (use-package amx ; show recently used commands
@@ -1141,13 +1141,10 @@ Entirely from Doom Emacs
 (defun +magit/stage-all-and-commit ()
   "stage all files and commit"
   (interactive)
-  ;; (let ((magit-mode-hook nil)
-  ;;       (magit-commit-show-diff nil)
-  ;;       (magit-slow-confirm nil)
-  ;;       (buffer-list-update-hook nil))
     (save-buffer (current-buffer))
     (magit-stage-modified)
-    (magit-commit-create))
+    (magit-commit-create)
+    (magit-push))
 #+END_SRC
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
