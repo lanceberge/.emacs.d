@@ -1112,6 +1112,8 @@ Entirely from Doom Emacs
   :custom
   (magit-save-repository-buffers nil)
   (magit-no-confirm '(stage-all-changes))
+  :hook
+  (git-commit-mode . evil-insert-state)
   :general
   (my-leader-def
     "g"    '(:ignore t                   :which-key "Git")
