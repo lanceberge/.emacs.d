@@ -55,6 +55,8 @@
   - [[#scala][Scala]]
   - [[#go][Go]]
   - [[#yaml][Yaml]]
+  - [[#docker][Docker]]
+  - [[#html--css][HTML & CSS]]
 
 * Early-Init
 
@@ -1143,10 +1145,10 @@ Entirely from Doom Emacs
 (defun +magit/stage-all-and-commit ()
   "stage all files and commit"
   (interactive)
-    (save-buffer (current-buffer))
-    (magit-stage-modified)
-    (magit-commit-create)
-    (magit-push))
+  (save-buffer (current-buffer))
+  (magit-stage-modified)
+  (magit-commit-create)
+  (magit-push))
 #+END_SRC
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
@@ -1664,7 +1666,10 @@ Entirely from Doom Emacs
     "=" #'(+format/buffer :which-key "format")
 
     :states 'visual
-    "=" #'+format/region))
+    "=" #'+format/region
+    :config
+    (setq-default format-all-formatters
+                '(("TypeScript" prettier)))))
 
 (use-package move-text
   :general
@@ -2141,11 +2146,17 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Javascript
 #+BEGIN_SRC emacs-lisp :results none
-(use-package js
+(use-package js2-mode
+  :mode ("\\.js\\'" . js2-mode)
+  :custom (js2-basic-offset 2)
   :defer t
-  :straight (:type built-in)
+  )
+
+(use-package typescript-mode
+  :defer t
   :custom
-  (js-indent-level 2))
+  (typescript-indent-level 2)
+  (typescript-auto-indent-flag t))
 #+END_SRC
 #+END_SRC
 ** Scala
@@ -2162,6 +2173,25 @@ Entirely from Doom Emacs
 ** Yaml
 #+BEGIN_SRC emacs-lisp :results none
 (use-package yaml-mode
-  :mode ("\\.gotmpl\\'" . yaml-mode)
+  :mode ("\\.gotmpl\\'" . yaml-mode))
+#+END_SRC
+
+** Docker
+#+BEGIN_SRC emacs-lisp :results none
+(use-package dockerfile-mode
   :defer t)
+#+END_SRC
+
+** HTML & CSS
+
+#+BEGIN_SRC emacs-lisp :results none
+(use-package html-mode
+  :straight (:type built-in)
+  :mode ("\\.html\\'" . html-mode))
+
+(use-package emmet-mode
+  :hook (html-mode . emmet-mode)
+  :general
+  ('insert emmet-mode-keymap
+    "TAB" #'emmet-expand-line))
 #+END_SRC
