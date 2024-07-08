@@ -38,7 +38,7 @@
   - [[#smartparens][Smartparens]]
   - [[#miscellaneous-1][Miscellaneous]]
 - [[#system][System]]
-  - [[#vterm][Vterm]]
+  - [[#terminal][Terminal]]
   - [[#eshell][Eshell]]
   - [[#tramp][Tramp]]
   - [[#dired][Dired]]
@@ -1692,16 +1692,13 @@ Entirely from Doom Emacs
    "g^" #'titlecase-region :which-key "titlecase region"))
 #+END_SRC
 * System
-** Vterm
+** Terminal
 #+BEGIN_SRC emacs-lisp :results none
-(use-package vterm ; terminal emulator
-  :custom
-  (vterm-kill-buffer-on-exit t)
+(use-package terminal-here
   :general
   (my-leader-def
-    "o"    '(:ignore t          :which-key "Open")
-    "ot"  #'vterm
-    "ovt" #'(vterm-other-window :which-key "vterm in vsplit")))
+    "o"   '(:ignore t           :which-key "Open")
+    "ot" #'terminal-here-launch :which-key "Launch terminal"))
 #+END_SRC
 ** Eshell
 #+BEGIN_SRC emacs-lisp :results none
