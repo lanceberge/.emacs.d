@@ -90,7 +90,7 @@ Tangles to early-init.el
 
 (set-face-attribute 'default nil ; font
                     :family "DejaVu Sans Mono"
-                    :height 130
+                    :height 140
                     :weight 'normal
                     :width 'normal)
 
@@ -2187,7 +2187,8 @@ Entirely from Doom Emacs
   :mode ("\\.html\\'" . html-mode))
 
 (use-package emmet-mode
-  :hook (html-mode . emmet-mode)
+  :mode ("\\.html\\'"   . emmet-mode)
+  :mode ("\\.Svelte\\'" . emmet-mode)
   :general
   ('insert emmet-mode-keymap
     "TAB" #'emmet-expand-line))
