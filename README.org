@@ -608,7 +608,7 @@ Taken entirely from Doom Emacs
    "g C-l" #'(end-of-visual-line       :which-key "end of visual line")
    "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line"))
 
-  ; TODO change for if mac vs linux
+  ;; TODO change for if mac vs linux
   ('(normal insert)
    "M-/" #'(comment-line :which-key "comment"))
 
@@ -969,9 +969,7 @@ Entirely from Doom Emacs
   ('(normal insert) ivy-minibuffer-map
    ";"   #'exit-minibuffer
    "C-j" #'ivy-next-line
-   "C-k" #'ivy-previous-line
-   ;; Navigate to home directory; 126 = '~' in ASCII
-   "C-b" (lambda () (interactive) (self-insert-command 1 126)))
+   "C-k" #'ivy-previous-line)
 
   ('normal ivy-minibuffer-map
            "q" #'minibuffer-keyboard-quit)
@@ -1074,7 +1072,7 @@ Entirely from Doom Emacs
 (use-package company ; autocomplete
   :defer 0.1
   :custom
-  (company-idle-delay nil) ; manual completion only
+  (company-idle-delay 0.01)
   (company-require-match 'never)
   (company-show-numbers t)
   (company-dabbrev-other-buffers nil)
@@ -1083,6 +1081,7 @@ Entirely from Doom Emacs
   ;; global default for the backend, buffer-local backends will be set based on filetype
   (company-backends '(company-capf
                       company-files
+                      company-dabbrev-code
                       company-yasnippet))
   :general
   ('insert company-mode-map
@@ -1094,10 +1093,20 @@ Entirely from Doom Emacs
                        "C-k" #'company-select-previous-or-abort
                        ";"   #'company-complete-selection) ; choose a completion with ; instead of tab
   :config
+  ;; complete suggestion based on the number
+  (let ((map company-active-map))
+    (mapc (lambda (x) (define-key map (format "%d" x)
+                        `(lambda () (interactive) (company-complete-number ,x))))
+          (number-sequence 0 9)))
   (global-company-mode))
 
 (use-package company-flx ; fuzzy sorting for company completion options with company-capf
   :hook (company-mode . company-flx-mode))
+
+(use-package company-lsp ; TODO
+  :disabled t
+  :config
+  (push 'company-lsp company-backends))
 #+END_SRC
 * Version Control
 #+BEGIN_SRC emacs-lisp :results none
@@ -1149,6 +1158,8 @@ Entirely from Doom Emacs
 #+END_SRC
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
+;; TODO go to symbol
+;; TODO popups for code completion
 (use-package lsp-mode ; LSP
   :disabled t
   :hook (prog-mode . lsp-mode)
@@ -1164,7 +1175,9 @@ Entirely from Doom Emacs
   :general
   (my-localleader-def
     "g"   '(:ignore t  :which-key "Miscellaneous")
-    "gr" #'(lsp-rename :which-key "rename with lsp")))
+    "gr" #'(lsp-rename :which-key "rename with lsp"))
+  :config
+  (lsp-eslint-auto-fix-on-save t))
 
 (use-package lsp-ui
   :disabled t
@@ -1176,21 +1189,21 @@ Entirely from Doom Emacs
   :after (lsp-mode))
 
 (use-package flycheck ; code syntax checking
+  ;; TODO shortcut to go to next error
   :hook (prog-mode . flycheck-mode)
   :custom
   (flycheck-emacs-lisp-load-path 'inherit)
   (flycheck-display-errors-delay 0.25)
   (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-
-  ;; Language specific
-  (flycheck-clang-include-path '("..")) ; TODO
   :general
   ('normal
    "[q" #'(flycheck-previous-error :which-key "previous error")
    "]q" #'(flycheck-next-error :which-key "next error"))
 
   (my-leader-def
-    "fe" #'(flycheck-list-errors :which-key "list errors")))
+    "fe" #'(flycheck-list-errors :which-key "list errors"))
+  :config
+  (flycheck-add-mode 'javascript-eslint 'web-mode))
 #+END_SRC
 * UI
 #+BEGIN_SRC emacs-lisp :results none
@@ -1666,7 +1679,7 @@ Entirely from Doom Emacs
     "=" #'+format/region
     :config
     (setq-default format-all-formatters
-                '(("TypeScript" prettier)))))
+                  '(("TypeScript" prettier)))))
 
 (use-package move-text
   :general
@@ -1700,6 +1713,8 @@ Entirely from Doom Emacs
 ** Eshell
 #+BEGIN_SRC emacs-lisp :results none
 (use-package eshell ; shell for elisp and regular shell commands
+;; TODO delete
+  :disabled t
   :defer-incrementally (em-alias em-banner em-basic em-cmpl
                                  em-dirs em-glob em-hist em-ls em-script em-term)
   :straight (:type built-in)
@@ -1868,7 +1883,7 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Dired
 #+BEGIN_SRC emacs-lisp :results none
-(use-package dired
+(use-package dired ; TODO how to move stuff
   :straight (:type built-in)
   :custom
   (dired-auto-revert-buffer) ; don't prompt to revert
@@ -2050,6 +2065,7 @@ Entirely from Doom Emacs
 ** Python
 #+BEGIN_SRC emacs-lisp :results none
 (use-package ein ; work with ipynb files
+  :disabled t
   :mode ("\\.ipynb\\'" . ein:ipynb-mode)
   :hook (ipynb-mode . display-line-numbers-mode)
   :custom
@@ -2116,8 +2132,7 @@ Entirely from Doom Emacs
 (use-package js2-mode
   :mode ("\\.js\\'" . js2-mode)
   :custom (js2-basic-offset 2)
-  :defer t
-  )
+  :defer t)
 
 (use-package typescript-mode
   :defer t
@@ -2127,7 +2142,6 @@ Entirely from Doom Emacs
 #+END_SRC
 #+END_SRC
 ** Scala
-
 #+BEGIN_SRC emacs-lisp :results none
 (use-package scala-mode
   :defer t)
@@ -2142,13 +2156,11 @@ Entirely from Doom Emacs
 (use-package yaml-mode
   :mode ("\\.gotmpl\\'" . yaml-mode))
 #+END_SRC
-
 ** Docker
 #+BEGIN_SRC emacs-lisp :results none
 (use-package dockerfile-mode
   :defer t)
 #+END_SRC
-
 ** HTML & CSS
 
 #+BEGIN_SRC emacs-lisp :results none
@@ -2170,5 +2182,5 @@ Entirely from Doom Emacs
   :hook (web-mode . emmet-mode)
   :general
   ('insert emmet-mode-keymap
-    "TAB" #'emmet-expand-line))
+           "TAB" #'emmet-expand-line))
 #+END_SRC
