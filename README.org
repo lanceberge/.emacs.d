@@ -44,7 +44,6 @@
   - [[#dired][Dired]]
   - [[#miscellaneous-2][Miscellaneous]]
 - [[#filetype-specific][Filetype Specific]]
-  - [[#pdf][PDF]]
   - [[#c-family][C family]]
   - [[#r][R]]
   - [[#markdown][Markdown]]
@@ -90,7 +89,7 @@ Tangles to early-init.el
 
 (set-face-attribute 'default nil ; font
                     :family "DejaVu Sans Mono"
-                    :height 140
+                    :height 160
                     :weight 'normal
                     :width 'normal)
 
@@ -788,7 +787,8 @@ Entirely from Doom Emacs
   :general
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
    [remap evil-next-line]     #'evil-next-visual-line
-   [remap evil-previous-line] #'evil-previous-visual-line)
+   [remap evil-previous-line] #'evil-previous-visual-line
+   [remap isearch-forward] 'ignore)
 
   ('evil-window-map
    "SPC h" #'(evil-window-move-far-left    :which-key "move window left")
@@ -1068,9 +1068,6 @@ Entirely from Doom Emacs
                              (yas-activate-extra-mode 'latex-mode)))
 
   (yas-global-mode 1))
-
-(use-package yasnippet-snippets ; a bunch of snippets
-  :after yasnippet)
 #+END_SRC
 ** Company
 #+BEGIN_SRC emacs-lisp :results none
@@ -1968,33 +1965,6 @@ Entirely from Doom Emacs
   (request-storage-directory (expand-file-name "request/" my/etc-dir)))
 #+END_SRC
 * Filetype Specific
-** PDF
-#+BEGIN_SRC emacs-lisp :results none
-(use-package pdf-tools
-  :mode ("\\.pdf\\'" . pdf-view-mode)
-  :hook (pdf-view-mode . my/pdf-mode)
-  :custom
-  (pdf-view-use-scaling t)
-  (pdf-view-midnight-colors '("#fdf4c1" . "#282828")) ; gruvbox fg and bg
-  :general
-  ('normal pdf-view-mode-map ; scroll with just d and u
-           "d" #'pdf-view-scroll-up-or-next-page
-           "u" #'pdf-view-scroll-down-or-previous-page)
-  :config
-  (evil-collection-pdf-setup)
-  (pdf-loader-install :no-query))
-#+END_SRC
-*** Functions
-#+BEGIN_SRC emacs-lisp :results none
-;;;###autoload
-(defun my/pdf-mode ()
-  ;; no cursor or line numbers in pdfs
-  (setq-local make-pointer-invisible t
-              evil-normal-state-cursor '(nil))
-  (blink-cursor-mode -1)
-  (display-line-numbers-mode -1))
-
-#+END_SRC
 ** C family
 #+BEGIN_SRC emacs-lisp :results none
 (use-package cc-mode
@@ -2182,13 +2152,22 @@ Entirely from Doom Emacs
 ** HTML & CSS
 
 #+BEGIN_SRC emacs-lisp :results none
+(use-package web-mode
+  :mode ("\\.html\\'"   . web-mode)
+  :mode ("\\.svelte\\'" . web-mode)
+  :mode ("\\.css\\'"    . web-mode)
+  :custom
+  (web-mode-code-indent-offset 2)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-enable-auto-closing t)
+  (web-mode-enable-auto-pairing t)
+)
 (use-package html-mode
   :straight (:type built-in)
   :mode ("\\.html\\'" . html-mode))
 
 (use-package emmet-mode
-  :mode ("\\.html\\'"   . emmet-mode)
-  :mode ("\\.Svelte\\'" . emmet-mode)
+  :hook (web-mode . emmet-mode)
   :general
   ('insert emmet-mode-keymap
     "TAB" #'emmet-expand-line))
