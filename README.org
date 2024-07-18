@@ -609,7 +609,7 @@ Taken entirely from Doom Emacs
    "g C-l" #'(end-of-visual-line       :which-key "end of visual line")
    "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line"))
 
-  ; TODO change for if mac vs linux
+  ;; TODO change for if mac vs linux
   ('(normal insert)
    "M-/" #'(comment-line :which-key "comment"))
 
@@ -1077,7 +1077,7 @@ Entirely from Doom Emacs
 (use-package company ; autocomplete
   :defer 0.1
   :custom
-  (company-idle-delay nil) ; manual completion only
+  (company-idle-delay 0.01) ; manual completion only
   (company-require-match 'never)
   (company-show-numbers t)
   (company-dabbrev-other-buffers nil)
@@ -1086,6 +1086,7 @@ Entirely from Doom Emacs
   ;; global default for the backend, buffer-local backends will be set based on filetype
   (company-backends '(company-capf
                       company-files
+                      company-dabbrev-code
                       company-yasnippet))
   :general
   ('insert company-mode-map
@@ -1097,10 +1098,20 @@ Entirely from Doom Emacs
                        "C-k" #'company-select-previous-or-abort
                        ";"   #'company-complete-selection) ; choose a completion with ; instead of tab
   :config
+  ;; complete suggestion based on the number
+  (let ((map company-active-map))
+    (mapc (lambda (x) (define-key map (format "%d" x)
+                        `(lambda () (interactive) (company-complete-number ,x))))
+          (number-sequence 0 9)))
   (global-company-mode))
 
 (use-package company-flx ; fuzzy sorting for company completion options with company-capf
   :hook (company-mode . company-flx-mode))
+
+(use-package company-lsp
+  :disabled t
+  :config
+  (push 'company-lsp company-backends))
 #+END_SRC
 * Version Control
 #+BEGIN_SRC emacs-lisp :results none
@@ -1152,6 +1163,8 @@ Entirely from Doom Emacs
 #+END_SRC
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
+;; TODO go to symbol
+;; TODO popups for code completion
 (use-package lsp-mode ; LSP
   :disabled t
   :hook (prog-mode . lsp-mode)
@@ -1167,7 +1180,9 @@ Entirely from Doom Emacs
   :general
   (my-localleader-def
     "g"   '(:ignore t  :which-key "Miscellaneous")
-    "gr" #'(lsp-rename :which-key "rename with lsp")))
+    "gr" #'(lsp-rename :which-key "rename with lsp"))
+  :config
+  (lsp-eslint-auto-fix-on-save t))
 
 (use-package lsp-ui
   :disabled t
@@ -1179,6 +1194,7 @@ Entirely from Doom Emacs
   :after (lsp-mode))
 
 (use-package flycheck ; code syntax checking
+  ;; TODO shortcut to go to next error
   :hook (prog-mode . flycheck-mode)
   :custom
   (flycheck-emacs-lisp-load-path 'inherit)
@@ -1193,7 +1209,9 @@ Entirely from Doom Emacs
    "]q" #'(flycheck-next-error :which-key "next error"))
 
   (my-leader-def
-    "fe" #'(flycheck-list-errors :which-key "list errors")))
+    "fe" #'(flycheck-list-errors :which-key "list errors"))
+  :config
+  (flycheck-add-mode 'javascript-eslint 'web-mode))
 #+END_SRC
 * UI
 #+BEGIN_SRC emacs-lisp :results none
@@ -1669,7 +1687,7 @@ Entirely from Doom Emacs
     "=" #'+format/region
     :config
     (setq-default format-all-formatters
-                '(("TypeScript" prettier)))))
+                  '(("TypeScript" prettier)))))
 
 (use-package move-text
   :general
@@ -2191,5 +2209,5 @@ Entirely from Doom Emacs
   :mode ("\\.Svelte\\'" . emmet-mode)
   :general
   ('insert emmet-mode-keymap
-    "TAB" #'emmet-expand-line))
+           "TAB" #'emmet-expand-line))
 #+END_SRC
