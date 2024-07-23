@@ -2013,6 +2013,16 @@ Entirely from Doom Emacs
   :defer t
   :custom
   (request-storage-directory (expand-file-name "request/" my/etc-dir)))
+
+(use-package google-this
+  :general
+  (my-localleader-def
+    "gt" #'google-this-symbol
+    "gs" #'google-this-search)
+
+  ('visual
+   "gs" (lambda () (interactive)
+          (google-this-region t t))))
 #+END_SRC
 * Filetype Specific
 ** C family
