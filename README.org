@@ -543,7 +543,7 @@ Taken entirely from Doom Emacs
   :general
   (my-leader-def
     "p"   '(:ignore t         :which-key "Project")
-    "pf" #'(project-find-file :which-key "find file")));
+    "pf" #'(project-find-file :which-key "find file")))
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -775,7 +775,7 @@ Entirely from Doom Emacs
   (evil-vsplit-window-right t)
   (evil-search-wrap t)
   (evil-want-keybinding nil)
-  (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
+  (evil-search-module 'isearch) ; swiper searches swap n and N if this isn't set
   (evil-want-fine-undo 'fine)       ; save inserts as undo units more often
   (evil-ex-search-persistent-highlight nil)
   (evil-ex-substitute-highlight-all nil)
@@ -1708,9 +1708,6 @@ Entirely from Doom Emacs
   (my-leader-def
     :states 'normal
     "=" #'(+format/buffer :which-key "format")
-
-    :states 'visual
-    "=" #'+format/region
     :config
     (setq-default format-all-formatters
                   '(("TypeScript" prettier)
