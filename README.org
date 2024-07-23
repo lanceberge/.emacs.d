@@ -2033,6 +2033,9 @@ Entirely from Doom Emacs
   :config
   (setq chatgpt-shell-model-version "gpt-3.5-turbo")
   (setq chatgpt-shell-openai-key (read-file-contents "~/secrets/gpt_api_key")))
+
+(use-package ace-link
+  :defer t)
 #+END_SRC
 ** Functions
 #+BEGIN_SRC emacs-lisp :results none
