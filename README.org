@@ -255,13 +255,14 @@ Mostly taken from Doom Emacs
 
   ;; Keeping ~/.emacs.d clean
   ;; (my/etc-dir                  (expand-file-name "etc/" user-emacs-directory))
-  (custom-file                 (expand-file-name "custom.el"            my/etc-dir))
-  (custom-theme-directory      (expand-file-name "themes/"              my/etc-dir))
-  (url-configuration-directory (expand-file-name "url/"                 my/etc-dir))
-  (url-cache-directory         (expand-file-name "url/"                 my/etc-dir))
-  (persist--directory-location (expand-file-name "persist/"             my/etc-dir))
-  (transient-history-file      (expand-file-name "transient/history.el" my/etc-dir))
-  (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions"   my/etc-dir)))
+ (custom-file                 (expand-file-name "custom.el"            my/etc-dir))
+ (custom-theme-directory      (expand-file-name "themes/"              my/etc-dir))
+ (url-configuration-directory (expand-file-name "url/"                 my/etc-dir))
+ (url-cache-directory         (expand-file-name "url/"                 my/etc-dir))
+ (persist--directory-location (expand-file-name "persist/"             my/etc-dir))
+ (transient-history-file      (expand-file-name "transient/history.el" my/etc-dir))
+ (lsp-session-file            (expand-file-name "lsp"                  my/etc-dir))
+ (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions"   my/etc-dir)))
 
 (advice-add #'tty-run-terminal-initialization :override #'ignore)
 
