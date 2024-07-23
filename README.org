@@ -43,6 +43,7 @@
   - [[#tramp][Tramp]]
   - [[#dired][Dired]]
   - [[#miscellaneous-2][Miscellaneous]]
+  - [[#functions-3][Functions]]
 - [[#filetype-specific][Filetype Specific]]
   - [[#c-family][C family]]
   - [[#r][R]]
@@ -2023,6 +2024,21 @@ Entirely from Doom Emacs
   ('visual
    "gs" (lambda () (interactive)
           (google-this-region t t))))
+
+(use-package chatgpt-shell
+  :ensure t
+  :config
+  (setq chatgpt-shell-model-version "gpt-3.5-turbo")
+  (setq chatgpt-shell-openai-key (read-file-contents "~/secrets/gpt_api_key")))
+#+END_SRC
+** Functions
+#+BEGIN_SRC emacs-lisp :results none
+;;;###autoload
+(defun read-file-contents (file-path)
+  "Read the contents of FILE-PATH and return it as a string."
+  (with-temp-buffer
+    (insert-file-contents file-path)
+    (buffer-string)))
 #+END_SRC
 * Filetype Specific
 ** C family
