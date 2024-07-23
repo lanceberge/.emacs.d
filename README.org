@@ -255,14 +255,14 @@ Mostly taken from Doom Emacs
 
   ;; Keeping ~/.emacs.d clean
   ;; (my/etc-dir                  (expand-file-name "etc/" user-emacs-directory))
- (custom-file                 (expand-file-name "custom.el"            my/etc-dir))
- (custom-theme-directory      (expand-file-name "themes/"              my/etc-dir))
- (url-configuration-directory (expand-file-name "url/"                 my/etc-dir))
- (url-cache-directory         (expand-file-name "url/"                 my/etc-dir))
- (persist--directory-location (expand-file-name "persist/"             my/etc-dir))
- (transient-history-file      (expand-file-name "transient/history.el" my/etc-dir))
- (lsp-session-file            (expand-file-name "lsp"                  my/etc-dir))
- (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions"   my/etc-dir)))
+  (custom-file                 (expand-file-name "custom.el"            my/etc-dir))
+  (custom-theme-directory      (expand-file-name "themes/"              my/etc-dir))
+  (url-configuration-directory (expand-file-name "url/"                 my/etc-dir))
+  (url-cache-directory         (expand-file-name "url/"                 my/etc-dir))
+  (persist--directory-location (expand-file-name "persist/"             my/etc-dir))
+  (transient-history-file      (expand-file-name "transient/history.el" my/etc-dir))
+  (lsp-session-file            (expand-file-name "lsp"                  my/etc-dir))
+  (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions"   my/etc-dir)))
 
 (advice-add #'tty-run-terminal-initialization :override #'ignore)
 
@@ -728,15 +728,16 @@ Entirely from Doom Emacs
 (defun +format/buffer ()
   "Reformat the current buffer using LSP or `format-all-buffer'."
   (interactive)
-  (if (and (eq major-mode 'org-mode)
-           (org-in-src-block-p t))
-      (+format--org-region nil nil)
-    (call-interactively
-     (cond ((and +format-with-lsp
-                 (bound-and-true-p lsp-mode)
-                 (lsp-feature? "textDocument/formatting"))
-            #'lsp-format-buffer)
-           (#'format-all-buffer)))))
+  (save-excursion
+    (if (and (eq major-mode 'org-mode)
+             (org-in-src-block-p t))
+        (+format--org-region nil nil)
+      (call-interactively
+       (cond ((and +format-with-lsp
+                   (bound-and-true-p lsp-mode)
+                   (lsp-feature? "textDocument/formatting"))
+              #'lsp-format-buffer)
+             (#'format-all-buffer))))))
 
 ;;;###autoload
 (defun +format/region (beg end)
@@ -1690,6 +1691,8 @@ Entirely from Doom Emacs
 ** Miscellaneous
 #+BEGIN_SRC emacs-lisp :results none
 (use-package format-all ; format code functions
+  :hook
+  (js2-mode . format-all-mode)
   :init
   (defvar +format-with-lsp nil)
   :general
