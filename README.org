@@ -826,6 +826,7 @@ Entirely from Doom Emacs
 ** Evil-Collection
 #+BEGIN_SRC emacs-lisp :results none
 (use-package evil-collection ; evil bindings for many modes
+  :defer t
   :custom
   (evil-collection-want-unimpaired-p t)
   (evil-collection-setup-minibuffer t)
@@ -1107,7 +1108,7 @@ Entirely from Doom Emacs
 
 (use-package magit ; git client
   :defer-incrementally
-  (magit-section dash f s with-editor git-commit package eieio lv transient)
+  (evil-collection magit-section dash f s with-editor git-commit package eieio lv transient)
   :custom
   (magit-save-repository-buffers nil)
   (magit-no-confirm '(stage-all-changes))
@@ -1187,6 +1188,7 @@ Entirely from Doom Emacs
   :hook (lsp-mode . lsp-ui-mode))
 
 (use-package lsp-ivy
+  :defer t
   :general
   (my-localleader-def
     "t" (lambda () (interactive)
@@ -2002,6 +2004,7 @@ Entirely from Doom Emacs
     "fu" #'(undo-tree-visualize :which-key "undo")))
 
 (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
+  :defer t
   :hook (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
                         (exec-path-from-shell-initialize))))
 
