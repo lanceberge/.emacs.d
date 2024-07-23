@@ -1234,6 +1234,11 @@ Entirely from Doom Emacs
   :hook ((prog-mode text-mode) . show-paren-mode)
   :custom
   (show-paren-when-point-inside-paren t))
+
+(use-package git-gutter
+  :defer 0.5
+  :config
+  (global-git-gutter-mode))
 #+END_SRC
 * Org
 ** Org
