@@ -1234,14 +1234,14 @@ Entirely from Doom Emacs
   :custom
   (show-paren-when-point-inside-paren t))
 
-(use-package git-gutter
+(use-package diff-hl
   :defer 0.5
   :config
-  (global-git-gutter-mode)
+  (global-diff-hl-mode)
   :general
   ('normal
-   "]h" #'git-gutter:next-hunk
-   "[h" #'git-gutter:previous-hunk))
+   "]h" #'diff-hl-next-hunk
+   "[h" #'diff-hl-previous-hunk))
 #+END_SRC
 * Org
 ** Org
