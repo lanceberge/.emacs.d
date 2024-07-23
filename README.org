@@ -1084,13 +1084,14 @@ Entirely from Doom Emacs
                        "C-j" #'company-select-next-or-abort
                        "C-k" #'company-select-previous-or-abort
                        "TAB" #'company-complete-selection ; choose a completion with ; instead of tab
+                       "0"   (lambda () (interactive) (company-complete-number 10))
                        ";"   #'company-complete-selection) ; choose a completion with ; instead of tab
   :config
   ;; complete suggestion based on the number
   (let ((map company-active-map))
     (mapc (lambda (x) (define-key map (format "%d" x)
                         `(lambda () (interactive) (company-complete-number ,x))))
-          (number-sequence 0 9)))
+          (number-sequence 1 9)))
   (global-company-mode))
 
 (use-package company-flx ; fuzzy sorting for company completion options with company-capf
@@ -1149,7 +1150,8 @@ Entirely from Doom Emacs
 ;; TODO go to symbol
 ;; TODO popups for code completion
 (use-package lsp-mode ; LSP
-  :commands (lsp lsp-deferred)
+  :hook
+  (js2-mode . lsp-deferred)
   :custom
   ;; Disable slow features
   (lsp-enable-file-watchers nil)
@@ -2152,7 +2154,6 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package js2-mode
   :mode ("\\.js\\'" . js2-mode)
-  :hook (js2-mode . lsp-deferred)
   :custom (js2-basic-offset 2))
 
 (use-package typescript-mode
