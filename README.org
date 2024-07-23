@@ -487,10 +487,6 @@ Taken entirely from Doom Emacs
   :straight (:type built-in)
   :hook (before-save . whitespace-cleanup)) ; clean unnecessary whitespace before save
 
-(use-package eldoc
-  :straight (:type built-in)
-  :defer t)
-
 (use-package savehist ; save command history
   :straight (:type built-in)
   :hook (pre-command . savehist-mode)
@@ -516,10 +512,6 @@ Taken entirely from Doom Emacs
     :general
     ('(normal insert)
      "M-f" #'(flyspell-auto-correct-word :which-key "fix word"))))
-
-(use-package eldoc
-  :straight (:type built-in)
-  :defer t)
 
 (use-package bookmark
   :straight (:type built-in)
@@ -1157,6 +1149,7 @@ Entirely from Doom Emacs
 ;; TODO go to symbol
 ;; TODO popups for code completion
 (use-package lsp-mode ; LSP
+  :commands (lsp lsp-deferred)
   :custom
   ;; Disable slow features
   (lsp-enable-file-watchers nil)
@@ -1164,29 +1157,35 @@ Entirely from Doom Emacs
   (lsp-enable-text-document-color nil)
   (lsp-headerline-breadcrumb-enable nil)
 
+  ;; Clean modeline
+  (lsp-modeline-diagnostics-enable nil)
+  (lsp-modeline-code-actions-enable nil)
+  (lsp-modeline-workspace-status-enable nil)
+
   ;; Don't modify our code w/o permission
   (lsp-enable-indentation nil)
   (lsp-enable-on-type-formatting nil)
   (lsp-clients-typescript-server-args '("--stdio"))
   :general
+  ('normal
+    [remap evil-goto-definition] #'lsp-find-definition)
   (my-localleader-def
-    "g"   '(:ignore t  :which-key "Miscellaneous")
-    "gr" #'(lsp-rename :which-key "rename with lsp")))
+    "g"   '(:ignore t                   :which-key "Miscellaneous")
+    "h"  #'(lsp-describe-thing-at-point :which-key "view doc")
+    "t"  #'(xref-find-references        :which-key "view usages")
+    "gr" #'(lsp-rename                  :which-key "rename with lsp")))
 
 (use-package lsp-ui
-  :disabled t
   :hook (lsp-mode . lsp-ui-mode)
   :custom
   (lsp-ui-doc-position 'bottom)
-  :config
-  (setq lsp-ui-doc-enable nil))
+  (lsp-ui-doc-enable nil))
 
 (use-package lsp-ivy ; TODO
   :disabled t
   :after (lsp-mode))
 
 (use-package flycheck ; code syntax checking
-  ;; TODO shortcut to go to next error
   :hook (prog-mode . flycheck-mode)
   :custom
   (flycheck-emacs-lisp-load-path 'inherit)
@@ -1201,6 +1200,12 @@ Entirely from Doom Emacs
     "fe" #'(flycheck-list-errors :which-key "list errors"))
   :config
   (flycheck-add-mode 'javascript-eslint 'web-mode))
+
+(use-package lsp-modeline
+  :disabled t)
+
+(use-package xref
+  :commands xref-find-references xref-auto-jump-first-definition)
 #+END_SRC
 * UI
 #+BEGIN_SRC emacs-lisp :results none
@@ -1848,6 +1853,7 @@ Entirely from Doom Emacs
 ** Tramp
 #+BEGIN_SRC emacs-lisp :results none
 (use-package tramp ; access remote files within emacs
+  :disabled t
   :straight (:type built-in)
   :custom
   (tramp-autosave-directory    (expand-file-name "tramp/auto-save/" my/etc-dir))
@@ -2129,9 +2135,8 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package js2-mode
   :mode ("\\.js\\'" . js2-mode)
-  :hook (js2-mode . lsp-mode)
-  :custom (js2-basic-offset 2)
-  :defer t)
+  :hook (js2-mode . lsp-deferred)
+  :custom (js2-basic-offset 2))
 
 (use-package typescript-mode
   :defer t
