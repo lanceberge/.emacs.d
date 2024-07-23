@@ -2205,6 +2205,9 @@ Entirely from Doom Emacs
   :custom
   (typescript-indent-level 2)
   (typescript-auto-indent-flag t))
+
+(use-package json-mode
+  :defer t)
 #+END_SRC
 ** Scala
 #+BEGIN_SRC emacs-lisp :results none
