@@ -1083,9 +1083,9 @@ Entirely from Doom Emacs
   ('company-active-map "C-w" nil ; don't override evil C-w
                        "C-j" #'company-select-next-or-abort
                        "C-k" #'company-select-previous-or-abort
+                       "TAB" #'company-complete-selection ; choose a completion with ; instead of tab
                        ";"   #'company-complete-selection) ; choose a completion with ; instead of tab
   :config
-  (setq company-doc-buffer nil)
   ;; complete suggestion based on the number
   (let ((map company-active-map))
     (mapc (lambda (x) (define-key map (format "%d" x)
@@ -1168,22 +1168,26 @@ Entirely from Doom Emacs
   (lsp-clients-typescript-server-args '("--stdio"))
   :general
   ('normal
-    [remap evil-goto-definition] #'lsp-find-definition)
+   [remap evil-goto-definition] #'lsp-find-definition)
   (my-localleader-def
     "g"   '(:ignore t                   :which-key "Miscellaneous")
     "h"  #'(lsp-describe-thing-at-point :which-key "view doc")
-    "t"  #'(xref-find-references        :which-key "view usages")
     "gr" #'(lsp-rename                  :which-key "rename with lsp")))
 
 (use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
+  :defer t
   :custom
+  (lsp-ui-doc-enable nil)
+  (lsp-ui-doc-show-with-cursor t)
   (lsp-ui-doc-position 'bottom)
-  (lsp-ui-doc-enable nil))
+  :hook (lsp-mode . lsp-ui-mode))
 
-(use-package lsp-ivy ; TODO
-  :disabled t
-  :after (lsp-mode))
+(use-package lsp-ivy
+  :general
+  (my-localleader-def
+    "t" (lambda () (interactive)
+          (lsp-ivy-workspace-symbol 'symbol-at-point)
+          :which-key "view usages")))
 
 (use-package flycheck ; code syntax checking
   :hook (prog-mode . flycheck-mode)
@@ -1510,12 +1514,25 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Functions
 #+BEGIN_SRC emacs-lisp :results none
+(defun bad-parens-p ()
+  "Return `t' if `check-parens' indicates unbalanced parens or quotes; otherwise `nil'"
+  (interactive)
+  (condition-case err
+      (check-parens)
+    (error (message "%s" (error-message-string err)) t)))
+
 ;;;###autoload
 (defun +org/tangle-config ()
   "tangle my org-mode config file to an elisp file"
   (interactive)
   (find-file config-org)
-  (org-babel-tangle-file config-org config-el))
+  (org-babel-tangle-file config-org config-el)
+  (with-temp-buffer
+    (insert-file-contents config-el)
+    (if (bad-parens-p)
+        (progn
+          (message "Unmatched parentheses detected in %s. Aborting exit." config-el)
+          (keyboard-quit)))))
 
 ;;;###autoload
 (defun +org/insert-subheading ()
@@ -2165,7 +2182,6 @@ Entirely from Doom Emacs
   :defer t)
 #+END_SRC
 ** HTML & CSS
-
 #+BEGIN_SRC emacs-lisp :results none
 (use-package web-mode
   :mode ("\\.html\\'"   . web-mode)
@@ -2175,8 +2191,8 @@ Entirely from Doom Emacs
   (web-mode-code-indent-offset 2)
   (web-mode-markup-indent-offset 2)
   (web-mode-enable-auto-closing t)
-  (web-mode-enable-auto-pairing t)
-  )
+  (web-mode-enable-auto-pairing t))
+
 (use-package html-mode
   :straight (:type built-in)
   :mode ("\\.html\\'" . html-mode))
