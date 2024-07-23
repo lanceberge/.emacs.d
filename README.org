@@ -1238,7 +1238,11 @@ Entirely from Doom Emacs
 (use-package git-gutter
   :defer 0.5
   :config
-  (global-git-gutter-mode))
+  (global-git-gutter-mode)
+  :general
+  ('normal
+   "]g" #'git-gutter:next-hunk
+   "[g" #'git-gutter:previous-hunk))
 #+END_SRC
 * Org
 ** Org
