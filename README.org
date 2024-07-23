@@ -776,29 +776,23 @@ Entirely from Doom Emacs
   (evil-want-keybinding nil)
   (evil-search-module 'evil-search) ; swiper searches swap n and N if this isn't set
   (evil-want-fine-undo 'fine)       ; save inserts as undo units more often
-  (evil-ex-search-persist-highlight nil)
+  (evil-ex-search-persistent-highlight nil)
   (evil-ex-substitute-highlight-all nil)
+  (evil-ex-search-persist-highlight nil)
   :general
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
-   [remap evil-next-line]     #'evil-next-visual-line
-   [remap evil-previous-line] #'evil-previous-visual-line
-   [remap isearch-forward] 'ignore)
-
-  ('evil-window-map
-   "SPC h" #'(evil-window-move-far-left    :which-key "move window left")
-   "SPC j" #'(evil-window-move-very-bottom :which-key "move window down")
-   "SPC k" #'(evil-window-move-very-top    :which-key "move window up")
-   "SPC l" #'(evil-window-move-far-right   :which-key "move window right"))
-
-  ('evil-ex-completion-map "C-g" 'exit-minibuffer) ; use ; to complete : vim commands
-  ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
-
-  ('normal
+   [remap evil-next-line]          #'evil-next-visual-line
+   [remap evil-previous-line]      #'evil-previous-visual-line
+   [remap evil-ex-search-forward]  #'isearch-forward
+   [remap evil-ex-search-backward] #'isearch-backward
    "zr" #'(evil-open-folds  :which-key "open folds recursively")
    "zm" #'(evil-close-folds :which-key "close folds recursively")
    "gm" (general-simulate-key "@@" :which-key "run last macro") ; last macro
    "C-M-d" #'scroll-other-window
    "C-M-u" #'scroll-other-window-down)
+
+  ('evil-ex-completion-map "C-g" 'exit-minibuffer) ; use ; to complete : vim commands
+  ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
   ('(normal visual motion)
    ";" #'evil-ex ; switch ; and :
@@ -811,6 +805,10 @@ Entirely from Doom Emacs
     "bo" #'(evil-buffer-new                    :which-key "new buffer"))
 
   ('evil-window-map
+   "SPC h" #'(evil-window-move-far-left    :which-key "move window left")
+   "SPC j" #'(evil-window-move-very-bottom :which-key "move window down")
+   "SPC k" #'(evil-window-move-very-top    :which-key "move window up")
+   "SPC l" #'(evil-window-move-far-right   :which-key "move window right")
    "d"     #'(evil-quit                    :which-key "delete window")
    "q"     #'(evil-save-modified-and-close :which-key "quit and save window")
    "SPC q" #'(save-buffers-kill-emacs      :which-key "save buffers & quit emacs")
@@ -947,12 +945,9 @@ Entirely from Doom Emacs
   (swiper-use-visual-line nil)
   (swiper-use-visual-line-p (lambda (a) nil))
   :general
-  ('normal
-   [remap evil-search-forward]  #'swiper-isearch
-   [remap evil-search-backward] #'swiper-backward
-   [remap evil-ex-search-forward]  #'swiper-isearch
-   [remap evil-ex-search-backward] #'swiper-backward)
   (my-leader-def
+    "/"  #'swiper-isearch
+    "?"  #'swiper-isearch-backward
     "fb" #'(swiper-multi :which-key "swiper in buffer")
     "fB" #'(swiper-all   :which-key "swiper in all buffers")))
 
@@ -1083,11 +1078,15 @@ Entirely from Doom Emacs
            "C-j" #'company-manual-begin)
 
   ('company-active-map "C-w" nil ; don't override evil C-w
-                       "C-j" #'company-select-next-or-abort
-                       "C-k" #'company-select-previous-or-abort
-                       "TAB" #'company-complete-selection ; choose a completion with ; instead of tab
-                       "0"   (lambda () (interactive) (company-complete-number 10))
-                       ";"   #'company-complete-selection) ; choose a completion with ; instead of tab
+                       "C-j"      #'company-select-next-or-abort
+                       "C-k"      #'company-select-previous-or-abort
+                       "<tab>"    #'company-complete-selection
+                       "0"          (lambda () (interactive) (company-complete-number 10))
+                       "RET"      #'newline
+                       "<return>" #'newline
+                       ";"        #'company-complete-selection) ; choose a completion with ; instead of tab
+
+
   :config
   ;; complete suggestion based on the number
   (let ((map company-active-map))
@@ -1241,8 +1240,8 @@ Entirely from Doom Emacs
   (global-git-gutter-mode)
   :general
   ('normal
-   "]g" #'git-gutter:next-hunk
-   "[g" #'git-gutter:previous-hunk))
+   "]h" #'git-gutter:next-hunk
+   "[h" #'git-gutter:previous-hunk))
 #+END_SRC
 * Org
 ** Org
