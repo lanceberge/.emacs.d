@@ -22,7 +22,7 @@
   - [[#ivy][Ivy]]
   - [[#yasnippet][Yasnippet]]
   - [[#company][Company]]
-- [[#version-control][Version Control]]
+- [[#git][Git]]
   - [[#functions-1][Functions]]
 - [[#lsp-related][LSP-Related]]
 - [[#ui-1][UI]]
@@ -1100,7 +1100,7 @@ Entirely from Doom Emacs
 (use-package company-flx ; fuzzy sorting for company completion options with company-capf
   :hook (company-mode . company-flx-mode))
 #+END_SRC
-* Version Control
+* Git
 #+BEGIN_SRC emacs-lisp :results none
 (use-package git-commit    :defer t)
 (use-package transient     :defer t)
@@ -1136,6 +1136,18 @@ Entirely from Doom Emacs
   (setq evil-collection-magit-state 'normal
         evil-collection-magit-use-z-for-folds t
         magit-auto-revert-mode nil))
+
+(use-package smerge-mode
+  :straight (:type built-in)
+  :general
+  ('normal
+   "]c" #'(smerge-next     :which-key "next conflicting hunk")
+   "[c" #'(smerge-previous :which-key "previous conflicting hunk"))
+  (my-localleader-def
+    "m" '(:ignore t           :which-key "Merge")
+    "ml" #'(smerge-keep-mine  :which-key "keep local changes")
+    "mo" #'(smerge-keep-other :which-key "keep other changes")
+    "mm" #'(smerge-ediff      :which-key "merge")))
 #+END_SRC
 ** Functions
 #+BEGIN_SRC emacs-lisp :results none
@@ -1153,8 +1165,6 @@ Entirely from Doom Emacs
 ;; TODO go to symbol
 ;; TODO popups for code completion
 (use-package lsp-mode ; LSP
-  :hook
-  (js2-mode . lsp-deferred)
   :custom
   ;; Disable slow features
   (lsp-enable-file-watchers nil)
@@ -2197,6 +2207,8 @@ Entirely from Doom Emacs
 ** Javascript
 #+BEGIN_SRC emacs-lisp :results none
 (use-package js2-mode
+  :hook
+  (js2-mode . lsp-deferred)
   :mode ("\\.js\\'" . js2-mode)
   :custom (js2-basic-offset 2))
 
