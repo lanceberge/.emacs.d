@@ -57,6 +57,7 @@
   - [[#yaml][Yaml]]
   - [[#docker][Docker]]
   - [[#html--css][HTML & CSS]]
+  - [[#elisp-mode][Elisp Mode]]
 
 * Early-Init
 
@@ -931,7 +932,7 @@ Entirely from Doom Emacs
 (use-package origami ; code folding
   :hook (prog-mode . origami-mode)
   :general
-  ('normal origami-mode
+  ('normal origami-mode-map
            "zc" #'(origami-close-node-recursively :which-key "close fold recursively")
            "zo" #'(origami-open-node-recursively  :which-key "open fold recursively")
            "zj" #'(origami-next-fold              :which-key "next fold")
@@ -1341,7 +1342,10 @@ Entirely from Doom Emacs
    "q"  #'(org-set-tags-command        :which-key "add tags")
    "p"  #'(org-latex-preview           :which-key "preview latex")
    ",p" #'(org-set-property            :which-key "set property")
-   ",t" #'(+org/tangle-config          :which-key "tangle config"))
+   ",t" (lambda () (interactive)
+          (+org/tangle-config)
+          (load-file config-el))
+   )
 
   ('normal org-mode-map
            "zo" #'outline-show-subtree
@@ -2262,4 +2266,14 @@ Entirely from Doom Emacs
   :general
   ('insert emmet-mode-keymap
            "TAB" #'emmet-expand-line))
+#+END_SRC
+** Elisp Mode
+#+BEGIN_SRC emacs-lisp :results none
+(use-package elisp-mode
+  :straight (:type built-in)
+  :general
+  ('(normal insert) emacs-lisp-mode-map
+   :prefix "C-c"
+   "C-c" #'eval-buffer
+  ))
 #+END_SRC
