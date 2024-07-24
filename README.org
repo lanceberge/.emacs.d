@@ -421,7 +421,6 @@ Taken entirely from Doom Emacs
     :non-normal-prefix "C-,")
 
   (my-leader-def
-    "f"   '(:ignore t                    :which-key "Find")
     "fm" #'(general-describe-keybindings :which-key "list keybindings")))
 
 (use-package minions ; hide all minor modes in modeline
@@ -440,13 +439,33 @@ Taken entirely from Doom Emacs
   (which-key-add-column-padding 1)
   (which-key-sort-uppercase-first nil)
   :general
+  ;; Set up all prefixes
+  (my-localleader-def
+    "m" '(:ignore t :which-key "Merge")
+    "g" '(:ignore t :which-key "Miscellaneous")
+    "t" '(:ignore t :which-key "Tramp ssh")
+    "s" '(:ignore t :which-key "Straight")
   (my-leader-def
+    "b"  '(:ignore t :which-key "Buffers")
+    "e"  '(:ignore t :which-key "Elisp")
+    "ei" '(:ignore t :which-key "Ein")
+    "f"  '(:ignore t :which-key "Find")
+    "fi" '(:ignore t :which-key "find in directory")
+    "g"  '(:ignore t :which-key "Git")
+    "gf" '(:ignore t :which-key "Find")
+    "gn" '(:ignore t :which-key "New")
+    "o"  '(:ignore t :which-key "Open")
+    "of" '(:ignore t :which-key "File")
+    "oj" '(:ignore t :which-key "Org journal")
+    "ov" '(:ignore t :which-key "Vertical")
+    "p"  '(:ignore t :which-key "Project")
+    "s"  '(:ignore t :which-key "Yasnippet")
+    "t"  '(:ignore t :which-key "Tab")
     "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
 
 (use-package straight ; package manager
   :general
   (my-localleader-def
-    "s"   '(:ignore t            :which-key "Straight")
     "sr" #'(straight-rebuild-all :which-key "rebuild all")
     "sf" #'(straight-fetch-all   :which-key "fetch all")
     "sp" #'(straight-pull-all    :which-key "pull all")))
@@ -526,7 +545,6 @@ Taken entirely from Doom Emacs
   :straight (:type built-in)
   :general
   (my-leader-def
-    "o"   '(:ignore t :which-key "Open")
     "oc" #'(calc      :which-key "calc")))
 
 (use-package desktop ; save sessions to a file
@@ -543,7 +561,6 @@ Taken entirely from Doom Emacs
   :straight (:type built-in)
   :general
   (my-leader-def
-    "p"   '(:ignore t         :which-key "Project")
     "pf" #'(project-find-file :which-key "find file")))
 #+END_SRC
 ** Keybindings
@@ -561,7 +578,6 @@ Taken entirely from Doom Emacs
     "w"         (general-simulate-key "C-w" :which-key "+Windows") ; window command
 
     ;; Buffers
-    "b"        '(:ignore t                 :which-key "Buffers")
     "bs"      #'(save-buffer               :which-key "write file")
     "bd"      #'(kill-this-buffer          :which-key "delete buffer")
     "bq"      #'(my/save-and-kill-buffer   :which-key "save and kill buffer")
@@ -572,7 +588,6 @@ Taken entirely from Doom Emacs
     "bp"      #'(previous-buffer           :which-key "previous buffer")
 
     ;; Eval elisp
-    "e"        '(:ignore t                    :which-key "Elisp")
     "er"      #'(eval-region                  :which-key "execute elisp region")
     "es"      #'(eval-last-sexp               :which-key "execute elisp sexp")
     "ee"      #'(eval-expression              :which-key "evaluate elisp expression")
@@ -581,7 +596,6 @@ Taken entirely from Doom Emacs
     "'"         (general-simulate-key "C-c '" :which-key "open src block")
 
     ;; Find specific files
-    "of" '(:ignore t :which-key "File")
     "ofr" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
             (find-file "~/.emacs.d/README.org") :which-key "config")
@@ -995,7 +1009,6 @@ Entirely from Doom Emacs
     "ps"      #'(counsel-git-grep  :which-key "git grep")
     "f SPC f" #'(counsel-file-jump :which-key "file")
     "ff"      #'(counsel-fzf       :which-key "fzf")
-    "fi"       '(:ignore t         :which-key "find in directory")
     "fih"       (lambda () (interactive) (counsel-file-jump "" "~"))
     "fis"       (lambda () (interactive) (counsel-file-jump "" "~/school"))
     "fic"       (lambda () (interactive) (counsel-file-jump "" "~/code"))
@@ -1047,7 +1060,6 @@ Entirely from Doom Emacs
   (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
   :general
   (my-leader-def
-    "s"   '(:ignore t           :which-key "Yasnippet")
     "si" #'(yas-insert-snippet  :which-key "insert")
     "sn" #'(yas-new-snippet     :which-key "new")
     "sl" #'(yas-describe-tables :which-key "list")
@@ -1117,17 +1129,14 @@ Entirely from Doom Emacs
   (git-commit-mode . evil-insert-state)
   :general
   (my-leader-def
-    "g"    '(:ignore t                   :which-key "Git")
     "gs"  #'(magit-status                :which-key "status")
     "gb"  #'(magit-branch-checkout       :which-key "checkout branch")
     "gd"  #'(magit-file-delete           :which-key "delete file")
     "gF"  #'(magit-fetch                 :which-key "fetch")
-    "gn"   '(:ignore t                   :which-key "New")
     "gnb" #'(magit-branch-and-checkout   :which-key "branch")
     "gnf" #'(magit-commit-fixup          :which-key "fixup commit")
     "gi"  #'(magit-init                  :which-key "init")
     "gl"  #'(magit-log                   :which-key "log")
-    "gf"   '(:ignore t                   :which-key "Find")
     "gfc" #'(magit-show-commit           :which-key "show commit")
     "gfg" #'(magit-find-git-config-file  :which-key "git config file")
     "gc"  #'(+magit/stage-all-and-commit :which-key "stage all and commit"))
@@ -1145,7 +1154,6 @@ Entirely from Doom Emacs
    "]c" #'(smerge-next     :which-key "next conflicting hunk")
    "[c" #'(smerge-prev :which-key "previous conflicting hunk"))
   (my-localleader-def
-    "m" '(:ignore t           :which-key "Merge")
     "ml" #'(smerge-keep-mine  :which-key "keep local changes")
     "mo" #'(smerge-keep-other :which-key "keep other changes")
     "mm" #'(smerge-ediff      :which-key "merge")))
@@ -1186,7 +1194,6 @@ Entirely from Doom Emacs
   ('normal
    [remap evil-goto-definition] #'lsp-find-definition)
   (my-localleader-def
-    "g"   '(:ignore t                   :which-key "Miscellaneous")
     "h"  #'(lsp-describe-thing-at-point :which-key "view doc")
     "gr" #'(lsp-rename                  :which-key "rename with lsp")))
 
@@ -1535,7 +1542,6 @@ Entirely from Doom Emacs
   (org-journal-file-format "%m%d%Y")
   :general
   (my-leader-def
-    "oj"   '(:ignore t :which-key "Org journal")
     "ojn" #'(org-journal-new-entry :which-key "new"))
 
   ('normal org-journal-mode-map
@@ -1657,7 +1663,6 @@ Entirely from Doom Emacs
    "[T" #'(tab-bar-move-tab-to        :which-key "move tab left"))
 
   (my-leader-def
-    "t"        '(:ignore t                    :which-key "Tab")
     "to"      #'(+tab-bar/open-and-rename     :which-key "new tab")
     "tl"      #'(tab-bar-switch-to-recent-tab :which-key "last tab")
     "t SPC g" #'(tab-bar-select-tab           :which-key "choose tab")
@@ -1755,7 +1760,6 @@ Entirely from Doom Emacs
 (use-package terminal-here
   :general
   (my-leader-def
-    "o"   '(:ignore t           :which-key "Open")
     "ot" #'terminal-here-launch :which-key "Launch terminal"))
 #+END_SRC
 ** Eshell
@@ -1788,7 +1792,6 @@ Entirely from Doom Emacs
   (my-leader-def
     "oe"      #'eshell
     "o SPC e" #'(lambda () (interactive) (eshell t) :which-key "new eshell")
-    "ov"       '(:ignore t                          :which-key "Vertical")
     "ove"     #'(+eshell/other-window               :which-key "eshell in vsplit"))
   :config
   (evil-collection-init 'eshell)
@@ -1905,7 +1908,6 @@ Entirely from Doom Emacs
   (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir))
   :general
   (my-localleader-def
-    "t"  '(:ignore t            :which-key "Tramp ssh")
     "tr" #'(+tramp/ssh-rlogin   :which-key "rlogin")
     "tc" #'(+tramp/ssh-cascades :which-key "cascades")
     "tp" #'(+tramp/ssh-pascal   :which-key "pascal")))
@@ -2174,7 +2176,6 @@ Entirely from Doom Emacs
            "r"   #'ein:notebook-restart-session-command)
 
   (my-leader-def
-    "ei"   '(:ignore t :which-key "Ein")
     "eir" #'(ein:run   :which-key "run")
     "eis" #'(ein:stop  :which-key "stop")))
 
