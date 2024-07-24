@@ -39,17 +39,13 @@
   - [[#miscellaneous-1][Miscellaneous]]
 - [[#system][System]]
   - [[#terminal][Terminal]]
-  - [[#eshell][Eshell]]
   - [[#tramp][Tramp]]
   - [[#dired][Dired]]
   - [[#miscellaneous-2][Miscellaneous]]
   - [[#functions-3][Functions]]
 - [[#filetype-specific][Filetype Specific]]
   - [[#c-family][C family]]
-  - [[#r][R]]
   - [[#markdown][Markdown]]
-  - [[#python][Python]]
-  - [[#matlab][Matlab]]
   - [[#latex][Latex]]
   - [[#javascript][Javascript]]
   - [[#scala][Scala]]
@@ -461,7 +457,7 @@ Taken entirely from Doom Emacs
     "p"  '(:ignore t :which-key "Project")
     "s"  '(:ignore t :which-key "Yasnippet")
     "t"  '(:ignore t :which-key "Tab")
-    "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
+    "f SPC m" #'(which-key-show-top-level :which-key "keybinding"))))
 
 (use-package straight ; package manager
   :general
@@ -1229,9 +1225,6 @@ Entirely from Doom Emacs
   :config
   (flycheck-add-mode 'javascript-eslint 'web-mode))
 
-(use-package lsp-modeline
-  :disabled t)
-
 (use-package xref
   :commands xref-find-references xref-auto-jump-first-definition)
 #+END_SRC
@@ -1762,142 +1755,6 @@ Entirely from Doom Emacs
   (my-leader-def
     "ot" #'terminal-here-launch :which-key "Launch terminal"))
 #+END_SRC
-** Eshell
-#+BEGIN_SRC emacs-lisp :results none
-(use-package eshell ; shell for elisp and regular shell commands
-  ;; TODO delete
-  :disabled t
-  :defer-incrementally (em-alias em-banner em-basic em-cmpl
-                                 em-dirs em-glob em-hist em-ls em-script em-term)
-  :straight (:type built-in)
-  :hook ((eshell-mode            . smartparens-mode)
-         (eshell-first-time-mode . +eshell/init-keymaps)
-         (eshell-post-command    . +eshell/init-aliases-h))
-  :custom
-  (eshell-prompt-function #'eshell/eshell-local-prompt-function)
-  (eshell-directory-name (expand-file-name "eshell/" my/etc-dir))
-  :custom-face
-  (eshell-ls-archive    ((t (:foreground "#bdae93"))))
-  (eshell-ls-backup     ((t (:foreground "#a89984"))))
-  (eshell-ls-clutter    ((t (:foreground "#fe8019" :bold t))))
-  (eshell-ls-directory  ((t (:foreground "#fabd2f"))))
-  (eshell-ls-executable ((t (:bold t))))
-  (eshell-ls-missing    ((t (:foreground "fb4933" :bold t))))
-  (eshell-ls-product    ((t (:foreground "#9d0006"))))
-  (eshell-ls-readonly   ((t (:foreground "#d5c4a1"))))
-  (eshell-ls-special    ((t (:foreground "#fabd2f" :bold t))))
-  (eshell-ls-symlink    ((t (:foreground "#fb4933"))))
-  (eshell-ls-unreadable ((t (:foreground "#fb4933" :bold t))))
-  :general
-  (my-leader-def
-    "oe"      #'eshell
-    "o SPC e" #'(lambda () (interactive) (eshell t) :which-key "new eshell")
-    "ove"     #'(+eshell/other-window               :which-key "eshell in vsplit"))
-  :config
-  (evil-collection-init 'eshell)
-
-  ;; Aliases
-  (advice-add #'eshell-write-aliases-list :override #'ignore))
-#+END_SRC
-**** Functions
-#+BEGIN_SRC emacs-lisp :results none
-;;;###autoload
-(defun +eshell/init-keymaps ()
-  "initialize eshell keybindings"
-  (general-def 'normal eshell-mode-map
-    "C-n" (lambda ()
-            "jump into insert mode before finding the next match in eshell"
-            (interactive)
-            (evil-append-line 1)
-            (general-simulate-key "C-n"))
-
-    "C-p" (lambda ()
-            "jump into insert mode before finding the previous match in eshell"
-            (interactive)
-            (evil-append-line 1)
-            (general-simulate-key "C-p")))
-
-  (general-def 'insert eshell-mode-map
-    "C-n"                        #'eshell-next-matching-input-from-input
-    "C-p"                        #'eshell-previous-matching-input-from-input
-    [remap company-manual-begin] #'completion-at-point)
-
-  (general-def '(insert normal) eshell-mode-map
-    "C-l" #'+eshell/clear)
-
-  (general-def 'normal eshell-mode-map
-    "q" #'kill-this-buffer))
-
-;;;###autoload
-(defun +eshell/init-aliases-h ()
-  "initialize eshell aliases"
-  (dolist (var '(("s" "sudo")
-
-                 ("l" "ls -A")
-                 ("ll" "ls -l")
-                 ("la" "ls -lA")
-
-                 ("g"    "git")
-                 ("gs"   "git status")
-                 ("gl"   "git log")
-                 ("ga"   "git add")
-                 ("gaa"  "git add -A")
-                 ("gcm"  "git commit -m")
-                 ("gcam" "git commit -a m")
-                 ("gr"   "git reset")
-                 ("grs"  "git reset --soft HEAD~1")
-
-                 ("gp"   "git push -u origin master")
-                 ("gF"   "git pull")))
-    (add-to-list 'eshell-command-aliases-list var)))
-
-;;;###autoload
-(defun +eshell/clear ()
-  "eshell clear screen"
-  (interactive)
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (eshell-send-input)))
-
-;;;###autoload
-(defun +eshell/other-window ()
-  "open eshell in a vsplit"
-  (interactive)
-  (evil-window-vsplit)
-  (eshell t))
-
-;; https://blog.liangzan.net/blog/2012/12/12/customizing-your-emacs-eshell-prompt/
-;;;###autoload
-(defun pwd-repl-home (pwd)
-  "shortened version of /home/ex/* for eshell prompt"
-  (interactive)
-  (let* ((home (expand-file-name (getenv "HOME")))
-         (home-len (length home)))
-    (if (and
-         (>= (length pwd) home-len)
-         (equal home (substring pwd 0 home-len)))
-        (concat "~" (substring pwd home-len))
-      pwd)))
-
-;; https://github.com/howardabrams/dot-files/blob/master/emacs-eshell.org
-;;;###autoload
-(defun eshell/eshell-local-prompt-function ()
-  "A prompt for eshell that works locally (in that is assumes
-              that it could run certain commands) in order to make a prettier,
-              more-helpful local prompt."
-  (interactive)
-  (let* ((pwd       (eshell/pwd))
-         (directory (pwd-repl-home pwd))
-
-         (dark-env  (eq 'dark (frame-parameter nil 'background-mode)))
-         (for-bars               `(:foreground "#98971a" :weight bold))
-         (for-dir   (if dark-env `(:foreground "#8ec07c" :weight bold)
-                      `(:foreground "blue" :weight bold))))
-
-    (concat
-     (propertize directory 'face for-dir)
-     (propertize " # " 'face `(:foreground "#ebdbb2")))))
-#+END_SRC
 ** Tramp
 #+BEGIN_SRC emacs-lisp :results none
 (use-package tramp ; access remote files within emacs
@@ -1998,16 +1855,6 @@ Entirely from Doom Emacs
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
-(use-package dumb-jump ; better way to search code TODO
-  :disabled t
-  :defer t
-  :custom
-  (dumb-jump-default-project "~/code")
-  (dumb-jump-selector 'ivy)
-  (dumb-jump-prefer-searcher 'rg)
-  :config
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
-
 (use-package undo-tree ; Persistent Undos
   :hook (after-init . global-undo-tree-mode)
   :custom
@@ -2023,13 +1870,6 @@ Entirely from Doom Emacs
   :defer t
   :hook (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
                         (exec-path-from-shell-initialize))))
-
-;; TODO
-(use-package request
-  :disabled t
-  :defer t
-  :custom
-  (request-storage-directory (expand-file-name "request/" my/etc-dir)))
 
 (use-package google-this
   :general
@@ -2096,39 +1936,6 @@ Entirely from Doom Emacs
                  company-capf
                  company-files))))
 #+END_SRC
-** R
-#+BEGIN_SRC emacs-lisp :results none
-(use-package ess
-  :disabled t
-  :hook (ess-r-mode . +ess/company-mode)
-  :general
-  ('(normal insert) ess-mode-map
-   "C-;" #'ess-eval-line
-   "M-;" #'ess-eval-buffer)
-
-  ('visual ess-mode-map
-           "C-;" #'ess-eval-region)
-
-  ('(normal insert) ess-mode-map
-   :prefix "C-c"
-   "o" #'R
-   "b" #'(ess-eval-buffer   :which-key "eval R buffer")
-   "r" #'(ess-eval-region   :which-key "eval R region")
-   "f" #'(ess-eval-function :which-key "eval R function")
-   "h" #'(ess-doc-map       :which-key "R help")))
-#+END_SRC
-*** Functions
-#+BEGIN_SRC emacs-lisp :results none
-;;;###autoload
-(defun +ess/company-mode ()
-  "company backends for r mode"
-  (setq-local company-backends
-              '((company-R-args
-                 company-R-objects
-                 company-dabbrev-code
-                 company-files
-                 company-yasnippet))))
-#+END_SRC
 ** Markdown
 #+BEGIN_SRC emacs-lisp :results none
 (use-package markdown-mode
@@ -2147,61 +1954,6 @@ Entirely from Doom Emacs
   ('markdown-mode-map
    :prefix "C-c"
    "t" #'markdown-toc-generate-toc))
-#+END_SRC
-** Python
-#+BEGIN_SRC emacs-lisp :results none
-(use-package ein ; work with ipynb files
-  :disabled t
-  :mode ("\\.ipynb\\'" . ein:ipynb-mode)
-  :hook (ipynb-mode . display-line-numbers-mode)
-  :custom
-  (ein:output-area-inlined-images t)
-  :general
-  ('ein:notebook-mode-map
-   "C-j" #'ein:worksheet-goto-next-input-km
-   "C-k" #'ein:worksheet-goto-prev-input-km
-   "M-:" #'ein:worksheet-execute-cell-and-insert-below-km
-   "M-j" #'ein:worksheet-move-cell-down-km
-   "M-k" #'ein:worksheet-move-cell-up-km
-   "M-:" #'ein:worksheet-insert-cell-above-km
-   "M-;" #'ein:worksheet-insert-cell-below-km
-   "C-;" #'ein:worksheet-execute-cell-km
-   [remap evil-write] #'ein:notebook-save-notebook-command)
-
-  ('normal ein:notebook-mode-map
-           :prefix "C-c"
-           "d"   #'ein:worksheet-delete-cell
-           "w"   #'ein:notebook-save-notebook-command
-           "k"   #'ein:worksheet-kill-cell-km
-           "c"   #'ein:worksheet-clear-all-output-km
-           "q"   #'ein:notebook-close
-           "SPC" #'ein:worksheet-execute-all-cells
-           "r"   #'ein:notebook-restart-session-command)
-
-  (my-leader-def
-    "eir" #'(ein:run   :which-key "run")
-    "eis" #'(ein:stop  :which-key "stop")))
-
-(use-package jupyter :defer t)
-
-(use-package ob-jupyter
-  :straight jupyter
-  :commands org-babel-execute:jupyter-python)
-#+END_SRC
-** Matlab
-#+BEGIN_SRC emacs-lisp :results none
-(use-package matlab-mode
-  :disable t
-  :mode ("\\.m\\'" . matlab-mode)
-  :general
-  ('normal matlab-shell-mode-map
-           "C-d" #'evil-scroll-down)
-
-  (my-leader-def
-    "oms" #'(matlab-shell :which-key "matlab shell")
-    "omt" #'(matlab-shell-tab :which-key "matlab shell tab")
-    "omi" (lambda () (interactive)
-            (switch-to-buffer "*Inferior Matlab*"))))
 #+END_SRC
 ** Latex
 #+BEGIN_SRC emacs-lisp :results none
