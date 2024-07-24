@@ -2188,6 +2188,7 @@ Entirely from Doom Emacs
 ** Matlab
 #+BEGIN_SRC emacs-lisp :results none
 (use-package matlab-mode
+  :disable t
   :mode ("\\.m\\'" . matlab-mode)
   :general
   ('normal matlab-shell-mode-map
@@ -2275,6 +2276,5 @@ Entirely from Doom Emacs
   :general
   ('(normal insert) emacs-lisp-mode-map
    :prefix "C-c"
-   "C-c" #'eval-buffer
-  ))
+   "C-c" #'eval-buffer))
 #+END_SRC
