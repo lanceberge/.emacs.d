@@ -2037,12 +2037,15 @@ Entirely from Doom Emacs
     "gt" #'google-this-symbol
     "gs" #'google-this-search)
 
-  ('visual
-   "gs" (lambda () (interactive)
-          (google-this-region t t))))
+  (my-localleader-def
+    :states 'visual
+    "gt" (lambda () (interactive)
+           (google-this-region t t))))
 
 (use-package chatgpt-shell
   :general
+  ('normal
+   "RET" #'shell-maker-submit)
   (my-localleader-def
     "gc" #'chatgpt-shell)
 
