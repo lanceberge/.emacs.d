@@ -1143,7 +1143,7 @@ Entirely from Doom Emacs
   :general
   ('normal
    "]c" #'(smerge-next     :which-key "next conflicting hunk")
-   "[c" #'(smerge-previous :which-key "previous conflicting hunk"))
+   "[c" #'(smerge-prev :which-key "previous conflicting hunk"))
   (my-localleader-def
     "m" '(:ignore t           :which-key "Merge")
     "ml" #'(smerge-keep-mine  :which-key "keep local changes")
