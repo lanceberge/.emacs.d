@@ -441,23 +441,23 @@ Taken entirely from Doom Emacs
     "g" '(:ignore t :which-key "Miscellaneous")
     "t" '(:ignore t :which-key "Tramp ssh")
     "s" '(:ignore t :which-key "Straight")
-  (my-leader-def
-    "b"  '(:ignore t :which-key "Buffers")
-    "e"  '(:ignore t :which-key "Elisp")
-    "ei" '(:ignore t :which-key "Ein")
-    "f"  '(:ignore t :which-key "Find")
-    "fi" '(:ignore t :which-key "find in directory")
-    "g"  '(:ignore t :which-key "Git")
-    "gf" '(:ignore t :which-key "Find")
-    "gn" '(:ignore t :which-key "New")
-    "o"  '(:ignore t :which-key "Open")
-    "of" '(:ignore t :which-key "File")
-    "oj" '(:ignore t :which-key "Org journal")
-    "ov" '(:ignore t :which-key "Vertical")
-    "p"  '(:ignore t :which-key "Project")
-    "s"  '(:ignore t :which-key "Yasnippet")
-    "t"  '(:ignore t :which-key "Tab")
-    "f SPC m" #'(which-key-show-top-level :which-key "keybinding"))))
+    (my-leader-def
+      "b"  '(:ignore t :which-key "Buffers")
+      "e"  '(:ignore t :which-key "Elisp")
+      "ei" '(:ignore t :which-key "Ein")
+      "f"  '(:ignore t :which-key "Find")
+      "fi" '(:ignore t :which-key "find in directory")
+      "g"  '(:ignore t :which-key "Git")
+      "gf" '(:ignore t :which-key "Find")
+      "gn" '(:ignore t :which-key "New")
+      "o"  '(:ignore t :which-key "Open")
+      "of" '(:ignore t :which-key "File")
+      "oj" '(:ignore t :which-key "Org journal")
+      "ov" '(:ignore t :which-key "Vertical")
+      "p"  '(:ignore t :which-key "Project")
+      "s"  '(:ignore t :which-key "Yasnippet")
+      "t"  '(:ignore t :which-key "Tab")
+      "f SPC m" #'(which-key-show-top-level :which-key "keybinding"))))
 
 (use-package straight ; package manager
   :general
@@ -1257,6 +1257,7 @@ Entirely from Doom Emacs
    "]h" #'diff-hl-next-hunk
    "[h" #'diff-hl-previous-hunk))
 #+END_SRC
+
 * Org
 ** Org
 #+BEGIN_SRC emacs-lisp :results none
@@ -1344,18 +1345,12 @@ Entirely from Doom Emacs
    ",p" #'(org-set-property            :which-key "set property")
    ",t" (lambda () (interactive)
           (+org/tangle-config)
-          (load-file config-el))
-   )
+          (load-file config-el)))
 
   ('normal org-mode-map
            "zo" #'outline-show-subtree
            "zk" #'org-backward-element
            "zj" #'org-forward-element)
-
-  ('insert org-mode-map
-           "S-RET" (lambda () (interactive)
-                     (org-return)
-                     (+org-indent)))
 
   ;; Vim keys calendar maps
   ('org-read-date-minibuffer-local-map
@@ -1369,6 +1364,12 @@ Entirely from Doom Emacs
    "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1)))
    "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
   :config
+  (defvar custom-functions-list '(evil-org-open-above evil-org-open-below  org-indent-line org-return))
+  (dolist (func custom-functions-list)
+    (advice-add func :after
+              (lambda (&rest args)
+                (+org-indent))))
+
   ;; Don't execute org-babel blocks on export
   (add-to-list 'org-babel-default-header-args
                '(:eval . "never-export"))
@@ -1411,7 +1412,6 @@ Entirely from Doom Emacs
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys)
-  :config
   (which-key-add-key-based-replacements
     "SPC oa" "agenda"))
 
@@ -1420,12 +1420,16 @@ Entirely from Doom Emacs
   :defer t
   :custom
   (org-edit-src-content-indentation 0) ; leading spaces before the #+begin line
-  (org-src-tab-acts-natively nil)
+  (org-src-tab-acts-natively t)
+
+
   (org-src-preserve-indentation t)     ; don't preserve leading whitespace on export
   (org-adapt-indentation nil)          ; don't indent under headlines
+
   (org-src-window-setup 'current-window)
   :general
   ('insert org-mode-map
+           "<tab>" '+org-indent
            "<backtab>" '+org-indent))
 
 (use-package ob ; org babel
@@ -1505,8 +1509,10 @@ Entirely from Doom Emacs
 
 (use-package ob-matlab
   :straight (:type built-in)
+
   :commands org-babel-execute:matlab)
 #+END_SRC
+
 ** Non built-ins
 #+BEGIN_SRC emacs-lisp :results none
 (use-package org-superstar ; bullets in org mode
@@ -1611,12 +1617,11 @@ Entirely from Doom Emacs
   "indent in major mode - org-src-tab-acts-natively gave me issues"
   (interactive)
   (if (org-in-src-block-p)
-      ;; (org-babel-do-in-edit-buffer
-      ;;  (call-interactively #'indent-for-tab-command))
-      (progn (org-edit-src-code)
-             (indent-for-tab-command)
-             (org-edit-src-exit))
-    (indent-for-tab-command)))
+      (save-window-excursion
+        (progn
+          (org-edit-src-code)
+          (call-interactively #'indent-for-tab-command)
+          (org-edit-src-exit)))))
 #+END_SRC
 * Windows, Buffers, Tabs
 ** Windows
