@@ -1067,13 +1067,10 @@ Entirely from Doom Emacs
   (company-require-match 'never)
   (company-show-numbers t)
   (company-dabbrev-other-buffers nil)
+  (company-dabbrev-downcase nil)
   (company-tooltip-offset-display nil)
   (company-dabbrev-minimum-length 3)
-
-  ;; global default for the backend, buffer-local backends will be set based on filetype
-  (company-backends '(company-files
-                      company-ispell
-                      company-yasnippet))
+  (company-minimum-prefix-length 2)
   :general
   ('insert company-mode-map
            "C-j" #'company-manual-begin)
@@ -1089,14 +1086,14 @@ Entirely from Doom Emacs
   :config
   ;; TODO configure this in prog-mode and text-mode use-package
   (defun prog-mode-company-backends ()
-    (add-to-list 'company-backends '(company-capf
-                                     company-dabbrev-code
-                                     company-keywords)))
+    (setq-local company-backends
+                '((company-capf company-files company-dabbrev-code))))
 
   (add-hook 'prog-mode-hook 'prog-mode-company-backends)
 
   (defun text-mode-company-backends ()
-    (add-to-list 'company-backends '(company-dabbrev)))
+    (setq-local company-backends
+                 '((company-files company-dabbrev))))
 
   (add-hook 'text-mode-hook 'text-mode-company-backends)
   ;; complete suggestion based on the number
@@ -1940,7 +1937,7 @@ Entirely from Doom Emacs
   (add-hook 'prog-mode-hook 'prog-mode-company-backends)
   "company backends for c-mode"
   (add-to-list 'company-backends
-              '(company-clang
+               '(company-clang
                  company-cmake
                  )))
 #+END_SRC
