@@ -47,12 +47,12 @@
   - [[#c-family][C family]]
   - [[#markdown][Markdown]]
   - [[#javascript][Javascript]]
-  - [[#scala][Scala]]
+  - [[#python][Python]]
   - [[#go][Go]]
   - [[#yaml][Yaml]]
   - [[#docker][Docker]]
   - [[#html--css][HTML & CSS]]
-  - [[#elisp-mode][Elisp Mode]]
+  - [[#elisp][Elisp]]
 
 * Early-Init
 
@@ -1981,9 +1981,11 @@ Entirely from Doom Emacs
 (use-package json-mode
   :defer t)
 #+END_SRC
-** Scala
+** Python
 #+BEGIN_SRC emacs-lisp :results none
-(use-package scala-mode
+(use-package python-mode
+  :hook
+  (python-mode . lsp-deferred)
   :defer t)
 #+END_SRC
 ** Go
@@ -2025,7 +2027,7 @@ Entirely from Doom Emacs
   ('insert emmet-mode-keymap
            "TAB" #'emmet-expand-line))
 #+END_SRC
-** Elisp Mode
+** Elisp
 #+BEGIN_SRC emacs-lisp :results none
 (use-package elisp-mode
   :straight (:type built-in)
