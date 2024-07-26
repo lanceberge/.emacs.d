@@ -983,7 +983,7 @@ Entirely from Doom Emacs
   :custom
   (ivy-initial-inputs-alist nil) ; no initial ^, let flx do all the sorting work
   :config
-  (setq ivy-re-builders-alist '((swiper-isearch        . ivy--regex-plus)
+  (setq ivy-re-builders-alist '((swiper-isearch        . ivy--regex-fuzzy)
                                 (counsel-rg            . ivy--regex-plus)
                                 (counsel-projectile-rg . ivy-regex-plus)
                                 (t                     . ivy--regex-fuzzy)))
