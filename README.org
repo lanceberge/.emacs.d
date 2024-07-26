@@ -1745,7 +1745,13 @@ Entirely from Doom Emacs
 
 (use-package flyspell-correct-ivy
   :general
-  ('normal insert "C-j" #'flyspell-correct-wrapper))
+  ('(normal insert)
+   "C-j" #'flyspell-correct-wrapper))
+
+(use-package define-word
+  :general
+  ('(normal insert)
+   "C-y" #'define-word-at-point))
 #+END_SRC
 * System
 ** Terminal
