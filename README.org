@@ -46,7 +46,6 @@
 - [[#filetype-specific][Filetype Specific]]
   - [[#c-family][C family]]
   - [[#markdown][Markdown]]
-  - [[#latex][Latex]]
   - [[#javascript][Javascript]]
   - [[#scala][Scala]]
   - [[#go][Go]]
@@ -797,8 +796,8 @@ Entirely from Doom Emacs
    [remap evil-previous-line]      #'evil-previous-visual-line
    [remap evil-ex-search-forward]  #'isearch-forward
    [remap evil-ex-search-backward] #'isearch-backward
-   "zr" #'(evil-open-folds  :which-key "open folds recursively")
-   "zm" #'(evil-close-folds :which-key "close folds recursively")
+   "zr" #'(evil-open-folds         :which-key "open folds recursively")
+   "zm" #'(evil-close-folds        :which-key "close folds recursively")
    "gm" (general-simulate-key "@@" :which-key "run last macro") ; last macro
    "C-M-d" #'scroll-other-window
    "C-M-u" #'scroll-other-window-down)
@@ -1020,14 +1019,6 @@ Entirely from Doom Emacs
 
     "ofs" (lambda () (interactive)
             (counsel-find-file "~/school/spring2022") :which-key "school"))
-
-
-  (my-localleader-def
-    "x" #'(counsel-M-x :which-key "M-x"))
-
-  ('(normal insert) org-mode-map
-   :prefix "C-c"
-   "f"  #'(counsel-org-goto-all :which-key "find org headline"))
   :config
   (which-key-add-key-based-replacements
     "SPC fih" "find in ~"
@@ -1077,12 +1068,11 @@ Entirely from Doom Emacs
   (company-show-numbers t)
   (company-dabbrev-other-buffers nil)
   (company-tooltip-offset-display nil)
-  (company-dabbrev-ignore-case nil)
+  (company-dabbrev-minimum-length 3)
 
   ;; global default for the backend, buffer-local backends will be set based on filetype
-  (company-backends '(company-capf
-                      company-files
-                      company-dabbrev-code
+  (company-backends '(company-files
+                      company-ispell
                       company-yasnippet))
   :general
   ('insert company-mode-map
@@ -1096,9 +1086,19 @@ Entirely from Doom Emacs
                        "RET"      #'newline
                        "<return>" #'newline
                        ";"        #'company-complete-selection) ; choose a completion with ; instead of tab
-
-
   :config
+  ;; TODO configure this in prog-mode and text-mode use-package
+  (defun prog-mode-company-backends ()
+    (add-to-list 'company-backends '(company-capf
+                                     company-dabbrev-code
+                                     company-keywords)))
+
+  (add-hook 'prog-mode-hook 'prog-mode-company-backends)
+
+  (defun text-mode-company-backends ()
+    (add-to-list 'company-backends '(company-dabbrev)))
+
+  (add-hook 'text-mode-hook 'text-mode-company-backends)
   ;; complete suggestion based on the number
   (let ((map company-active-map))
     (mapc (lambda (x) (define-key map (format "%d" x)
@@ -1367,8 +1367,8 @@ Entirely from Doom Emacs
   (defvar custom-functions-list '(evil-org-open-above evil-org-open-below  org-indent-line org-return))
   (dolist (func custom-functions-list)
     (advice-add func :after
-              (lambda (&rest args)
-                (+org-indent))))
+                (lambda (&rest args)
+                  (+org-indent))))
 
   ;; Don't execute org-babel blocks on export
   (add-to-list 'org-babel-default-header-args
@@ -1959,16 +1959,6 @@ Entirely from Doom Emacs
   ('markdown-mode-map
    :prefix "C-c"
    "t" #'markdown-toc-generate-toc))
-#+END_SRC
-** Latex
-#+BEGIN_SRC emacs-lisp :results none
-(use-package auctex
-  :defer t
-  :general
-  ('TeX-mode-map
-   :prefix "C-c"
-   "e" (lambda () (interactive)
-         (save-buffer) (TeX-command-master) :which-key "export")))
 #+END_SRC
 ** Javascript
 #+BEGIN_SRC emacs-lisp :results none
