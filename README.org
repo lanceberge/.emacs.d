@@ -1072,9 +1072,6 @@ Entirely from Doom Emacs
   (company-dabbrev-minimum-length 3)
   (company-minimum-prefix-length 2)
   :general
-  ('insert company-mode-map
-           "C-j" #'company-manual-begin)
-
   ('company-active-map "C-w" nil ; don't override evil C-w
                        "C-j"      #'company-select-next-or-abort
                        "C-k"      #'company-select-previous-or-abort
@@ -1359,6 +1356,7 @@ Entirely from Doom Emacs
    "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
   :config
   (defvar custom-functions-list '(evil-org-open-above evil-org-open-below  org-indent-line org-return))
+
   (dolist (func custom-functions-list)
     (advice-add func :after
                 (lambda (&rest args)
@@ -1414,9 +1412,6 @@ Entirely from Doom Emacs
   :defer t
   :custom
   (org-edit-src-content-indentation 0) ; leading spaces before the #+begin line
-  (org-src-tab-acts-natively t)
-
-
   (org-src-preserve-indentation t)     ; don't preserve leading whitespace on export
   (org-adapt-indentation nil)          ; don't indent under headlines
 
@@ -1424,7 +1419,9 @@ Entirely from Doom Emacs
   :general
   ('insert org-mode-map
            "<tab>" '+org-indent
-           "<backtab>" '+org-indent))
+           "<backtab>" '+org-indent)
+  :custom
+  (setq org-src-tab-acts-natively t))
 
 (use-package ob ; org babel
   :straight (:type built-in)
@@ -1745,6 +1742,10 @@ Entirely from Doom Emacs
 
   ('visual
    "g^" #'titlecase-region :which-key "titlecase region"))
+
+(use-package flyspell-correct-ivy
+  :general
+  ('normal insert "C-j" #'flyspell-correct-wrapper))
 #+END_SRC
 * System
 ** Terminal
