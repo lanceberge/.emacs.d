@@ -1167,8 +1167,6 @@ Entirely from Doom Emacs
 #+END_SRC
 * LSP-Related
 #+BEGIN_SRC emacs-lisp :results none
-;; TODO go to symbol
-;; TODO popups for code completion
 (use-package lsp-mode ; LSP
   :custom
   ;; Disable slow features
@@ -1257,7 +1255,6 @@ Entirely from Doom Emacs
    "]h" #'diff-hl-next-hunk
    "[h" #'diff-hl-previous-hunk))
 #+END_SRC
-
 * Org
 ** Org
 #+BEGIN_SRC emacs-lisp :results none
@@ -1796,7 +1793,7 @@ Entirely from Doom Emacs
 #+END_SRC
 ** Dired
 #+BEGIN_SRC emacs-lisp :results none
-(use-package dired ; TODO how to move stuff
+(use-package dired
   :straight (:type built-in)
   :custom
   (dired-auto-revert-buffer) ; don't prompt to revert
@@ -1915,7 +1912,7 @@ Entirely from Doom Emacs
 #+BEGIN_SRC emacs-lisp :results none
 (use-package cc-mode
   :straight (:type built-in)
-  :hook (c-mode . +cc/company-mode)
+  :hook (c-mode . +cc/company-backends)
   :mode ("\\.cu\\'" . c-mode)
   :custom
   (c-basic-offset 4)
@@ -1924,7 +1921,7 @@ Entirely from Doom Emacs
   ('c-mode-base-map
    "M-;" #'my/append-semicolon))
 
-(use-package gdb-mi ; TODO
+(use-package gdb-mi
   :straight (:type built-in)
   :general
   ('c-mode-map
@@ -1932,14 +1929,20 @@ Entirely from Doom Emacs
 #+END_SRC
 *** Functions
 #+BEGIN_SRC emacs-lisp :results none
+;; TODO
 ;;;###autoload
-(defun +cc/company-mode ()
+(defun +cc/company-backends ()
+  (defun prog-mode-company-backends ()
+    (add-to-list 'company-backends '(company-capf
+                                     company-dabbrev-code
+                                     company-keywords)))
+
+  (add-hook 'prog-mode-hook 'prog-mode-company-backends)
   "company backends for c-mode"
-  (setq-local company-backends
-              '((company-clang
+  (add-to-list 'company-backends
+              '(company-clang
                  company-cmake
-                 company-capf
-                 company-files))))
+                 )))
 #+END_SRC
 ** Markdown
 #+BEGIN_SRC emacs-lisp :results none
@@ -1985,6 +1988,8 @@ Entirely from Doom Emacs
 ** Go
 #+BEGIN_SRC emacs-lisp :results none
 (use-package go-mode
+  :hook
+  (go-mode . lsp-deferred)
   :defer t)
 #+END_SRC
 ** Yaml
