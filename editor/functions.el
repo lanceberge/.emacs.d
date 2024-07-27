@@ -114,9 +114,10 @@
     (call-interactively 'move-end-of-line)
     (insert ";")))
 
-(defun bad-parens-p ()
-  "Return `t' if `check-parens' indicates unbalanced parens or quotes; otherwise `nil'"
-  (interactive)
-  (condition-case err
-      (check-parens)
-    (error (message "%s" (error-message-string err)) t)))
+(defun balanced-parens-p ()
+  "Return `t' if parentheses are balanced; otherwise `nil'."
+  (condition-case nil
+      (progn
+        (check-parens)
+        t)
+    (error nil)))
