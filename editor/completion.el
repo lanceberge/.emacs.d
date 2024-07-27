@@ -4,9 +4,12 @@
   (swiper-use-visual-line nil)
   (swiper-use-visual-line-p (lambda (a) nil))
   :general
+  ('normal
+   "/"  #'swiper-isearch
+   "?"  #'swiper-isearch-backward)
   (my-leader-def
-    "/"  #'swiper-isearch
-    "?"  #'swiper-isearch-backward
+    "/"  #'swiper
+    "?"  #'swiper-backward
     "fb" #'(swiper-multi :which-key "swiper in buffer")
     "fB" #'(swiper-all   :which-key "swiper in all buffers")))
 
@@ -49,7 +52,6 @@
     "gff"     #'(counsel-git       :which-key "git files")
     "ps"      #'(counsel-git-grep  :which-key "git grep")
     "f SPC f" #'(counsel-file-jump :which-key "file")
-    "ff"      #'(counsel-fzf       :which-key "fzf")
     "fih"       (lambda () (interactive) (counsel-file-jump "" "~"))
     "fis"       (lambda () (interactive) (counsel-file-jump "" "~/school"))
     "fic"       (lambda () (interactive) (counsel-file-jump "" "~/code"))
@@ -57,7 +59,7 @@
     "fie"       (lambda () (interactive) (counsel-file-jump "" "~/.emacs.d"))
     "fid"       (lambda () (interactive) (counsel-file-jump "" "~/Downloads"))
     "fd"      #'(counsel-dired     :which-key "directory")
-    "p SPC s" #'(counsel-rg        :which-key "ripgrep")
+    "pr"      #'(counsel-rg        :which-key "ripgrep")
 
     "ofo" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
