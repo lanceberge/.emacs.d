@@ -134,6 +134,7 @@
     "gc" #'chatgpt-shell)
 
   :config
+  (setq chatgpt-shell-root-path (no-littering-expand-var-file-name "chatgpt/"))
   (setq chatgpt-shell-model-version "gpt-3.5-turbo")
   (setq chatgpt-shell-openai-key (read-file-contents "~/secrets/gpt_api_key")))
 
