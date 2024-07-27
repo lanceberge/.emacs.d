@@ -103,4 +103,15 @@
 
 (set-face-foreground 'vertical-border bg-color)
 
-(use-package no-littering)
+(use-package no-littering
+  :demand t
+  :config
+  (no-littering-theme-backups))
+
+(use-package minions ; hide all minor modes in modeline
+  :demand t
+  :custom
+  (minions-mode-line-lighter "")
+  (minions-mode-line-delimiters '(" " . ""))
+  :config
+  (minions-mode 1))
