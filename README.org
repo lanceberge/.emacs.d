@@ -983,9 +983,8 @@ Entirely from Doom Emacs
   :custom
   (ivy-initial-inputs-alist nil) ; no initial ^, let flx do all the sorting work
   :config
-  (setq ivy-re-builders-alist '((swiper-isearch        . ivy--regex-fuzzy)
+  (setq ivy-re-builders-alist '((swiper-isearch        . ivy--regex-plus)
                                 (counsel-rg            . ivy--regex-plus)
-                                (counsel-projectile-rg . ivy-regex-plus)
                                 (t                     . ivy--regex-fuzzy)))
   (evil-collection-init 'minibuffer)
   (evil-collection-init 'ivy))
@@ -1342,9 +1341,6 @@ Entirely from Doom Emacs
            "zk" #'org-backward-element
            "zj" #'org-forward-element)
 
-  ('normal org-tag-alist
-           ";" #'org-ctrl-c-ctrl-c)
-
   ;; Vim keys calendar maps
   ('org-read-date-minibuffer-local-map
    ";" #'exit-minibuffer
@@ -1357,6 +1353,13 @@ Entirely from Doom Emacs
    "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1)))
    "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
   :config
+  (defun org-mode-company-backends ()
+    (setq-local company-backends
+                '((company-files company-capf))))
+
+  (add-hook 'org-mode-hook 'org-mode-company-backends)
+    (setq-local company-backends
+                '((company-files company-capf))))
   (setq org-tag-alist '(("personal"      . ?p)
                         ("easy tasks"    . ?t)
                         ("hard tasks"    . ?T)
@@ -1367,7 +1370,7 @@ Entirely from Doom Emacs
                         ("emacs"         . ?e)
                         ("music"         . ?m)))
 
-  (defvar custom-functions-list '(evil-org-open-above evil-org-open-below  org-indent-line org-return))
+  (defvar custom-functions-list '(evil-org-open-above evil-org-open-below  org-return))
 
   (dolist (func custom-functions-list)
     (advice-add func :after
@@ -1435,7 +1438,7 @@ Entirely from Doom Emacs
   (org-adapt-indentation nil)          ; don't indent under headlines
 
   (org-src-window-setup 'current-window)
-  :custom
+  :config
   (setq org-src-tab-acts-natively t))
 
 (use-package ob ; org babel
@@ -1547,6 +1550,20 @@ Entirely from Doom Emacs
 
   ('normal org-journal-mode-map
            "za" #'(org-cycle    :which-key "open fold")))
+
+(use-package org-roam
+  :defer-incrementally (emacsql emacsqlite)
+  :custom
+  (org-roam-completion-everywhere t)
+  (org-roam-directory "~/org-roam")
+  (org-roam-db-gc-threshold most-positive-fixnum)
+  :general
+  (my-leader-def
+    "oni" #'org-roam-node-insert
+    "onl" #'org-roam-buffer-toggle
+    "onf" #'org-roam-node-find)
+  :config
+  (org-roam-db-autosync-mode))
 #+END_SRC
 ** Functions
 #+BEGIN_SRC emacs-lisp :results none
