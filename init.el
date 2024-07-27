@@ -283,5 +283,8 @@
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
-(add-to-list 'load-path "~/.emacs.d/editor")
-(add-to-list 'load-path "~/.emacs.d/lang")
+(let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
+  (mapc (lambda (dir)
+          (mapc 'load-file
+                (directory-files-recursively dir "\\.el$")))
+        dirs))

@@ -2,7 +2,6 @@
 (use-package org
   :straight (:type built-in)
   :hook
-  (kill-emacs . +org/tangle-config)
   (org-tab-first . yas-expand)
   :defer-incrementally
   (calendar find-func format-spec org-macs org-compat
@@ -80,10 +79,7 @@
    "d"  #'(org-deadline                :which-key "deadline")
    "q"  #'(org-set-tags-command        :which-key "add tags")
    "p"  #'(org-latex-preview           :which-key "preview latex")
-   ",p" #'(org-set-property            :which-key "set property")
-   ",t" (lambda () (interactive)
-          (+org/tangle-config)
-          (load-file config-el)))
+   ",p" #'(org-set-property            :which-key "set property"))
 
   ('normal org-mode-map
            "zo" #'outline-show-subtree
