@@ -7,7 +7,7 @@
   (org-agenda-files '("~/org/todo.org"))
   :general
   ('org-agenda-mode-map
-   [remap org-agenda-todo] #'+org-agenda-filter-by-tag)
+   [remap org-agenda-todo] #'org-agenda-filter)
 
   (my-leader-def
     "oa" (lambda ()
@@ -148,7 +148,6 @@
 
 (use-package ob-matlab
   :straight (:type built-in)
-
   :commands org-babel-execute:matlab)
 
 (use-package toc-org ; auto-generate tables of contents w/in org and markdown with a :TOC: tag
