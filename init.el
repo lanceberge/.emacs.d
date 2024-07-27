@@ -185,10 +185,6 @@
             (append targets (list name)))))
      (use-package-process-keywords name rest state))))
 
-(unless (file-exists-p config-el) ; tangle config-org to config-el
-  (require 'org)
-  (org-babel-tangle-file config-org config-el))
-
 (use-package general ; unified way to map keybindings; works with :general in use-package
   :demand t
   :config
