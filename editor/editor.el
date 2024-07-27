@@ -104,7 +104,6 @@
   :hook (after-init . global-undo-tree-mode)
   :custom
   (undo-limit 10000)
-  (undo-tree-history-directory-alist (list (cons "." (expand-file-name "undo/" my/etc-dir))))
   (undo-tree-auto-save-history t)
   (evil-undo-system 'undo-tree)
   :general
@@ -130,7 +129,7 @@
 (use-package chatgpt-shell
   :general
   ('normal chatgpt-shell-mode-map
-   "RET" #'shell-maker-submit)
+           "RET" #'shell-maker-submit)
   (my-localleader-def
     "gc" #'chatgpt-shell)
 

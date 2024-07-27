@@ -2,8 +2,7 @@
 (if (version< emacs-version "27.1")
     (load-file (expand-file-name "early-init.el" user-emacs-directory)))
 
-(setq my/etc-dir (expand-file-name "etc/" user-emacs-directory)
-      default-file-name-handler-alist file-name-handler-alist)
+(setq default-file-name-handler-alist file-name-handler-alist)
 
 (use-package emacs
   :custom
@@ -47,18 +46,7 @@
   ;; Disable bidirectional text rendering for performance
   (bidi-display-reordering 'left-to-right)
   (bidi-paragraph-direction 'left-to-right)
-  (cursor-in-non-selected-windows nil)
-
-  ;; Keeping ~/.emacs.d clean
-  ;; (my/etc-dir                  (expand-file-name "etc/" user-emacs-directory))
-  (custom-file                 (expand-file-name "custom.el"            my/etc-dir))
-  (custom-theme-directory      (expand-file-name "themes/"              my/etc-dir))
-  (url-configuration-directory (expand-file-name "url/"                 my/etc-dir))
-  (url-cache-directory         (expand-file-name "url/"                 my/etc-dir))
-  (persist--directory-location (expand-file-name "persist/"             my/etc-dir))
-  (transient-history-file      (expand-file-name "transient/history.el" my/etc-dir))
-  (lsp-session-file            (expand-file-name "lsp"                  my/etc-dir))
-  (auto-save-list-file-prefix  (expand-file-name "auto-save/sessions"   my/etc-dir)))
+  (cursor-in-non-selected-windows nil))
 
 (advice-add #'tty-run-terminal-initialization :override #'ignore)
 

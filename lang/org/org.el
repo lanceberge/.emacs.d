@@ -10,8 +10,6 @@
             org-capture evil-org flyspell)
   :custom
   ;; Directories
-  (org-id-locations-file (expand-file-name ".org-id-locations" my/etc-dir))
-
   (org-directory "~/org")
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
 

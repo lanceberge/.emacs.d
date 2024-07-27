@@ -142,5 +142,4 @@
 (use-package amx ; show recently used commands
   :hook (pre-command . amx-mode)
   :custom
-  (amx-save-file (expand-file-name "amx-history" my/etc-dir))
   (amx-history-length 50))

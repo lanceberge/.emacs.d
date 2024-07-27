@@ -22,9 +22,7 @@
 
 (use-package saveplace ; save location in files
   :straight (:type built-in)
-  :hook (pre-command . save-place-mode)
-  :custom
-  (save-place-file (expand-file-name "places" my/etc-dir)))
+  :hook (pre-command . save-place-mode))
 
 (use-package whitespace
   :straight (:type built-in)
@@ -34,7 +32,6 @@
   :straight (:type built-in)
   :hook (pre-command . savehist-mode)
   :custom
-  (savehist-file (expand-file-name "savehist" my/etc-dir))
   (history-length 500)
   (history-delete-duplicates t)
   (savehist-save-minibuffer-history t))
@@ -45,7 +42,6 @@
   :hook (pre-command . recentf-mode)
   :custom
   (recentf-auto-cleanup 'never)
-  (recentf-save-file (expand-file-name "recentf" my/etc-dir))
   (recentf-max-saved-items 200))
 
 (when (or IS-LINUX IS-MAC)
@@ -60,23 +56,20 @@
 
 (use-package bookmark
   :straight (:type built-in)
-  :defer t
-  :custom
-  (bookmark-default-file (expand-file-name "bookarks" my/etc-dir)))
+  :defer t)
 
 (use-package calc
   :disabled t
   :straight (:type built-in)
   :general
   (my-leader-def
-    "oc" #'(calc      :which-key "calc")))
+    "oc" #'(calc :which-key "calc")))
 
 (use-package desktop ; save sessions to a file
   :defer t
   :straight (:type built-in)
   :custom
   (desktop-load-locked-desktop t) ; ignore desktop-lock files
-  (desktop-dirname (expand-file-name "desktop/" my/etc-dir))
   (desktop-path (list desktop-dirname))
   (desktop-save-mode 1)
   (desktop-base-file-name "emacs.desktop"))

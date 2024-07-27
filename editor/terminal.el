@@ -7,9 +7,6 @@
 (use-package tramp ; access remote files within emacs
   :disabled t
   :straight (:type built-in)
-  :custom
-  (tramp-autosave-directory    (expand-file-name "tramp/auto-save/" my/etc-dir))
-  (tramp-persistency-file-name (expand-file-name "tramp/persistency.el" my/etc-dir))
   :general
   (my-localleader-def
     "tr" #'(+tramp/ssh-rlogin   :which-key "rlogin")
