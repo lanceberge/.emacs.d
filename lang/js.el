@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package js2-mode
   :hook
   (js2-mode . lsp-deferred)

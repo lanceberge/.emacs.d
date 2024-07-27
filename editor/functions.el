@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;;###autoload
 (defun +format--org-region (beg end)
   "Reformat the region within BEG and END.

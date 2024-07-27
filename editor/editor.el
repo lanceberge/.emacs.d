@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package smartparens ; pair delimiters automatically and functions to work with delimiters
   :defer 0.1
   :custom

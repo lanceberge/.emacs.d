@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package simple
   :straight (:type built-in)
   :hook (after-init . global-visual-line-mode)

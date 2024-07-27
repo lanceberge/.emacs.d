@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package git-commit    :defer t)
 (use-package transient     :defer t)
 (use-package magit-section :defer t)

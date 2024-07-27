@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package markdown-mode
   :general
   ('normal markdown-mode-map "RET" #'markdown-follow-thing-at-point))

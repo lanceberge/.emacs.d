@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package emacs ; initial keybindings of built-in functions
   :general
   (my-localleader-def

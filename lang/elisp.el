@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package elisp-mode
   :straight (:type built-in)
   :general

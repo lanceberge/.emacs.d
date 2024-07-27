@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package terminal-here
   :general
   (my-leader-def

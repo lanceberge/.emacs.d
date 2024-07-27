@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package swiper ; ivy for searching through buffers
   :custom
   (swiper-use-visual-line nil)

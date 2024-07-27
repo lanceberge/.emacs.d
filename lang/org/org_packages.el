@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package org-agenda
   :straight (:type built-in)
   :custom

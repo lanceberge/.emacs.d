@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package evil-collection ; evil bindings for many modes
   :defer t
   :custom

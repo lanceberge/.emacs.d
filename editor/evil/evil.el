@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package evil ; vim bindings in emacs
   :demand t
   :custom

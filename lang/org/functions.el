@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;;###autoload
 (defun +org/insert-subheading ()
   "insert a subheading in org mode and go to insert mode"

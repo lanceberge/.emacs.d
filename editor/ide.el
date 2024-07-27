@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package lsp-mode ; LSP
   :custom
   ;; Disable slow features

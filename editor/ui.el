@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package minions ; hide all minor modes in modeline
   :custom
   (minions-mode-line-lighter "")

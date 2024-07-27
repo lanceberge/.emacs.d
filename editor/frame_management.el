@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package ace-window
   :custom
   (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
