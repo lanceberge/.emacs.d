@@ -78,5 +78,7 @@
   :straight (:type built-in)
   :general
   (my-leader-def
-    "pk" #'(project-kill-buffers :which-key "find file")
-    "pf" #'(project-find-file    :which-key "find file")))
+    "pk" #'(project-kill-buffers   :which-key "find file")
+    "pf" #'(project-find-file      :which-key "find file")
+    "pd" #'(project-find-dir       :which-key "find dir")
+    "pi" #'(project-switch-project :which-key "in dir")))
