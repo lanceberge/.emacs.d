@@ -1338,6 +1338,7 @@ Entirely from Doom Emacs
           (load-file config-el)))
 
   ('normal org-mode-map
+           "RET" #'org-return
            "zo" #'outline-show-subtree
            "zk" #'org-backward-element
            "zj" #'org-forward-element)
@@ -1479,7 +1480,7 @@ Entirely from Doom Emacs
 
      ("e" "Emacs TODO entry"
       entry (file+headline "~/org/todo.org" "Emacs")
-      "** TODO %? :emacs:\n %i\n" :prepend t)))
+      "** TODO %?\n %i\n" :prepend t)))
   :general
   (my-leader-def
     "oc" #'(org-capture :which-key "org capture"))
@@ -1945,7 +1946,7 @@ Entirely from Doom Emacs
 
 (use-package chatgpt-shell
   :general
-  ('normal
+  ('normal chatgpt-shell-mode-map
    "RET" #'shell-maker-submit)
   (my-localleader-def
     "gc" #'chatgpt-shell)
