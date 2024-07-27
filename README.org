@@ -1617,6 +1617,7 @@ Entirely from Doom Emacs
 (use-package ace-window
   :custom
   (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
+  (aw-scope 'frame)
   :general
   ("M-o" #'ace-window)
 
