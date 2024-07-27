@@ -534,6 +534,7 @@ Taken entirely from Doom Emacs
   (bookmark-default-file (expand-file-name "bookarks" my/etc-dir)))
 
 (use-package calc
+  :disabled t
   :straight (:type built-in)
   :general
   (my-leader-def
@@ -843,6 +844,7 @@ Entirely from Doom Emacs
      ivy
      dired
      eshell
+     ediff
      (pdf pdf-tools)
      magit)))
 #+END_SRC
@@ -903,6 +905,11 @@ Entirely from Doom Emacs
   ('(normal visual)
    "gx" #'(evil-exchange        :which-key "exchange operator")
    "gX" #'(evil-exchange-cancel :which-key "cancel exchange")))
+
+(use-package evil-textobj-anyblock
+  :general
+  ('evil-inner-text-objects-map "c" #'(evil-textobj-anyblock-inner-block :which-key "nearest text object"))
+  ('evil-outer-text-objects-map "c" #'(evil-textobj-anyblock-a-block     :which-key "nearest text object")))
 
 (use-package evil-args ; argument text object: ex. arg1,ar|g2,arg2 - can delete with daa
   :general
@@ -1428,32 +1435,28 @@ Entirely from Doom Emacs
    :prefix "C-c"
    "e" #'(org-export-dispatch :which-key "export")))
 
-(use-package org-capture
+(use-package org-capture ;; TODO
   :straight (:type built-in)
   :custom
   (org-capture-templates
-   '(("l" "Life TODO entry"
-      entry (file+headline "~/org/todo.org" "Life")
-      "*     TODO %?\n %i\n" :prepend t)
+   '(("a" "A"
+      entry (file+headline "~/org/todo.org" "A")
+      "** %?\n %i\n" :prepend t)
+
+     ("b" "B"
+      entry (file+headline "~/org/todo.org" "B")
+      "** %?\n %i\n" :prepend t)
+
+     ("c" "C"
+      entry (file+headline "~/org/todo.org" "C")
+      "** %?\n %i\n" :prepend t)
 
      ("e" "Emacs TODO entry"
       entry (file+headline "~/org/todo.org" "Emacs")
-      "*     TODO %?\n %i\n" :prepend t)
-
-     ("t" "today TODO entry"
-      entry (file+headline "~/org/todo.org" "Today")
-      "*     TODO %?\n %i\n" :prepend t)
-
-     ("s" "school TODO"
-      entry (file+headline "~/org/todo.org" "School")
-      "*     TODO %?\n %i\n" :prepend t)
-
-     ("d" "org drill"
-      entry (file+headline "~/org/notes.org" "Miscellaneous")
-      "* %? :drill:" :prepend t)))
+      "** %?\n %i\n" :prepend t)))
   :general
   (my-leader-def
-    "on" #'(org-capture :which-key "org capture")))
+    "oc" #'(org-capture :which-key "org capture")))
 
 (use-package ol ; org links
   :straight (:type built-in)
