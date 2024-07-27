@@ -80,9 +80,10 @@
    ",p" #'(org-set-property            :which-key "set property"))
 
   ('normal org-mode-map
-           "zo" #'outline-show-subtree
-           "zk" #'org-backward-element
-           "zj" #'org-forward-element)
+           "RET" #'org-return
+           "zo"  #'outline-show-subtree
+           "zk"  #'org-backward-element
+           "zj"  #'org-forward-element)
 
   ;; Vim keys calendar maps
   ('org-read-date-minibuffer-local-map
@@ -139,6 +140,9 @@
    `(org-quote            ((t (:background ,bg-color))))
    `(org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
    `(org-done             ((t (:foreground "#7C6f64")))))
+
+  ;; open links in the current window
+  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
   (setq org-todo-keyword-faces '(("WAIT" . (:foreground "#7C6f64" :weight bold))
                                  ("OPT." . (:foreground "#fe8019" :weight bold)))
