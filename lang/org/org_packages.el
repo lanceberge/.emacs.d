@@ -56,7 +56,7 @@
 
      ("e" "Emacs TODO entry"
       entry (file+headline "~/org/todo.org" "Emacs")
-      "** TODO %? :emacs:\n %i\n" :prepend t)))
+      "** TODO %?\n %i\n" :prepend t)))
   :general
   (my-leader-def
     "oc" #'(org-capture :which-key "org capture"))
