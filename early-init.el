@@ -103,6 +103,4 @@
 
 (set-face-foreground 'vertical-border bg-color)
 
-(use-package no-littering
-  :custom
-  (no-littering-etc-directory (expand-file-name "etc/" user-emacs-directory)))
+(use-package no-littering)
