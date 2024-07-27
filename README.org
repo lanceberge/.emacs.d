@@ -1273,6 +1273,7 @@ Entirely from Doom Emacs
   (org-startup-folded t)
   (org-fontify-done-headline t)
   (org-M-RET-may-split-line nil)
+  (org-return-follows-link t)
 
   ;; Latex exports
   (org-export-backends '(html latex md))
@@ -1358,8 +1359,7 @@ Entirely from Doom Emacs
                 '((company-files company-capf))))
 
   (add-hook 'org-mode-hook 'org-mode-company-backends)
-    (setq-local company-backends
-                '((company-files company-capf))))
+
   (setq org-tag-alist '(("personal"      . ?p)
                         ("easy tasks"    . ?t)
                         ("hard tasks"    . ?T)
@@ -1368,6 +1368,9 @@ Entirely from Doom Emacs
                         ("health"        . ?h)
                         ("relationships" . ?r)
                         ("emacs"         . ?e)
+                        ("A"             . ?a)
+                        ("B"             . ?b)
+                        ("C"             . ?c)
                         ("music"         . ?m)))
 
   (defvar custom-functions-list '(evil-org-open-above evil-org-open-below  org-return))
@@ -1479,7 +1482,9 @@ Entirely from Doom Emacs
       "** TODO %? :emacs:\n %i\n" :prepend t)))
   :general
   (my-leader-def
-    "oc" #'(org-capture :which-key "org capture")))
+    "oc" #'(org-capture :which-key "org capture"))
+  :config
+  (add-hook 'org-capture-mode-hook 'evil-insert-state))
 
 (use-package ol ; org links
   :straight (:type built-in)
@@ -1551,6 +1556,20 @@ Entirely from Doom Emacs
   ('normal org-journal-mode-map
            "za" #'(org-cycle    :which-key "open fold")))
 
+(use-package org-roam
+  :defer-incrementally (emacsql emacsqlite)
+  :custom
+  (org-roam-completion-everywhere t)
+  (org-roam-directory "~/org-roam")
+  (org-roam-db-gc-threshold most-positive-fixnum)
+  :general
+  (my-leader-def
+    "oni" #'org-roam-node-insert
+    "onl" #'org-roam-buffer-toggle
+    ;; TODO org-roam-capture
+    "onf" #'org-roam-node-find)
+  :config
+  (org-roam-db-autosync-mode))
 (use-package org-roam
   :defer-incrementally (emacsql emacsqlite)
   :custom
