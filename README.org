@@ -461,15 +461,10 @@ Taken entirely from Doom Emacs
 (use-package straight ; package manager
   :general
   (my-localleader-def
-    "sr" #'(straight-rebuild-all :which-key "rebuild all")
-    "sf" #'(straight-fetch-all   :which-key "fetch all")
-    "sp" #'(straight-pull-all    :which-key "pull all")))
-
-(use-package straight-x
-  :straight straight
-  :general
-  (my-localleader-def
-    "sc" #'(straight-x-clean-unused-repos :which-key "clean unused")))
+    "sr" #'(straight-rebuild-all         :which-key "rebuild all")
+    "sf" #'(straight-fetch-all           :which-key "fetch all")
+    "sc" #'(straight-remove-unused-repos :which-key "fetch all")
+    "sp" #'(straight-pull-all            :which-key "pull all")))
 #+END_SRC
 ** Built-in Packages
 #+BEGIN_SRC emacs-lisp :results none
@@ -558,7 +553,8 @@ Taken entirely from Doom Emacs
   :straight (:type built-in)
   :general
   (my-leader-def
-    "pf" #'(project-find-file :which-key "find file")))
+    "pk" #'(project-kill-buffers :which-key "find file")
+    "pf" #'(project-find-file    :which-key "find file")))
 #+END_SRC
 ** Keybindings
 #+BEGIN_SRC emacs-lisp :results none
@@ -907,11 +903,6 @@ Entirely from Doom Emacs
   ('(normal visual)
    "gx" #'(evil-exchange        :which-key "exchange operator")
    "gX" #'(evil-exchange-cancel :which-key "cancel exchange")))
-
-(use-package evil-textobj-anyblock
-  :general
-  ('evil-inner-text-objects-map "c" #'(evil-textobj-anyblock-inner-block :which-key "nearest text object"))
-  ('evil-outer-text-objects-map "c" #'(evil-textobj-anyblock-a-block     :which-key "nearest text object")))
 
 (use-package evil-args ; argument text object: ex. arg1,ar|g2,arg2 - can delete with daa
   :general
