@@ -180,7 +180,7 @@
     :states '(normal visual motion insert emacs)
     :keymaps 'override
     :prefix "SPC"
-    :non-normal-prefix "C-SPC")
+    :non-normal-prefix "C-b")
 
   (general-create-definer my-localleader-def ; , prefixed bindings
     :states '(normal visual motion insert emacs)
@@ -211,13 +211,14 @@
       "e"  '(:ignore t :which-key "Elisp")
       "ei" '(:ignore t :which-key "Ein")
       "f"  '(:ignore t :which-key "Find")
-      "fi" '(:ignore t :which-key "find in directory")
+      "fi" '(:ignore t :which-key "in directory")
       "g"  '(:ignore t :which-key "Git")
       "gf" '(:ignore t :which-key "Find")
       "gn" '(:ignore t :which-key "New")
       "o"  '(:ignore t :which-key "Open")
       "of" '(:ignore t :which-key "File")
-      "oj" '(:ignore t :which-key "Org journal")
+      "oj" '(:ignore t :which-key "Org Journal")
+      "on" '(:ignore t :which-key "Org Note")
       "ov" '(:ignore t :which-key "Vertical")
       "p"  '(:ignore t :which-key "Project")
       "s"  '(:ignore t :which-key "Yasnippet")
