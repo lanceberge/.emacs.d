@@ -55,7 +55,11 @@
       entry (file+headline "~/org/todo.org" "Work")
       "** TODO %?\n %i\n" :prepend t)
 
-     ("e" "Emacs TODO entry"
+     ("m" "Music"
+      entry (file+headline "~/org/todo.org" "Music")
+      "** TODO %?\n %i\n" :prepend t)
+
+     ("e" "Emacs"
       entry (file+headline "~/org/todo.org" "Emacs")
       "** TODO %?\n %i\n" :prepend t)))
   :general
