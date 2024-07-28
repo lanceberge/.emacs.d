@@ -272,6 +272,7 @@
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
+;; Load config files recursively
 (let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
   (mapc (lambda (dir)
           (mapc 'load-file
