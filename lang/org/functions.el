@@ -59,3 +59,11 @@
   "indent in major mode - org-src-tab-acts-natively gave me issues"
   (interactive)
   (org-agenda-filter-by-tag t ?\t))
+
+;;;###autoload
+(defun +org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                  '(:immediate-finish t)))))
+    (apply #'org-roam-node-insert args)))

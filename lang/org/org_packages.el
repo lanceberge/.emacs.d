@@ -12,11 +12,7 @@
   (my-leader-def
     "oa" (lambda ()
            (interactive)
-           (org-agenda nil "t"))
-
-    "ova" (lambda () (interactive)
-            (evil-window-vsplit)
-            (org-agenda-list)))
+           (org-agenda nil "t")))
   :config
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys)
@@ -31,10 +27,11 @@
   (org-roam-db-gc-threshold most-positive-fixnum)
   :general
   (my-leader-def
-    "oni" #'org-roam-node-insert
-    "onl" #'org-roam-buffer-toggle
+    "oni" #'(org-roam-node-insert            :which-key "insert link")
+    "onl" #'(org-roam-buffer-toggle          :which-key "view links")
     ;; TODO org-roam-capture
-    "onf" #'org-roam-node-find)
+    "onn" #'(+org-roam-node-insert-immediate :which-key "insert now")
+    "onf" #'(org-roam-node-find              :which-key "find note"))
   :config
   (org-roam-db-autosync-mode))
 
