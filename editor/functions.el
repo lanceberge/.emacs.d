@@ -114,6 +114,7 @@
     (call-interactively 'move-end-of-line)
     (insert ";")))
 
+;;;###autoload
 (defun balanced-parens-p ()
   "Return `t' if parentheses are balanced; otherwise `nil'."
   (condition-case nil
@@ -121,3 +122,14 @@
         (check-parens)
         t)
     (error nil)))
+
+;;;###autoload
+(defun +flycheck-list-errors ()
+  "Display the Flycheck error list and set its window height to take up 1/3 of the frame."
+  (interactive)
+  (flycheck-list-errors)
+  (let ((error-window (get-buffer-window "*Flycheck errors*" t)))
+    (when error-window
+      (with-selected-window error-window
+        (let ((window-height (round (* 0.33 (frame-height)))))
+          (enlarge-window (- window-height (window-height))))))))

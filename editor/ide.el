@@ -45,7 +45,7 @@
    "]q" #'(flycheck-next-error :which-key "next error"))
 
   (my-leader-def
-    "fe" #'(flycheck-list-errors :which-key "list errors"))
+    "fe" #'(+flycheck-list-errors :which-key "list errors"))
   :config
   (flycheck-add-mode 'javascript-eslint 'web-mode))
 
