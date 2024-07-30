@@ -19,11 +19,16 @@
 
   (lsp-auto-guess-root t)
   :general
-  ('normal
-   [remap evil-goto-definition] #'lsp-find-definition)
+  ('normal lsp-mode-map
+           "gh" #'(lsp-describe-thing-at-point :which-key "view doc"))
   (my-localleader-def
     "h"  #'(lsp-describe-thing-at-point :which-key "view doc")
     "gr" #'(lsp-rename                  :which-key "rename with lsp")))
+
+(use-package lsp-ui
+  :general
+  ('normal lsp-mode-map
+           "gd" #'lsp-ui-peek-find-implementation))
 
 (use-package lsp-ivy
   :defer t
@@ -51,3 +56,9 @@
 
 (use-package xref
   :commands xref-find-references xref-auto-jump-first-definition)
+
+(use-package eldoc
+  :general
+  ('normal
+   ;; TODO wrap in smaller buffer function
+   "gh" #'(eldoc-print-current-symbol-info :which-key "view doc")))
