@@ -115,7 +115,7 @@
                        "C-j"      #'company-select-next-or-abort
                        "C-k"      #'company-select-previous-or-abort
                        "<tab>"    #'company-complete-selection
-                       "0"          (lambda () (interactive) (company-complete-number 10))
+                       "C-0"        (lambda () (interactive) (company-complete-number 10))
                        "RET"      #'newline
                        "<return>" #'newline
                        ";"        #'company-complete-selection) ; choose a completion with ; instead of tab
@@ -134,7 +134,7 @@
   (add-hook 'text-mode-hook 'text-mode-company-backends)
   ;; complete suggestion based on the number
   (let ((map company-active-map))
-    (mapc (lambda (x) (define-key map (format "%d" x)
+    (mapc (lambda (x) (define-key map (kbd (format "C-%d" x))
                         `(lambda () (interactive) (company-complete-number ,x))))
           (number-sequence 1 9)))
   (global-company-mode))
