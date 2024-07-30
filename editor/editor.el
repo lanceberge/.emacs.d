@@ -111,7 +111,6 @@
     "fu" #'(undo-tree-visualize :which-key "undo")))
 
 (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
-  :defer t
   :hook (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
                         (exec-path-from-shell-initialize))))
 

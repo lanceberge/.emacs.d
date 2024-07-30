@@ -40,7 +40,10 @@
   (my-localleader-def
     "ml" #'(smerge-keep-mine  :which-key "keep local changes")
     "mo" #'(smerge-keep-other :which-key "keep other changes")
-    "mm" #'(smerge-ediff      :which-key "merge")))
+    "ma" #'(smerge-keep-all   :which-key "keep all changes")
+    "mm" #'(smerge-ediff      :which-key "merge"))
+  :config
+  (evil-collection-init 'ediff))
 
 ;;;###autoload
 (defun +magit/stage-all-and-commit ()

@@ -86,3 +86,12 @@
 (use-package electric-pair-mode
   :straight (:type built-in)
   :hook (prog-mode . electric-pair-mode))
+
+(use-package ediff
+  :straight (:type built-in)
+  :custom
+  (ediff-window-setup-function 'ediff-setup-windows-plain)
+  (ediff-use-faces nil)
+  :config
+  (setq ediff-diff-options "")
+  (add-hook 'ediff-prepare-buffer-hook #'evil-open-folds))
