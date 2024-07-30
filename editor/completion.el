@@ -114,7 +114,7 @@
   ('company-active-map "C-w" nil ; don't override evil C-w
                        "C-j"      #'company-select-next-or-abort
                        "C-k"      #'company-select-previous-or-abort
-                       "<tab>"    #'company-complete-selection
+                       "<tab>"    #'yas-expand ; don't interfere with yasnippet
                        "C-0"        (lambda () (interactive) (company-complete-number 10))
                        "RET"      #'newline
                        "<return>" #'newline
@@ -123,7 +123,7 @@
   ;; TODO configure this in prog-mode and text-mode use-package
   (defun prog-mode-company-backends ()
     (setq-local company-backends
-                '((company-capf company-files company-dabbrev-code))))
+                '((company-capf company-files company-dabbrev-code company-yasnippet))))
 
   (add-hook 'prog-mode-hook 'prog-mode-company-backends)
 
