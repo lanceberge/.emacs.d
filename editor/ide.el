@@ -16,6 +16,8 @@
   (lsp-enable-indentation nil)
   (lsp-enable-on-type-formatting nil)
   (lsp-clients-typescript-server-args '("--stdio"))
+
+  (lsp-auto-guess-root t)
   :general
   ('normal
    [remap evil-goto-definition] #'lsp-find-definition)
