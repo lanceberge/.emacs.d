@@ -19,6 +19,7 @@
   :general
   ('(normal insert) ivy-minibuffer-map
    ";"   #'exit-minibuffer
+   "S-SPC" (lambda () (interactive) (insert " "))
    "C-j" #'ivy-next-line
    "C-k" #'ivy-previous-line)
 
