@@ -33,7 +33,7 @@
 
 (use-package format-all ; format code functions
   :hook
-  (js2-mode . format-all-mode)
+  (prog-mode . format-all-mode)
   :init
   (defvar +format-with-lsp nil)
   :general
@@ -43,6 +43,7 @@
     :config
     (setq-default format-all-formatters
                   '(("TypeScript" prettier)
+                    ("svelte"     prettier)
                     ("JavaScript" prettier)))))
 
 (use-package avy ; jump to things in files similar to easymotion for vim
