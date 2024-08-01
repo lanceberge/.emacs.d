@@ -62,3 +62,13 @@
   ('normal
    ;; TODO wrap in smaller buffer function
    "gh" #'(eldoc-print-current-symbol-info :which-key "view doc")))
+
+(use-package projectile
+  :defer 0.2
+  :custom
+  (projectile-project-search-path '("~/code/" "~/src/" "~/org" ))
+  :general
+  (my-leader-def
+    "p" #'projectile-command-map)
+  :config
+  (projectile-mode +1))

@@ -74,15 +74,6 @@
   (desktop-save-mode 1)
   (desktop-base-file-name "emacs.desktop"))
 
-(use-package project
-  :straight (:type built-in)
-  :general
-  (my-leader-def
-    "pk" #'(project-kill-buffers   :which-key "find file")
-    "pf" #'(project-find-file      :which-key "find file")
-    "pd" #'(project-find-dir       :which-key "find dir")
-    "pi" #'(project-switch-project :which-key "in dir")))
-
 (use-package electric-pair-mode
   :straight (:type built-in)
   :hook (prog-mode . electric-pair-mode))
