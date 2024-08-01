@@ -116,6 +116,9 @@
                         ("C"             . ?c)
                         ("music"         . ?m)))
 
+  (add-hook 'kill-emacs-hook
+            (lambda () (interactive) (setq kill-emacs-query-functions nil)))
+
   (defvar custom-functions-list '(evil-org-open-above evil-org-open-below  org-return))
 
   (dolist (func custom-functions-list)
