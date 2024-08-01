@@ -12,7 +12,6 @@
   ;; Directories
   (org-directory "~/org")
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
-  (kill-emacs-query-functions nil)
 
   ;; General settings
   (org-list-allow-alphabetical t)
@@ -116,6 +115,9 @@
                         ("B"             . ?b)
                         ("C"             . ?c)
                         ("music"         . ?m)))
+
+  (add-hook 'kill-emacs-hook
+            (lambda () (interactive) (setq kill-emacs-query-functions nil)))
 
   (defvar custom-functions-list '(evil-org-open-above evil-org-open-below  org-return))
 
