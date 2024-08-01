@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: use-package
+# key: up
+# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# --
+(use-package $1
+  $0)
