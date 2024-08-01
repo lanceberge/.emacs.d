@@ -74,9 +74,14 @@
   (desktop-save-mode 1)
   (desktop-base-file-name "emacs.desktop"))
 
+
 (use-package electric-pair-mode
   :straight (:type built-in)
-  :hook (prog-mode . electric-pair-mode))
+  :hook (prog-mode . electric-pair-mode)
+  :config
+  (setq electric-pair-inhibit-predicate
+        (lambda (c)
+          (if (char-equal c ?\") t (electric-pair-default-inhibit c)))))
 
 (use-package ediff
   :straight (:type built-in)
