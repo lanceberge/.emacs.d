@@ -13,6 +13,16 @@
     "tc" #'(+tramp/ssh-cascades :which-key "cascades")
     "tp" #'(+tramp/ssh-pascal   :which-key "pascal")))
 
+(use-package vterm
+  :general
+  ('(normal insert) vterm-mode-map
+   "C-c" #'vterm--self-insert)
+  (my-leader-def
+    "ot" #'vterm)
+  :config
+  (evil-collection-init 'vterm)
+  (add-hook 'vterm-mode-hook (lambda () (display-line-numbers-mode -1))))
+
 ;;;###autoload
 (defun +tramp/ssh-rlogin ()
   "ssh into rlogin through tramp"
