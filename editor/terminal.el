@@ -16,8 +16,12 @@
 (use-package vterm
   :general
   ('(normal insert) vterm-mode-map
+   "C-l" #'vterm--self-insert
    "C-c" #'vterm--self-insert)
   (my-leader-def
+    "ost" (lambda () (interactive)
+            (evil-window-split 12)
+            (vterm))
     "ot" #'vterm)
   :config
   (evil-collection-init 'vterm)
