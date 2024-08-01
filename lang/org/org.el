@@ -12,6 +12,7 @@
   ;; Directories
   (org-directory "~/org")
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
+  (kill-emacs-query-functions nil)
 
   ;; General settings
   (org-list-allow-alphabetical t)
