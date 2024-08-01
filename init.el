@@ -180,7 +180,7 @@
     :states '(normal visual motion insert emacs)
     :keymaps 'override
     :prefix "SPC"
-    :non-normal-prefix "C-b")
+    :non-normal-prefix "C-c")
 
   (general-create-definer my-localleader-def ; , prefixed bindings
     :states '(normal visual motion insert emacs)
