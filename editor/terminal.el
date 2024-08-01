@@ -17,13 +17,18 @@
   :general
   ('(normal insert) vterm-mode-map
    "C-l" #'vterm--self-insert
+   "C-b" #'vterm--self-insert
    "C-c" #'vterm--self-insert)
   (my-leader-def
     "ost" (lambda () (interactive)
-            (evil-window-split 12)
+            (evil-window-split 10)
             (vterm))
     "ot" #'vterm)
   :config
+  (cl-loop for num from 0 to 9 do
+           (general-define-key :keymaps 'vterm-mode-map
+                               :states '(normal insert)
+                               (number-to-string num) #'vterm--self-insert))
   (evil-collection-init 'vterm)
   (add-hook 'vterm-mode-hook (lambda () (display-line-numbers-mode -1))))
 
