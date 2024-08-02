@@ -1,17 +1,18 @@
 ;;; -*- lexical-binding: t -*-
-(use-package swiper ; ivy for searching through buffers
-  :custom
-  (swiper-use-visual-line nil)
-  (swiper-use-visual-line-p (lambda (a) nil))
+(use-package consult
+  :hook (completion-list-mode . consult-preview-at-point-mode)
   :general
-  ('normal
-   "/"  #'swiper-isearch
-   "?"  #'swiper-isearch-backward)
   (my-leader-def
-    "/"  #'swiper
-    "?"  #'swiper-backward
-    "fb" #'(swiper-multi :which-key "swiper in buffer")
-    "fB" #'(swiper-all   :which-key "swiper in all buffers")))
+    ;; TODO consult-project-buffer
+    "SPC" #'(consult-buffer :which-key "find buffer")
+    "fr"  #'(consult-recent-file :which-key "find recent file")
+    "fs"  #'(consult-ripgrep :which-key "ripgrep"))
+  ('normal
+   "/" #'(consult-line :which-key "line"))
+
+  :config
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-function (lambda (_) (projectile-project-root))))
 
 (use-package ivy ; narrowing framework
   :defer 0.1
@@ -22,10 +23,6 @@
    "S-SPC" (lambda () (interactive) (insert " "))
    "C-j" #'ivy-next-line
    "C-k" #'ivy-previous-line)
-
-  ('normal ivy-minibuffer-map
-           "q" #'minibuffer-keyboard-quit)
-
   ('(normal insert) minibuffer-local-mode-map
    ";" #'exit-minibuffer)
 
@@ -38,7 +35,8 @@
                                 (counsel-rg            . ivy--regex-plus)
                                 (t                     . ivy--regex-fuzzy)))
   (evil-collection-init 'minibuffer)
-  (evil-collection-init 'ivy))
+  (evil-collection-init 'ivy)
+  )
 
 (use-package counsel ; ivy support for many functions
   :custom
@@ -48,7 +46,6 @@
   (my-leader-def
     "."       #'(counsel-find-file :which-key "file in directory")
     "SPC"     #'(ivy-switch-buffer :which-key "switch buffer")
-    "fr"      #'(counsel-recentf   :which-key "find recent files")
     "fj"      #'(counsel-imenu     :which-key "imenu")
     "gff"     #'(counsel-git       :which-key "git files")
     "ps"      #'(counsel-git-grep  :which-key "git grep")
@@ -79,7 +76,32 @@
     "SPC fid" "find in downloads")
   (counsel-mode))
 
+(use-package marginalia
+  :init
+  (marginalia-mode))
+
 (use-package flx :defer t)
+
+(use-package embark
+  :general
+  (my-localleader-def
+    "a" #'embark-act
+    "e" #'embark-export)
+  )
+
+(use-package vertico
+  :init
+  (vertico-mode)
+  )
+
+(use-package embark-consult
+  :disabled t)
+
+(use-package orderless
+  :disabled t)
+
+(use-package wgrep
+  :disabled t)
 
 (use-package yasnippet ; snippets
   :defer 0.2
@@ -88,10 +110,11 @@
   (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
   :general
   (my-leader-def
-    "si" #'(yas-insert-snippet  :which-key "insert")
-    "sn" #'(yas-new-snippet     :which-key "new")
-    "sl" #'(yas-describe-tables :which-key "list")
-    "sr" #'(yas-reload-all      :which-key "reload"))
+    "si" #'(yas-insert-snippet     :which-key "insert")
+    "sn" #'(yas-new-snippet        :which-key "new")
+    "sf" #'(yas-visit-snippet-file :which-key "find snippet")
+    "sl" #'(yas-describe-tables    :which-key "list")
+    "sr" #'(yas-reload-all         :which-key "reload"))
   :config
   ;; Latex-mode snippets in org
   (add-hook 'org-mode-hook (lambda ()
@@ -141,8 +164,3 @@
 
 (use-package company-flx ; fuzzy sorting for company completion options with company-capf
   :hook (company-mode . company-flx-mode))
-
-(use-package amx ; show recently used commands
-  :hook (pre-command . amx-mode)
-  :custom
-  (amx-history-length 50))

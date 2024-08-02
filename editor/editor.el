@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package smartparens ; pair delimiters automatically and functions to work with delimiters
+  :disabled t
   :defer 0.1
   :custom
   (sp-highlight-pair-overlay nil)
@@ -11,7 +12,7 @@
   (sp-show-pair-from-inside t)
   (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
   :config
-  (smartparens-global-mode)
+  (smartparens-global-mode -1)
   (require 'smartparens-config) ; config for many languages
 
   ;; characters to not pair in org mode
