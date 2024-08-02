@@ -47,11 +47,6 @@
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
    "g SPC o" #'(avy-goto-char-timer :which-key "timer")))
 
-(use-package flyspell-correct-ivy
-  :general
-  ('(normal insert)
-   "C-j" #'flyspell-correct-wrapper))
-
 (use-package define-word
   :general
   ('(normal insert)
