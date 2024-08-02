@@ -28,8 +28,7 @@
   (my-leader-def
     "ot" (lambda () (interactive)
            (evil-window-split 12)
-           (vterm))
-    "oft" #'vterm)
+           (vterm)))
   :config
   (cl-loop for num from 0 to 9 do
            (general-define-key :keymaps 'vterm-mode-map
