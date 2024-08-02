@@ -17,8 +17,6 @@
    "/" #'(consult-line :which-key "line"))
 
   :config
-
-
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function (lambda (_) (projectile-project-root))))
 

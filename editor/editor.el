@@ -131,7 +131,10 @@
   (setq chatgpt-shell-openai-key (read-file-contents "~/secrets/gpt_api_key")))
 
 (use-package ace-link
-  :defer t)
+  :general
+  ('normal
+   "g SPC l" #'(ace-link :which-key "goto link")))
+
 
 (use-package wgrep
   :general
