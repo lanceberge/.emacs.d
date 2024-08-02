@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: binding
+# key: kb
+# --
+"$1" #'($2 :which-key $3)
