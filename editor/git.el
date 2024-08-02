@@ -45,6 +45,14 @@
   :config
   (evil-collection-init 'ediff))
 
+(use-package git-timemachine
+  :general
+  (my-leader-def
+    "gt" #'(git-timemachine :which-key "git timemachine"))
+  ('normal 'git-timemachine-mode-map
+           "p" #'git-timemachine-show-previous-revision
+           "n" #'git-timemachine-show-next-revision))
+
 ;;;###autoload
 (defun +magit/stage-all-and-commit ()
   "stage all files and commit"
