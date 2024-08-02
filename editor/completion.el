@@ -7,6 +7,7 @@
     "SPC" #'(consult-buffer      :which-key "find buffer")
     "."   #'(find-file           :which-key "find file")
     "fr"  #'(consult-recent-file :which-key "find recent file")
+    "fj"  #'(consult-imenu       :which-key "imenu")
     "fs"  #'(consult-ripgrep     :which-key "ripgrep"))
   ('normal
    "/" #'(consult-line :which-key "line"))
@@ -44,8 +45,7 @@
    "C-k" #'vertico-previous
    "C-u" #'vertico-scroll-down
    "C-d" #'vertico-scroll-up
-   ";"   #'vertico-exit
-   "<backspace>" #' vertico-directory-delete-word))
+   ";"   #'vertico-exit))
 
 (use-package embark-consult
   :after (consult embark))
