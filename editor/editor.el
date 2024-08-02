@@ -43,6 +43,8 @@
 
 (use-package avy ; jump to things in files similar to easymotion for vim
   :general
+  ('evil-operator-state-map
+   "go" #'(avy-goto-char-2 :which-key "goto char"))
   ('normal
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
    "g SPC o" #'(avy-goto-char-timer :which-key "timer")))

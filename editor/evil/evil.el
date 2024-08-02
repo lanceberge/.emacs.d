@@ -14,6 +14,9 @@
   (evil-ex-substitute-highlight-all nil)
   (evil-ex-search-persist-highlight nil)
   :general
+  (evil-operator-state-map
+   "?" #'evil-search-backward
+   "/" #'evil-search-forward)
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
    [remap evil-next-line]          #'evil-next-visual-line
    [remap evil-previous-line]      #'evil-previous-visual-line
