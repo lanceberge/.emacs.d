@@ -51,7 +51,10 @@
     "gt" #'(git-timemachine :which-key "git timemachine"))
   ('normal 'git-timemachine-mode-map
            "p" #'git-timemachine-show-previous-revision
-           "n" #'git-timemachine-show-next-revision))
+           "n" #'git-timemachine-show-next-revision
+           "q" #'git-timemachine-quit
+           "t" #'git-timemachine-show-commit
+           "r" #'write-file))
 
 ;;;###autoload
 (defun +magit/stage-all-and-commit ()
