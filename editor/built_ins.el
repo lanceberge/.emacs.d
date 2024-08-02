@@ -91,3 +91,17 @@
   :config
   (setq ediff-diff-options "")
   (add-hook 'ediff-prepare-buffer-hook #'evil-open-folds))
+
+(use-package outline-mode
+  :straight (:type built-in)
+  :general
+  ('normal
+   "za"  #'outline-toggle-children
+   "zo"  #'outline-show-subtree
+   "zc"  #'outline-hide-subtree
+   "zk"  #'org-backward-element
+   "zj"  #'org-forward-element
+   "zr"  #'outline-show-all
+   "zm"  #'outline-hide-body
+   )
+  )

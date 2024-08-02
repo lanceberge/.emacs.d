@@ -80,10 +80,7 @@
    ",p" #'(org-set-property            :which-key "set property"))
 
   ('normal org-mode-map
-           "RET" #'org-return
-           "zo"  #'outline-show-subtree
-           "zk"  #'org-backward-element
-           "zj"  #'org-forward-element)
+           "RET" #'org-return)
 
   ;; Vim keys calendar maps
   ('org-read-date-minibuffer-local-map

@@ -98,17 +98,6 @@
   (evil-escape-excluded-major-modes '(org-agenda-mode))
   (evil-escape-excluded-states '(normal visual emacs)))
 
-(use-package origami ; code folding
-  :hook (prog-mode . origami-mode)
-  :general
-  ('normal origami-mode-map
-           "zc" #'(origami-close-node-recursively :which-key "close fold recursively")
-           "zo" #'(origami-open-node-recursively  :which-key "open fold recursively")
-           "zj" #'(origami-next-fold              :which-key "next fold")
-           "zk" #'(origami-previous-fold          :which-key "previous fold")
-           "zm" #'(origami-close-all-nodes        :which-key "close all folds recursively")
-           "zr" #'(origami-open-all-nodes         :which-key "open all folds recursively")))
-
 (use-package move-text
   :general
   ('normal
