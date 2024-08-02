@@ -135,3 +135,14 @@
 
 (use-package ace-link
   :defer t)
+
+(use-package wgrep
+  :general
+  ('normal grep-mode-map
+           "i" #'wgrep-change-to-wgrep-mode)
+  ('wgrep-mode-map
+   [remap evil-write] 'wgrep-save-all-buffers
+   [remap evil-save-modified-and-close] (lambda () (interactive)
+                                          (wgrep-save-all-buffers)
+                                          (evil-quit)))
+  :defer t)

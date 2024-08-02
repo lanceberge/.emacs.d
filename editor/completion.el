@@ -50,9 +50,6 @@
 (use-package embark-consult
   :after (consult embark))
 
-(use-package wgrep
-  :disabled t)
-
 (use-package yasnippet ; snippets
   :defer 0.2
   :defer-incrementally (eldoc easymenu help-mode)
