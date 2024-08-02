@@ -83,7 +83,7 @@
   "save and kill buffer"
   (interactive)
   (save-buffer)
-  (kill-this-buffer))
+  (kill-current-buffer))
 
 ;;;###autoload
 (defun my/split-line-below ()

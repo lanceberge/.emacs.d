@@ -13,7 +13,7 @@
 
     ;; Buffers
     "bs"      #'(save-buffer                    :which-key "write file")
-    "bd"      #'(kill-this-buffer               :which-key "delete buffer")
+    "bd"      #'(kill-current-buffer            :which-key "delete buffer")
     "bq"      #'(my/save-and-kill-buffer        :which-key "save and kill buffer")
     "b SPC d" #'(my/kill-window-and-buffer      :which-key "kill window and buffer")
     "br"        (lambda () (interactive)

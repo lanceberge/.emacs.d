@@ -10,14 +10,6 @@
   (sp-escape-quotes-after-insert nil)
   (sp-show-pair-from-inside t)
   (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
-  :general
-  ('normal
-   ">" (general-key-dispatch #'evil-shift-right
-         ")" #'(sp-forward-slurp-sexp :which-key "forward slurp")
-         "(" #'(sp-backward-barf-sexp :which-key "backward barf"))
-   "<" (general-key-dispatch #'evil-shift-left
-         ")" #'(sp-forward-barf-sexp   :which-key "forward barf")
-         "(" #'(sp-backward-slurp-sexp :which-key "backward slurp")))
   :config
   (smartparens-global-mode)
   (require 'smartparens-config) ; config for many languages
