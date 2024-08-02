@@ -8,6 +8,7 @@
     "."   #'(find-file           :which-key "find file")
     "fr"  #'(consult-recent-file :which-key "find recent file")
     "fj"  #'(consult-imenu       :which-key "imenu")
+    "fo"  #'(consult-outline     :which-key "outline")
     "fs"  #'(consult-ripgrep     :which-key "ripgrep"))
   ('normal
    "/" #'(consult-line :which-key "line"))
@@ -15,6 +16,19 @@
   :config
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function (lambda (_) (projectile-project-root))))
+
+(use-package vertico
+  :defer 0.1
+  :init
+  (evil-collection-init 'minibuffer)
+  (vertico-mode)
+  :general
+  ('(normal insert) '(vertico-map minibuffer-inactive-mode-map)
+   "C-j" #'vertico-next
+   "C-k" #'vertico-previous
+   "C-u" #'vertico-scroll-down
+   "C-d" #'vertico-scroll-up
+   ";"   #'vertico-exit))
 
 (use-package marginalia
   :defer 0.2
@@ -33,19 +47,6 @@
   (my-localleader-def
     "a" #'embark-act
     "e" #'embark-export))
-
-(use-package vertico
-  :defer 0.1
-  :init
-  (evil-collection-init 'minibuffer)
-  (vertico-mode)
-  :general
-  ('(normal insert) '(vertico-map minibuffer-inactive-mode-map)
-   "C-j" #'vertico-next
-   "C-k" #'vertico-previous
-   "C-u" #'vertico-scroll-down
-   "C-d" #'vertico-scroll-up
-   ";"   #'vertico-exit))
 
 (use-package embark-consult
   :after (consult embark))
