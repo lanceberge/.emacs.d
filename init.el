@@ -248,7 +248,7 @@
                   gc-cons-percentage 0.1
                   file-name-handler-alist default-file-name-handler-alist)))
 
-;; Raise gc threshold while minibuffer is active to not slow down ivy
+;; Raise gc threshold while minibuffer is active
 (defun doom-defer-garbage-collection-h ()
   "Defer garbage collection by setting it to the largest possible number"
   (setq gc-cons-threshold most-positive-fixnum))

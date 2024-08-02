@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package smartparens ; pair delimiters automatically and functions to work with delimiters
+  :disabled t
   :defer 0.1
   :custom
   (sp-highlight-pair-overlay nil)
@@ -11,7 +12,7 @@
   (sp-show-pair-from-inside t)
   (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
   :config
-  (smartparens-global-mode)
+  (smartparens-global-mode -1)
   (require 'smartparens-config) ; config for many languages
 
   ;; characters to not pair in org mode
@@ -45,11 +46,6 @@
   ('normal
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
    "g SPC o" #'(avy-goto-char-timer :which-key "timer")))
-
-(use-package flyspell-correct-ivy
-  :general
-  ('(normal insert)
-   "C-j" #'flyspell-correct-wrapper))
 
 (use-package define-word
   :general
@@ -133,4 +129,15 @@
   (setq chatgpt-shell-openai-key (read-file-contents "~/secrets/gpt_api_key")))
 
 (use-package ace-link
+  :defer t)
+
+(use-package wgrep
+  :general
+  ('normal grep-mode-map
+           "i" #'wgrep-change-to-wgrep-mode)
+  ('wgrep-mode-map
+   [remap evil-write] 'wgrep-save-all-buffers
+   [remap evil-save-modified-and-close] (lambda () (interactive)
+                                          (wgrep-save-all-buffers)
+                                          (evil-quit)))
   :defer t)

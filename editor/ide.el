@@ -30,14 +30,6 @@
   ('normal lsp-mode-map
            "gd" #'lsp-ui-peek-find-implementation))
 
-(use-package lsp-ivy
-  :defer t
-  :general
-  (my-localleader-def
-    "t" (lambda () (interactive)
-          (lsp-ivy-workspace-symbol 'symbol-at-point)
-          :which-key "view usages")))
-
 (use-package flycheck ; code syntax checking
   :hook (prog-mode . flycheck-mode)
   :custom

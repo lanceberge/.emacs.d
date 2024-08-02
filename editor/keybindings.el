@@ -22,7 +22,6 @@
     "bp"      #'(previous-buffer                :which-key "previous buffer")
 
     ;; Eval elisp
-    "er"      #'(eval-region                    :which-key "execute elisp region")
     "es"      #'(eval-last-sexp                 :which-key "execute elisp sexp")
     "ee"      #'(eval-expression                :which-key "evaluate elisp expression")
     "eb"      #'(eval-buffer                    :which-key "evaluate elisp buffer")
@@ -30,16 +29,19 @@
     "'"         (general-simulate-key "C-c '"   :which-key "open src block")
 
     ;; Find specific files
+    "er" (lambda () (interactive)
+           (load-file "~/.emacs.d/init.el"))
+
     "ofr" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
             (find-file "~/.emacs.d/README.org") :which-key "config")
 
     "oft" (lambda () (interactive)
             (tab-bar-switch-to-tab "org")
-            (find-file "~/org/todo.org")        :which-key "todo")
-
-    "ofc" (lambda () (interactive)
-            (counsel-find-file "~/code/")       :which-key "todo"))
+            (find-file "~/org/todo.org")        :which-key "todo"))
+  (my-leader-def
+    :states 'visual
+    "ee" #'(eval-region :which-key "execute elisp region"))
 
   ('normal
    "gs" #'(my/split-line-below         :which-key "split line below")

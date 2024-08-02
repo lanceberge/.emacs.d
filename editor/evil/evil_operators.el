@@ -6,7 +6,6 @@
   (evil-collection-setup-minibuffer t)
   (evil-collection-mode-list
    '(minibuffer
-     ivy
      dired
      eshell
      ediff
