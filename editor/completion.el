@@ -2,6 +2,8 @@
 (use-package consult
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :general
+  ('projectile-command-map
+   "s"  #'(consult-ripgrep     :which-key "ripgrep"))
   (my-leader-def
     ;; TODO consult-project-buffer
     "SPC" #'(consult-buffer      :which-key "find buffer")
