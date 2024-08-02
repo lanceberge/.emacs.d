@@ -14,68 +14,6 @@
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function (lambda (_) (projectile-project-root))))
 
-(use-package ivy ; narrowing framework
-  :defer 0.1
-  :hook (pre-command . ivy-mode)
-  :general
-  ('(normal insert) ivy-minibuffer-map
-   ";"   #'exit-minibuffer
-   "S-SPC" (lambda () (interactive) (insert " "))
-   "C-j" #'ivy-next-line
-   "C-k" #'ivy-previous-line)
-  ('(normal insert) minibuffer-local-mode-map
-   ";" #'exit-minibuffer)
-
-  ('(normal insert) minibuffer-inactive-mode-map
-   ";" #'ivy-done)
-  :custom
-  (ivy-initial-inputs-alist nil) ; no initial ^, let flx do all the sorting work
-  :config
-  (setq ivy-re-builders-alist '((swiper-isearch        . ivy--regex-plus)
-                                (counsel-rg            . ivy--regex-plus)
-                                (t                     . ivy--regex-fuzzy)))
-  (evil-collection-init 'minibuffer)
-  (evil-collection-init 'ivy)
-  )
-
-(use-package counsel ; ivy support for many functions
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
-  :general
-  (my-leader-def
-    "."       #'(counsel-find-file :which-key "file in directory")
-    "SPC"     #'(ivy-switch-buffer :which-key "switch buffer")
-    "fj"      #'(counsel-imenu     :which-key "imenu")
-    "gff"     #'(counsel-git       :which-key "git files")
-    "ps"      #'(counsel-git-grep  :which-key "git grep")
-    "f SPC f" #'(counsel-file-jump :which-key "file")
-    "fih"       (lambda () (interactive) (counsel-file-jump "" "~"))
-    "fis"       (lambda () (interactive) (counsel-file-jump "" "~/school"))
-    "fic"       (lambda () (interactive) (counsel-file-jump "" "~/code"))
-    "fio"       (lambda () (interactive) (counsel-file-jump "" "~/org"))
-    "fie"       (lambda () (interactive) (counsel-file-jump "" "~/.emacs.d"))
-    "fid"       (lambda () (interactive) (counsel-file-jump "" "~/Downloads"))
-    "fd"      #'(counsel-dired     :which-key "directory")
-    "pr"      #'(counsel-rg        :which-key "ripgrep")
-
-    "ofo" (lambda () (interactive)
-            (tab-bar-switch-to-tab "org")
-            (counsel-find-file "~/org") :which-key "org")
-
-    "ofs" (lambda () (interactive)
-            (counsel-find-file "~/school/spring2022") :which-key "school"))
-  :config
-  (which-key-add-key-based-replacements
-    "SPC fih" "find in ~"
-    "SPC fis" "find in school"
-    "SPC fin" "find in notes"
-    "SPC fic" "find in code"
-    "SPC fio" "find in org"
-    "SPC fie" "find in dotemacs"
-    "SPC fid" "find in downloads")
-  (counsel-mode))
-
 (use-package marginalia
   :init
   (marginalia-mode))
