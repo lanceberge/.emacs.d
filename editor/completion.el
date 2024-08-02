@@ -33,7 +33,7 @@
   )
 
 (use-package embark-consult
-  :disabled t)
+  )
 
 (use-package orderless
   :disabled t)
