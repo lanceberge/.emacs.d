@@ -62,5 +62,8 @@
   :general
   (my-leader-def
     "p" #'projectile-command-map)
+  ('projectile-command-map
+   "p" #'(+projectile-switch-and-find-file :which-key "switch proj and find file")
+   "s" #'(consult-ripgrep           :which-key "ripgrep"))
   :config
   (projectile-mode +1))

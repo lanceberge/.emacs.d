@@ -3,7 +3,8 @@
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :general
   ('projectile-command-map
-   "s"  #'(consult-ripgrep     :which-key "ripgrep"))
+   "SPC p" #'(+projectile-switch-and-rg :which-key "switch proj and ripgrep")
+   "s"     #'(consult-ripgrep           :which-key "ripgrep"))
   (my-leader-def
     ;; TODO consult-project-buffer
     "SPC" #'(consult-buffer      :which-key "find buffer")
@@ -16,6 +17,8 @@
    "/" #'(consult-line :which-key "line"))
 
   :config
+
+
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function (lambda (_) (projectile-project-root))))
 
