@@ -15,15 +15,21 @@
 
 (use-package vterm
   :general
+  ('normal vterm-mode-map
+           "N" #'vterm--self-insert
+           "R" #'vterm--self-insert)
   ('(normal insert) vterm-mode-map
    "C-l" #'vterm--self-insert
    "C-b" #'vterm--self-insert
    "C-c" #'vterm--self-insert)
   (my-leader-def
-    "ost" (lambda () (interactive)
-            (evil-window-split 10)
-            (vterm))
-    "ot" #'vterm)
+    :states 'insert
+    "C-c" #'vterm--self-insert)
+  (my-leader-def
+    "ot" (lambda () (interactive)
+           (evil-window-split 12)
+           (vterm))
+    "oft" #'vterm)
   :config
   (cl-loop for num from 0 to 9 do
            (general-define-key :keymaps 'vterm-mode-map
