@@ -44,7 +44,7 @@
    "M-<return>"   #'+org/insert-todo
    "M-S-<return>" #'+org/insert-todo-above
    "C-<return>"   #'+org/insert-heading
-   "C-S-<return>"   #'+org/insert-heading-above
+   "C-S-<return>" #'+org/insert-heading-above
 
    ;; Vim keys > arrow keys
    "M-h"   #'org-metaleft
@@ -116,6 +116,7 @@
                         ("C"             . ?c)
                         ("music"         . ?m)))
 
+  (setq kill-emacs-query-functions nil)
   (add-hook 'kill-emacs-hook
             (lambda () (interactive) (setq kill-emacs-query-functions nil)))
 
