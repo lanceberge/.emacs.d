@@ -80,6 +80,7 @@
    ",p" #'(org-set-property            :which-key "set property"))
 
   ('normal org-mode-map
+           "zm" #'(outline-hide-sublevels :which-key "hide all")
            "RET" #'org-return)
 
   ;; Vim keys calendar maps

@@ -96,12 +96,10 @@
   :straight (:type built-in)
   :general
   ('normal
-   "za"  #'outline-toggle-children
-   "zo"  #'outline-show-subtree
-   "zc"  #'outline-hide-subtree
-   "zk"  #'org-backward-element
-   "zj"  #'org-forward-element
-   "zr"  #'outline-show-all
-   "zm"  #'outline-hide-body
-   )
-  )
+   "za"  #'(outline-toggle-children :which-key "toggle fold")
+   "zo"  #'(outline-show-subtree    :which-key "fully open")
+   "zc"  #'(outline-hide-subtree    :which-key "fully fold")
+   "zk"  #'(org-backward-element    :which-key "go up an outline")
+   "zj"  #'(org-forward-element     :which-key "go down an outline")
+   "zr"  #'(outline-show-all        :which-key "close all folds")
+   "zm"  #'(outline-hide-body       :which-key "open all folds")))
