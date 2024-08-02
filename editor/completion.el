@@ -4,9 +4,10 @@
   :general
   (my-leader-def
     ;; TODO consult-project-buffer
-    "SPC" #'(consult-buffer :which-key "find buffer")
+    "SPC" #'(consult-buffer      :which-key "find buffer")
+    "."   #'(find-file           :which-key "find file")
     "fr"  #'(consult-recent-file :which-key "find recent file")
-    "fs"  #'(consult-ripgrep :which-key "ripgrep"))
+    "fs"  #'(consult-ripgrep     :which-key "ripgrep"))
   ('normal
    "/" #'(consult-line :which-key "line"))
 
@@ -15,28 +16,39 @@
   (setq consult-project-function (lambda (_) (projectile-project-root))))
 
 (use-package marginalia
-  :init
+  :defer 0.2
+  :config
   (marginalia-mode))
 
-(use-package flx :defer t)
+(use-package orderless
+  :after vertico
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package embark
+  :defer 0.3
   :general
   (my-localleader-def
     "a" #'embark-act
-    "e" #'embark-export)
-  )
+    "e" #'embark-export))
 
 (use-package vertico
+  :defer 0.1
   :init
+  (evil-collection-init 'minibuffer)
   (vertico-mode)
-  )
+  :general
+  ('(normal insert) '(vertico-map minibuffer-inactive-mode-map)
+   "C-j" #'vertico-next
+   "C-k" #'vertico-previous
+   "C-u" #'vertico-scroll-down
+   "C-d" #'vertico-scroll-up
+   ";"   #'vertico-exit
+   "<backspace>" #' vertico-directory-delete-word))
 
 (use-package embark-consult
-  )
-
-(use-package orderless
-  :disabled t)
+  :after (consult embark))
 
 (use-package wgrep
   :disabled t)
@@ -99,6 +111,8 @@
                         `(lambda () (interactive) (company-complete-number ,x))))
           (number-sequence 1 9)))
   (global-company-mode))
+
+(use-package flx :defer t)
 
 (use-package company-flx ; fuzzy sorting for company completion options with company-capf
   :hook (company-mode . company-flx-mode))
