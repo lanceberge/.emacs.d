@@ -19,7 +19,11 @@
 
   (lsp-auto-guess-root t)
   :general
+  ('(normal insert) 'lsp-mode-map
+   "M-i" #'(lsp-execute-code-action :which-key "code action"))
   ('normal lsp-mode-map
+           "gr" #'(lsp-find-references :which-key "find references")
+           "ga" #'(lsp-execute-code-action :which-key "code action")
            "gh" #'(lsp-describe-thing-at-point :which-key "view doc"))
   (my-localleader-def
     "h"  #'(lsp-describe-thing-at-point :which-key "view doc")
