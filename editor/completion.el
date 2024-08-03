@@ -14,11 +14,7 @@
     "fo"  #'(consult-outline     :which-key "outline")
     "fs"  #'(consult-ripgrep     :which-key "ripgrep"))
   ('normal
-   "/" #'(consult-line :which-key "line"))
-
-  :config
-  (autoload 'projectile-project-root "projectile")
-  (setq consult-project-function (lambda (_) (projectile-project-root))))
+   "/" #'(consult-line :which-key "line")))
 
 (use-package vertico
   :defer 0.1
@@ -97,7 +93,6 @@
                        "<return>" #'newline
                        ";"        #'company-complete-selection) ; choose a completion with ; instead of tab
   :config
-  ;; TODO configure this in prog-mode and text-mode use-package
   (defun prog-mode-company-backends ()
     (setq-local company-backends
                 '((company-capf company-files company-dabbrev-code company-yasnippet))))
