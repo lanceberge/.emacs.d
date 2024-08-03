@@ -20,4 +20,4 @@
       (message "Parens are not balanced, saving canceled"))))
 
 (use-package aggressive-indent-mode
-  :hook (emacs-lisp-mode-map . aggressive-indent-mode)
+  :hook (emacs-lisp-mode . aggressive-indent-mode))
