@@ -59,6 +59,8 @@
   :custom
   (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
   :general
+  ('yas-keymap
+   "<tab>" #'yas-next-field)
   (my-leader-def
     "si" #'(yas-insert-snippet     :which-key "insert")
     "sn" #'(yas-new-snippet        :which-key "new")
@@ -87,7 +89,7 @@
   ('company-active-map "C-w" nil ; don't override evil C-w
                        "C-j"      #'company-select-next-or-abort
                        "C-k"      #'company-select-previous-or-abort
-                       "<tab>"    #'yas-next-field-or-maybe-expand ; don't interfere with yasnippet
+                       "<tab>"    #'yas-expand ; don't interfere with yasnippet
                        "C-0"        (lambda () (interactive) (company-complete-number 10))
                        "RET"      #'newline
                        "<return>" #'newline
@@ -106,7 +108,7 @@
   (add-hook 'text-mode-hook 'text-mode-company-backends)
   ;; complete suggestion based on the number
   (let ((map company-active-map))
-    (mapc (lambda (x) (define-key map (kbd (format "C-%d" x))
+    (mapc (lambda (x) (define-key map (kbd (format "M-%d" x))
                         `(lambda () (interactive) (company-complete-number ,x))))
           (number-sequence 1 9)))
   (global-company-mode))
