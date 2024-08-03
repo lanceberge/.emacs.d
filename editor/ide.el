@@ -47,7 +47,10 @@
   (flycheck-add-mode 'javascript-eslint 'web-mode))
 
 (use-package xref
-  :commands xref-find-references xref-auto-jump-first-definition)
+  :commands (xref-find-references xref-auto-jump-first-definition)
+  :general
+  ('normal xref--xref-buffer-mode-map
+           ";" #'xref-goto-xref))
 
 (use-package eldoc
   :general
