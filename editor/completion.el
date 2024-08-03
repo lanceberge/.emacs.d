@@ -47,6 +47,9 @@
 (use-package embark
   :defer 0.3
   :general
+  ('(normal insert)
+   "M-." #'embark-act
+   "M-," #'embark-export)
   (my-localleader-def
     "a" #'embark-act
     "e" #'embark-export))
