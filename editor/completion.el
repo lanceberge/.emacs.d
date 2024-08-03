@@ -6,15 +6,17 @@
    "SPC p" #'(+projectile-switch-and-rg :which-key "switch proj and ripgrep")
    "s"     #'(consult-ripgrep           :which-key "ripgrep"))
   (my-leader-def
-    ;; TODO consult-project-buffer
-    "SPC" #'(consult-buffer      :which-key "find buffer")
-    "."   #'(find-file           :which-key "find file")
-    "fr"  #'(consult-recent-file :which-key "find recent file")
-    "fj"  #'(consult-imenu       :which-key "imenu")
-    "fo"  #'(consult-outline     :which-key "outline")
-    "fs"  #'(consult-ripgrep     :which-key "ripgrep"))
+    "SPC" #'(consult-buffer         :which-key "find buffer")
+    "."   #'(find-file              :which-key "find file")
+    "fr"  #'(consult-recent-file    :which-key "find recent file")
+    "fj"  #'(consult-imenu          :which-key "imenu")
+    "fp"  #'(consult-project-buffer :which-key "project buffer")
+    "fo"  #'(consult-outline        :which-key "outline")
+    "fs"  #'(consult-ripgrep        :which-key "ripgrep"))
   ('normal
-   "/" #'(consult-line :which-key "line")))
+   "/" #'(consult-line :which-key "line"))
+  :config
+  (setq xref-show-xrefs-function #'consult-xref))
 
 (use-package vertico
   :defer 0.1
