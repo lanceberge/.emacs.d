@@ -2,7 +2,7 @@
 (use-package terminal-here
   :general
   (my-leader-def
-    "ot" #'terminal-here-launch :which-key "Launch terminal"))
+    "o SPC t" #'terminal-here-launch :which-key "Launch terminal"))
 
 (use-package tramp ; access remote files within emacs
   :disabled t

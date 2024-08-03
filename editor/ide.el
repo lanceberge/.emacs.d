@@ -63,9 +63,8 @@
     "pp"      #'(+project-switch-and-find-file :which-key "switch project")
     "p SPC p" #'(+project-switch-and-rg        :which-key "switch project")
     "pf"      #'(project-find-file             :which-key "find file")
-    "ps"      #'(consult-ripgrep               :which-key "ripgrep"))
-  ;; (add-to-list 'project-switch-commands '('consult-ripgrep "Consult Ripgrep" "s"))
-  )
+    "ps"      #'(consult-ripgrep               :which-key "ripgrep")))
+
 (use-package projectile
   :disabled t
   :defer 0.2
