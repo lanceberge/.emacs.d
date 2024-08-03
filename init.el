@@ -43,6 +43,10 @@
   (indent-tabs-mode nil) ; tabs are converted to spaces
   (apropos-do-all t)     ; more extensive apropos searches
 
+  (use-file-dialog nil)
+  (use-dialog-box nil)
+  (pop-up-frames nil)
+
   ;; Disable bidirectional text rendering for performance
   (bidi-display-reordering 'left-to-right)
   (bidi-paragraph-direction 'left-to-right)
