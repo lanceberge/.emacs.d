@@ -6,13 +6,14 @@
    "SPC p" #'(+projectile-switch-and-rg :which-key "switch proj and ripgrep")
    "s"     #'(consult-ripgrep           :which-key "ripgrep"))
   (my-leader-def
-    "SPC" #'(consult-buffer         :which-key "find buffer")
-    "."   #'(find-file              :which-key "find file")
-    "fr"  #'(consult-recent-file    :which-key "find recent file")
-    "fj"  #'(consult-imenu          :which-key "imenu")
-    "fp"  #'(consult-project-buffer :which-key "project buffer")
-    "fo"  #'(consult-outline        :which-key "outline")
-    "fs"  #'(consult-ripgrep        :which-key "ripgrep"))
+    "SPC"     #'(consult-buffer         :which-key "find buffer")
+    "."       #'(find-file              :which-key "find file")
+    "fr"      #'(consult-recent-file    :which-key "find recent file")
+    "fj"      #'(consult-imenu          :which-key "imenu")
+    "f SPC j" #'(consult-imenu-multi    :which-key "imenu")
+    "fp"      #'(consult-project-buffer :which-key "project buffer")
+    "fo"      #'(consult-outline        :which-key "outline")
+    "fs"      #'(consult-ripgrep        :which-key "ripgrep"))
   ('normal
    "/" #'(consult-line :which-key "line"))
   :config
@@ -29,6 +30,10 @@
    "C-k" #'vertico-previous
    "C-u" #'vertico-scroll-down
    "C-d" #'vertico-scroll-up
+   "M-j" #'vertico-next
+   "M-k" #'vertico-previous
+   "M-u" #'vertico-scroll-down
+   "M-d" #'vertico-scroll-up
    ";"   #'vertico-exit))
 
 (use-package marginalia
@@ -91,6 +96,8 @@
   ('company-active-map "C-w" nil ; don't override evil C-w
                        "C-j"      #'company-select-next-or-abort
                        "C-k"      #'company-select-previous-or-abort
+                       "M-j"      #'company-select-next-or-abort
+                       "M-k"      #'company-select-previous-or-abort
                        "<tab>"    #'yas-expand ; don't interfere with yasnippet
                        "C-0"        (lambda () (interactive) (company-complete-number 10))
                        "RET"      #'newline
