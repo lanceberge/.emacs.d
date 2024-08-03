@@ -91,7 +91,7 @@
   ('company-active-map "C-w" nil ; don't override evil C-w
                        "C-j"      #'company-select-next-or-abort
                        "C-k"      #'company-select-previous-or-abort
-                       "<tab>"    #'yas-expand ; don't interfere with yasnippet
+                       "<tab>"    #'yas-next-field-or-maybe-expand ; don't interfere with yasnippet
                        "C-0"        (lambda () (interactive) (company-complete-number 10))
                        "RET"      #'newline
                        "<return>" #'newline
