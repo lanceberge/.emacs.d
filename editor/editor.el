@@ -154,11 +154,17 @@
      "Output\\*$"
      "\\*Async Shell Command\\*"
      "^\\*vterm.*\\*$"
+     "^\\*eldoc"
      helpful-mode
      help-mode
      compilation-mode))
   :general
+  (my-leader-def
+    "'" #'popper-toggle)
+
+  ('evil-window-map
+   "p" #'popper-toggle-type)
+
   ("C-'" #'popper-toggle)
-  ;; TODO popper-toggle-type
   :config
   (popper-mode +1))
