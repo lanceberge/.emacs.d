@@ -151,11 +151,11 @@
   "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
   (interactive)
   (setq project-switch-commands 'consult-ripgrep)
-  (project-switch-project))
+  (call-interactively 'project-switch-project))
 
 ;;;###autoload
 (defun +project-switch-and-find-file ()
   "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
   (interactive)
   (setq project-switch-commands 'project-find-file)
-  (project-switch-project))
+  (call-interactively 'project-switch-project))
