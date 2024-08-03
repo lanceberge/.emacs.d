@@ -146,3 +146,19 @@
                                           (wgrep-save-all-buffers)
                                           (evil-quit)))
   :defer t)
+(use-package popper
+  :defer 0.3
+  :custom
+  (popper-reference-buffers
+   '("\\*Messages\\*"
+     "Output\\*$"
+     "\\*Async Shell Command\\*"
+     "^\\*vterm.*\\*$"
+     helpful-mode
+     help-mode
+     compilation-mode))
+  :general
+  ("C-'" #'popper-toggle)
+  ;; TODO popper-toggle-type
+  :config
+  (popper-mode +1))
