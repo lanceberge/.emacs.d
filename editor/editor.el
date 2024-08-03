@@ -1,28 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(use-package smartparens ; pair delimiters automatically and functions to work with delimiters
-  :disabled t
-  :defer 0.1
-  :custom
-  (sp-highlight-pair-overlay nil)
-  (sp-highlight-wrap-overlay nil)
-  (sp-highlight-wrap-tag-overlay nil)
-  (sp-max-prefix-length 25)
-  (sp-max-pair-length 4)
-  (sp-escape-quotes-after-insert nil)
-  (sp-show-pair-from-inside t)
-  (sp-cancel-autoskip-on-backward-movement nil) ; quote pairs buggy otherwise
-  :config
-  (smartparens-global-mode -1)
-  (require 'smartparens-config) ; config for many languages
-
-  ;; characters to not pair in org mode
-  (eval-after-load 'smartparens-org '(progn
-                                       (sp-local-pair 'org-mode "=" nil :actions nil)
-                                       (sp-local-pair 'org-mode "~" nil :actions nil)
-                                       (sp-local-pair 'org-mode "/" nil :actions nil)
-                                       (sp-local-pair 'org-mode "_" nil :actions nil)
-                                       (sp-local-pair 'org-mode "'" nil :actions nil)
-                                       (sp-local-pair 'org-mode "*" nil :actions nil))))
 
 (use-package format-all ; format code functions
   :hook
