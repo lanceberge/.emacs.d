@@ -50,6 +50,11 @@
   :config
   (flycheck-add-mode 'javascript-eslint 'web-mode))
 
+(use-package consult-flycheck
+  :general
+  (my-leader-def
+    "fe" #'(consult-flycheck :which-key "outline")))
+
 (use-package xref
   :commands (xref-find-references xref-auto-jump-first-definition)
   :general
@@ -59,7 +64,6 @@
 (use-package eldoc
   :general
   ('normal
-   ;; TODO wrap in smaller buffer function
    "gh" #'(eldoc-print-current-symbol-info :which-key "view doc")))
 
 (use-package project

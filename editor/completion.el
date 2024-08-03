@@ -13,10 +13,12 @@
     "f SPC j" #'(consult-imenu-multi    :which-key "imenu")
     "fp"      #'(consult-project-buffer :which-key "project buffer")
     "fo"      #'(consult-outline        :which-key "outline")
+    "fl"      #'(consult-goto-line      :which-key "outline")
     "fs"      #'(consult-ripgrep        :which-key "ripgrep"))
   ('normal
    "/" #'(consult-line :which-key "line"))
   :config
+  ;; This function is amazing
   (setq xref-show-xrefs-function #'consult-xref))
 
 (use-package vertico
