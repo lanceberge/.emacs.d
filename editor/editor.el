@@ -1,5 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-
 (use-package format-all ; format code functions
   :hook
   (prog-mode . format-all-mode)
