@@ -93,7 +93,7 @@
   (corfu-preview-current t)
   (corfu-preselect 'first)
   (corfu-auto-prefix 2)
-  (corfu-on-exact-match 'insert)
+  (corfu-on-exact-match nil)
   (corfu-scroll-margin 5)
   :init
   (global-corfu-mode)

@@ -100,11 +100,11 @@
   (interactive)
   (add-hook 'org-capture-after-finalize-hook #'+org-roam-project-finalize-hook)
   (org-roam-capture-
-   :node (org-roam-node-read
-          nil
-          (+org-roam-filter-by-tag "Project"))
-   :templates '(("p" "project" plain "** TODO %?"
-                 :if-new
-                 (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
-                                "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
-                                ("Tasks"))))))
+   :node
+   (org-roam-node-read nil (+org-roam-filter-by-tag "Project"))
+   :templates
+   '(("p" "project" plain "** TODO %?"
+      :if-new
+      (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
+                     "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
+                     ("Tasks"))))))
