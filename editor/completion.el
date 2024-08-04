@@ -98,8 +98,6 @@
   :init
   (global-corfu-mode)
   :general
-  ('insert
-   "M-j" #'corfu-send)
   ('corfu-map
    "RET"   #'newline
    "M-j"   #'corfu-next
