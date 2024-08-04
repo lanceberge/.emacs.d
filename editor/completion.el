@@ -2,9 +2,6 @@
 (use-package consult
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :general
-  ('projectile-command-map
-   "SPC p" #'(+projectile-switch-and-rg :which-key "switch proj and ripgrep")
-   "s"     #'(consult-ripgrep           :which-key "ripgrep"))
   (my-leader-def
     "SPC"     #'(consult-buffer         :which-key "find buffer")
     "."       #'(find-file              :which-key "find file")
@@ -14,7 +11,10 @@
     "fp"      #'(consult-project-buffer :which-key "project buffer")
     "fo"      #'(consult-outline        :which-key "outline")
     "fl"      #'(consult-goto-line      :which-key "outline")
+    "fa"      #'(consult-org-agenda     :which-key "agenda")
     "fs"      #'(consult-ripgrep        :which-key "ripgrep"))
+  ('org-agenda-mode-map
+   [remap evil-search-forward] #'(consult-line :which-key "line"))
   ('normal
    "/" #'(consult-line :which-key "line"))
   :config
