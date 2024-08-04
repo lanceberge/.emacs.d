@@ -67,3 +67,44 @@
         (org-roam-capture-templates (list (append (car org-roam-capture-templates)
                                                   '(:immediate-finish t)))))
     (apply #'org-roam-node-insert args)))
+
+;;;###autoload
+(defun +org-roam-filter-by-tag (tag-name)
+  (lambda (node)
+    (member tag-name (org-roam-node-tags node))))
+
+;;;###autoload
+(defun +org-roam-list-notes-by-tag (tag-name)
+  (mapcar #'org-roam-node-file
+          (seq-filter
+           (+org-roam-filter-by-tag tag-name)
+           (org-roam-node-list))))
+
+;;;###autoload
+(defun +org-roam-refresh-agenda-list ()
+  (interactive)
+  (setq org-agenda-files
+        (append (+org-roam-list-notes-by-tag "Project") org-agenda-files)))
+
+;;;###autoload
+(defun +org-roam-project-finalize-hook ()
+  (remove-hook 'org-capture-after-finalize-hook #'+org-roam-project-finalize-hook)
+
+  (unless org-note-abort
+    (with-current-buffer (org-capture-get :buffer)
+      (add-to-list 'org-agenda-files (buffer-file-name))))
+  )
+
+;;;###autoload
+(defun +org-roam-add-todo ()
+  (interactive)
+  (add-hook 'org-capture-after-finalize-hook #'+org-roam-project-finalize-hook)
+  (org-roam-capture-
+   :node (org-roam-node-read
+          nil
+          (+org-roam-filter-by-tag "Project"))
+   :templates '(("p" "project" plain "** TODO %?"
+                 :if-new
+                 (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
+                                "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
+                                ("Tasks"))))))

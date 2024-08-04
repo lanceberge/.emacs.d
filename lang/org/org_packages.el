@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org-agenda
+  :defer 0.5
   :straight (:type built-in)
   :custom
   (org-agenda-span 14)              ; show 14 days
@@ -15,6 +16,7 @@
            (org-agenda nil "t")))
   :config
   (require 'evil-org-agenda)
+  (+org-roam-refresh-agenda-list)
   (evil-org-agenda-set-keys)
   (which-key-add-key-based-replacements
     "SPC oa" "agenda"))
@@ -25,13 +27,31 @@
   (org-roam-completion-everywhere t)
   (org-roam-directory "~/org-roam")
   (org-roam-db-gc-threshold most-positive-fixnum)
+  (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:30}")))
+  (org-roam-capture-templates
+   '(("d" "default" plain "%?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                         "#+title: ${title}\n")
+      :unnarrowed t)
+     ("c" "Programming" plain "%?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                         "#+title: ${title}\n#+filetags: Programming\n")
+      :unnarrowed t)
+     ("p" "Projects" plain "%?"
+      :if-new
+      (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                 "#+title: ${title}\n#+category: ${title}\n#+filetags: Project\n")
+      :unnarrowed t)
+     )
+   )
   :general
   (my-leader-def
     "oni" #'(org-roam-node-insert            :which-key "insert link")
     "onl" #'(org-roam-buffer-toggle          :which-key "view links")
-    ;; TODO org-roam-capture
     "onn" #'(+org-roam-node-insert-immediate :which-key "insert now")
-    "onf" #'(org-roam-node-find              :which-key "find note"))
+    "onf" #'(org-roam-node-find              :which-key "find note")
+    "ont" #'(+org-roam-add-todo              :which-key "add todo")
+    )
   :config
   (org-roam-db-autosync-mode))
 
