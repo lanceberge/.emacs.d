@@ -26,7 +26,6 @@
     "ee"      #'(eval-expression                :which-key "evaluate elisp expression")
     "eb"      #'(eval-buffer                    :which-key "evaluate elisp buffer")
     "ef"      #'(eval-defun                     :which-key "evaluate elisp defun")
-    "'"         (general-simulate-key "C-c '"   :which-key "open src block")
 
     ;; Find specific files
     "er" (lambda () (interactive)
