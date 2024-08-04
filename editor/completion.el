@@ -46,7 +46,7 @@
 (use-package orderless
   :after vertico
   :custom
-  (completion-styles '(orderless basic))
+  (completion-styles '(flex basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package embark
@@ -83,7 +83,40 @@
 
   (yas-global-mode 1))
 
+(use-package corfu
+  :custom
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-delay 0.01)
+  (corfu-separator ?\s)
+  (corfu-quit-no-match t)
+  (corfu-preview-current t)
+  (corfu-preselect 'first)
+  (corfu-auto-prefix 2)
+  (corfu-on-exact-match 'insert)
+  (corfu-scroll-margin 5)
+  :init
+  (global-corfu-mode)
+  :general
+  ('insert
+   "M-j" #'corfu-send)
+  ('corfu-map
+   "RET"   #'newline
+   "M-j"   #'corfu-next
+   "M-k"   #'corfu-previous
+   ";"     #'corfu-complete
+   "<tab>" #'yas-expand))
+
+(use-package cape
+  :after corfu
+  :custom
+  (cape-file-directory-must-exist nil)
+  :init
+  (dolist (backend '(cape-file))
+    (add-to-list 'completion-at-point-functions backend)))
+
 (use-package company ; autocomplete
+  :disabled t
   :defer 0.1
   :custom
   (company-idle-delay 0.01)
@@ -124,7 +157,8 @@
           (number-sequence 1 9)))
   (global-company-mode))
 
-(use-package flx :defer t)
+(use-package flx :disabled t)
 
 (use-package company-flx ; fuzzy sorting for company completion options with company-capf
+  :disabled t
   :hook (company-mode . company-flx-mode))
