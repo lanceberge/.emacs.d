@@ -47,13 +47,23 @@
   :general
   (my-leader-def
     "oni" #'(org-roam-node-insert            :which-key "insert link")
-    "onl" #'(org-roam-buffer-toggle          :which-key "view links")
     "onn" #'(+org-roam-node-insert-immediate :which-key "insert now")
-    "onf" #'(org-roam-node-find              :which-key "find note")
     "ont" #'(+org-roam-add-todo              :which-key "add todo")
     )
   :config
   (org-roam-db-autosync-mode))
+
+(use-package consult-org-roam
+  :custom
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  :general
+  (my-leader-def
+    "onb"      #'(consult-org-roam-backlinks           :which-key "view backlinks")
+    "onl"      #'(consult-org-roam-forward-links       :which-key "view forward links")
+    "on SPC b" #'(consult-org-roam-backlinks-recursive :which-key "view recursive backlinks")
+    "onf"      #'(consult-org-roam-file-find           :which-key "find note")
+    )
+  )
 
 (use-package org-capture
   :straight (:type built-in)
