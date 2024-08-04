@@ -18,6 +18,3 @@
           (call-interactively #'format-all-buffer)
           (save-buffer))
       (message "Parens are not balanced, saving canceled"))))
-
-(use-package aggressive-indent-mode
-  :hook (emacs-lisp-mode . aggressive-indent-mode))
