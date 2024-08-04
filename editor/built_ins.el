@@ -103,3 +103,11 @@
    "zj"  #'(org-forward-element     :which-key "go down an outline")
    "zr"  #'(outline-show-all        :which-key "close all folds")
    "zm"  #'(outline-hide-body       :which-key "open all folds")))
+
+(use-package ispell
+  :straight (:type built-in)
+  :custom
+  (ispell-complete-word-dict t)
+  :general
+  ('insert
+   "M-y" #'ispell-word))
