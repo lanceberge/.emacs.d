@@ -104,15 +104,15 @@
   (setq org-tag-alist '(("personal"      . ?p)
                         ("easy tasks"    . ?t)
                         ("hard tasks"    . ?T)
-                        ("work"          . ?w)
+                        ("Work"          . ?w)
                         ("side projects" . ?s)
                         ("health"        . ?h)
                         ("relationships" . ?r)
-                        ("emacs"         . ?e)
+                        ("Emacs"         . ?e)
                         ("A"             . ?a)
                         ("B"             . ?b)
                         ("C"             . ?c)
-                        ("music"         . ?m)))
+                        ("Music"         . ?m)))
 
   (setq kill-emacs-query-functions nil)
   (add-hook 'kill-emacs-hook

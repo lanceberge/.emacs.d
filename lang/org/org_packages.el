@@ -40,7 +40,7 @@
      ("p" "Projects" plain "%?"
       :if-new
       (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                 "#+title: ${title}\n#+category: ${title}\n#+filetags: Project\n")
+                 "#+title: ${title}\n#+category: ${title}\n#+filetags: Project ${title}\n")
       :unnarrowed t)
      )
    )

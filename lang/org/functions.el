@@ -106,5 +106,5 @@
    '(("p" "project" plain "** TODO %?"
       :if-new
       (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
-                     "#+title: ${title}\n#+category: ${title}\n#+filetags: Project"
+                     "#+title: ${title}\n#+category: ${title}\n#+filetags: Project ${title}"
                      ("Tasks"))))))
