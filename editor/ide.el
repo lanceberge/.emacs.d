@@ -18,6 +18,14 @@
   (lsp-clients-typescript-server-args '("--stdio"))
 
   (lsp-auto-guess-root t)
+
+  (lsp-completion-provider :none)
+  :init
+  (defun +lsp-mode-setup-completion ()
+    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+          '(flex))) ;; Configure flex
+  :hook
+  (lsp-completion-mode . +lsp-mode-setup-completion)
   :general
   ('(normal insert) 'lsp-mode-map
    "M-i" #'(lsp-execute-code-action :which-key "code action"))
@@ -30,6 +38,7 @@
     "gr" #'(lsp-rename                  :which-key "rename with lsp")))
 
 (use-package lsp-ui
+  :disabled t
   :general
   ('normal lsp-mode-map
            "gd" #'lsp-ui-peek-find-implementation))
