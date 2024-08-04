@@ -144,5 +144,6 @@
 
   ('(normal insert visual)
    "C-'" #'popper-toggle)
+
   :config
   (popper-mode +1))
