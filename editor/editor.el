@@ -132,6 +132,7 @@
      "\\*Async Shell Command\\*"
      "^\\*vterm.*\\*$"
      "^\\*eldoc"
+     "\\*Warnings\\*"
      helpful-mode
      help-mode
      compilation-mode))

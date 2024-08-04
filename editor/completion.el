@@ -113,6 +113,18 @@
   (dolist (backend '(cape-file))
     (add-to-list 'completion-at-point-functions backend)))
 
+(use-package consult-org-roam
+  :custom
+  (consult-org-roam-grep-func #'consult-ripgrep)
+  :general
+  (my-leader-def
+    "onb"      #'(consult-org-roam-backlinks           :which-key "view backlinks")
+    "onl"      #'(consult-org-roam-forward-links       :which-key "view forward links")
+    "on SPC b" #'(consult-org-roam-backlinks-recursive :which-key "view recursive backlinks")
+    "onf"      #'(consult-org-roam-file-find           :which-key "find note")
+    )
+  )
+
 (use-package company ; autocomplete
   :disabled t
   :defer 0.1
