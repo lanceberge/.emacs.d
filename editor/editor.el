@@ -132,11 +132,6 @@
      "\\*Async Shell Command\\*"
      "^\\*vterm.*\\*$"
      "^\\*eldoc"
-     "^\\*chatgpt"
-     (lambda (buf) (with-current-buffer buf
-                     (and (derived-mode-p 'fundamental-mode)
-                          (< (count-lines (point-min) (point-max))
-                             10))))
      helpful-mode
      help-mode
      compilation-mode))
