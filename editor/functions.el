@@ -134,17 +134,19 @@
         (let ((window-height (round (* 0.33 (frame-height)))))
           (enlarge-window (- window-height (window-height))))))))
 
-;; (defun +projectile-switch-and-rg ()
-;;   "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
-;;   (interactive)
-;;   (setq projectile-switch-project-action 'consult-ripgrep)
-;;   (projectile-switch-project))
+;;;###autoload
+(defun +projectile-switch-and-rg ()
+  "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+  (interactive)
+  (setq projectile-switch-project-action 'consult-ripgrep)
+  (projectile-switch-project))
 
-;; (defun +projectile-switch-and-find-file ()
-;;   "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
-;;   (interactive)
-;;   (setq projectile-switch-project-action 'projectile-find-file)
-;;   (projectile-switch-project))
+;;;###autoload
+(defun +projectile-switch-and-find-file ()
+  "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+  (interactive)
+  (setq projectile-switch-project-action 'projectile-find-file)
+  (projectile-switch-project))
 
 ;;;###autoload
 (defun +project-switch-and-rg ()

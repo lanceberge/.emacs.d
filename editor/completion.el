@@ -18,6 +18,9 @@
   ('normal
    "/" #'(consult-line :which-key "line"))
   :config
+  (when IS-LINUX
+    (autoload 'projectile-project-root "projectile")
+    (setq consult-project-function (lambda (_) (projectile-project-root))))
   ;; This function is amazing
   (setq xref-show-xrefs-function #'consult-xref))
 

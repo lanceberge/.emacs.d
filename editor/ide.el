@@ -75,26 +75,30 @@
   ('normal
    "gh" #'(eldoc-print-current-symbol-info :which-key "view doc")))
 
-(use-package project
-  :straight (:type built-in)
-  :general
 
-  (my-leader-def
-    "pp"      #'(+project-switch-and-find-file :which-key "switch project")
-    "p SPC p" #'(+project-switch-and-rg        :which-key "switch project")
-    "pf"      #'(project-find-file             :which-key "find file")
-    "ps"      #'(consult-ripgrep               :which-key "ripgrep")))
+(when IS-MAC
+  (use-package project
+    :commands (project-switch-project)
+    :general
+    (my-leader-def
+      "pp"      #'(+project-switch-and-find-file :which-key "switch project")
+      "p SPC p" #'(+project-switch-and-rg        :which-key "switch project")
+      "pf"      #'(project-find-file             :which-key "find file")
+      "ps"      #'(consult-ripgrep               :which-key "ripgrep")))
+  )
 
-(use-package projectile
-  :disabled t
-  :defer 0.2
-  :custom
-  (projectile-project-search-path '("~/code/" "~/src/" "~/org" ))
-  :general
-  (my-leader-def
-    "p" #'projectile-command-map)
-  ('projectile-command-map
-   "p" #'(+projectile-switch-and-find-file :which-key "switch proj and find file")
-   "s" #'(consult-ripgrep                  :which-key "ripgrep"))
-  :config
-  (projectile-mode +1))
+(when IS-LINUX
+  (use-package projectile
+    :defer 0.2
+    :custom
+    (projectile-project-search-path '("~/src/" "~/org" ))
+    :general
+    (my-leader-def
+      "p" #'projectile-command-map)
+    ('projectile-command-map
+     "p"     #'(+projectile-switch-and-find-file :which-key "switch proj and find file")
+     "SPC p" #'(+projectile-switch-and-rg        :which-key "switch proj and find file")
+     "s"     #'(consult-ripgrep                  :which-key "ripgrep"))
+    :config
+    (projectile-mode +1)
+    ))
