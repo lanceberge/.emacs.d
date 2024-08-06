@@ -53,7 +53,7 @@
 (use-package orderless
   :after vertico
   :custom
-  (completion-styles '(flex basic))
+  (completion-styles '(orderless flex basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package embark
@@ -87,10 +87,10 @@
   ;; Latex-mode snippets in org
   (add-hook 'org-mode-hook (lambda ()
                              (yas-activate-extra-mode 'latex-mode)))
-
   (yas-global-mode 1))
 
 (use-package corfu
+  :defer 0.3
   :custom
   (corfu-cycle t)
   (corfu-auto t)
@@ -101,6 +101,7 @@
   (corfu-preselect 'first)
   (corfu-auto-prefix 2)
   (corfu-on-exact-match nil)
+  (corfu-quit-at-boundary nil)
   (corfu-scroll-margin 5)
   :init
   (global-corfu-mode)
@@ -112,13 +113,21 @@
    "C-j"   #'corfu-next
    "C-k"   #'corfu-previous
    ";"     #'corfu-complete
-   "<tab>" #'yas-expand))
+   "<tab>" #'yas-expand
+   )
+  )
 
 (use-package cape
   :after corfu
   :custom
   (cape-file-directory-must-exist nil)
   :init
+  (defun text-mode-cape-backends ()
+    (dolist (backend '(cape-dabbrev cape-dict))
+      (add-to-list 'completion-at-point-functions backend)))
+
+  (add-hook 'text-mode-hook 'text-mode-cape-backends)
+
   (dolist (backend '(cape-file))
     (add-to-list 'completion-at-point-functions backend)))
 
