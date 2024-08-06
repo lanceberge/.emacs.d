@@ -109,6 +109,8 @@
    "RET"   #'newline
    "M-j"   #'corfu-next
    "M-k"   #'corfu-previous
+   "C-j"   #'corfu-next
+   "C-k"   #'corfu-previous
    ";"     #'corfu-complete
    "<tab>" #'yas-expand))
 
