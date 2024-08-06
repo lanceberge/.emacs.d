@@ -78,6 +78,7 @@
 
 (when IS-MAC
   (use-package project
+    :straight (:type built-in)
     :commands (project-switch-project)
     :general
     (my-leader-def
