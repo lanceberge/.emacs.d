@@ -106,15 +106,15 @@
   :init
   (global-corfu-mode)
   :general
-  ('corfu-map
-   "RET"   #'newline
-   "M-j"   #'corfu-next
-   "M-k"   #'corfu-previous
-   "C-j"   #'corfu-next
-   "C-k"   #'corfu-previous
-   ";"     #'corfu-complete
-   "<tab>" #'yas-expand
-   )
+  ('insert 'corfu-map
+           "RET"   #'newline
+           "C-k"   #'corfu-previous
+           "M-j"   #'corfu-next
+           "M-k"   #'corfu-previous
+           "C-j"   #'corfu-next
+           ";"     #'corfu-complete
+           "<tab>" #'yas-expand
+           )
   )
 
 (use-package cape
