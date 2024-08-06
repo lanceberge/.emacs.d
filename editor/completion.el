@@ -10,9 +10,11 @@
     "f SPC j" #'(consult-imenu-multi    :which-key "imenu")
     "fp"      #'(consult-project-buffer :which-key "project buffer")
     "fo"      #'(consult-outline        :which-key "outline")
+    "f."      #'(consult-find           :which-key "file")
     "fl"      #'(consult-goto-line      :which-key "outline")
     "fa"      #'(consult-org-agenda     :which-key "agenda")
-    "fs"      #'(consult-ripgrep        :which-key "ripgrep"))
+    "fs"      #'(consult-ripgrep        :which-key "ripgrep")
+    )
   ('org-agenda-mode-map
    [remap evil-search-forward] #'(consult-line :which-key "line"))
   ('normal
@@ -26,6 +28,8 @@
 
 (use-package vertico
   :defer 0.1
+  :custom
+  (vertico-cycle t)
   :init
   (evil-collection-init 'minibuffer)
   (vertico-mode)

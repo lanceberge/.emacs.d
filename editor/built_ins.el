@@ -52,7 +52,7 @@
     (text-mode . flyspell-mode)
     :general
     ('(normal insert)
-     "M-f" #'(flyspell-auto-correct-word :which-key "fix word"))))
+     "M-y" #'(flyspell-auto-correct-word :which-key "fix word"))))
 
 (use-package bookmark
   :straight (:type built-in)
