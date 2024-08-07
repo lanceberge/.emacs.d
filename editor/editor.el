@@ -22,7 +22,10 @@
    "go" #'(avy-goto-char-2 :which-key "goto char"))
   ('normal
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
-   "g SPC o" #'(avy-goto-char-timer :which-key "timer")))
+   "g SPC o" #'(avy-goto-char-timer :which-key "timer"))
+  ('isearch-mode-map
+   "g" #'avy-isearch)
+  )
 
 (use-package define-word
   :general
