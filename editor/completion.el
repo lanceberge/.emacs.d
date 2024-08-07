@@ -5,9 +5,11 @@
   (my-leader-def
     "SPC"     #'(consult-buffer         :which-key "find buffer")
     "."       #'(find-file              :which-key "find file")
+    "/"       #'(consult-line           :which-key "line")
     "fr"      #'(consult-recent-file    :which-key "find recent file")
     "fj"      #'(consult-imenu          :which-key "imenu")
     "f SPC j" #'(consult-imenu-multi    :which-key "imenu")
+    "fm"      #'(consult-global-mark    :which-key "mark")
     "fp"      #'(consult-project-buffer :which-key "project buffer")
     "fo"      #'(consult-outline        :which-key "outline")
     "f."      #'(consult-find           :which-key "file")
@@ -17,8 +19,8 @@
     )
   ('org-agenda-mode-map
    [remap evil-search-forward] #'(consult-line :which-key "line"))
-  ('normal
-   "/" #'(consult-line :which-key "line"))
+  ;; ('normal
+  ;;  "/" #'(consult-line :which-key "line"))
   :config
   (when IS-LINUX
     (autoload 'projectile-project-root "projectile")

@@ -8,13 +8,13 @@
   (evil-vsplit-window-right t)
   (evil-search-wrap t)
   (evil-want-keybinding nil)
-  (evil-search-module 'isearch) ; swiper searches swap n and N if this isn't set
+  (evil-search-module 'isearch)     ; swiper searches swap n and N if this isn't set
   (evil-want-fine-undo 'fine)       ; save inserts as undo units more often
   (evil-ex-search-persistent-highlight nil)
   (evil-ex-substitute-highlight-all nil)
   (evil-ex-search-persist-highlight nil)
   :general
-  (evil-operator-state-map
+  ('(normal evil-operator-state-map)
    "?" #'evil-search-backward
    "/" #'evil-search-forward)
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
