@@ -50,6 +50,8 @@
     "oni" #'(org-roam-node-insert            :which-key "insert link")
     "onn" #'(+org-roam-node-insert-immediate :which-key "insert now")
     "ont" #'(+org-roam-add-todo              :which-key "add todo")
+    "ond" #'(+org-roam-add-drill-tag         :which-key "add todo")
+    "onp" #'(+org-roam-add-project-tag       :which-key "add todo")
     )
   :config
   (org-roam-db-autosync-mode))
@@ -122,6 +124,18 @@
   ('(normal insert) org-mode-map
    "C-;"   #'evil-org-org-insert-heading-respect-content-below
    "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below))
+
+(use-package org-drill
+  :general
+  (my-leader-def
+    "od" #'(org-drill :which-key "org-drill")
+    )
+  :config
+  (setq org-drill-scope
+        (if (setq org-drill-scope-list (+org-roam-list-notes-by-tag "Drill"))
+            org-drill-scope-list
+          'file))
+  )
 
 (use-package org-journal
   :custom

@@ -108,3 +108,19 @@
       (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
                      "#+title: ${title}\n#+category: ${title}\n#+filetags: Project ${title}"
                      ("Tasks"))))))
+
+;;;###autoload
+(defun +org-roam-add-project-tag ()
+  "Add a project tag and add this to org-drill files"
+  (interactive)
+  (org-roam-tag-add '("Project"))
+  (add-to-list 'org-agenda-files (buffer-file-name))
+  )
+
+;;;###autoload
+(defun +org-roam-add-drill-tag ()
+  "Add a drill tag and add this to org-drill files"
+  (interactive)
+  (org-roam-tag-add '("Drill"))
+  (add-to-list 'org-drill-scope (buffer-file-name))
+  )
