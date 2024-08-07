@@ -54,7 +54,7 @@
 (use-package orderless
   :after vertico
   :custom
-  (completion-styles '(flex basic))
+  (completion-styles '(orderless flex basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package embark
@@ -88,10 +88,10 @@
   ;; Latex-mode snippets in org
   (add-hook 'org-mode-hook (lambda ()
                              (yas-activate-extra-mode 'latex-mode)))
-
   (yas-global-mode 1))
 
 (use-package corfu
+  :defer 0.3
   :custom
   (corfu-cycle t)
   (corfu-auto t)
@@ -102,71 +102,32 @@
   (corfu-preselect 'first)
   (corfu-auto-prefix 2)
   (corfu-on-exact-match nil)
+  (corfu-quit-at-boundary nil)
   (corfu-scroll-margin 5)
   :init
   (global-corfu-mode)
   :general
-  ('corfu-map
+  ('(normal insert) 'corfu-map
    "RET"   #'newline
+   "C-k"   #'corfu-previous
    "M-j"   #'corfu-next
    "M-k"   #'corfu-previous
    "C-j"   #'corfu-next
-   "C-k"   #'corfu-previous
    ";"     #'corfu-complete
-   "<tab>" #'yas-expand))
+   "<tab>" #'yas-expand
+   )
+  )
 
 (use-package cape
   :after corfu
   :custom
   (cape-file-directory-must-exist nil)
   :init
+  (defun text-mode-cape-backends ()
+    (dolist (backend '(cape-dabbrev cape-dict))
+      (add-to-list 'completion-at-point-functions backend)))
+
+  (add-hook 'text-mode-hook 'text-mode-cape-backends)
+
   (dolist (backend '(cape-file))
     (add-to-list 'completion-at-point-functions backend)))
-
-(use-package company ; autocomplete
-  :disabled t
-  :defer 0.1
-  :custom
-  (company-idle-delay 0.01)
-  (company-require-match 'never)
-  (company-show-numbers t)
-  (company-dabbrev-other-buffers nil)
-  (company-dabbrev-downcase nil)
-  (company-tooltip-offset-display nil)
-  (company-dabbrev-minimum-length 3)
-  (company-minimum-prefix-length 2)
-  :general
-  ('company-active-map "C-w" nil ; don't override evil C-w
-                       "C-j"      #'company-select-next-or-abort
-                       "C-k"      #'company-select-previous-or-abort
-                       "M-j"      #'company-select-next-or-abort
-                       "M-k"      #'company-select-previous-or-abort
-                       "<tab>"    #'yas-expand ; don't interfere with yasnippet
-                       "C-0"        (lambda () (interactive) (company-complete-number 10))
-                       "RET"      #'newline
-                       "<return>" #'newline
-                       ";"        #'company-complete-selection) ; choose a completion with ; instead of tab
-  :config
-  (defun prog-mode-company-backends ()
-    (setq-local company-backends
-                '((company-capf company-files company-dabbrev-code company-yasnippet))))
-
-  (add-hook 'prog-mode-hook 'prog-mode-company-backends)
-
-  (defun text-mode-company-backends ()
-    (setq-local company-backends
-                '((company-files company-dabbrev))))
-
-  (add-hook 'text-mode-hook 'text-mode-company-backends)
-  ;; complete suggestion based on the number
-  (let ((map company-active-map))
-    (mapc (lambda (x) (define-key map (kbd (format "M-%d" x))
-                        `(lambda () (interactive) (company-complete-number ,x))))
-          (number-sequence 1 9)))
-  (global-company-mode))
-
-(use-package flx :disabled t)
-
-(use-package company-flx ; fuzzy sorting for company completion options with company-capf
-  :disabled t
-  :hook (company-mode . company-flx-mode))

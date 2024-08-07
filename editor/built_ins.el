@@ -111,3 +111,13 @@
   :general
   ('insert
    "M-y" #'ispell-word))
+
+(use-package occur
+  :straight (:type built-in)
+  :hook
+  (occur-mode . (lambda ()
+                  (evil-local-mode)
+                  (evil-normal-state)))
+  :general
+  ('normal 'occur-mode-map
+           "q" #'quit-window))
