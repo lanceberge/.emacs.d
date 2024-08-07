@@ -121,11 +121,3 @@
   :general
   ('normal 'occur-mode-map
            "q" #'quit-window))
-
-;; (use-package isearch
-;;   :straight (:type built-in)
-;;   :general
-;;   ('normal
-;;    "gf"      #'(isearch-forward :which-key "isearch forward")
-;;    "g SPC f" #'(isearch-backward :which-key "isearch backward"))
-;;   )
