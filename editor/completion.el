@@ -129,11 +129,17 @@
   :custom
   (cape-file-directory-must-exist nil)
   :init
-  (defun text-mode-cape-backends ()
-    (dolist (backend '(cape-dabbrev cape-dict))
-      (add-to-list 'completion-at-point-functions backend)))
+  (defun +cape-text-mode ()
+    (setq-local corfu-auto-prefix 4))
 
-  (add-hook 'text-mode-hook 'text-mode-cape-backends)
+  (add-hook 'text-mode-hook '+cape-text-mode)
 
-  (dolist (backend '(cape-file))
+  (defun +cape-minibuffer-mode ()
+    (dolist (backend '(cape-history))
+      (add-to-list 'completion-at-point-functions backend))
+    (setq-local corfu-auto-prefix 3))
+
+  (add-hook 'minibuffer-setup-hook '+cape-minibuffer-mode)
+
+  (dolist (backend '(cape-file cape-dabbrev))
     (add-to-list 'completion-at-point-functions backend)))
