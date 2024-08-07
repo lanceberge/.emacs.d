@@ -111,9 +111,9 @@
   :general
   ('insert corfu-mode-map
            "<tab>" #'yas-expand
-           "<escape>" (lambda () (interactive)
-                        (corfu-quit)
-                        (evil-normal-state)))
+           "jk" (lambda () (interactive)
+                  (corfu-quit)
+                  (evil-normal-state)))
   ('(normal insert) 'corfu-map
    "RET"   #'newline
    "C-k"   #'corfu-previous
