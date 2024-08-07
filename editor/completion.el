@@ -116,6 +116,9 @@
    "C-j"   #'corfu-next
    ";"     #'corfu-complete
    "<tab>" #'yas-expand
+   "<escape>" (lambda () (interactive)
+                (corfu-quit)
+                (evil-normal-state))
    )
   )
 
