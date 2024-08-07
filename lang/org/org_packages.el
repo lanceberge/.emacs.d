@@ -23,6 +23,7 @@
     "SPC oa" "agenda"))
 
 (use-package org-roam
+  :commands (org-roam-node-list)
   :defer-incrementally (emacsql emacsqlite)
   :custom
   (org-roam-completion-everywhere t)
@@ -130,7 +131,7 @@
   (my-leader-def
     "od" #'(org-drill :which-key "org-drill")
     )
-  :config
+  :init
   (setq org-drill-scope
         (if (setq org-drill-scope-list (+org-roam-list-notes-by-tag "Drill"))
             org-drill-scope-list
