@@ -87,8 +87,9 @@
     "sr" #'(yas-reload-all         :which-key "reload"))
   :config
   ;; Latex-mode snippets in org
-  (add-hook 'org-mode-hook (lambda ()
-                             (yas-activate-extra-mode 'latex-mode)))
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (yas-activate-extra-mode 'latex-mode)))
   (yas-global-mode 1))
 
 (use-package corfu
