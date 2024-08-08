@@ -108,9 +108,6 @@
   (global-corfu-mode)
   :general
   ('insert corfu-mode-map
-           "<escape>" (lambda () (interactive)
-                        (corfu-quit)
-                        (evil-normal-state))
            "<tab>" #'yas-expand)
   ('(normal insert) 'corfu-map
    "RET"   #'newline
@@ -120,7 +117,8 @@
    "C-j"   #'corfu-next
    ";"     #'corfu-complete
    )
-  )
+  :config
+  (advice-add 'evil-escape-func :after #'corfu-quit))
 
 (use-package cape
   :after corfu
