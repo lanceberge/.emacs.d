@@ -108,7 +108,7 @@
       "** TODO %?\n %i\n" :prepend t)
 
      ("e" "Emacs"
-      entry (file+headline "~/org/todo.org" "Emacs")
+      entry (file+headline "~/org-roam/20240804163601-emacs.org" "Tasks")
       "** TODO %?\n %i\n" :prepend t)))
   :general
   (my-leader-def
