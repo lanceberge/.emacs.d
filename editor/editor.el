@@ -58,6 +58,7 @@
    "$" nil
    ";" #'flyspell-auto-correct-word
    "y" #'define-word-at-point
+   "d" #'embark-find-definition
    "g" #'google-this-word)
   (my-localleader-def
     "a" #'embark-act
