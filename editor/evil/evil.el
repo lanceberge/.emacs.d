@@ -25,19 +25,22 @@
    "gm" (general-simulate-key "@@" :which-key "run last macro") ; last macro
    "C-M-d" #'scroll-other-window
    "C-M-u" #'scroll-other-window-down
-   "]m" #'(forward-global-mark  :which-key "forward mark")
-   "[m" #'(backward-global-mark :which-key "backward mark")
    )
 
   ('evil-ex-completion-map "C-g" 'exit-minibuffer) ; use ; to complete : vim commands
   ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
   ('(normal visual motion)
-   "M-u" #'evil-scroll-up
-   "M-d" #'evil-scroll-down
-   ";"   #'evil-ex ; switch ; and :
-   "H"   #'evil-first-non-blank
-   "L"   #'evil-end-of-line)
+   "M-u"     #'evil-scroll-up
+   "M-d"     #'evil-scroll-down
+   ";"       #'evil-ex ; switch ; and :
+   "H"       #'evil-first-non-blank
+   "L"       #'evil-end-of-line
+   "]m"      #'(+forward-global-mark  :which-key "forward mark")
+   "[m"      #'(+backward-global-mark :which-key "backward mark")
+   [M-right] #'(+forward-global-mark  :which-key "forward mark")
+   [M-left]  #'(+backward-global-mark :which-key "backward mark")
+   )
 
   (my-leader-def
     "bS" #'(evil-write-all                     :which-key "write all buffers")
