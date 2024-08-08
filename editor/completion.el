@@ -108,7 +108,10 @@
   (global-corfu-mode)
   :general
   ('insert corfu-mode-map
-           "<tab>" #'yas-expand
+           "<escape>" (lambda () (interactive)
+                        (corfu-quit)
+                        (evil-normal-state))
+           "<tab>" #'yas-expand)
   ('(normal insert) 'corfu-map
    "RET"   #'newline
    "C-k"   #'corfu-previous
