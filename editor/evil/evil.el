@@ -24,7 +24,10 @@
    "zm" #'(evil-close-folds        :which-key "close folds recursively")
    "gm" (general-simulate-key "@@" :which-key "run last macro") ; last macro
    "C-M-d" #'scroll-other-window
-   "C-M-u" #'scroll-other-window-down)
+   "C-M-u" #'scroll-other-window-down
+   "]m" #'(forward-global-mark  :which-key "forward mark")
+   "[m" #'(backward-global-mark :which-key "backward mark")
+   )
 
   ('evil-ex-completion-map "C-g" 'exit-minibuffer) ; use ; to complete : vim commands
   ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
