@@ -86,11 +86,6 @@
     "i"   #'+dired/edit
     "-"   #'+dired/up-dir))
 
-(use-package dired-x
-  :straight (:type built-in)
-  :hook (dired-mode . dired-omit-mode)
-  :custom
-  (dired-omit-files "^\\..$\\|^.$")) ; hide .. and ../ in dired
 
 (use-package helpful ; better help menu
   :defer 0.3

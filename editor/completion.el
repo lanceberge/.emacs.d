@@ -46,6 +46,7 @@
    "M-k" #'vertico-previous
    "M-u" #'vertico-scroll-down
    "M-d" #'vertico-scroll-up
+   ";"   #'vertico-exit
    ))
 
 (use-package marginalia
