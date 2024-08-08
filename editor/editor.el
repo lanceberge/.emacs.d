@@ -28,17 +28,23 @@
   :config
   ;; https://karthinks.com/software/avy-can-do-anything/
   (defun avy-action-embark (pt)
+    "Perform an embark action on the avy target without moving point to it"
     (unwind-protect
         (save-excursion
-          (goto-char pt)
-          (embark-act))
+          (avy-action-embark-move pt))
       (select-window
        (cdr (ring-ref avy-ring 0))))
     t)
 
+  (defun avy-action-embark-move (pt)
+    "Perform an embark action on the avy target and move the point to it"
+    (goto-char pt)
+    (embark-act))
+
   (setq avy-dispatch-alist
         (list
-         (cons ?\s 'avy-action-embark)
+         (cons ?\s 'avy-action-embark-move)
+         (cons ?, 'avy-action-embark)
          ))
   )
 
