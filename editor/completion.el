@@ -1,6 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 (use-package consult
   :hook (completion-list-mode . consult-preview-at-point-mode)
+  :custom
+  (xref-show-xrefs-function #'consult-xref)
   :general
   (my-leader-def
     "SPC"     #'(consult-buffer         :which-key "find buffer")
@@ -23,8 +25,9 @@
   (when IS-LINUX
     (autoload 'projectile-project-root "projectile")
     (setq consult-project-function (lambda (_) (projectile-project-root))))
-  ;; This function is amazing
-  (setq xref-show-xrefs-function #'consult-xref))
+  )
+;; This function is amazing
+
 
 (use-package vertico
   :defer 0.1
@@ -43,7 +46,7 @@
    "M-k" #'vertico-previous
    "M-u" #'vertico-scroll-down
    "M-d" #'vertico-scroll-up
-   ";"   #'vertico-exit))
+   ))
 
 (use-package marginalia
   :defer 0.2
@@ -55,16 +58,6 @@
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
-
-(use-package embark
-  :defer 0.3
-  :general
-  ('(normal insert)
-   "M-." #'embark-act
-   "M-," #'embark-export)
-  (my-localleader-def
-    "a" #'embark-act
-    "e" #'embark-export))
 
 (use-package embark-consult
   :after (consult embark))

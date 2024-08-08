@@ -42,6 +42,20 @@
          ))
   )
 
+(use-package embark
+  :defer 0.3
+  :general
+  ('(normal insert)
+   "M-." #'embark-act
+   "M-," #'embark-export)
+  ('embark-general-map
+   "$" nil
+   ";" #'flyspell-auto-correct-word)
+  (my-localleader-def
+    "a" #'embark-act
+    "e" #'embark-export)
+  )
+
 (use-package define-word
   :general
   ('(normal insert)
