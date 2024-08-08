@@ -72,7 +72,11 @@
   (dired-recursive-copies 'always)
   :general
   ('normal
-   "-"  #'(dired-jump :which-key "open dired"))
+   "-"  #'(dired-jump :which-key "open dired")
+   )
+  ('normal 'dired-mode-map
+           "q"  #'(evil-switch-to-windows-last-buffer :which-key "quit")
+           )
   :config
   (evil-collection-init 'dired)
 
