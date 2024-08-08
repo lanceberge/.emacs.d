@@ -102,9 +102,9 @@
   (global-corfu-mode)
   :general
   ('insert corfu-mode-map
+           "RET"   #'newline
            "<tab>" #'yas-expand)
   ('(normal insert) 'corfu-map
-   "RET"   #'newline
    "C-k"   #'corfu-previous
    "M-j"   #'corfu-next
    "M-k"   #'corfu-previous

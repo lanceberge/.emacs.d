@@ -107,10 +107,7 @@
 (use-package ispell
   :straight (:type built-in)
   :custom
-  (ispell-complete-word-dict t)
-  :general
-  ('insert
-   "M-y" #'ispell-word))
+  (ispell-complete-word-dict t))
 
 (use-package occur
   :straight (:type built-in)
