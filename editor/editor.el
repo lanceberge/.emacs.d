@@ -56,16 +56,16 @@
    "M-," #'embark-export)
   ('embark-general-map
    "$" nil
-   ";" #'flyspell-auto-correct-word)
+   ";" #'flyspell-auto-correct-word
+   "y" #'define-word-at-point
+   "g" #'google-this-word)
   (my-localleader-def
     "a" #'embark-act
     "e" #'embark-export)
   )
 
 (use-package define-word
-  :general
-  ('(normal insert)
-   "C-y" #'define-word-at-point))
+  :commands (define-word-at-point))
 
 (use-package dired
   :straight (:type built-in)
