@@ -80,9 +80,10 @@
   ('normal helpful-mode-map
            "q" #'quit-window)
 
-  ([remap describe-command] #'helpful-command
-   [remap describe-key]     #'helpful-key
-   [remap describe-symbol]  #'helpful-symbol)
+  ([remap describe-command]  #'helpful-command
+   [remap describe-key]      #'helpful-key
+   [remap describe-function] #'helpful-function
+   [remap describe-symbol]   #'helpful-symbol)
   :config
   (evil-collection-inhibit-insert-state 'helpful-mode-map))
 
