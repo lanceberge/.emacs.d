@@ -36,6 +36,9 @@
   (my-localleader-def
     "h"  #'(lsp-describe-thing-at-point :which-key "view doc")
     "gr" #'(lsp-rename                  :which-key "rename with lsp"))
+  ('(normal insert visual) 'lsp-mode-map
+   [remap xref-find-references]  #'lsp-find-references
+   [remap xref-find-definitions] #'lsp-find-definition)
   :config
   ;; lsp-booster
   (when IS-MAC
@@ -100,6 +103,8 @@
 
 (use-package xref
   :commands (xref-find-references xref-auto-jump-first-definition)
+  :custom
+  (xref-prompt-for-identifier nil)
   :general
   ('normal xref--xref-buffer-mode-map
            ";" #'xref-goto-xref))
