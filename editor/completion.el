@@ -19,8 +19,6 @@
     )
   ('org-agenda-mode-map
    [remap evil-search-forward] #'(consult-line :which-key "line"))
-  ;; ('normal
-  ;;  "/" #'(consult-line :which-key "line"))
   :config
   (when IS-LINUX
     (autoload 'projectile-project-root "projectile")
@@ -111,9 +109,6 @@
   :general
   ('insert corfu-mode-map
            "<tab>" #'yas-expand
-           "jk" (lambda () (interactive)
-                  (corfu-quit)
-                  (evil-normal-state)))
   ('(normal insert) 'corfu-map
    "RET"   #'newline
    "C-k"   #'corfu-previous
