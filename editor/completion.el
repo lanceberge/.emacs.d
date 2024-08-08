@@ -53,7 +53,7 @@
 (use-package orderless
   :after vertico
   :custom
-  (completion-styles '(orderless flex basic))
+  (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package embark
