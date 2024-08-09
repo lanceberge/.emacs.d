@@ -96,7 +96,10 @@
   (evil-escape-key-sequence "jk")
   (evil-escape-delay 0.25)
   (evil-escape-excluded-major-modes '(org-agenda-mode))
-  (evil-escape-excluded-states '(normal visual emacs)))
+  (evil-escape-excluded-states '(normal visual emacs))
+  :general
+  ('(insert visual)
+   "<escape>" #'evil-escape))
 
 (use-package move-text
   :general
