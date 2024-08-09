@@ -21,11 +21,15 @@
   (avy-keys '(?d ?j ?s ?k ?a ?l))
   :general
   ('evil-operator-state-map
-   "go" #'(avy-goto-char-2 :which-key "goto char"))
+   "go" #'(avy-goto-char-2 :which-key "goto char")
+   )
+
+  ('(normal insert)
+   "M-j" #'(avy-goto-char-2 :which-key "goto char")
+   )
 
   ('isearch-mode-map
-   "g"   #'avy-isearch
-   "M-o" #'avy-isearch)
+   "M-j" #'avy-isearch)
 
   ('normal
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
