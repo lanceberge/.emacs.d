@@ -118,3 +118,18 @@
   :general
   ('normal 'occur-mode-map
            "q" #'quit-window))
+
+(use-package isearch
+  :straight (:type built-in)
+  :general
+  ('normal
+   "/" #'isearch-forward
+   "?" #'isearch-backward)
+
+  ('isearch-mode-map
+   "C-j" #'isearch-repeat-forward
+   "C-k" #'isearch-repeat-backward
+   "M-j" #'isearch-repeat-forward
+   "M-k" #'isearch-repeat-backward
+   ";"   #'isearch-done
+   ))

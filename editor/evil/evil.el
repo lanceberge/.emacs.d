@@ -8,15 +8,11 @@
   (evil-vsplit-window-right t)
   (evil-search-wrap t)
   (evil-want-keybinding nil)
-  (evil-search-module 'isearch)     ; swiper searches swap n and N if this isn't set
-  (evil-want-fine-undo 'fine)       ; save inserts as undo units more often
+  (evil-want-fine-undo 'fine) ; save inserts as undo units more often
   (evil-ex-search-persistent-highlight nil)
   (evil-ex-substitute-highlight-all nil)
   (evil-ex-search-persist-highlight nil)
   :general
-  ('(normal evil-operator-state-map)
-   "?" #'evil-search-backward
-   "/" #'evil-search-forward)
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
    [remap evil-next-line]          #'evil-next-visual-line
    [remap evil-previous-line]      #'evil-previous-visual-line
@@ -41,6 +37,10 @@
    [M-right] #'(+forward-global-mark  :which-key "forward mark")
    [M-left]  #'(+backward-global-mark :which-key "backward mark")
    )
+
+  ('normal 'evil-operator-state-map
+           "?" #'evil-search-backward
+           "/" #'evil-search-forward)
 
   (my-leader-def
     "bS" #'(evil-write-all                     :which-key "write all buffers")

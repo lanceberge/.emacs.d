@@ -24,26 +24,13 @@
    "go" #'(avy-goto-char-2 :which-key "goto char"))
 
   ('isearch-mode-map
-   "/" #'+isearch consult line
-   "g" #'evil-avy-isearch)
+   "g"   #'avy-isearch
+   "M-o" #'avy-isearch)
 
   ('normal
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
    "g SPC o" #'(avy-goto-char-timer :which-key "timer"))
   :config
-  (defun +isearch-consult-line-from-isearch ()
-    "Invoke `consult-line' from isearch."
-    (interactive)
-    (let ((query (if isearch-regexp
-                     isearch-string
-                   (regexp-quote isearch-string))))
-      (isearch-update-ring isearch-string isearch-regexp)
-      (let (search-nonincremental-instead)
-        (ignore-errors (isearch-done t t)))
-      (consult-line query)))
-
-  (evil-define-avy-motion avy-isearch inclusive)
-
   ;; https://karthinks.com/software/avy-can-do-anything/
   (defun avy-action-embark (pt)
     "Perform an embark action on the avy target without moving point to it"
