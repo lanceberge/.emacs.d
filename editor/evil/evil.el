@@ -16,9 +16,6 @@
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
    [remap evil-next-line]          #'evil-next-visual-line
    [remap evil-previous-line]      #'evil-previous-visual-line
-   "zr" #'(evil-open-folds         :which-key "open folds recursively")
-   "zm" #'(evil-close-folds        :which-key "close folds recursively")
-   "gm" (general-simulate-key "@@" :which-key "run last macro") ; last macro
    "C-M-d" #'scroll-other-window
    "C-M-u" #'scroll-other-window-down
    )

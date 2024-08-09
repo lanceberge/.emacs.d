@@ -43,7 +43,6 @@
     (setq consult-project-function (lambda (_) (projectile-project-root))))
   )
 
-
 (use-package vertico
   :defer 0.1
   :custom
