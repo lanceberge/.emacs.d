@@ -37,6 +37,7 @@
     "h"  #'(lsp-describe-thing-at-point :which-key "view doc")
     "gr" #'(lsp-rename                  :which-key "rename with lsp"))
   ('(normal insert visual) 'lsp-mode-map
+   [remap display-local-help]    #'lsp-describe-thing-at-point
    [remap xref-find-references]  #'lsp-find-references
    [remap xref-find-definitions] #'lsp-find-definition)
   :config
