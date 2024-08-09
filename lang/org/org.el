@@ -135,11 +135,11 @@
 
   ;; No unnecessary background highlighting
   (custom-set-faces
-   `(org-block            ((t (:background ,bg-color))))
-   `(org-block-begin-line ((t (:background ,bg-color))))
-   `(org-block-end-line   ((t (:background ,bg-color))))
    `(org-level-1          ((t (:background ,bg-color))))
    `(org-quote            ((t (:background ,bg-color))))
+   `(org-block-begin-line ((t (:background ,bg-color-light))))
+   `(org-block            ((t (:background ,bg-color-light))))
+   `(org-block-end-line   ((t (:background ,bg-color-light))))
    `(org-headline-done    ((t (:strike-through t :foreground "#7C6f64"))))
    `(org-done             ((t (:foreground "#7C6f64")))))
 
