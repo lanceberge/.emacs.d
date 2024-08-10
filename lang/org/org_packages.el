@@ -65,8 +65,9 @@
     "oni" #'(org-roam-node-insert            :which-key "insert link")
     "onn" #'(+org-roam-node-insert-immediate :which-key "insert now")
     "ont" #'(+org-roam-add-todo              :which-key "add todo")
-    "ond" #'(+org-roam-add-drill-tag         :which-key "add todo")
-    "onp" #'(+org-roam-add-project-tag       :which-key "add todo")
+    "ond" #'(+org-roam-add-drill-tag         :which-key "add drill tag")
+    "onp" #'(+org-roam-add-project-tag       :which-key "add project tag")
+    "onq" #'(org-roam-tag-add                :which-key "add tag")
     )
   :config
   (org-roam-db-autosync-mode))
@@ -136,7 +137,7 @@
   :custom
   (org-edit-src-content-indentation 0) ; leading spaces before the #+begin line
   (org-src-preserve-indentation t)     ; don't preserve leading whitespace on export
-  (org-adapt-indentation nil)          ; don't indent under headlines
+  (org-adapt-indentation t)
 
   (org-src-window-setup 'current-window)
   :config

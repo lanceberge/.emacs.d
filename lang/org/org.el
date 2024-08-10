@@ -107,7 +107,7 @@
   (org-code                  ((t (:inherit org-verbatim :background "#282828" :foreground "#fe8019"))))
   (org-document-info         ((t (:foreground "#d5c4a1" :weight bold))))
   (org-document-info-keyword ((t (:inherit shadow))))
-  (org-document-title        ((t (:foreground "#fbf1c7" :weight bold :height 1.4))))
+  (org-document-title        ((t (:foreground "#fbf1c7" :weight bold :height 1.2))))
   (org-meta-line             ((t (:inherit shadow))))
   (org-target                ((t (:height 0.7 :inherit shadow))))
   (org-link                  ((t (:foreground "#b8bb26" :background "#282828" :overline nil))))  ;;
