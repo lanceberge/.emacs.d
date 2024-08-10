@@ -104,15 +104,16 @@
   :init
   (global-corfu-mode)
   :general
-  ('corfu-mode-map
-   "RET"   #'newline
-   "C-k"   #'corfu-previous
-   "M-j"   #'corfu-next
-   "M-k"   #'corfu-previous
-   "C-j"   #'corfu-next
-   ";"     #'corfu-complete
+  ('corfu-map
+   "RET" #'newline
+   "C-k" #'corfu-previous
+   "M-j" #'corfu-next
+   "M-k" #'corfu-previous
+   "C-j" #'corfu-next
+   ";"   #'corfu-complete
    )
-  ('insert 'corfu-mode-map"<tab>" #'yas-expand)
+  ('insert 'corfu-mode-map
+           "<tab>" #'yas-expand)
   :config
   (advice-add 'evil-escape-func :after #'corfu-quit))
 
