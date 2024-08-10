@@ -173,7 +173,7 @@
 (defun +push-mark-maybe ()
   "push mark onto `global-mark-ring' if mark head or tail is not current location"
   (if (not global-mark-ring) (error "global-mark-ring empty")
-    (unless (or (+marker-is-point-p (car global-mark-ring))
+    (unless (or (marker-is-point-p (car global-mark-ring))
                 (marker-is-point-p (car (reverse global-mark-ring))))
       (push-mark))))
 
