@@ -131,5 +131,5 @@
    "C-k" #'isearch-repeat-backward
    "M-j" #'isearch-repeat-forward
    "M-k" #'isearch-repeat-backward
-   ";"   #'isearch-done
+   ";"   #'isearch-exit
    ))

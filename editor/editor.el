@@ -25,11 +25,11 @@
    )
 
   ('(normal insert)
-   "M-j" #'(avy-goto-char-2 :which-key "goto char")
+   "M-i" #'(avy-goto-char-2 :which-key "goto char")
    )
 
   ('isearch-mode-map
-   "M-j" #'avy-isearch)
+   "M-i" #'avy-isearch)
 
   ('normal
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
