@@ -84,6 +84,7 @@
           (if (char-equal c ?\") t (electric-pair-default-inhibit c)))))
 
 (use-package ediff
+  :defer t
   :straight (:type built-in)
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -105,6 +106,7 @@
    "zm"  #'(outline-hide-body       :which-key "open all folds")))
 
 (use-package ispell
+  :defer t
   :straight (:type built-in)
   :custom
   (ispell-complete-word-dict t))
