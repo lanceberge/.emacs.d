@@ -25,7 +25,7 @@
    )
 
   ('(normal insert)
-   "M-i" #'(avy-goto-char-2 :which-key "goto char")
+   "M-i" #'(avy-goto-char-timer :which-key "goto char")
    )
 
   ('isearch-mode-map
