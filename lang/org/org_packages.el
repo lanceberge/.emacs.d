@@ -152,6 +152,16 @@
           'file))
   )
 
+
+(use-package org-modern
+  :custom
+  (org-modern-star 'replace)
+  :custom-face
+  (org-modern-face ((t (:background "#d3869b"))))
+  :hook
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda))
+
 (use-package org-journal
   :custom
   (org-journal-dir "~/org/journal")

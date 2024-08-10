@@ -30,6 +30,11 @@
   (org-latex-minted-options '(("linenos" "true") ; line numbers in expored src blocks
                               ("frame" "lines")
                               ("style" "emacs")))
+
+  ;; Styling
+  (org-pretty-entities t)
+  (org-hide-emphasis-markers t)
+  (org-agenda-tags-column 0)
   :general
   (my-localleader-def
     :keymaps 'org-mode-map
@@ -95,6 +100,34 @@
    "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
    "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1)))
    "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
+  :custom-face
+  (cursor                    ((t (:foreground "#928374"))))
+  (org-block                 ((t (:foreground "#ebdbb2":background "#1c2021" :extend t))))
+  (org-block-begin-line      ((t (:inherit org-block :background "#1d2021" :foreground "#665c54" :extend t))))
+  (org-block-end-line        ((t (:inherit org-block-begin-line :background "#1d2021"))))
+  (org-code                  ((t (:inherit org-verbatim :background "#3c3836" :foreground "#fe8019"))))
+  (org-document-info         ((t (:foreground "#d5c4a1" :weight bold))))
+  (org-document-info-keyword ((t (:inherit shadow))))
+  (org-document-title        ((t (:foreground "#fbf1c7" :weight bold :height 1.4))))
+  (org-meta-line             ((t (:inherit shadow))))
+  (org-target                ((t (:height 0.7 :inherit shadow))))
+  (org-link                  ((t (:foreground "#b8bb26" :background "#282828" :overline nil))))  ;;
+  (org-indent                ((t (:inherit org-hide))))
+  (org-indent                ((t (:inherit (org-hide fixed-pitch)))))
+  (org-footnote              ((t (:foreground "#8ec07c" :background "#32302f" :overline nil))))
+  (org-ref-cite-face         ((t (:foreground "#fabd2f" :background "#32302f" :overline nil))))  ;;
+  (org-ref-ref-face          ((t (:foreground "#83a598" :background "#32302f" :overline nil))))
+  (org-ref-label-face        ((t (:inherit shadow :box t))))
+  (org-drawer                ((t (:inherit shadow))))
+  (org-property-value        ((t (:inherit org-document-info))) t)
+  (org-tag                   ((t (:inherit shadow))))
+  (org-date                  ((t (:foreground "#83a598" :underline t))))
+  (org-verbatim              ((t (:inherit org-block :background "#3c3836" :foreground "#d5c4a1"))))
+  (org-quote                 ((t (:inherit org-block :slant italic))))
+  (org-level-1               ((t (:foreground "#83a598" :background "#282828" :height 1.05 :overline nil :extend t))))
+  (org-level-2               ((t (:foreground "#d3869b" :background "#282828" :height 1.05 :overline nil :extend t))))
+  (org-level-3               ((t (:foreground "#b8bb26" :background "#282828" :height 1.05 :overline nil :extend t))))
+  (org-level-4               ((t (:foreground "#fe8019" :background "#282828" :height 1.05 :overline nil :extend t))))
   :config
   (defun org-mode-company-backends ()
     (setq-local company-backends
@@ -130,34 +163,6 @@
   (add-to-list 'org-babel-default-header-args
                '(:eval . "never-export"))
 
-  (custom-set-faces
-   '(cursor                    ((t (:foreground "#928374"))))
-   '(org-block                 ((t (:foreground "#ebdbb2":background "#1c2021" :extend t))))
-   '(org-block-begin-line      ((t (:inherit org-block :background "#1d2021" :foreground "#665c54" :extend t))))
-   '(org-block-end-line        ((t (:inherit org-block-begin-line :background "#1d2021"))))
-   '(org-code                  ((t (:inherit org-verbatim :background "#3c3836" :foreground "#fe8019"))))
-   '(org-document-info         ((t (:foreground "#d5c4a1" :weight bold))))
-   '(org-document-info-keyword ((t (:inherit shadow))))
-   '(org-document-title        ((t (:foreground "#fbf1c7" :weight bold :height 1.4))))
-   '(org-meta-line             ((t (:inherit shadow))))
-   '(org-target                ((t (:height 0.7 :inherit shadow))))
-   '(org-link                  ((t (:foreground "#b8bb26" :background "#32302f" :overline nil))))  ;;
-   '(org-indent                ((t (:inherit org-hide))))
-   '(org-indent                ((t (:inherit (org-hide fixed-pitch)))))
-   '(org-footnote              ((t (:foreground "#8ec07c" :background "#32302f" :overline nil))))
-   '(org-ref-cite-face         ((t (:foreground "#fabd2f" :background "#32302f" :overline nil))))  ;;
-   '(org-ref-ref-face          ((t (:foreground "#83a598" :background "#32302f" :overline nil))))
-   '(org-ref-label-face        ((t (:inherit shadow :box t))))
-   '(org-drawer                ((t (:inherit shadow))))
-   '(org-property-value        ((t (:inherit org-document-info))) t)
-   '(org-tag                   ((t (:inherit shadow))))
-   '(org-date                  ((t (:foreground "#83a598" :underline t))))
-   '(org-verbatim              ((t (:inherit org-block :background "#3c3836" :foreground "#d5c4a1"))))
-   '(org-quote                 ((t (:inherit org-block :slant italic))))
-   '(org-level-1               ((t (:foreground "#83a598" :background "#282828" :height 1.05 :overline nil :extend t))))
-   '(org-level-2               ((t (:foreground "#d3869b" :background "#282828" :height 1.05 :overline nil :extend t))))
-   '(org-level-3               ((t (:foreground "#b8bb26" :background "#282828" :height 1.05 :overline nil :extend t))))
-   '(org-level-4               ((t (:foreground "#fe8019" :background "#282828" :height 1.05 :overline nil :extend t)))))
 
                                         ;  open links in the current window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)

@@ -24,8 +24,3 @@
   :hook ((prog-mode text-mode) . show-paren-mode)
   :custom
   (show-paren-when-point-inside-paren t))
-
-(use-package org-superstar ; bullets in org mode
-  :hook (org-mode . org-superstar-mode)
-  :custom
-  (org-hide-leading-stars t))
