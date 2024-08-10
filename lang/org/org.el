@@ -34,7 +34,6 @@
   ;; Styling
   (org-pretty-entities t)
   (org-hide-emphasis-markers t)
-  (org-agenda-tags-column 0)
   :general
   (my-localleader-def
     :keymaps 'org-mode-map
@@ -105,7 +104,7 @@
   (org-block                 ((t (:foreground "#ebdbb2":background "#1c2021" :extend t))))
   (org-block-begin-line      ((t (:inherit org-block :background "#1d2021" :foreground "#665c54" :extend t))))
   (org-block-end-line        ((t (:inherit org-block-begin-line :background "#1d2021"))))
-  (org-code                  ((t (:inherit org-verbatim :background "#3c3836" :foreground "#fe8019"))))
+  (org-code                  ((t (:inherit org-verbatim :background "#282828" :foreground "#fe8019"))))
   (org-document-info         ((t (:foreground "#d5c4a1" :weight bold))))
   (org-document-info-keyword ((t (:inherit shadow))))
   (org-document-title        ((t (:foreground "#fbf1c7" :weight bold :height 1.4))))
