@@ -33,7 +33,7 @@
 
   ('normal
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
-   "g SPC o" #'(avy-goto-char-timer :which-key "timer"))
+   "g SPC o" #'(avy-isearch         :which-key "timer"))
   :config
   ;; https://karthinks.com/software/avy-can-do-anything/
   (defun avy-action-embark (pt)
