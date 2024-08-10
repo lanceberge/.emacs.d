@@ -5,6 +5,7 @@
 (setq default-file-name-handler-alist file-name-handler-alist)
 
 (use-package emacs
+  :straight (:type built-in)
   :custom
   ;; unset file-name-handler-alist until its set again in Hooks heading (improve startup time)
   (file-name-handler-alist nil)
@@ -276,7 +277,6 @@
   :config
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
-
 
 ;; Load config files recursively
 (let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
