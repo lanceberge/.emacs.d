@@ -81,10 +81,6 @@
     "sl" #'(yas-describe-tables    :which-key "list")
     "sr" #'(yas-reload-all         :which-key "reload"))
   :config
-  ;; Latex-mode snippets in org
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (yas-activate-extra-mode 'latex-mode)))
   (yas-global-mode 1))
 
 (use-package corfu
@@ -109,9 +105,8 @@
    "M-k" #'corfu-previous
    "C-j" #'corfu-next
    ";"   #'corfu-complete
+   "<tab>" #'yas-expand
    )
-  ('insert 'corfu-mode-map
-           "<tab>" #'yas-expand)
   :config
   (global-corfu-mode)
   (advice-add 'evil-escape-func :after #'corfu-quit))
