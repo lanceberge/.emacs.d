@@ -68,11 +68,10 @@
 
 (use-package display-line-numbers
   :straight (:type built-in)
+  :custom-face
+  (line-number              ((t (:background ,bg-color))))
+  (line-number-current-line ((t (:background ,bg-color))))
   :config
-  (custom-set-faces
-   `(line-number              ((t (:background ,bg-color))))
-   `(line-number-current-line ((t (:background ,bg-color)))))
-
   (unless IS-WINDOWS
     (setq-default display-line-numbers-type 'visual
                   display-line-numbers-width-start t ; auto count number of lines to start numbers
