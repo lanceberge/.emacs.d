@@ -66,7 +66,7 @@
     "oc" #'(calc :which-key "calc")))
 
 (use-package desktop ; save sessions to a file
-  :defer t
+  :disabled t
   :straight (:type built-in)
   :custom
   (desktop-load-locked-desktop t) ; ignore desktop-lock files
