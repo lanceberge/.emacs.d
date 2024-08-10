@@ -7,14 +7,27 @@
   (org-agenda-span 14)              ; show 14 days
   (org-agenda-start-on-weekday nil) ; start on today
   (org-agenda-files '("~/org/todo.org"))
+  (org-agenda-tags-column 0)
+  (org-agenda-custom-commands
+   '(
+     ("w" "Work"
+      ((tags-todo "Work"))
+      )
+
+     ("p" "Projects"
+      ((tags-todo "Project"))
+      )
+     ("e" "Emacs"
+      ((tags-todo "Emacs")
+       )
+      )
+     ))
   :general
   ('org-agenda-mode-map
    [remap org-agenda-todo] #'org-agenda-filter)
 
   (my-leader-def
-    "oa" (lambda ()
-           (interactive)
-           (org-agenda nil "t")))
+    "oa" #'(org-agenda :which-key "org agenda"))
   :config
   (require 'evil-org-agenda)
   (+org-roam-refresh-agenda-list)
@@ -25,6 +38,7 @@
 (use-package org-roam
   :commands (org-roam-node-list)
   :defer-incrementally (emacsql emacsqlite)
+  :after org
   :custom
   (org-roam-completion-everywhere t)
   (org-roam-directory "~/org-roam")
@@ -141,6 +155,7 @@
    "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below))
 
 (use-package org-drill
+  :after org-roam
   :general
   (my-leader-def
     "od" #'(org-drill :which-key "org-drill")
