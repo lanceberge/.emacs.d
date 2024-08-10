@@ -60,7 +60,7 @@
 (use-package embark
   :defer 0.3
   :general
-  ('(normal insert)
+  ('(insert normal) global-map
    "M-." #'embark-act
    "M-," #'embark-export)
   ('embark-general-map
@@ -140,8 +140,8 @@
 
 (use-package chatgpt-shell
   :general
-  ('normal chatgpt-shell-mode-map
-           "RET" #'shell-maker-submit)
+  ('(insert normal) chatgpt-shell-mode-map
+   "RET" #'shell-maker-submit)
   (my-localleader-def
     "gc" #'chatgpt-shell)
 

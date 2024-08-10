@@ -21,7 +21,8 @@
    )
 
   ('evil-ex-completion-map "C-g" 'exit-minibuffer) ; use ; to complete : vim commands
-  ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
+  ('insert 'evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
+  ('insert 'minibuffer-local-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
   ('(normal visual motion)
    "M-u"     #'evil-scroll-up
