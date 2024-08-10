@@ -277,13 +277,6 @@
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
-;; Load config files recursively
-(let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
-  (mapc (lambda (dir)
-          (mapc 'load-file
-                (directory-files-recursively dir "\\.el$")))
-        dirs))
-
 (custom-set-variables
  '(ignored-local-variable-values
    '((elisp-lint-indent-specs
@@ -316,3 +309,10 @@
       (magit-section-case . 0)
       (org-roam-with-file . 2))
      (elisp-lint-ignored-validators "byte-compile" "package-lint"))))
+
+;; Load config files recursively
+(let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
+  (mapc (lambda (dir)
+          (mapc 'load-file
+                (directory-files-recursively dir "\\.el$")))
+        dirs))

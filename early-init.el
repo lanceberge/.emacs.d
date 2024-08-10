@@ -101,9 +101,8 @@
                 mode-line-end-spaces))
 
 ;; Mode-line faces
-(custom-set-faces `(mode-line           ((t (:background ,bg-color-light :foreground "#928374"))))
-                  `(mode-line-inactive  ((t (:background ,bg-color))))
-                  `(mode-line-buffer-id ((t (:bold t)))))
+(custom-set-faces `(mode-line           ((t (:background ,bg-color-light :foreground "#61ACBB"))))
+                  `(mode-line-inactive  ((t (:background ,bg-color)))))
 
 (set-face-foreground 'vertical-border bg-color)
 
