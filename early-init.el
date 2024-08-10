@@ -54,17 +54,17 @@
 (straight-use-package 'use-package)
 (setq use-package-verbose t) ; show which packages are being loaded on startup and when
 
-(defconst bg-color-light "#282828"
+(defconst bg-color-light "#32302f"
   "gruvbox background color")
 
-(defconst bg-color "#1d2021"
+(defconst bg-color "#282828"
   "gruvbox background color")
 
 (use-package autothemer :defer t)
 
 (use-package gruvbox-theme ; theme
   :config
-  (load-theme 'gruvbox-dark-hard t))
+  (load-theme 'gruvbox t))
 
 (use-package display-line-numbers
   :straight (:type built-in)
@@ -101,7 +101,7 @@
                 mode-line-end-spaces))
 
 ;; Mode-line faces
-(custom-set-faces `(mode-line           ((t (:background ,bg-color-light :foreground "#61ACBB"))))
+(custom-set-faces `(mode-line           ((t (:background ,bg-color-light :foreground "#928374"))))
                   `(mode-line-inactive  ((t (:background ,bg-color)))))
 
 (set-face-foreground 'vertical-border bg-color)
