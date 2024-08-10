@@ -194,3 +194,9 @@
 
   :config
   (popper-mode +1))
+
+(use-package restart-emacs
+  :general
+  (my-leader-def
+    "re" #'(restart-emacs :which-key "restart emacs")
+    ))
