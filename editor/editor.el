@@ -3,13 +3,12 @@
   :hook
   (prog-mode . format-all-mode)
   (web-mode  . format-all-mode)
-  :init
-  (defvar +format-with-lsp nil)
   :general
   (my-leader-def
     :states 'normal
     "=" #'(+format/buffer :which-key "format"))
   :config
+  (defvar +format-with-lsp nil)
   (setq-default format-all-formatters
                 '(("TypeScript" prettier)
                   ("svelte"     prettier)
