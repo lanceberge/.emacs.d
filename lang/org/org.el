@@ -124,9 +124,9 @@
   (org-verbatim              ((t (:inherit org-block :background "#3c3836" :foreground "#d5c4a1"))))
   (org-quote                 ((t (:inherit org-block :slant italic))))
   (org-level-1               ((t (:foreground "#83a598" :background "#282828" :height 1.05 :overline nil :extend t))))
-  (org-level-2               ((t (:foreground "#d3869b" :background "#282828" :height 1.05 :overline nil :extend t))))
-  (org-level-3               ((t (:foreground "#b8bb26" :background "#282828" :height 1.05 :overline nil :extend t))))
-  (org-level-4               ((t (:foreground "#fe8019" :background "#282828" :height 1.05 :overline nil :extend t))))
+  (org-level-2               ((t (:foreground "#fe8019" :background "#282828" :height 1.05 :overline nil :extend t))))
+  (org-level-3               ((t (:foreground "#d3869b" :background "#282828" :height 1.05 :overline nil :extend t))))
+  (org-level-4               ((t (:foreground "#b8bb26" :background "#282828" :height 1.05 :overline nil :extend t))))
   :config
   (defun org-mode-company-backends ()
     (setq-local company-backends

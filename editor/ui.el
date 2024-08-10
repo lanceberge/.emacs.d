@@ -24,3 +24,8 @@
   :hook ((prog-mode text-mode) . show-paren-mode)
   :custom
   (show-paren-when-point-inside-paren t))
+
+(use-package rainbow-mode
+  :hook
+  (prog-mode . rainbow-mode)
+  (text-mode . rainbow-mode))
