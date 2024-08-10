@@ -1,7 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org-agenda
   :defer 0.5
-  :after org-roam
   :straight (:type built-in)
   :custom
   (org-agenda-span 14)              ; show 14 days
@@ -23,11 +22,12 @@
       )
      ))
   :general
+  (my-leader-def
+    "oa" #'(org-agenda :which-key "org agenda"))
+
   ('org-agenda-mode-map
    [remap org-agenda-todo] #'org-agenda-filter)
 
-  (my-leader-def
-    "oa" #'(org-agenda :which-key "org agenda"))
   :config
   (require 'evil-org-agenda)
   (+org-roam-refresh-agenda-list)
