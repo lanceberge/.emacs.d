@@ -20,6 +20,7 @@
   (org-M-RET-may-split-line nil)
   (org-return-follows-link t)
   (org-modules nil)
+  (org-image-actual-width nil)
 
   ;; Latex exports
   (org-export-backends '(html latex md))

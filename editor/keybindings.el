@@ -6,6 +6,7 @@
     "c" (general-simulate-key "C-c" :which-key "+Mode specific maps"))
 
   (my-leader-def
+    "nf"      #'(make-frame                 :which-key"New Frame")
     "h"         (general-simulate-key "C-h" :which-key "Help")
     ";"       #'(shell-command              :which-key "shell command")
 
