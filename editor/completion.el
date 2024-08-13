@@ -36,9 +36,6 @@
   :defer 0.1
   :custom
   (vertico-cycle t)
-  :init
-  (evil-collection-init 'minibuffer)
-  (vertico-mode)
   :general
   ('(normal insert) '(vertico-map minibuffer-inactive-mode-map)
    "C-j" #'vertico-next
@@ -50,7 +47,10 @@
    "M-u" #'vertico-scroll-down
    "M-d" #'vertico-scroll-up
    ";"   #'vertico-exit
-   ))
+   )
+  :config
+  (evil-collection-init 'minibuffer)
+  (vertico-mode))
 
 (use-package marginalia
   :defer 0.2
@@ -81,11 +81,10 @@
     "sl" #'(yas-describe-tables    :which-key "list")
     "sr" #'(yas-reload-all         :which-key "reload"))
   :config
-  ;; Latex-mode snippets in org
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (yas-activate-extra-mode 'latex-mode)))
   (yas-global-mode 1))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
 
 (use-package corfu
   :defer 0.3
@@ -101,38 +100,35 @@
   (corfu-on-exact-match nil)
   (corfu-quit-at-boundary nil)
   (corfu-scroll-margin 5)
-  :init
-  (global-corfu-mode)
   :general
-  ('insert corfu-mode-map
-           "RET"   #'newline
-           "<tab>" #'yas-expand)
-  ('(normal insert) 'corfu-map
-   "C-k"   #'corfu-previous
-   "M-j"   #'corfu-next
-   "M-k"   #'corfu-previous
-   "C-j"   #'corfu-next
-   ";"     #'corfu-complete
+  ('corfu-map
+   "RET" #'newline
+   "C-k" #'corfu-previous
+   "M-j" #'corfu-next
+   "M-k" #'corfu-previous
+   "C-j" #'corfu-next
+   ";"   #'corfu-complete
+   "<tab>" #'yas-expand
    )
   :config
+  (global-corfu-mode)
   (advice-add 'evil-escape-func :after #'corfu-quit))
 
 (use-package cape
   :after corfu
+  :hook
+  (text-mode        . +cape-text-mode)
+  (minibuffer-setup . +cape-minibuffer-mode)
   :custom
   (cape-file-directory-must-exist nil)
   :init
   (defun +cape-text-mode ()
     (setq-local corfu-auto-prefix 4))
 
-  (add-hook 'text-mode-hook '+cape-text-mode)
-
   (defun +cape-minibuffer-mode ()
     (dolist (backend '(cape-history))
       (add-to-list 'completion-at-point-functions backend))
     (setq-local corfu-auto-prefix 3))
-
-  (add-hook 'minibuffer-setup-hook '+cape-minibuffer-mode)
 
   (dolist (backend '(cape-file cape-dabbrev))
     (add-to-list 'completion-at-point-functions backend)))

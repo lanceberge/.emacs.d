@@ -1,20 +1,33 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org-agenda
   :defer 0.5
-  :after org-roam
   :straight (:type built-in)
   :custom
   (org-agenda-span 14)              ; show 14 days
   (org-agenda-start-on-weekday nil) ; start on today
   (org-agenda-files '("~/org/todo.org"))
+  (org-agenda-tags-column 0)
+  (org-agenda-custom-commands
+   '(
+     ("w" "Work"
+      ((tags-todo "Work"))
+      )
+
+     ("p" "Projects"
+      ((tags-todo "Project"))
+      )
+     ("e" "Emacs"
+      ((tags-todo "Emacs")
+       )
+      )
+     ))
   :general
+  (my-leader-def
+    "oa" #'(org-agenda :which-key "org agenda"))
+
   ('org-agenda-mode-map
    [remap org-agenda-todo] #'org-agenda-filter)
 
-  (my-leader-def
-    "oa" (lambda ()
-           (interactive)
-           (org-agenda nil "t")))
   :config
   (require 'evil-org-agenda)
   (+org-roam-refresh-agenda-list)
@@ -25,6 +38,7 @@
 (use-package org-roam
   :commands (org-roam-node-list)
   :defer-incrementally (emacsql emacsqlite)
+  :after org
   :custom
   (org-roam-completion-everywhere t)
   (org-roam-directory "~/org-roam")
@@ -51,8 +65,9 @@
     "oni" #'(org-roam-node-insert            :which-key "insert link")
     "onn" #'(+org-roam-node-insert-immediate :which-key "insert now")
     "ont" #'(+org-roam-add-todo              :which-key "add todo")
-    "ond" #'(+org-roam-add-drill-tag         :which-key "add todo")
-    "onp" #'(+org-roam-add-project-tag       :which-key "add todo")
+    "ond" #'(+org-roam-add-drill-tag         :which-key "add drill tag")
+    "onp" #'(+org-roam-add-project-tag       :which-key "add project tag")
+    "onq" #'(org-roam-tag-add                :which-key "add tag")
     )
   :config
   (org-roam-db-autosync-mode))
@@ -122,7 +137,7 @@
   :custom
   (org-edit-src-content-indentation 0) ; leading spaces before the #+begin line
   (org-src-preserve-indentation t)     ; don't preserve leading whitespace on export
-  (org-adapt-indentation nil)          ; don't indent under headlines
+  (org-adapt-indentation t)
 
   (org-src-window-setup 'current-window)
   :config
@@ -141,6 +156,7 @@
    "M-;"   #'evil-org-org-insert-todo-heading-respect-content-below))
 
 (use-package org-drill
+  :after org-roam
   :general
   (my-leader-def
     "od" #'(org-drill :which-key "org-drill")
@@ -151,6 +167,16 @@
             org-drill-scope-list
           'file))
   )
+
+
+(use-package org-modern
+  :custom
+  (org-modern-star 'replace)
+  :custom-face
+  (org-modern-face ((t (:background "#d3869b"))))
+  :hook
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda))
 
 (use-package org-journal
   :custom

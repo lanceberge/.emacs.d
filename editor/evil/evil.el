@@ -20,8 +20,8 @@
    "C-M-u" #'scroll-other-window-down
    )
 
-  ('evil-ex-completion-map "C-g" 'exit-minibuffer) ; use ; to complete : vim commands
-  ('evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
+  ('evil-ex-completion-map "C-g" 'abort-recursive-edit) ; quit on C-g
+  ('insert 'evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
   ('(normal visual motion)
    "M-u"     #'evil-scroll-up

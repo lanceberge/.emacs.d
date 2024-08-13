@@ -5,6 +5,7 @@
 (setq default-file-name-handler-alist file-name-handler-alist)
 
 (use-package emacs
+  :straight (:type built-in)
   :custom
   ;; unset file-name-handler-alist until its set again in Hooks heading (improve startup time)
   (file-name-handler-alist nil)
@@ -235,7 +236,7 @@
   (my-localleader-def
     "sr" #'(straight-rebuild-all         :which-key "rebuild all")
     "sf" #'(straight-fetch-all           :which-key "fetch all")
-    "sc" #'(straight-remove-unused-repos :which-key "fetch all")
+    "sc" #'(straight-remove-unused-repos :which-key "remove unused")
     "sp" #'(straight-pull-all            :which-key "pull all")))
 
 (add-hook 'after-init-hook ; show startup time

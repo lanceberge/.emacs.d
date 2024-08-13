@@ -25,7 +25,7 @@
   :custom
   (show-paren-when-point-inside-paren t))
 
-(use-package org-superstar ; bullets in org mode
-  :hook (org-mode . org-superstar-mode)
-  :custom
-  (org-hide-leading-stars t))
+(use-package rainbow-mode
+  :hook
+  (prog-mode . rainbow-mode)
+  (text-mode . rainbow-mode))

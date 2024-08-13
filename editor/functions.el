@@ -77,42 +77,33 @@
     (insert-file-contents file-path)
     (buffer-string)))
 
-;; TODO rename all my/ to +
 ;;;###autoload
-(defun my/save-and-kill-buffer ()
+(defun +save-and-kill-buffer ()
   "save and kill buffer"
   (interactive)
   (save-buffer)
   (kill-current-buffer))
 
 ;;;###autoload
-(defun my/split-line-below ()
+(defun +split-line-below ()
   "split the line below at point"
   (interactive)
   (newline)
   (indent-according-to-mode))
 
 ;;;###autoload
-(defun my/split-line-above ()
+(defun +split-line-above ()
   "split the line above at point"
   (interactive)
-  (my/split-line-below)
-  (move-text-up))
+  (+split-line-below)
+  (move-text-line-up))
 
 ;;;###autoload
-(defun my/kill-window-and-buffer ()
+(defun +kill-window-and-buffer ()
   "kill window and buffer"
   (interactive)
   (kill-this-buffer)
   (evil-quit))
-
-;;;###autoload
-(defun my/append-semicolon()
-  "append a semicolon to the end of the line"
-  (interactive)
-  (save-excursion
-    (call-interactively 'move-end-of-line)
-    (insert ";")))
 
 ;;;###autoload
 (defun balanced-parens-p ()
@@ -173,7 +164,7 @@
 (defun +push-mark-maybe ()
   "push mark onto `global-mark-ring' if mark head or tail is not current location"
   (if (not global-mark-ring) (error "global-mark-ring empty")
-    (unless (or (+marker-is-point-p (car global-mark-ring))
+    (unless (or (marker-is-point-p (car global-mark-ring))
                 (marker-is-point-p (car (reverse global-mark-ring))))
       (push-mark))))
 

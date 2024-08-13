@@ -3,13 +3,12 @@
   :hook
   (prog-mode . format-all-mode)
   (web-mode  . format-all-mode)
-  :init
-  (defvar +format-with-lsp nil)
   :general
   (my-leader-def
     :states 'normal
     "=" #'(+format/buffer :which-key "format"))
   :config
+  (defvar +format-with-lsp nil)
   (setq-default format-all-formatters
                 '(("TypeScript" prettier)
                   ("svelte"     prettier)
@@ -21,15 +20,19 @@
   (avy-keys '(?d ?j ?s ?k ?a ?l))
   :general
   ('evil-operator-state-map
-   "go" #'(avy-goto-char-2 :which-key "goto char"))
+   "go" #'(avy-goto-char-2 :which-key "goto char")
+   )
+
+  ('(normal insert)
+   "M-i" #'(avy-goto-char-timer :which-key "goto char")
+   )
 
   ('isearch-mode-map
-   "g"   #'avy-isearch
-   "M-o" #'avy-isearch)
+   "M-i" #'avy-isearch)
 
   ('normal
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
-   "g SPC o" #'(avy-goto-char-timer :which-key "timer"))
+   "g SPC o" #'(avy-isearch         :which-key "timer"))
   :config
   ;; https://karthinks.com/software/avy-can-do-anything/
   (defun avy-action-embark (pt)
@@ -56,7 +59,7 @@
 (use-package embark
   :defer 0.3
   :general
-  ('(normal insert)
+  ('(insert normal) global-map
    "M-." #'embark-act
    "M-," #'embark-export)
   ('embark-general-map
@@ -120,8 +123,10 @@
     "fu" #'(undo-tree-visualize :which-key "undo")))
 
 (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
-  :hook (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
-                        (exec-path-from-shell-initialize))))
+  :defer 0.5
+  :hook
+  (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
+                  (exec-path-from-shell-initialize))))
 
 (use-package google-this
   :general
@@ -136,8 +141,8 @@
 
 (use-package chatgpt-shell
   :general
-  ('normal chatgpt-shell-mode-map
-           "RET" #'shell-maker-submit)
+  ('(insert normal) chatgpt-shell-mode-map
+   "RET" #'shell-maker-submit)
   (my-localleader-def
     "gc" #'chatgpt-shell)
 
@@ -190,3 +195,9 @@
 
   :config
   (popper-mode +1))
+
+(use-package restart-emacs
+  :general
+  (my-leader-def
+    "re" #'(restart-emacs :which-key "restart emacs")
+    ))

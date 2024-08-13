@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: html image size
+# key: width
+# --
+#+attr_html: :width $0px

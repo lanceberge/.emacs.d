@@ -54,6 +54,9 @@
 (straight-use-package 'use-package)
 (setq use-package-verbose t) ; show which packages are being loaded on startup and when
 
+(defconst bg-color-light "#32302f"
+  "gruvbox background color")
+
 (defconst bg-color "#282828"
   "gruvbox background color")
 
@@ -65,10 +68,10 @@
 
 (use-package display-line-numbers
   :straight (:type built-in)
+  :custom-face
+  (line-number              ((t (:background ,bg-color))))
+  (line-number-current-line ((t (:background ,bg-color))))
   :config
-  (custom-set-faces `(line-number ((t (:background ,bg-color))))
-                    `(line-number-current-line ((t (:background ,bg-color)))))
-
   (unless IS-WINDOWS
     (setq-default display-line-numbers-type 'visual
                   display-line-numbers-width-start t ; auto count number of lines to start numbers
@@ -97,9 +100,8 @@
                 mode-line-end-spaces))
 
 ;; Mode-line faces
-(custom-set-faces `(mode-line           ((t (:background ,bg-color :foreground "#928374"))))
-                  `(mode-line-inactive  ((t (:background ,bg-color))))
-                  `(mode-line-buffer-id ((t (:bold t)))))
+(custom-set-faces `(mode-line           ((t (:background ,bg-color-light :foreground "#928374"))))
+                  `(mode-line-inactive  ((t (:background ,bg-color)))))
 
 (set-face-foreground 'vertical-border bg-color)
 

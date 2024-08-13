@@ -1,6 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 (use-package elisp-mode
   :straight (:type built-in)
+  :hook
+  (emacs-lisp-mode . (lambda () (flycheck-mode -1)))
   :general
   ('(normal insert) emacs-lisp-mode-map
    :prefix "C-c"

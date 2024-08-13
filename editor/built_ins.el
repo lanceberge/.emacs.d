@@ -66,7 +66,7 @@
     "oc" #'(calc :which-key "calc")))
 
 (use-package desktop ; save sessions to a file
-  :defer t
+  :disabled t
   :straight (:type built-in)
   :custom
   (desktop-load-locked-desktop t) ; ignore desktop-lock files
@@ -84,6 +84,7 @@
           (if (char-equal c ?\") t (electric-pair-default-inhibit c)))))
 
 (use-package ediff
+  :defer t
   :straight (:type built-in)
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -105,6 +106,7 @@
    "zm"  #'(outline-hide-body       :which-key "open all folds")))
 
 (use-package ispell
+  :defer t
   :straight (:type built-in)
   :custom
   (ispell-complete-word-dict t))
@@ -131,5 +133,6 @@
    "C-k" #'isearch-repeat-backward
    "M-j" #'isearch-repeat-forward
    "M-k" #'isearch-repeat-backward
-   ";"   #'isearch-done
+   "C-g" #'isearch-exit
+   ";"   #'isearch-exit
    ))

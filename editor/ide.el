@@ -1,5 +1,11 @@
 ;;; -*- lexical-binding: t -*-
 (use-package lsp-mode ; LSP
+  :hook
+  (svelte-mode     . lsp-deferred)
+  (go-mode         . lsp-deferred)
+  (python-mode     . lsp-deferred)
+  (js2-mode        . lsp-deferred)
+  (typescript-mode . lsp-deferred)
   :custom
   ;; Disable slow features
   (lsp-enable-file-watchers nil)
