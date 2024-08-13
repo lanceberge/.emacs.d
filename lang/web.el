@@ -24,5 +24,6 @@
            "TAB" #'emmet-expand-line))
 
 (use-package svelte-mode
+  :defer t
   :custom
   (svelte-basic-offset 2))
