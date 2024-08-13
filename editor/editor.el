@@ -122,11 +122,13 @@
   (my-leader-def
     "fu" #'(undo-tree-visualize :which-key "undo")))
 
-(use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
-  :defer 0.5
-  :hook
-  (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
-                  (exec-path-from-shell-initialize))))
+(if (version< emacs-version "29.1")
+    (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
+      :defer 0.5
+      :hook
+      (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
+                      (exec-path-from-shell-initialize))))
+  )
 
 (use-package google-this
   :general
