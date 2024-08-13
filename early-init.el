@@ -115,3 +115,5 @@
   (minions-mode-line-delimiters '(" " . ""))
   :config
   (minions-mode 1))
+
+(setenv "LSP_USE_PLISTS" "true")
