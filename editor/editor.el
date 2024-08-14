@@ -68,6 +68,8 @@
    "y" #'define-word-at-point
    "d" #'embark-find-definition
    "g" #'google-this-word)
+  ('embark-identifier-map
+   "." #'lsp-execute-code-action)
   )
 
 (use-package define-word

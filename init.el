@@ -60,6 +60,7 @@
 (advice-add #'display-startup-echo-area-message :override #'ignore)
 
 (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
+(setopt use-short-answers t)
 
 (unless IS-WINDOWS
   (setq selection-coding-system 'utf-8))
