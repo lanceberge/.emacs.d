@@ -3,10 +3,9 @@
   :defer 0.2
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :custom
-  ;; This function is amazing
   (xref-show-xrefs-function #'consult-xref)
   :general
-  ([remap project-find-file]    #'(consult-project-buffer :which-key "project buffer")
+  (
    [remap projectile-find-file] #'(consult-project-buffer :which-key "project buffer"))
 
   (my-leader-def
@@ -15,6 +14,7 @@
     "/"       #'(consult-line           :which-key "line")
     "fr"      #'(consult-recent-file    :which-key "find recent file")
     "fj"      #'(consult-imenu          :which-key "imenu")
+    "fp"      #'(consult-project-buffer :which-key "project buffer")
     "f SPC j" #'(consult-imenu-multi    :which-key "imenu")
     "fm"      #'(consult-global-mark    :which-key "mark")
     "fp"      #'(consult-project-buffer :which-key "project buffer")
