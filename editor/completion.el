@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package consult
+  :defer 0.2
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :custom
   ;; This function is amazing
@@ -67,7 +68,7 @@
   :after (consult embark))
 
 (use-package yasnippet ; snippets
-  :defer 0.2
+  :defer 0.4
   :defer-incrementally (eldoc easymenu help-mode)
   :custom
   (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
