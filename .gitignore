@@ -2,4 +2,5 @@ etc
 straight
 var
 .chatgpt-shell.el
+eln-cache/
 auto-save-list
