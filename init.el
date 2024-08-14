@@ -212,6 +212,10 @@
     "g" '(:ignore t :which-key "Miscellaneous")
     "t" '(:ignore t :which-key "Tramp ssh")
     "s" '(:ignore t :which-key "Straight"))
+  ('normal
+   "[o" '(:ignore t :which-key "Toggle Off")
+   "]o" '(:ignore t :which-key "Toggle On")
+   )
   (my-leader-def
     "b"  '(:ignore t :which-key "Buffers")
     "e"  '(:ignore t :which-key "Elisp")

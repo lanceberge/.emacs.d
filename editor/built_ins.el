@@ -51,6 +51,10 @@
     (prog-mode . flyspell-prog-mode)
     (text-mode . flyspell-mode)
     :general
+    ('normal
+     "[os" (lambda () (interactive) (flyspell-mode -1))
+     "]os" (lambda () (interactive) (flyspell-mode t))
+     )
     ('(normal insert)
      "M-y" #'(flyspell-auto-correct-word :which-key "fix word"))))
 
