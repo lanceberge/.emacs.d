@@ -130,4 +130,5 @@
       read-process-output-max (* 1024 1024))
 
 (if (>= emacs-major-version 29)
+    (setopt use-short-answers t)
     (add-to-list 'default-frame-alist '(undecorated-round . t)))

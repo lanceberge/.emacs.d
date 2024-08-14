@@ -26,7 +26,7 @@
 
   (lsp-auto-guess-root t)
 
-  (lsp-completion-provider :none)
+  (lsp-completion-provider :none) ;; Corfu
   :init
   (defun +lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
