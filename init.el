@@ -273,7 +273,7 @@
   :commands gcmh-idle-garbage-collect
   :custom
   (gcmh-idle-delay 10)
-  (gcmh-high-cons-threshold 107772160)
+  (gcmh-high-cons-threshold 17772160)
   :config
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
