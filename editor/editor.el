@@ -57,7 +57,6 @@
   )
 
 (use-package embark
-  :defer 0.3
   :general
   ('(insert normal) global-map
    "M-." #'embark-act

@@ -11,7 +11,6 @@
 
 (use-package winner ; Undo and redo window configs
   :straight (:type built-in)
-  :defer 0.3
   :general
   ('evil-window-map
    "u" #'(winner-undo :which-key "undo window operation")

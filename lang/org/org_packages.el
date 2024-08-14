@@ -96,6 +96,8 @@
     "on SPC b" #'(consult-org-roam-backlinks-recursive :which-key "view recursive backlinks")
     "onf"      #'(consult-org-roam-file-find           :which-key "find note")
     )
+  :config
+  (consult-org-roam-mode)
   )
 
 (use-package org-capture

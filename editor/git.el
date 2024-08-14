@@ -4,6 +4,7 @@
 (use-package magit-section :defer t)
 
 (use-package magit ; git client
+  :defer 0.5
   :defer-incrementally
   (evil-collection magit-section dash f s with-editor git-commit package eieio lv transient)
   :custom
