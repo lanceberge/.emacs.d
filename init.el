@@ -262,7 +262,7 @@
 (defun doom-restore-garbage-collection-h ()
   "Restore the garbage collection threshold"
   (run-at-time
-   1 nil (lambda () (setq gc-cons-threshold 16777216))))
+   1 nil (lambda () (setq gc-cons-threshold 107772160))))
 
 ;; decrease garbage collection when using minibuffer
 (add-hook 'minibuffer-setup-hook #'doom-defer-garbage-collection-h)
@@ -273,7 +273,7 @@
   :commands gcmh-idle-garbage-collect
   :custom
   (gcmh-idle-delay 10)
-  (gcmh-high-cons-threshold 16777216)
+  (gcmh-high-cons-threshold 107772160)
   :config
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))

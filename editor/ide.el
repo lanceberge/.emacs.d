@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package lsp-mode ; LSP
+  :defer 0.7
   :hook
   (svelte-mode     . lsp-deferred)
   (go-mode         . lsp-deferred)

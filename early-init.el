@@ -119,7 +119,8 @@
   (minions-mode 1))
 
 (setenv "LSP_USE_PLISTS" "true")
-(setq byte-compile-warnings nil)
+(setq byte-compile-warnings nil
+      read-process-output-max (* 1024 1024))
 
 (if (>= emacs-major-version 29)
     (add-to-list 'default-frame-alist '(undecorated-round . t)))
