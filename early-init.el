@@ -84,7 +84,7 @@
   :init
   (keycast-mode-line-mode)
   :custom-face
-  (keycast-key ((t (:box nil :background ,bg-color :foreground "#b8bb26")))))
+  (keycast-key ((t (:box nil :background ,bg-color-light :foreground "#b8bb26")))))
 
 ;; Minimalistic mode-line
 (setq-default mode-line-format
