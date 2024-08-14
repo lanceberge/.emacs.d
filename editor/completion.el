@@ -6,6 +6,9 @@
   ;; This function is amazing
   (xref-show-xrefs-function #'consult-xref)
   :general
+  ([remap project-find-file]    #'(consult-project-buffer :which-key "project buffer")
+   [remap projectile-find-file] #'(consult-project-buffer :which-key "project buffer"))
+
   (my-leader-def
     "SPC"     #'(consult-buffer         :which-key "find buffer")
     "."       #'(find-file              :which-key "find file")

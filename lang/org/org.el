@@ -1,8 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org
   :straight (:type built-in)
-  :hook
-  (org-tab-first . yas-expand)
   :defer-incrementally
   (calendar find-func format-spec org-macs org-compat
             org-faces org-entities org-list org-pcomplete org-src

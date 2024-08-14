@@ -80,6 +80,12 @@
 
   (global-display-line-numbers-mode))
 
+(use-package keycast
+  :init
+  (keycast-mode-line-mode)
+  :custom-face
+  (keycast-key ((t (:box nil :background ,bg-color :foreground "#b8bb26")))))
+
 ;; Minimalistic mode-line
 (setq-default mode-line-format
               '("%e"
@@ -97,7 +103,8 @@
                 mode-line-modes                 ; show current mode
                 " "
                 mode-line-misc-info
-                mode-line-end-spaces))
+                mode-line-end-spaces
+                keycast-mode-line))
 
 ;; Mode-line faces
 (custom-set-faces `(mode-line           ((t (:background ,bg-color-light :foreground "#928374"))))
@@ -119,3 +126,8 @@
   (minions-mode 1))
 
 (setenv "LSP_USE_PLISTS" "true")
+(setq byte-compile-warnings nil
+      read-process-output-max (* 1024 1024))
+
+(if (>= emacs-major-version 29)
+    (add-to-list 'default-frame-alist '(undecorated-round . t)))

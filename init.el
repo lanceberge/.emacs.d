@@ -60,6 +60,7 @@
 (advice-add #'display-startup-echo-area-message :override #'ignore)
 
 (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
+(setopt use-short-answers t)
 
 (unless IS-WINDOWS
   (setq selection-coding-system 'utf-8))
@@ -262,7 +263,7 @@
 (defun doom-restore-garbage-collection-h ()
   "Restore the garbage collection threshold"
   (run-at-time
-   1 nil (lambda () (setq gc-cons-threshold 16777216))))
+   1 nil (lambda () (setq gc-cons-threshold 107772160))))
 
 ;; decrease garbage collection when using minibuffer
 (add-hook 'minibuffer-setup-hook #'doom-defer-garbage-collection-h)
@@ -273,7 +274,7 @@
   :commands gcmh-idle-garbage-collect
   :custom
   (gcmh-idle-delay 10)
-  (gcmh-high-cons-threshold 16777216)
+  (gcmh-high-cons-threshold 107772160)
   :config
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))

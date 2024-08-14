@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package lsp-mode ; LSP
+  :defer 0.7
   :hook
   (svelte-mode     . lsp-deferred)
   (go-mode         . lsp-deferred)
@@ -44,7 +45,6 @@
     "gr" #'(lsp-rename                  :which-key "rename with lsp"))
   ('(normal insert visual) 'lsp-mode-map
    [remap display-local-help]    #'lsp-describe-thing-at-point
-   [remap xref-find-references]  #'lsp-find-references
    [remap xref-find-definitions] #'lsp-find-definition)
   :config
   ;; lsp-booster
