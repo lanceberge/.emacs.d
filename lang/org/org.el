@@ -2,10 +2,9 @@
 (use-package org
   :defer 0.4
   :defer-incrementally
-  (calendar find-func format-spec org-macs org-compat
-            org-faces org-entities org-list org-pcomplete org-src
-            org-footnote org-macro ob org org-clock org-agenda
-            org-capture evil-org flyspell)
+  (calendar find-func format-spec org-macs
+            org-faces org-entities org-list org-src
+            ob org org-agenda org-capture evil-org flyspell)
   :custom
   ;; Directories
   (org-directory "~/org")
