@@ -30,6 +30,10 @@
 
   ('isearch-mode-map
    "/" #'consult-line)
+  :config
+  (when IS-LINUX
+    (autoload 'projectile-project-root "projectile")
+    (setq consult-project-function (lambda (_) (projectile-project-root))))
   )
 
 (use-package vertico
