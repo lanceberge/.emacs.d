@@ -53,7 +53,6 @@
    "M-d" #'vertico-scroll-up
    ";"   #'vertico-exit
    "C-w" #'vertico-directory-up
-   "C-<backspace>" #'vertico-directory-up
    )
   :config
   (evil-collection-init 'minibuffer)

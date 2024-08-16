@@ -23,6 +23,7 @@
   (avy-keys '(?d ?j ?s ?k ?a ?l))
   :general
   ('evil-operator-state-map
+   "\\" #'(avy-goto-char-2 :which-key "goto char")
    "go" #'(avy-goto-char-2 :which-key "goto char")
    )
 
@@ -31,12 +32,15 @@
    )
 
   ('isearch-mode-map
-   "M-i" #'avy-isearch)
+   "M-i" #'evil-avy-isearch)
 
   ('normal
+   "\\"      #'(avy-goto-char-2     :which-key "2-chars")
    "go"      #'(avy-goto-char-2     :which-key "2-chars")
-   "g SPC o" #'(avy-isearch         :which-key "timer"))
+   "SPC \\"  #'(evil-avy-isearch         :which-key "timer")
+   "g SPC o" #'(evil-avy-isearch         :which-key "timer"))
   :config
+  (evil-define-avy-motion avy-isearch inclusive)
   ;; https://karthinks.com/software/avy-can-do-anything/
   (defun avy-action-embark (pt)
     "Perform an embark action on the avy target without moving point to it"
