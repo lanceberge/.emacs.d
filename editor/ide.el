@@ -133,6 +133,20 @@
       "p SPC p" #'(+project-switch-and-rg        :which-key "switch project")
       "pf"      #'(project-find-file             :which-key "find file")
       "ps"      #'(consult-ripgrep               :which-key "ripgrep")))
+  :config
+;;;###autoload
+  (defun +project-switch-and-rg ()
+    "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+    (interactive)
+    (setq project-switch-commands 'consult-ripgrep)
+    (call-interactively 'project-switch-project))
+
+;;;###autoload
+  (defun +project-switch-and-find-file ()
+    "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+    (interactive)
+    (setq project-switch-commands 'project-find-file)
+    (call-interactively 'project-switch-project))
   )
 
 (when IS-LINUX
@@ -148,5 +162,19 @@
      "SPC p" #'(+projectile-switch-and-rg        :which-key "switch proj and find file")
      "s"     #'(consult-ripgrep                  :which-key "ripgrep"))
     :config
+;;;###autoload
+    (defun +projectile-switch-and-rg ()
+      "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+      (interactive)
+      (setq projectile-switch-project-action 'consult-ripgrep)
+      (projectile-switch-project))
+
+;;;###autoload
+    (defun +projectile-switch-and-find-file ()
+      "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+      (interactive)
+      (setq projectile-switch-project-action 'projectile-find-file)
+      (projectile-switch-project))
+
     (projectile-mode +1)
     ))
