@@ -22,10 +22,13 @@
       )
      ))
   :general
+  ('org-agenda-mode
+   "g" #'ace-link)
   (my-leader-def
     "oa" #'(org-agenda :which-key "org agenda"))
 
-  ('org-agenda-mode-map
+  ('motion 'org-agenda-mode-map
+           "go" #'ace-link
    [remap org-agenda-todo] #'org-agenda-filter)
 
   :config

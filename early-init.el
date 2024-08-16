@@ -7,6 +7,15 @@
 (defconst IS-MAC     (eq system-type   'darwin))
 
 (setq package-enable-at-startup nil) ; disable package.el at startup
+(if (fboundp 'native-comp-available-p)
+    (if (native-comp-available-p)
+        (setq comp-speed 2
+              package-native-compile t
+              native-comp-async-report-warnings-errors nil
+              native-comp-deferred-compilation-deny-list nil)
+      )
+  )
+
 (advice-add #'package--ensure-init-file :override #'ignore)
 
 ;; No unnecessary noise: toolbar, menu-bar, and scroll-bar
@@ -131,4 +140,4 @@
 
 (if (>= emacs-major-version 29)
     (setopt use-short-answers t)
-    (add-to-list 'default-frame-alist '(undecorated-round . t)))
+  (add-to-list 'default-frame-alist '(undecorated-round . t)))
