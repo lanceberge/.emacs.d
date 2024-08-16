@@ -50,12 +50,12 @@
                          "#+title: ${title}\n")
       :unnarrowed t)
      ("c" "Programming" plain "%?"
-      :if-new (file+head "${slug}.org"
+      :if-new (file+head "public/${slug}.org"
                          "#+title: ${title}\n#+filetags: Programming\n")
       :unnarrowed t)
      ("p" "Projects" plain "%?"
       :if-new
-      (file+head "${slug}.org"
+      (file+head "projects/${slug}.org"
                  "#+title: ${title}\n#+category: ${title}\n#+filetags: Project ${title}\n")
       :unnarrowed t)
      )
@@ -105,27 +105,23 @@
   :custom
   (org-capture-templates
    '(("a" "A"
-      entry (file+headline "~/org/todo.org" "A")
+      entry (file+headline "~/org-roam/projects/todo.org" "A")
       "** TODO %?\n %i\n" :prepend t)
 
      ("b" "B"
-      entry (file+headline "~/org/todo.org" "B")
+      entry (file+headline "~/org-roam/projects/todo.org" "B")
       "** TODO %?\n %i\n" :prepend t)
 
      ("c" "C"
-      entry (file+headline "~/org/todo.org" "C")
+      entry (file+headline "~/org-roam/projects/todo.org" "C")
       "** TODO %?\n %i\n" :prepend t)
 
      ("w" "Work"
-      entry (file+headline "~/org-roam/work.org" "Tasks")
-      "** TODO %?\n %i\n" :prepend t)
-
-     ("m" "Music"
-      entry (file+headline "~/org/todo.org" "Music")
+      entry (file+headline "~/org-roam/projects/work.org" "Tasks")
       "** TODO %?\n %i\n" :prepend t)
 
      ("e" "Emacs"
-      entry (file+headline "~/org-roam/emacs.org" "Tasks")
+      entry (file+headline "~/org-roam/projects/emacs.org" "Tasks")
       "** TODO %?\n %i\n" :prepend t)))
   :general
   (my-leader-def
