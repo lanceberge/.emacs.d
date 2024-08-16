@@ -35,10 +35,10 @@
    "M-i" #'evil-avy-isearch)
 
   ('normal
-   "\\"      #'(avy-goto-char-2     :which-key "2-chars")
-   "go"      #'(avy-goto-char-2     :which-key "2-chars")
-   "SPC \\"  #'(evil-avy-isearch         :which-key "timer")
-   "g SPC o" #'(evil-avy-isearch         :which-key "timer"))
+   "\\"      #'(avy-goto-char-2  :which-key "2-chars")
+   "go"      #'(avy-goto-char-2  :which-key "2-chars")
+   "SPC \\"  #'(evil-avy-isearch :which-key "timer")
+   "g SPC o" #'(evil-avy-isearch :which-key "timer"))
   :config
   (evil-define-avy-motion avy-isearch inclusive)
   ;; https://karthinks.com/software/avy-can-do-anything/

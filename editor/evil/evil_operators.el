@@ -71,6 +71,7 @@
          (evil-lion-left 1 start-pos end-pos ?\()
          (evil-lion-left 1 start-pos end-pos ?\:)
          )
+       (format-all-buffer)
        ))))
 
 (use-package evil-matchit ; navigate matching blocks of code with %
