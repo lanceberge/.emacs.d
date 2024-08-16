@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org
-  :defer 0.4
+  :defer 2.0
   :defer-incrementally
   (calendar find-func format-spec org-macs
             org-faces org-entities org-list org-src

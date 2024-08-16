@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org-agenda
-  :defer 0.5
+  :defer 1.5
   :straight (:type built-in)
   :custom
   (org-agenda-span 14)              ; show 14 days

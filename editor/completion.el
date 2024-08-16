@@ -60,7 +60,7 @@
   (vertico-mode))
 
 (use-package marginalia
-  :defer 0.2
+  :defer 0.4
   :config
   (marginalia-mode))
 
@@ -74,7 +74,7 @@
   :after (consult embark))
 
 (use-package yasnippet ; snippets
-  :defer 0.4
+  :defer 1.1
   :defer-incrementally (eldoc easymenu help-mode)
   :custom
   (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
@@ -96,7 +96,7 @@
   (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer"))
 
 (use-package corfu
-  :defer 0.3
+  :defer 1.4
   :custom
   (corfu-cycle t)
   (corfu-auto t)

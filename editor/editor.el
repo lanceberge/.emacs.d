@@ -102,7 +102,7 @@
 
 
 (use-package helpful ; better help menu
-  :defer 0.3
+  :defer 0.7
   :general
   ('normal
    "gp" #'helpful-at-point)
