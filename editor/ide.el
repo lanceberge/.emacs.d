@@ -122,30 +122,11 @@
    "gh" #'(eldoc-print-current-symbol-info :which-key "view doc")))
 
 
-(when IS-MAC
-  (use-package project
-    :straight (:type built-in)
-    :commands (project-switch-project)
-    :general
-    (my-leader-def
-      "pp"      #'(+project-switch-and-find-file :which-key "switch project")
-      "p SPC p" #'(+project-switch-and-rg        :which-key "switch project")
-      "pf"      #'(project-find-file             :which-key "find file")
-      "ps"      #'(consult-ripgrep               :which-key "ripgrep")))
-  )
-
-(when IS-LINUX
-  (use-package projectile
-    :defer 0.2
-    :custom
-    (projectile-project-search-path '("~/src/" "~/org" ))
-    :general
-    (my-leader-def
-      "p" #'projectile-command-map)
-    ('projectile-command-map
-     "p"     #'(+projectile-switch-and-find-file :which-key "switch proj and find file")
-     "SPC p" #'(+projectile-switch-and-rg        :which-key "switch proj and find file")
-     "s"     #'(consult-ripgrep                  :which-key "ripgrep"))
-    :config
-    (projectile-mode +1)
-    ))
+(use-package project
+  :commands (project-switch-project)
+  :general
+  (my-leader-def
+    "pp"      #'(+project-switch-and-find-file :which-key "switch project")
+    "p SPC p" #'(+project-switch-and-rg        :which-key "switch project")
+    "pf"      #'(project-find-file             :which-key "find file")
+    "ps"      #'(consult-ripgrep               :which-key "ripgrep")))
