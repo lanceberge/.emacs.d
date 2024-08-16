@@ -2,7 +2,7 @@
 (use-package terminal-here
   :general
   (my-leader-def
-    "o SPC t" #'terminal-here-launch :which-key "Launch terminal"))
+    "ot" #'terminal-here-launch :which-key "Launch terminal"))
 
 (use-package tramp ; access remote files within emacs
   :disabled t
@@ -26,7 +26,7 @@
     :states 'insert
     "C-c" #'vterm--self-insert)
   (my-leader-def
-    "ot" #'(vterm :which-key "vterm"))
+    "ov" #'(vterm :which-key "vterm"))
   :config
   (cl-loop for num from 0 to 9 do
            (general-define-key :keymaps 'vterm-mode-map
