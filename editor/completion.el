@@ -88,7 +88,9 @@
   (yas-global-mode 1))
 
 (use-package yasnippet-snippets
-  :after yasnippet)
+  :after yasnippet
+  :config
+  (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer"))
 
 (use-package corfu
   :defer 0.3
