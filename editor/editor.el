@@ -114,14 +114,17 @@
   (evil-collection-inhibit-insert-state 'helpful-mode-map))
 
 (use-package undo-tree ; Persistent Undos
-  :hook (after-init . global-undo-tree-mode)
+  :defer 0.1
+  :hook (evil-local-mode . turn-on-undo-tree-mode)
   :custom
   (undo-limit 10000)
   (undo-tree-auto-save-history t)
   (evil-undo-system 'undo-tree)
   :general
   (my-leader-def
-    "fu" #'(undo-tree-visualize :which-key "undo")))
+    "fu" #'(undo-tree-visualize :which-key "undo"))
+  :config
+  (global-undo-tree-mode))
 
 (if (version< emacs-version "29.1")
     (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.

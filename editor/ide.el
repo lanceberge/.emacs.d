@@ -30,7 +30,7 @@
   :init
   (defun +lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(flex))) ;; Configure flex
+          '(orderless basic)))
   :hook
   (lsp-completion-mode . +lsp-mode-setup-completion)
   :general

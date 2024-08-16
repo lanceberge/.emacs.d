@@ -11,12 +11,13 @@
 
 (use-package winner ; Undo and redo window configs
   :straight (:type built-in)
+  :defer 1
+  :init
+  (winner-mode)
   :general
   ('evil-window-map
    "u" #'(winner-undo :which-key "undo window operation")
-   "r" #'(winner-redo :which-key "redo window operation"))
-  :config
-  (winner-mode))
+   "r" #'(winner-redo :which-key "redo window operation")))
 
 (use-package tab-bar
   :straight (:type built-in)
