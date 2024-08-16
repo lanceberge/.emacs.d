@@ -123,16 +123,14 @@
    "gh" #'(eldoc-print-current-symbol-info :which-key "view doc")))
 
 
-(when IS-MAC
-  (use-package project
-    :straight (:type built-in)
-    :commands (project-switch-project)
-    :general
-    (my-leader-def
-      "pp"      #'(+project-switch-and-find-file :which-key "switch project")
-      "p SPC p" #'(+project-switch-and-rg        :which-key "switch project")
-      "pf"      #'(project-find-file             :which-key "find file")
-      "ps"      #'(consult-ripgrep               :which-key "ripgrep")))
+(use-package project
+  :commands (project-switch-project)
+  :general
+  (my-leader-def
+    "pp"      #'(+project-switch-and-find-file :which-key "switch project")
+    "p SPC p" #'(+project-switch-and-rg        :which-key "switch project")
+    "pf"      #'(project-find-file             :which-key "find file")
+    "ps"      #'(consult-ripgrep               :which-key "ripgrep"))
   :config
 ;;;###autoload
   (defun +project-switch-and-rg ()
@@ -148,33 +146,3 @@
     (setq project-switch-commands 'project-find-file)
     (call-interactively 'project-switch-project))
   )
-
-(when IS-LINUX
-  (use-package projectile
-    :defer 0.2
-    :custom
-    (projectile-project-search-path '("~/src/" "~/org" ))
-    :general
-    (my-leader-def
-      "p" #'projectile-command-map)
-    ('projectile-command-map
-     "p"     #'(+projectile-switch-and-find-file :which-key "switch proj and find file")
-     "SPC p" #'(+projectile-switch-and-rg        :which-key "switch proj and find file")
-     "s"     #'(consult-ripgrep                  :which-key "ripgrep"))
-    :config
-;;;###autoload
-    (defun +projectile-switch-and-rg ()
-      "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
-      (interactive)
-      (setq projectile-switch-project-action 'consult-ripgrep)
-      (projectile-switch-project))
-
-;;;###autoload
-    (defun +projectile-switch-and-find-file ()
-      "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
-      (interactive)
-      (setq projectile-switch-project-action 'projectile-find-file)
-      (projectile-switch-project))
-
-    (projectile-mode +1)
-    ))
