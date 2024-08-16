@@ -7,6 +7,9 @@
   (my-leader-def
     :states 'normal
     "=" #'(+format/buffer :which-key "format"))
+  ('normal
+   "[of" (lambda () (interactive) (format-all-mode -1))
+   "]of" (lambda () (interactive) (format-all-mode 1)))
   :config
   (defvar +format-with-lsp nil)
   (setq-default format-all-formatters
