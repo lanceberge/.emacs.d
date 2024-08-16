@@ -46,16 +46,16 @@
   (org-roam-node-display-template (concat "${title:*} " (propertize "${tags:30}")))
   (org-roam-capture-templates
    '(("d" "default" plain "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+      :if-new (file+head "${slug}.org"
                          "#+title: ${title}\n")
       :unnarrowed t)
      ("c" "Programming" plain "%?"
-      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+      :if-new (file+head "${slug}.org"
                          "#+title: ${title}\n#+filetags: Programming\n")
       :unnarrowed t)
      ("p" "Projects" plain "%?"
       :if-new
-      (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+      (file+head "${slug}.org"
                  "#+title: ${title}\n#+category: ${title}\n#+filetags: Project ${title}\n")
       :unnarrowed t)
      )
@@ -125,7 +125,7 @@
       "** TODO %?\n %i\n" :prepend t)
 
      ("e" "Emacs"
-      entry (file+headline "~/org-roam/20240804163601-emacs.org" "Tasks")
+      entry (file+headline "~/org-roam/emacs.org" "Tasks")
       "** TODO %?\n %i\n" :prepend t)))
   :general
   (my-leader-def
