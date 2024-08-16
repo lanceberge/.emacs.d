@@ -45,9 +45,11 @@
    "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line"))
 
   ('(normal insert)
+   "C-/" #'(comment-line :which-key "comment")
    "M-/" #'(comment-line :which-key "comment"))
 
   ('visual
+   "C-/" #'(comment-dwim :which-key "comment")
    "M-/" #'(comment-dwim :which-key "comment"))
 
 
