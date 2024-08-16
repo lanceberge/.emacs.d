@@ -40,6 +40,7 @@
   :defer 0.1
   :custom
   (vertico-cycle t)
+  (vertico-preselect 'first)
   :general
   ('(normal insert) '(vertico-map minibuffer-inactive-mode-map)
    "C-j" #'vertico-next
@@ -51,6 +52,8 @@
    "M-u" #'vertico-scroll-down
    "M-d" #'vertico-scroll-up
    ";"   #'vertico-exit
+   "C-w" #'vertico-directory-up
+   "C-<backspace>" #'vertico-directory-up
    )
   :config
   (evil-collection-init 'minibuffer)
