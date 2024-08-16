@@ -54,7 +54,24 @@
            "C-x" #'(evil-numbers/dec-at-pt :which-key "decrement number")))
 
 (use-package evil-lion ; gl as an operator to left-align, gL to right-align
-  :hook ((prog-mode text-mode) . evil-lion-mode))
+  :hook
+  ((prog-mode text-mode) . evil-lion-mode)
+  :general
+  ('normal
+   [remap evil-lion-right] #'(+align-keybindings :which-key "align keybindings")
+   :config
+   (defun +align-keybindings (count)
+     (interactive "P")
+     (save-excursion
+       (beginning-of-line)
+       (let ((start-pos (line-beginning-position))
+             (end-pos (progn (forward-line (1+ count)) (point))))
+         (evil-lion-left 1 start-pos end-pos ?\")
+         (evil-lion-left 1 start-pos end-pos ?\#)
+         (evil-lion-left 1 start-pos end-pos ?\()
+         (evil-lion-left 1 start-pos end-pos ?\:)
+         )
+       ))))
 
 (use-package evil-matchit ; navigate matching blocks of code with %
   :hook (find-file . evil-matchit-mode)
