@@ -52,7 +52,10 @@
    "M-u" #'vertico-scroll-down
    "M-d" #'vertico-scroll-up
    ";"   #'vertico-exit
-   "C-w" #'vertico-directory-up
+   "M-h" #'vertico-directory-up
+   "M-l" #'vertico-directory-enter
+   "M-l" #'vertico-directory-enter
+   "C-w" #'evil-delete-backward-word
    )
   :config
   (evil-collection-init 'minibuffer)
