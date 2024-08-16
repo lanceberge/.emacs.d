@@ -29,6 +29,8 @@
   (initial-major-mode 'fundamental-mode) ; start in an empty mode
 
   (find-file-visit-truename t) ; auto go to symlinks
+  (vc-follow-symlinks t)
+  (confirm-kill-emacs 'y-or-n-p)
   (kill-buffer-query-functions nil)
   (inhibit-compacting-font-caches t) ; inhibit font compacting
   (highlight-nonselected-windows nil)
