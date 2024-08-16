@@ -218,5 +218,11 @@
 (use-package restart-emacs
   :general
   (my-leader-def
-    "re" #'(restart-emacs :which-key "restart emacs")
+    "re" #'(+restart-emacs :which-key "restart emacs")
+    )
+  :config
+  (defun +restart-emacs ()
+    (interactive)
+    (setq confirm-kill-emacs nil)
+    (restart-emacs)
     ))

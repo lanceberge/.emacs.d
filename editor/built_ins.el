@@ -140,3 +140,12 @@
    "C-g" #'isearch-exit
    ";"   #'isearch-exit
    ))
+
+(use-package grep-mode
+  :straight (:type built-in)
+  :hook
+  (grep-mode . evil-normal-state)
+  :general
+  ('normal grep-mode-map
+           ";" #'compile-goto-error
+           "q" #'quit-window))
