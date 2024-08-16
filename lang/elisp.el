@@ -17,6 +17,5 @@
   (when (eq major-mode 'emacs-lisp-mode)
     (if (balanced-parens-p)
         (progn
-          (call-interactively #'format-all-buffer)
           (save-buffer))
       (message "Parens are not balanced, saving canceled"))))

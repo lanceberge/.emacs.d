@@ -7,6 +7,9 @@
   (my-leader-def
     :states 'normal
     "=" #'(+format/buffer :which-key "format"))
+  ('normal
+   "[of" (lambda () (interactive) (format-all-mode -1))
+   "]of" (lambda () (interactive) (format-all-mode 1)))
   :config
   (defvar +format-with-lsp nil)
   (setq-default format-all-formatters
@@ -20,6 +23,7 @@
   (avy-keys '(?d ?j ?s ?k ?a ?l))
   :general
   ('evil-operator-state-map
+   "\\" #'(avy-goto-char-2 :which-key "goto char")
    "go" #'(avy-goto-char-2 :which-key "goto char")
    )
 
@@ -28,12 +32,15 @@
    )
 
   ('isearch-mode-map
-   "M-i" #'avy-isearch)
+   "M-i" #'evil-avy-isearch)
 
   ('normal
-   "go"      #'(avy-goto-char-2     :which-key "2-chars")
-   "g SPC o" #'(avy-isearch         :which-key "timer"))
+   "\\"      #'(avy-goto-char-2  :which-key "2-chars")
+   "go"      #'(avy-goto-char-2  :which-key "2-chars")
+   "SPC \\"  #'(evil-avy-isearch :which-key "timer")
+   "g SPC o" #'(evil-avy-isearch :which-key "timer"))
   :config
+  (evil-define-avy-motion avy-isearch inclusive)
   ;; https://karthinks.com/software/avy-can-do-anything/
   (defun avy-action-embark (pt)
     "Perform an embark action on the avy target without moving point to it"
@@ -99,7 +106,7 @@
 
 
 (use-package helpful ; better help menu
-  :defer 0.3
+  :defer 0.7
   :general
   ('normal
    "gp" #'helpful-at-point)
@@ -108,20 +115,24 @@
 
   ([remap describe-command]  #'helpful-command
    [remap describe-key]      #'helpful-key
+   [remap describe-variable] #'helpful-variable
    [remap describe-function] #'helpful-function
    [remap describe-symbol]   #'helpful-symbol)
   :config
   (evil-collection-inhibit-insert-state 'helpful-mode-map))
 
 (use-package undo-tree ; Persistent Undos
-  :hook (after-init . global-undo-tree-mode)
+  :defer 0.1
+  :hook (evil-local-mode . turn-on-undo-tree-mode)
   :custom
   (undo-limit 10000)
   (undo-tree-auto-save-history t)
   (evil-undo-system 'undo-tree)
   :general
   (my-leader-def
-    "fu" #'(undo-tree-visualize :which-key "undo")))
+    "fu" #'(undo-tree-visualize :which-key "undo"))
+  :config
+  (global-undo-tree-mode))
 
 (if (version< emacs-version "29.1")
     (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.

@@ -25,15 +25,16 @@
   (inhibit-startup-echo-area-message user-login-name)
 
   ;; inhibit-default-init t
-  (initial-scratch-message nil)          ; empty scratch file
+  (initial-scratch-message nil) ; empty scratch file
   (initial-major-mode 'fundamental-mode) ; start in an empty mode
 
+  (find-file-visit-truename t) ; auto go to symlinks
   (kill-buffer-query-functions nil)
   (inhibit-compacting-font-caches t) ; inhibit font compacting
   (highlight-nonselected-windows nil)
-  (ffap-machine-p-known 'reject)     ; don't ping things that look like domain names
+  (ffap-machine-p-known 'reject) ; don't ping things that look like domain names
   (bidi-inhibit-bpa t)
-  (fast-but-imprecise-scrolling t)   ; faster scrolling over unfontified regions
+  (fast-but-imprecise-scrolling t) ; faster scrolling over unfontified regions
 
   ;; Scrolling
   (scroll-conservatively 1000)
@@ -273,7 +274,7 @@
 (add-hook 'minibuffer-exit-hook  #'doom-restore-garbage-collection-h)
 
 (use-package gcmh ; Garbage collect in idle time
-  :defer 0.4
+  :defer 2.0
   :commands gcmh-idle-garbage-collect
   :custom
   (gcmh-idle-delay 10)

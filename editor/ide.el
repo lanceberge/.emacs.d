@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package lsp-mode ; LSP
-  :defer 0.7
+  :defer 2.0
   :hook
   (svelte-mode     . lsp-deferred)
   (go-mode         . lsp-deferred)
@@ -30,7 +30,7 @@
   :init
   (defun +lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-          '(flex))) ;; Configure flex
+          '(orderless basic)))
   :hook
   (lsp-completion-mode . +lsp-mode-setup-completion)
   :general
@@ -38,6 +38,7 @@
    "M-i" #'(lsp-execute-code-action :which-key "code action"))
   ('normal lsp-mode-map
            "gr" #'(lsp-find-references         :which-key "find references")
+           "K"  #'(lsp-describe-thing-at-point :which-key "find references")
            "ga" #'(lsp-execute-code-action     :which-key "code action")
            "gh" #'(lsp-describe-thing-at-point :which-key "view doc"))
   (my-localleader-def
@@ -122,30 +123,26 @@
    "gh" #'(eldoc-print-current-symbol-info :which-key "view doc")))
 
 
-(when IS-MAC
-  (use-package project
-    :straight (:type built-in)
-    :commands (project-switch-project)
-    :general
-    (my-leader-def
-      "pp"      #'(+project-switch-and-find-file :which-key "switch project")
-      "p SPC p" #'(+project-switch-and-rg        :which-key "switch project")
-      "pf"      #'(project-find-file             :which-key "find file")
-      "ps"      #'(consult-ripgrep               :which-key "ripgrep")))
-  )
+(use-package project
+  :commands (project-switch-project)
+  :general
+  (my-leader-def
+    "pp"      #'(+project-switch-and-find-file :which-key "switch project")
+    "p SPC p" #'(+project-switch-and-rg        :which-key "switch project")
+    "pf"      #'(project-find-file             :which-key "find file")
+    "ps"      #'(consult-ripgrep               :which-key "ripgrep"))
+  :config
+;;;###autoload
+  (defun +project-switch-and-rg ()
+    "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+    (interactive)
+    (setq project-switch-commands 'consult-ripgrep)
+    (call-interactively 'project-switch-project))
 
-(when IS-LINUX
-  (use-package projectile
-    :defer 0.2
-    :custom
-    (projectile-project-search-path '("~/src/" "~/org" ))
-    :general
-    (my-leader-def
-      "p" #'projectile-command-map)
-    ('projectile-command-map
-     "p"     #'(+projectile-switch-and-find-file :which-key "switch proj and find file")
-     "SPC p" #'(+projectile-switch-and-rg        :which-key "switch proj and find file")
-     "s"     #'(consult-ripgrep                  :which-key "ripgrep"))
-    :config
-    (projectile-mode +1)
-    ))
+;;;###autoload
+  (defun +project-switch-and-find-file ()
+    "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+    (interactive)
+    (setq project-switch-commands 'project-find-file)
+    (call-interactively 'project-switch-project))
+  )

@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org-agenda
-  :defer 0.5
+  :defer 1.5
   :straight (:type built-in)
   :custom
   (org-agenda-span 14)              ; show 14 days
@@ -117,7 +117,7 @@
       "** TODO %?\n %i\n" :prepend t)
 
      ("w" "Work"
-      entry (file+headline "~/org/todo.org" "Work")
+      entry (file+headline "~/org-roam/work.org" "Tasks")
       "** TODO %?\n %i\n" :prepend t)
 
      ("m" "Music"

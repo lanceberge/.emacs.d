@@ -40,6 +40,7 @@
   :defer 0.1
   :custom
   (vertico-cycle t)
+  (vertico-preselect 'first)
   :general
   ('(normal insert) '(vertico-map minibuffer-inactive-mode-map)
    "C-j" #'vertico-next
@@ -51,13 +52,14 @@
    "M-u" #'vertico-scroll-down
    "M-d" #'vertico-scroll-up
    ";"   #'vertico-exit
+   "C-w" #'vertico-directory-up
    )
   :config
   (evil-collection-init 'minibuffer)
   (vertico-mode))
 
 (use-package marginalia
-  :defer 0.2
+  :defer 0.4
   :config
   (marginalia-mode))
 
@@ -71,7 +73,7 @@
   :after (consult embark))
 
 (use-package yasnippet ; snippets
-  :defer 0.4
+  :defer 1.1
   :defer-incrementally (eldoc easymenu help-mode)
   :custom
   (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
@@ -88,10 +90,12 @@
   (yas-global-mode 1))
 
 (use-package yasnippet-snippets
-  :after yasnippet)
+  :after yasnippet
+  :config
+  (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer"))
 
 (use-package corfu
-  :defer 0.3
+  :defer 1.4
   :custom
   (corfu-cycle t)
   (corfu-auto t)
