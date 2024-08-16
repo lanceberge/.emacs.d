@@ -8,8 +8,10 @@
     :states 'normal
     "=" #'(+format/buffer :which-key "format"))
   ('normal
-   "[of" (lambda () (interactive) (format-all-mode -1))
-   "]of" (lambda () (interactive) (format-all-mode 1)))
+   "[of" (defun +format-all-off () (interactive)
+                (format-all-mode -1) :which-key "format-all")
+   "]of" (defun +format-all-on  () (interactive)
+                (format-all-mode 1) :which-key "format all"))
   :config
   (defvar +format-with-lsp nil)
   (setq-default format-all-formatters
@@ -155,8 +157,10 @@
 
   (my-localleader-def
     :states 'visual
-    "gt" (lambda () (interactive)
-           (google-this-region t t))))
+    "gt" (defun +google-this () (interactive)
+                (google-this-region t t) :which-key "google this")
+    )
+  )
 
 (use-package chatgpt-shell
   :general
@@ -182,9 +186,10 @@
            "i" #'wgrep-change-to-wgrep-mode)
   ('wgrep-mode-map
    [remap evil-write] 'wgrep-save-all-buffers
-   [remap evil-save-modified-and-close] (lambda () (interactive)
-                                          (wgrep-save-all-buffers)
-                                          (evil-quit)))
+   [remap evil-save-modified-and-close]
+   (defun +wgrep-save-and-quit () (interactive)
+          (wgrep-save-all-buffers)
+          (evil-quit) :which-key "save and quit"))
   :defer t)
 
 (use-package popper

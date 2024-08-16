@@ -17,8 +17,8 @@
     "bd"      #'(kill-current-buffer        :which-key "delete buffer")
     "bq"      #'(+save-and-kill-buffer      :which-key "save and kill buffer")
     "b SPC d" #'(+kill-window-and-buffer    :which-key "kill window and buffer")
-    "br"        (lambda () (interactive)
-                  (revert-buffer t t))
+    "br"        (defun +revert-buffer () (interactive)
+                  (revert-buffer t t)       :which-key "revert buffer")
     "bn"      #'(next-buffer                :which-key "next buffer")
     "bp"      #'(previous-buffer            :which-key "previous buffer")
 
@@ -29,8 +29,8 @@
     "ef"      #'(eval-defun                 :which-key "evaluate elisp defun")
 
     ;; Find specific files
-    "er" (lambda () (interactive)
-           (load-file "~/.emacs.d/init.el")))
+    "er" (defun +source-init-file () (interactive)
+           (load-file "~/.emacs.d/init.el") :which-key "source init file"))
 
   (my-leader-def
     :states 'visual

@@ -87,16 +87,16 @@
            "RET" #'org-return)
 
   ;; Vim keys calendar maps
-  ('org-read-date-minibuffer-local-map
+  ('calendar-mode-map
    ";" #'exit-minibuffer
-   "M-h" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1)))
-   "M-j" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-week 1)))
-   "M-k" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-week 1)))
-   "M-l" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1)))
-   "M-H" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-month 1)))
-   "M-J" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1)))
-   "M-K" (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1)))
-   "M-L" (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
+   "M-l" #'calendar-forward-day
+   "M-h" #'calendar-backward-day
+   "M-j" #'calendar-forward-week
+   "M-k" #'calendar-backward-week
+   "M-H" #'calendar-backward-month
+   "M-L" #'calendar-forward-month
+   "M-K" #'calendar-backward-year
+   "M-J" #'calendar-forward-year)
   :custom-face
   (cursor                    ((t (:foreground "#928374"))))
   (org-block                 ((t (:foreground "#ebdbb2":background "#1c2021" :extend t))))
