@@ -28,6 +28,7 @@
     "oa" #'(org-agenda :which-key "org agenda"))
 
   ('motion 'org-agenda-mode-map
+           ";"  #'org-agenda-switch-to
            "go" #'ace-link
    [remap org-agenda-todo] #'org-agenda-filter)
 
