@@ -58,6 +58,15 @@
    "C-w" #'evil-delete-backward-word
    )
   :config
+  ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
+;;;###autoload
+  (defun +auto-create-missing-dirs ()
+    (let ((target-dir (file-name-directory buffer-file-name)))
+      (unless (file-exists-p target-dir)
+        (make-directory target-dir t))))
+
+  (add-to-list 'find-file-not-found-functions #'+auto-create-missing-dirs)
+
   (evil-collection-init 'minibuffer)
   (vertico-mode))
 

@@ -58,14 +58,11 @@
    "SPC" (general-simulate-key "C-c C-c"))
 
   ('insert
-   "C-y" #'yank ; otherwise is overridden by evil
    "C-e" #'end-of-line
    "C-a" #'beginning-of-line
-   "C-w" #'backward-kill-word)
-
-  ('insert '(prog-mode-map text-mode-map)
-           "C-w" #'evil-delete-backward-word)
-
+   "C-<backspace>" #'evil-delete-backward-word
+   "M-<backspace>" #'evil-delete-backward-word
+   )
   :config
   (which-key-add-key-based-replacements
     "C-c r" "revert-buffer"))
