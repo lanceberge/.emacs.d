@@ -109,7 +109,9 @@
    "J" #'(evil-indent-plus-a-indent-up-down :which-key "indent level up and down")))
 
 (use-package evil-escape ; jk to leave insert mode
-  :hook (pre-command . evil-escape-mode)
+  :hook
+  (prog-mode . evil-escape-mode)
+  (text-mode . evil-escape-mode)
   :custom
   (evil-escape-key-sequence "jk")
   (evil-escape-delay 0.25)
