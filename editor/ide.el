@@ -25,6 +25,7 @@
   (lsp-clients-typescript-server-args '("--stdio"))
 
   (lsp-auto-guess-root t)
+  (lsp-auto-execute-action nil)
 
   (lsp-completion-provider :none) ;; Corfu
   :init

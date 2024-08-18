@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: highlighted src
+# --
+#+BEGIN_SRC $0
+  `yas-selected-text`
+#+END_SRC

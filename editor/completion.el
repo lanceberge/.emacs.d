@@ -93,6 +93,12 @@
   :general
   ('yas-keymap
    "<tab>" #'yas-next-field)
+  ('visual 'org-mode-map
+           "ss" (defun +src-snippet () (interactive) (+expand-snippet "highlighted src"))
+           )
+  ('visual 'prog-mode-map
+           "st" (defun +try-catch-snippet () (interactive) (+expand-snippet "try-catch"))
+           )
   (my-leader-def
     "si" #'(yas-insert-snippet     :which-key "insert")
     "sn" #'(yas-new-snippet        :which-key "new")
@@ -109,6 +115,7 @@
                     (evil-insert-state)
                     (goto-char p)
                     (set-mark m)))))
+
 
   (yas-global-mode 1))
 
