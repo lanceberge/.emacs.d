@@ -51,8 +51,9 @@
    "M-/" #'(comment-line :which-key "comment"))
 
   ('visual
-   "C-/" #'(comment-dwim :which-key "comment")
-   "M-/" #'(comment-dwim :which-key "comment"))
+   "r"   #'(replace-string :which-key "replace string")
+   "C-/" #'(comment-dwim   :which-key "comment")
+   "M-/" #'(comment-dwim   :which-key "comment"))
 
 
   ('(normal insert)

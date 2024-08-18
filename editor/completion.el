@@ -85,6 +85,7 @@
   :after (consult embark))
 
 (use-package yasnippet ; snippets
+  ;; https://joaotavora.github.io/yasnippet/snippet-development.html
   :defer 1.1
   :defer-incrementally (eldoc easymenu help-mode)
   :custom

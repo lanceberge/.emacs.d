@@ -8,7 +8,9 @@
   ("\\.ts\\'" . typescript-mode)
   :custom
   (typescript-indent-level 2)
-  (typescript-auto-indent-flag t))
+  (typescript-auto-indent-flag t)
+  :config
+  (require 'dap-node))
 
 (use-package json-mode
   :defer t)

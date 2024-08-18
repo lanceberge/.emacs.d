@@ -82,6 +82,28 @@
     (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
     ))
 
+(use-package dap-mode
+  :defer t
+  :custom
+  ;; configure what the ui shows by default
+  ;; (dap-auto-configure-features '(sessions locals tooltip))
+  (lsp-enable-dap-auto-configure nil)
+  :general
+  (my-localleader-def
+    "db"      #'(dap-breakpoint-toggle     :which-key "breakpoint")
+    "d SPC b" #'(dap-breakpoint-delete-all :which-key "breakpoint")
+    "dd"      #'(dap-debug                 :which-key "debug")
+    "d SPC d" #'(dap-disconnect            :which-key "disconnect")
+    "dr"      #'(dap-debug-recent          :which-key "debug recent")
+    "dl"      #'(dap-debug-last            :which-key "debug last")
+    "ds"      #'(dap-switch-stack-frame    :which-key "switch stack frame")
+    "dh"      #'(dap-hydra                 :which-key "hydra")
+    )
+  :config
+  (dap-ui-mode 1)
+  )
+
+
 (use-package lsp-ui
   :disabled t
   :general
