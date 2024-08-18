@@ -34,7 +34,7 @@
 
   (my-leader-def
     :states 'visual
-    "ee" #'(eval-region :which-key "execute elisp region"))
+    "eb" #'(eval-region :which-key "execute elisp region"))
 
   ('normal
    "gs"    #'(+split-line-below        :which-key "split line below")

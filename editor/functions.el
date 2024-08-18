@@ -160,3 +160,10 @@
     (call-interactively 'pop-global-mark))
   (call-interactively 'pop-global-mark)
   (setq global-mark-ring (nreverse global-mark-ring)))
+
+
+;;;###autoload
+(defun +expand-snippet (snippet-name)
+  (interactive)
+  (yas-expand-snippet (yas-lookup-snippet snippet-name))
+  )

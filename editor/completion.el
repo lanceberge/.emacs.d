@@ -99,6 +99,16 @@
     "sl" #'(yas-describe-tables    :which-key "list")
     "sr" #'(yas-reload-all         :which-key "reload"))
   :config
+  ;; https://github.com/emacs-evil/evil/issues/254
+  (add-hook 'yas-before-expand-snippet-hook
+            #'(lambda()
+                (when (evil-visual-state-p)
+                  (let ((p (point))
+                        (m (mark)))
+                    (evil-insert-state)
+                    (goto-char p)
+                    (set-mark m)))))
+
   (yas-global-mode 1))
 
 (use-package yasnippet-snippets
