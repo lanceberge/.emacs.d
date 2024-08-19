@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: built-in
+# key: bi
+# --
+:straight (:type built-in)

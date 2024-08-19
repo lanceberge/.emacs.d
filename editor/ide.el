@@ -2,10 +2,11 @@
 (use-package lsp-mode ; LSP
   :defer 2.0
   :hook
-  (svelte-mode     . lsp-deferred)
   (go-mode         . lsp-deferred)
-  (python-mode     . lsp-deferred)
+  (java-mode       . lsp-deferred)
   (js2-mode        . lsp-deferred)
+  (python-mode     . lsp-deferred)
+  (svelte-mode     . lsp-deferred)
   (typescript-mode . lsp-deferred)
   :custom
   ;; Disable slow features
