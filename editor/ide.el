@@ -28,6 +28,7 @@
   (lsp-auto-guess-root t)
   (lsp-auto-execute-action nil)
 
+  (lsp-diagnostics-provider :flycheck)
   (lsp-completion-provider :none) ;; Corfu
   :init
   (defun +lsp-mode-setup-completion ()
@@ -107,7 +108,6 @@
 
 
 (use-package lsp-ui
-  :disabled t
   :general
   ('normal lsp-mode-map
            "gd" #'lsp-ui-peek-find-implementation))
