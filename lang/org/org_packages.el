@@ -10,13 +10,21 @@
    '(
      ("w" "Work"
       ((tags-todo "Work"))
+      ((org-agenda-sorting-strategy '(priority-down)))
       )
 
      ("p" "Projects"
       ((tags-todo "Project"))
+      ((org-agenda-sorting-strategy '(priority-down)))
       )
      ("e" "Emacs"
-      ((tags-todo "Emacs")
+      ((tags-todo "Emacs"))
+      ((org-agenda-sorting-strategy '(priority-down))
+       )
+      )
+     ("l" "Life"
+      ((tags-todo "-Work-Emacs-Programming"))
+      ((org-agenda-sorting-strategy '(priority-down))
        )
       )
      ))
@@ -29,7 +37,7 @@
   ('motion 'org-agenda-mode-map
            ";"  #'org-agenda-switch-to
            "go" #'ace-link
-   [remap org-agenda-todo] #'org-agenda-filter)
+           [remap org-agenda-todo] #'org-agenda-filter)
 
   :config
   (require 'evil-org-agenda)
