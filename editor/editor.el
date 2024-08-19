@@ -204,6 +204,7 @@
      "^\\*lsp-help.*\\*$"
      "^\\*eldoc"
      "^\\*Embark Collect:"
+     "^\\*Embark Export:"
      "\\*Warnings\\*"
      helpful-mode
      help-mode
