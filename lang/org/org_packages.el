@@ -5,7 +5,6 @@
   :custom
   (org-agenda-span 14)              ; show 14 days
   (org-agenda-start-on-weekday nil) ; start on today
-  (org-agenda-files '("~/org/todo.org"))
   (org-agenda-tags-column 0)
   (org-agenda-custom-commands
    '(
