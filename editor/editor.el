@@ -201,6 +201,7 @@
      "Output\\*$"
      "\\*Async Shell Command\\*"
      "^\\*vterm.*\\*$"
+     "^\\*lsp-help.*\\*$"
      "^\\*eldoc"
      "^\\*Embark Collect:"
      "\\*Warnings\\*"

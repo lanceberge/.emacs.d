@@ -10,7 +10,13 @@
      eshell
      ediff
      (pdf pdf-tools)
-     magit)))
+     magit))
+  :general
+  ('normal 'org-mode-map
+           [remap evil-collection-unimpaired-move-text-up]   #'(org-metaup   :which-key "move up")
+           [remap evil-collection-unimpaired-move-text-down] #'(org-metadown :which-key "move down")
+           )
+  )
 
 (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
   :hook (pre-command . evil-snipe-mode)
@@ -120,12 +126,6 @@
   :general
   ('(insert visual)
    "<escape>" #'evil-escape))
-
-(use-package move-text
-  :general
-  ('normal
-   "]e" #'(move-text-down :which-key "move text down")
-   "[e" #'(move-text-up   :which-key "move text up")))
 
 (use-package titlecase ; title case a line
   :general
