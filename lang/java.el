@@ -2,5 +2,7 @@
   :defer t
   :defer-incrementally (request)
   :custom
-  (lsp-java-workspace-dir "/usr/lib/jvm/java-8-openjdk-amd64/bin/java")
+  (lsp-java-java-path "/usr/bin/java")
+  :config
+  (setenv "JAVA_HOME"  "/usr/lib/jvm/java-8-openjdk-amd64")
   )
