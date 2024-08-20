@@ -14,6 +14,7 @@
     "tp" #'(+tramp/ssh-pascal   :which-key "pascal")))
 
 (use-package vterm
+  :disabled t
   :general
   ('normal vterm-mode-map
            "N" #'vterm--self-insert

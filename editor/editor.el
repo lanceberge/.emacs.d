@@ -40,7 +40,10 @@
    "\\"      #'(avy-goto-char-2  :which-key "2-chars")
    "go"      #'(avy-goto-char-2  :which-key "2-chars")
    "SPC \\"  #'(evil-avy-isearch :which-key "timer")
-   "g SPC o" #'(evil-avy-isearch :which-key "timer"))
+   "g SPC o" #'(evil-avy-isearch :which-key "timer")
+   "g SPC m" #'(avy-move-line    :which-key "move line")
+   "g SPC r" #'(avy-move-region  :which-key "move region")
+   )
   :config
   (evil-define-avy-motion avy-isearch inclusive)
   ;; https://karthinks.com/software/avy-can-do-anything/
