@@ -3,6 +3,7 @@
   :hook
   (prog-mode . format-all-mode)
   (web-mode  . format-all-mode)
+  (json-mode . format-all-mode)
   :general
   (my-leader-def
     :states 'normal
@@ -18,6 +19,7 @@
                 '(("TypeScript" prettier)
                   ("svelte"     prettier)
                   ("HTML"       prettier)
+                  ("JSON"       prettier)
                   ("JavaScript" prettier))))
 
 (use-package avy ; jump to things in files similar to easymotion for vim
