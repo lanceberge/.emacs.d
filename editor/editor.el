@@ -25,8 +25,8 @@
   (avy-keys '(?d ?j ?s ?k ?a ?l))
   :general
   ('evil-operator-state-map
-   "\\" #'(avy-goto-char-2 :which-key "goto char")
-   "go" #'(avy-goto-char-2 :which-key "goto char")
+   "\\" #'(avy-goto-char-timer :which-key "goto char")
+   "go" #'(avy-goto-char-2     :which-key "goto char")
    )
 
   ('(normal insert)
@@ -37,12 +37,12 @@
    "M-i" #'evil-avy-isearch)
 
   ('normal
-   "\\"      #'(avy-goto-char-2  :which-key "2-chars")
-   "go"      #'(avy-goto-char-2  :which-key "2-chars")
-   "SPC \\"  #'(evil-avy-isearch :which-key "timer")
-   "g SPC o" #'(evil-avy-isearch :which-key "timer")
-   "g SPC m" #'(avy-move-line    :which-key "move line")
-   "g SPC r" #'(avy-move-region  :which-key "move region")
+   "\\"      #'(avy-goto-char-timer :which-key "2-chars")
+   "go"      #'(avy-goto-char-2     :which-key "2-chars")
+   "SPC \\"  #'(evil-avy-isearch    :which-key "timer")
+   "g SPC o" #'(evil-avy-isearch    :which-key "timer")
+   "g SPC m" #'(avy-move-line       :which-key "move line")
+   "g SPC r" #'(avy-move-region     :which-key "move region")
    )
   :config
   (evil-define-avy-motion avy-isearch inclusive)

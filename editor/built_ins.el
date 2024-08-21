@@ -28,6 +28,10 @@
   :straight (:type built-in)
   :hook (before-save . whitespace-cleanup)) ; clean unnecessary whitespace before save
 
+(use-package autorevert
+  :straight (:type built-in)
+  :hook (pre-command . global-auto-revert-mode))
+
 (use-package savehist ; save command history
   :straight (:type built-in)
   :hook (pre-command . savehist-mode)
