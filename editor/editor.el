@@ -236,3 +236,8 @@
     (setq confirm-kill-emacs nil)
     (restart-emacs)
     ))
+
+(use-package hydra
+  :general
+  ('hydra-base-map
+   "C-u" nil))

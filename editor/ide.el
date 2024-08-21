@@ -86,7 +86,7 @@
     ))
 
 (use-package dap-mode
-  :defer t
+  :defer-incrementally (hydra)
   :custom
   ;; configure what the ui shows by default
   ;; (dap-auto-configure-features '(sessions locals tooltip))
