@@ -83,7 +83,9 @@
    ",p" #'(org-set-property            :which-key "set property"))
 
   ('normal org-mode-map
-           "zm" #'(outline-hide-sublevels :which-key "hide all")
+           "zm"  #'(outline-hide-sublevels   :which-key "hide all")
+           "zn"  #'(outline-next-heading     :which-key "next heading")
+           "zp"  #'(outline-previous-heading :which-key "previous heading")
            "RET" #'org-return)
 
   ;; Vim keys calendar maps
