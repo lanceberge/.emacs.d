@@ -82,8 +82,8 @@
 
 (use-package yasnippet ; snippets
   ;; https://joaotavora.github.io/yasnippet/snippet-development.html
-  :defer 1.1
-  :defer-incrementally (eldoc easymenu help-mode)
+  :defer 0.7
+  :defer-incrementally (eldoc easymenu help-mode yasnippet-snippets)
   :custom
   (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
   :general
@@ -116,7 +116,7 @@
   (yas-global-mode 1))
 
 (use-package yasnippet-snippets
-  :after yasnippet
+  :defer t
   :config
   (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer"))
 
