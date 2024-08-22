@@ -8,7 +8,7 @@
         "/usr/lib/jvm/java-17-openjdk-amd64/bin/java")
 
   (setenv "JAVA_HOME"
-          "/usr/lib/jvm/java-17-openjdk-amd64")
+          "/usr/lib/jvm/java-8-openjdk-amd64")
 
   ;; TODO
   (setq lsp-java-configuration-runtimes

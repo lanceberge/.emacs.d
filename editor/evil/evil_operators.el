@@ -134,3 +134,8 @@
 
   ('visual
    "g^" #'titlecase-region :which-key "titlecase region"))
+
+(use-package evil-easymotion
+  :config
+  (evilem-default-keybindings "'")
+  )
