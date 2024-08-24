@@ -2,12 +2,13 @@
 (use-package lsp-mode ; LSP
   :defer 2.0
   :hook
-  (go-mode         . lsp-deferred)
-  (java-mode       . lsp-deferred)
-  (js2-mode        . lsp-deferred)
-  (python-mode     . lsp-deferred)
-  (svelte-mode     . lsp-deferred)
-  (typescript-mode . lsp-deferred)
+  ((go-mode
+    java-mode
+    js2-mode
+    python-mode
+    svelte-mode
+    typescript-mode ) . lsp-deferred)
+  (lsp-mode . lsp-completion-mode)
   :custom
   ;; Disable slow features
   (lsp-enable-file-watchers nil)
@@ -27,9 +28,13 @@
 
   (lsp-auto-guess-root t)
   (lsp-auto-execute-action nil)
+  (lsp-enable-imenu t)
+
+  (lsp-enable-dap-auto-configure t)
 
   (lsp-diagnostics-provider :flycheck)
   (lsp-completion-provider :none) ;; Corfu
+  (lsp-completion-enable-additional-text-edit t)
   :init
   (defun +lsp-mode-setup-completion ()
     (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
@@ -106,8 +111,13 @@
   (dap-ui-mode 1)
   )
 
-
 (use-package lsp-ui
+  :custom
+  (lsp-ui-doc-enable t)
+  (evil-lookup-func #'lsp-ui-doc-glance )
+  (lsp-ui-doc-show-with-cursor nil)
+  (lsp-ui-doc-include-signature t)
+  (lsp-ui-doc-position 'at-point)
   :general
   ('normal lsp-mode-map
            "gd" #'lsp-ui-peek-find-implementation))
