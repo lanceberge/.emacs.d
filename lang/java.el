@@ -10,10 +10,10 @@
   (setenv "JAVA_HOME"
           "/usr/lib/jvm/java-8-openjdk-amd64")
 
-  ;; TODO
   (setq lsp-java-configuration-runtimes
         '[(:name "JavaSE-1.8"
-                 :path "/usr/lib/jvm/java-8-openjdk-amd64")])
+                 :path "/usr/lib/jvm/java-8-openjdk-amd64"
+                 :default t)])
 
   ;; Lombok jar path
   (setq lsp-java-vmargs
