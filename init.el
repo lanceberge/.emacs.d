@@ -241,10 +241,11 @@
 (use-package straight ; package manager
   :general
   (my-localleader-def
-    "sr" #'(straight-rebuild-all         :which-key "rebuild all")
-    "sf" #'(straight-pull-package        :which-key "pull package")
-    "sc" #'(straight-remove-unused-repos :which-key "remove unused")
-    "sp" #'(straight-pull-all            :which-key "pull all")))
+   "sr"      #'(straight-rebuild-package     :which-key "rebuild all")
+   "s SPC r" #'(straight-rebuild-all         :which-key "rebuild all")
+   "sf"      #'(straight-pull-package        :which-key "pull package")
+   "sc"      #'(straight-remove-unused-repos :which-key "remove unused")
+   "sp"      #'(straight-pull-all            :which-key "pull all")))
 
 (add-hook 'after-init-hook ; show startup time
           (lambda ()
