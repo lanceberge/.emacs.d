@@ -289,5 +289,9 @@
   :straight (:type built-in)
   :commands org-babel-execute:matlab)
 
+(use-package ob-perl
+  :straight (:type built-in)
+  :commands org-babel-execute:perl)
+
 (use-package toc-org ; auto-generate tables of contents w/in org and markdown with a :TOC: tag
   :hook ((org-mode markdown-mode) . toc-org-mode))

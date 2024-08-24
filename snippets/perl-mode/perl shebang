@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: perl shebang
+# key: pl
+# --
+#!/usr/bin/perl

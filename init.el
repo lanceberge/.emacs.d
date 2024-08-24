@@ -242,7 +242,7 @@
   :general
   (my-localleader-def
     "sr" #'(straight-rebuild-all         :which-key "rebuild all")
-    "sf" #'(straight-fetch-all           :which-key "fetch all")
+    "sf" #'(straight-pull-package        :which-key "pull package")
     "sc" #'(straight-remove-unused-repos :which-key "remove unused")
     "sp" #'(straight-pull-all            :which-key "pull all")))
 

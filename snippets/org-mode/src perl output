@@ -1,0 +1,6 @@
+# key: splo
+# name: src perl output
+# --
+#+BEGIN_SRC perl :results output
+$0
+#+END_SRC
