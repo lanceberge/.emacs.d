@@ -3,7 +3,7 @@
 (use-package transient     :defer t)
 (use-package magit-section :defer t)
 
-(use-package magit ; git client
+(use-package magit
   :defer 1.0
   :defer-incrementally
   (evil-collection magit-section dash f s with-editor git-commit package eieio lv transient)
@@ -25,6 +25,9 @@
     "gfc" #'(magit-show-commit           :which-key "show commit")
     "gfg" #'(magit-find-git-config-file  :which-key "git config file")
     "gc"  #'(+magit/stage-all-and-commit :which-key "stage all and commit"))
+
+  ('normal magit-mode-map
+           ";" (general-simulate-key "RET"))
   :config
   (evil-collection-init 'magit)
 
