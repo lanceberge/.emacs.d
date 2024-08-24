@@ -144,6 +144,8 @@
    ";"   #'corfu-complete
    "<tab>" #'yas-expand
    )
+  ('insert corfu-map
+           "C-k" #'corfu-previous)
   :config
   (global-corfu-mode)
   (advice-add 'evil-escape-func :after #'corfu-quit))
