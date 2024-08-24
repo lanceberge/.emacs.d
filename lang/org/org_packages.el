@@ -69,6 +69,11 @@
       (file+head "projects/${slug}.org"
                  "#+title: ${title}\n#+category: ${title}\n#+filetags: Project ${title}\n")
       :unnarrowed t)
+     ("b" "Braindump (public)" plain "%?"
+      :if-new
+      (file+head "public/${slug}.org"
+                 "#+title: ${title}\n#+category: ${title}\n")
+      :unnarrowed t)
      )
    )
   :general
