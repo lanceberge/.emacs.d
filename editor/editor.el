@@ -173,6 +173,9 @@
   :custom
   (gptel-model "claude-3-5-sonnet-20240620")
   :general
+  (my-localleader-def
+    "gc" #'gptel)
+
   ('gptel-mode-map
    "RET" #'gptel-send
    "S-<return>" #'newline)
