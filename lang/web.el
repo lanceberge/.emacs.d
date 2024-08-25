@@ -18,7 +18,9 @@
   :mode ("\\.html\\'" . html-mode))
 
 (use-package emmet-mode
-  :hook (web-mode . emmet-mode)
+  :hook
+  (web-mode . emmet-mode)
+  (svelte-mode . emmet-mode)
   :general
   ('insert emmet-mode-keymap
            "TAB" #'emmet-expand-line))

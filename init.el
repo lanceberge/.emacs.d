@@ -47,6 +47,7 @@
   (indent-tabs-mode nil) ; tabs are converted to spaces
   (apropos-do-all t)     ; more extensive apropos searches
   (completion-ignore-case t)
+  (tab-width 4)
 
   (use-file-dialog nil)
   (use-dialog-box nil)

@@ -7,7 +7,8 @@
     js2-mode
     python-mode
     svelte-mode
-    typescript-mode ) . lsp-deferred)
+    typescript-ts-mode
+    typescript-mode) . lsp-deferred)
   (lsp-mode . lsp-completion-mode)
   :custom
   ;; Disable slow features

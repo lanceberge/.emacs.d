@@ -42,7 +42,8 @@
    "]b"    #'(next-buffer              :which-key "next buffer")
    "[b"    #'(previous-buffer          :which-key "previous buffer")
    "g C-l" #'(end-of-visual-line       :which-key "end of visual line")
-   "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line"))
+   "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line")
+   "s-t"   #'beginning-of-line)
 
   ('normal
    "Y" (general-simulate-key "y$" :which-key "yank until end of line")

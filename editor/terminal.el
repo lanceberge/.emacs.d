@@ -5,13 +5,8 @@
     "ot" #'terminal-here-launch :which-key "Launch terminal"))
 
 (use-package tramp ; access remote files within emacs
-  :disabled t
-  :straight (:type built-in)
-  :general
-  (my-localleader-def
-    "tr" #'(+tramp/ssh-rlogin   :which-key "rlogin")
-    "tc" #'(+tramp/ssh-cascades :which-key "cascades")
-    "tp" #'(+tramp/ssh-pascal   :which-key "pascal")))
+  :defer t
+  )
 
 (use-package vterm
   :disabled t
