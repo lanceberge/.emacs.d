@@ -96,7 +96,9 @@
   "split the line above at point"
   (interactive)
   (+split-line-below)
-  (move-text-line-up))
+  (transpose-lines 1)
+  (forward-line -2)
+  )
 
 ;;;###autoload
 (defun +kill-window-and-buffer ()
