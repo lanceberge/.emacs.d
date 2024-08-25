@@ -85,7 +85,7 @@
   :defer 0.7
   :defer-incrementally (eldoc easymenu help-mode yasnippet-snippets)
   :custom
-  (yas-snippet-dirs '("~/.emacs.d/snippets" "~/org/snippets"))
+  (yas-snippet-dirs '("~/.emacs.d/snippets"))
   :general
   ('yas-keymap
    "<tab>" #'yas-next-field)
@@ -95,6 +95,9 @@
   ('visual 'prog-mode-map
            "st" (defun +try-catch-snippet () (interactive) (+expand-snippet "try-catch"))
            )
+
+  ('snippet-mode-map
+   "C-c C-c" #'+yas-load-snippet-noconfirm)
   (my-leader-def
     "si" #'(yas-insert-snippet     :which-key "insert")
     "sn" #'(yas-new-snippet        :which-key "new")
@@ -112,6 +115,20 @@
                     (goto-char p)
                     (set-mark m)))))
 
+;;;###autoload
+  (defun +yas-load-snippet-noconfirm()
+    (interactive)
+    (unless yas--guessed-modes
+      (setq-local yas--guessed-modes (yas--compute-major-mode-and-parents buffer-file-name)))
+    (let ((template (yas-load-snippet-buffer (cl-first yas--guessed-modes) t)))
+      (when (buffer-modified-p)
+        (let ((default-directory (car (cdr (car (yas--guess-snippet-directories
+                                                 (yas--template-table template))))))
+              (default-file-name (yas--template-name template)))
+          (setq buffer-file-name (concat default-directory default-file-name))
+          (rename-buffer default-file-name t)
+          (save-buffer)))
+      (quit-window t)))
 
   (yas-global-mode 1))
 
