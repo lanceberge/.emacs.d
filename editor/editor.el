@@ -169,17 +169,23 @@
     )
   )
 
-(use-package chatgpt-shell
+(use-package gptel
+  :custom
+  (gptel-model "claude-3-5-sonnet-20240620")
   :general
-  ('(insert normal) chatgpt-shell-mode-map
-   "RET" #'shell-maker-submit)
-  (my-localleader-def
-    "gc" #'chatgpt-shell)
-
+  ('gptel-mode-map
+   "RET" #'gptel-send
+   "S-<return>" #'newline)
   :config
-  (setq chatgpt-shell-root-path (no-littering-expand-var-file-name "chatgpt/"))
-  (setq chatgpt-shell-model-version "gpt-3.5-turbo")
-  (setq chatgpt-shell-openai-key (read-file-contents "~/secrets/gpt_api_key")))
+  (defun gptel-api-key ()
+    (read-file-contents "~/secrets/claude_key"))
+  (setq
+   gptel-backend (gptel-make-anthropic "Claude"
+                   :stream t
+                   :key #'gptel-api-key
+                   ))
+  )
+
 
 (use-package ace-link
   :general
