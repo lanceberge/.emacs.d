@@ -1,0 +1,6 @@
+# key: script
+# name: typescript src
+# --
+<script lang="ts">
+$0
+</script>
