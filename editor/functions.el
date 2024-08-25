@@ -169,3 +169,55 @@
   (interactive)
   (yas-expand-snippet (yas-lookup-snippet snippet-name))
   )
+
+;;;###autoload
+(defun berge-lookup (prompt)
+  (interactive (list (read-string "Ask GPT: " nil gptel-lookup--history)))
+  (when (string= prompt "") (user-error "A prompt is required."))
+  prompt)
+
+;;;###autoload
+(defun berge-lookup-wrapper ()
+  (call-interactively #'berge-lookup))
+
+;;;###autoload
+(defun berge-rewrite-region (bounds &optional directive)
+  (interactive
+   (list
+    (cond
+     ((use-region-p) (cons (region-beginning) (region-end)))
+     ((derived-mode-p 'text-mode)
+      (list (bounds-of-thing-at-point 'sentence)))
+     (t (cons (line-beginning-position) (line-end-position))))
+    ))
+
+  (setq gptel--system-message
+        (format "For this code in \"%s\", send me the code for this request: %s"
+                (symbol-name major-mode)
+                (berge-lookup-wrapper)))
+
+  (gptel-request
+      (buffer-substring-no-properties (car bounds) (cdr bounds)) ;the prompt
+
+    :buffer (current-buffer)
+    :context (cons (set-marker (make-marker) (car bounds))
+                   (set-marker (make-marker) (cdr bounds)))
+    :callback
+    (lambda (response info)
+      (if (not response)
+          (message "GPT response failed with: %s" (plist-get info :status))
+        (let* ((bounds (plist-get info :context))
+               (beg (car bounds))
+               (end (cdr bounds))
+               (buf (plist-get info :buffer)))
+          (with-current-buffer buf
+            (save-excursion
+              (goto-char beg)
+              (kill-region beg end)
+              (let ((content (if (string-match "```\n\\(\\(?:.\\|\n\\)*?\\)\n```" response)
+                                 (match-string 1 response)
+                               response)))
+                (insert content))
+              (set-marker beg nil)
+              (set-marker end nil)
+              (message "Rewrote line. Original line saved to kill-ring."))))))))
