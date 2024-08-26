@@ -10,7 +10,7 @@
   ('emacs-lisp-mode-map
    [remap evil-write] #'+elisp-format-and-check))
 
-
+;;;###autoload
 (defun +elisp-format-and-check ()
   "Format buffer, check parens, and save if balanced."
   (interactive)
