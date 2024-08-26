@@ -18,6 +18,10 @@
    [remap evil-previous-line]      #'evil-previous-visual-line
    "C-M-d" #'scroll-other-window
    "C-M-u" #'scroll-other-window-down
+   "J" (defun +evil-join ()
+     (interactive)
+     (save-excursion (call-interactively 'evil-join))
+     )
    )
 
   ('evil-ex-completion-map "C-g" 'abort-recursive-edit) ; quit on C-g

@@ -10,6 +10,8 @@
     typescript-ts-mode
     typescript-mode) . lsp-deferred)
   (lsp-mode . lsp-completion-mode)
+  (lsp-mode-hook . (lambda ()
+                     (add-hook 'before-save-hook #'lsp-organize-imports)))
   :custom
   ;; Disable slow features
   (lsp-enable-file-watchers nil)
