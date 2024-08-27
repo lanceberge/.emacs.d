@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package emacs ; initial keybindings of built-in functions
-  :straight (:type built-in)
+  :ensure nil
   :general
   (my-localleader-def
     "c" (general-simulate-key "C-c" :which-key "+Mode specific maps"))

@@ -184,6 +184,8 @@
      (use-package-process-keywords name rest state))))
 
 (use-package general ; unified way to map keybindings; works with :general in use-package
+             :custom (general-use-package-emit-autoloads t)
+             :demand t
   :config
   (general-create-definer my-leader-def ; SPC prefixed bindings
     :states '(normal visual motion insert emacs)
@@ -199,6 +201,8 @@
 
   (my-leader-def
     "fm" #'(general-describe-keybindings :which-key "list keybindings")))
+
+(elpaca-wait)
 
 (use-package which-key ; show keybindings following when a prefix is pressed
   :hook (pre-command . which-key-mode)

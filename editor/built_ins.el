@@ -1,18 +1,18 @@
 ;;; -*- lexical-binding: t -*-
 (use-package simple
-  :straight (:type built-in)
+  :ensure nil
   :hook (after-init . global-visual-line-mode)
   :custom
   (idle-update-delay 1.0) ; slow down how often emacs updates its ui
   (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
 
 (use-package advice
-  :straight (:type built-in)
+  :ensure nil
   :defer t
   :custom (ad-redefinition-action 'accept)) ; disable warnings from legacy advice system
 
 (use-package files
-  :straight (:type built-in)
+  :ensure nil
   :defer t
   :custom
   (make-backup-files nil)
@@ -21,19 +21,19 @@
   (auto-save-default nil))
 
 (use-package saveplace ; save location in files
-  :straight (:type built-in)
+  :ensure nil
   :hook (pre-command . save-place-mode))
 
 (use-package whitespace
-  :straight (:type built-in)
+  :ensure nil
   :hook (before-save . whitespace-cleanup)) ; clean unnecessary whitespace before save
 
 (use-package autorevert
-  :straight (:type built-in)
+  :ensure nil
   :hook (pre-command . global-auto-revert-mode))
 
 (use-package savehist ; save command history
-  :straight (:type built-in)
+  :ensure nil
   :hook (pre-command . savehist-mode)
   :custom
   (history-length 500)
@@ -41,7 +41,7 @@
   (savehist-save-minibuffer-history t))
 
 (use-package recentf
-  :straight (:type built-in)
+  :ensure nil
   :defer-incrementally (easymenu tree-widget timer)
   :hook (pre-command . recentf-mode)
   :custom
@@ -50,7 +50,7 @@
 
 (when (or IS-LINUX IS-MAC)
   (use-package flyspell ; spellcheck
-    :straight (:type built-in)
+    :ensure nil
     :hook
     (prog-mode . flyspell-prog-mode)
     (text-mode . flyspell-mode)
@@ -63,19 +63,19 @@
      "M-y" #'(flyspell-auto-correct-word :which-key "fix word"))))
 
 (use-package bookmark
-  :straight (:type built-in)
+  :ensure nil
   :defer t)
 
 (use-package calc
   :disabled t
-  :straight (:type built-in)
+  :ensure nil
   :general
   (my-leader-def
     "oc" #'(calc :which-key "calc")))
 
 (use-package desktop ; save sessions to a file
   :disabled t
-  :straight (:type built-in)
+  :ensure nil
   :custom
   (desktop-load-locked-desktop t) ; ignore desktop-lock files
   (desktop-path (list desktop-dirname))
@@ -84,7 +84,7 @@
 
 
 (use-package electric-pair-mode
-  :straight (:type built-in)
+  :ensure nil
   :hook (prog-mode . electric-pair-mode)
   :config
   (setq electric-pair-inhibit-predicate
@@ -93,7 +93,7 @@
 
 (use-package ediff
   :defer t
-  :straight (:type built-in)
+  :ensure nil
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain)
   (ediff-use-faces nil)
@@ -102,7 +102,7 @@
   (add-hook 'ediff-prepare-buffer-hook #'evil-open-folds))
 
 (use-package outline-mode
-  :straight (:type built-in)
+  :ensure nil
   :general
   ('normal
    "za"  #'(outline-toggle-children :which-key "toggle fold")
@@ -115,12 +115,12 @@
 
 (use-package ispell
   :defer t
-  :straight (:type built-in)
+  :ensure nil
   :custom
   (ispell-complete-word-dict t))
 
 (use-package occur
-  :straight (:type built-in)
+  :ensure nil
   :hook
   (occur-mode . (lambda ()
                   (evil-local-mode)
@@ -130,7 +130,7 @@
            "q" #'quit-window))
 
 (use-package isearch
-  :straight (:type built-in)
+  :ensure nil
   :general
   ('normal
    "/" #'isearch-forward
@@ -146,7 +146,7 @@
    ))
 
 (use-package grep-mode
-  :straight (:type built-in)
+  :ensure nil
   :hook
   (grep-mode . evil-normal-state)
   :general

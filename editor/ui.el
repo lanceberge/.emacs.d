@@ -20,7 +20,7 @@
   :hook (prog-mode . hes-mode))
 
 (use-package paren ; show matching parentheses
-  :straight (:type built-in)
+  :ensure nil
   :hook ((prog-mode text-mode) . show-paren-mode)
   :custom
   (show-paren-when-point-inside-paren t))

@@ -81,7 +81,6 @@
 (elpaca elpaca-use-package
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
-(elpaca-wait)
 
 (setq comp-deferred-compilation t) ; defer elisp compilation, great with native-comp branch
 

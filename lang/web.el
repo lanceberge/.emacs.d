@@ -14,7 +14,7 @@
   )
 
 (use-package html-mode
-  :straight (:type built-in)
+  :ensure nil
   :mode ("\\.html\\'" . html-mode))
 
 (use-package emmet-mode

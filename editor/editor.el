@@ -91,7 +91,7 @@
   :commands (define-word-at-point))
 
 (use-package dired
-  :straight (:type built-in)
+  :ensure nil
   :custom
   (dired-auto-revert-buffer) ; don't prompt to revert
   (dired-recursive-copies 'always)
@@ -114,7 +114,7 @@
     "-"   #'+dired/up-dir))
 
 (use-package dired-x
-  :straight (:type built-in)
+  :ensure nil
   :hook (dired-mode . dired-omit-mode)
   :custom
   (dired-omit-files "^\\..$\\|^.$")) ; hide .. and ../ in dired
@@ -256,7 +256,7 @@
    "C-u" nil))
 
 (use-package treesit
-  :straight (:type built-in)
+  :ensure nil
   :mode (("\\.tsx\\'" . tsx-ts-mode)
          ("\\.js\\'"  . typescript-ts-mode)
          ("\\.mjs\\'" . typescript-ts-mode)

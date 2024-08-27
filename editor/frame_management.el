@@ -10,7 +10,7 @@
    "m" #'(ace-swap-window :which-key "move")))
 
 (use-package winner ; Undo and redo window configs
-  :straight (:type built-in)
+  :ensure nil
   :defer 1
   :init
   (winner-mode)
@@ -20,7 +20,7 @@
    "r" #'(winner-redo :which-key "redo window operation")))
 
 (use-package tab-bar
-  :straight (:type built-in)
+  :ensure nil
   :custom
   (tab-bar-new-button-show nil)
   (tab-bar-close-button-show nil)

@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org-agenda
   :defer 1.5
-  :straight (:type built-in)
+  :ensure nil
   :custom
   (org-agenda-span 14)              ; show 14 days
   (org-agenda-start-on-weekday nil) ; start on today
@@ -127,19 +127,19 @@
 
   (org-roam-db-autosync-mode))
 
-(use-package org-roam-ui
-  :straight (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-  :after org-roam
-  :custom
-  (org-roam-ui-sync-theme t)
-  (org-roam-ui-follow t)
-  (org-roam-ui-update-on-save t)
-  (org-roam-ui-open-on-start t)
-  :general
-  (my-leader-def
-    "ong" #'(org-roam-ui-mode :which-key "org roam graph")
-    )
-  )
+;; (use-package org-roam-ui
+;;   :straight (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+;;   :after org-roam
+;;   :custom
+;;   (org-roam-ui-sync-theme t)
+;;   (org-roam-ui-follow t)
+;;   (org-roam-ui-update-on-save t)
+;;   (org-roam-ui-open-on-start t)
+;;   :general
+;;   (my-leader-def
+;;     "ong" #'(org-roam-ui-mode :which-key "org roam graph")
+;;     )
+;;   )
 
 (use-package consult-org-roam
   :custom
@@ -156,7 +156,7 @@
   )
 
 (use-package org-capture
-  :straight (:type built-in)
+  :ensure nil
   :custom
   (org-capture-templates
    '(("a" "A"
@@ -185,7 +185,7 @@
   (add-hook 'org-capture-mode-hook 'evil-insert-state))
 
 (use-package org-src
-  :straight (:type built-in)
+  :ensure nil
   :defer t
   :custom
   (org-edit-src-content-indentation 0) ; leading spaces before the #+begin line
@@ -243,7 +243,7 @@
            "za" #'(org-cycle    :which-key "open fold")))
 
 (use-package ob ; org babel
-  :straight (:type built-in)
+  :ensure nil
   :defer t
   :custom
   (org-confirm-babel-evaluate nil)
@@ -253,14 +253,14 @@
    "b"  #'(org-babel-tangle :which-key "tangle file")))
 
 (use-package ox ; org exports
-  :straight (:type built-in)
+  :ensure nil
   :general
   ('(normal insert) org-mode-map
    :prefix "C-c"
    "e" #'(org-export-dispatch :which-key "export")))
 
 (use-package ol ; org links
-  :straight (:type built-in)
+  :ensure nil
   :general
   ('(normal insert) org-mode-map
    :prefix "C-c"
@@ -271,31 +271,31 @@
 
 ;; autoload org babel functions for specific languages
 (use-package ob-haskell
-  :straight (:type built-in)
+  :ensure nil
   :commands org-babel-execute:haskell)
 
 (use-package ob-shell
-  :straight (:type built-in)
+  :ensure nil
   :commands org-babel-execute:sh)
 
 (use-package ob-C
-  :straight (:type built-in)
+  :ensure nil
   :commands org-babel-execute:C)
 
 (use-package ob-R
-  :straight (:type built-in)
+  :ensure nil
   :commands org-babel-execute:R)
 
 (use-package ob-python
-  :straight (:type built-in)
+  :ensure nil
   :commands org-babel-execute:python)
 
 (use-package ob-matlab
-  :straight (:type built-in)
+  :ensure nil
   :commands org-babel-execute:matlab)
 
 (use-package ob-perl
-  :straight (:type built-in)
+  :ensure nil
   :commands org-babel-execute:perl)
 
 (use-package toc-org ; auto-generate tables of contents w/in org and markdown with a :TOC: tag

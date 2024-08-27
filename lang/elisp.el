@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package elisp-mode
-  :straight (:type built-in)
+  :ensure nil
   :hook
   (emacs-lisp-mode . (lambda () (flycheck-mode -1)))
   :general

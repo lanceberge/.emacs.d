@@ -36,7 +36,7 @@
         magit-auto-revert-mode nil))
 
 (use-package smerge-mode
-  :straight (:type built-in)
+  :ensure nil
   :general
   ('normal
    "]c" #'(smerge-next     :which-key "next conflicting hunk")
