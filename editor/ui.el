@@ -1,12 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(use-package lsp-ui
-  :defer t
-  :custom
-  (lsp-ui-doc-enable nil)
-  (lsp-ui-doc-show-with-cursor t)
-  (lsp-ui-doc-position 'bottom)
-  :hook (lsp-mode . lsp-ui-mode))
-
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 

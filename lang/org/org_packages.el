@@ -40,6 +40,7 @@
            [remap org-agenda-todo] #'org-agenda-filter)
 
   :config
+  ;; TODO factor to use-package
   (require 'evil-org-agenda)
   (+org-roam-refresh-agenda-list)
   (evil-org-agenda-set-keys)

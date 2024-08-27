@@ -217,7 +217,7 @@
   (my-localleader-def
     "m" '(:ignore t :which-key "Merge")
     "g" '(:ignore t :which-key "Miscellaneous")
-    "t" '(:ignore t :which-key "Tramp ssh")
+    "t" '(:ignore t :which-key "Tramp ssh"))
   ('normal
    "[o" '(:ignore t :which-key "Toggle Off")
    "]o" '(:ignore t :which-key "Toggle On")
@@ -239,7 +239,7 @@
     "p"  '(:ignore t :which-key "Project")
     "s"  '(:ignore t :which-key "Yasnippet")
     "t"  '(:ignore t :which-key "Tab")
-    "f SPC m" #'(which-key-show-top-level :which-key "keybinding"))))
+    "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
 
 (add-hook 'after-init-hook ; show startup time
           (lambda ()

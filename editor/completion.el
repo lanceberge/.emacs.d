@@ -83,7 +83,7 @@
 (use-package yasnippet ; snippets
   ;; https://joaotavora.github.io/yasnippet/snippet-development.html
   :defer 0.7
-  :defer-incrementally (eldoc easymenu help-mode yasnippet-snippets)
+  :defer-incrementally (easymenu help-mode yasnippet-snippets)
   :custom
   (yas-snippet-dirs '("~/.emacs.d/snippets"))
   :general

@@ -5,6 +5,7 @@
     "ot" #'terminal-here-launch :which-key "Launch terminal"))
 
 (use-package tramp ; access remote files within emacs
+  :ensure (:wait t)
   :defer t
   )
 

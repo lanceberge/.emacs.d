@@ -155,6 +155,7 @@
            ";" #'xref-goto-xref))
 
 (use-package eldoc
+  :ensure (:wait t)
   :general
   ('normal
    "gh" #'(eldoc-print-current-symbol-info :which-key "view doc")))

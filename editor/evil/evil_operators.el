@@ -35,6 +35,9 @@
 (use-package evil-surround ; s as an operator for surrounding
   :hook (pre-command . evil-surround-mode))
 
+(use-package embrace
+  :defer t)
+
 (use-package evil-embrace ; custom surround pairs
   :after evil-surround
   :config
