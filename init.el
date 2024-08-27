@@ -5,7 +5,7 @@
 (setq default-file-name-handler-alist file-name-handler-alist)
 
 (use-package emacs
-  :straight (:type built-in)
+             :ensure nil
   :custom
   ;; unset file-name-handler-alist until its set again in Hooks heading (improve startup time)
   (file-name-handler-alist nil)
@@ -184,7 +184,6 @@
      (use-package-process-keywords name rest state))))
 
 (use-package general ; unified way to map keybindings; works with :general in use-package
-  :demand t
   :config
   (general-create-definer my-leader-def ; SPC prefixed bindings
     :states '(normal visual motion insert emacs)
@@ -215,7 +214,6 @@
     "m" '(:ignore t :which-key "Merge")
     "g" '(:ignore t :which-key "Miscellaneous")
     "t" '(:ignore t :which-key "Tramp ssh")
-    "s" '(:ignore t :which-key "Straight"))
   ('normal
    "[o" '(:ignore t :which-key "Toggle Off")
    "]o" '(:ignore t :which-key "Toggle On")
@@ -237,16 +235,7 @@
     "p"  '(:ignore t :which-key "Project")
     "s"  '(:ignore t :which-key "Yasnippet")
     "t"  '(:ignore t :which-key "Tab")
-    "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
-
-(use-package straight ; package manager
-  :general
-  (my-localleader-def
-   "sr"      #'(straight-rebuild-package     :which-key "rebuild all")
-   "s SPC r" #'(straight-rebuild-all         :which-key "rebuild all")
-   "sf"      #'(straight-pull-package        :which-key "pull package")
-   "sc"      #'(straight-remove-unused-repos :which-key "remove unused")
-   "sp"      #'(straight-pull-all            :which-key "pull all")))
+    "f SPC m" #'(which-key-show-top-level :which-key "keybinding"))))
 
 (add-hook 'after-init-hook ; show startup time
           (lambda ()
