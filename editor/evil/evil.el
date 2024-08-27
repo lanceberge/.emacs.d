@@ -22,6 +22,8 @@
      (interactive)
      (save-excursion (call-interactively 'evil-join))
      )
+
+   "gm" (general-simulate-key "@@")
    )
 
   ('evil-ex-completion-map "C-g" 'abort-recursive-edit) ; quit on C-g
