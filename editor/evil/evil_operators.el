@@ -38,18 +38,6 @@
 (use-package embrace
   :defer t)
 
-(use-package evil-embrace ; custom surround pairs
-  :after evil-surround
-  :config
-  (setq evil-embrace-show-help-p nil)
-  (add-hook 'org-mode-hook 'embrace-org-mode-hook)
-  (evil-embrace-enable-evil-surround-integration)
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (dolist (var '((?s "#+BEGIN_SRC" . "#+END_SRC")
-                             (?$ "$" . "$")))
-                (embrace-add-pair (car var) (cadr var) (cddr var))))))
-
 (use-package evil-nerd-commenter ; comment lines like in tpope's commentary
   :general
   ('normal
