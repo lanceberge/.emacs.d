@@ -19,3 +19,24 @@
         (progn
           (save-buffer))
       (message "Parens are not balanced, saving canceled"))))
+
+(use-package debug
+  :ensure nil
+  :after evil-collection
+  :commands
+  (debug-on-entry)
+  :config
+  (evil-collection-init 'debug)
+  )
+
+(use-package edebug
+  :ensure nil
+  :after evil-collection
+  :general
+  (my-leader-def
+    "ed" #'(edebug-defun :which-key "debug function")
+    "e SPC d" #'(edebug-remove-instrumentation :which-key "remove instrumentation")
+    )
+  :config
+  (evil-collection-init 'edebug)
+  )
