@@ -4,7 +4,8 @@
   (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
   (aw-scope 'frame)
   :general
-  ("M-o" #'ace-window)
+  ('(normal visual insert)
+   "M-o" #'ace-window)
 
   ('evil-window-map
    "m" #'(ace-swap-window :which-key "move")))

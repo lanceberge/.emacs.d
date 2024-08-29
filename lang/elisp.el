@@ -40,3 +40,7 @@
   :config
   (evil-collection-init 'edebug)
   )
+
+(use-package lispy
+  :hook
+  (emacs-lisp-mode . lispy-mode))
