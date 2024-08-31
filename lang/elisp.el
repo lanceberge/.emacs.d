@@ -51,9 +51,6 @@
 
 (use-package lispyville
   :hook (emacs-lisp-mode . lispyville-mode)
-  :general
-  ('normal
-   [remap evil-])
   :config
   (lispyville-set-key-theme
    '(operators c-w text-objects atom-motions additional-motions
