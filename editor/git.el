@@ -27,19 +27,19 @@
     "gc"  #'(+magit/stage-all-and-commit :which-key "stage all and commit"))
 
   ('normal magit-mode-map
-           ";" (general-simulate-key "RET"))
+	   ";" (general-simulate-key "RET"))
   :config
   (evil-collection-init 'magit)
 
   (setq evil-collection-magit-state 'normal
-        evil-collection-magit-use-z-for-folds t
-        magit-auto-revert-mode nil))
+	evil-collection-magit-use-z-for-folds t
+	magit-auto-revert-mode nil))
 
 (use-package smerge-mode
   :ensure nil
   :general
   ('normal
-   "]c" #'(smerge-next     :which-key "next conflicting hunk")
+   "]c" #'(smerge-next :which-key "next conflicting hunk")
    "[c" #'(smerge-prev :which-key "previous conflicting hunk"))
   (my-localleader-def
     "ml" #'(smerge-keep-mine  :which-key "keep local changes")
@@ -53,12 +53,13 @@
   :general
   (my-leader-def
     "gt" #'(git-timemachine :which-key "git timemachine"))
+
   ('normal 'git-timemachine-mode-map
-           "p" #'git-timemachine-show-previous-revision
-           "n" #'git-timemachine-show-next-revision
-           "q" #'git-timemachine-quit
-           "t" #'git-timemachine-show-commit
-           "r" #'write-file))
+	   "p" #'git-timemachine-show-previous-revision
+	   "n" #'git-timemachine-show-next-revision
+	   "q" #'git-timemachine-quit
+	   "t" #'git-timemachine-show-commit
+	   "r" #'write-file))
 
 ;;;###autoload
 (defun +magit/stage-all-and-commit ()

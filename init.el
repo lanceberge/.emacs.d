@@ -66,11 +66,11 @@
 
 (when IS-WINDOWS
   (setq w32-get-true-file-attributes nil
-        w32-pipe-read-delay 0
-        w32-pipe-buffer-size (* 64 1024)
-        w32-lwindow-modifier 'super
-        w32-rwindow-modifier 'super
-        abbreviated-home-dir "\\ `'"))
+	w32-pipe-read-delay 0
+	w32-pipe-buffer-size (* 64 1024)
+	w32-lwindow-modifier 'super
+	w32-rwindow-modifier 'super
+	abbreviated-home-dir "\\ `'"))
 
 (when (and IS-WINDOWS (null (getenv "HOME")))
   (setenv "HOME" (getenv "USERPROFILE")))
@@ -92,9 +92,9 @@
     broken up into:
       (doom-load-packages-incrementally
        '(calendar find-func format-spec org-macs org-compat
-         org-faces org-entities org-list org-pcomplete org-src
-         org-footnote org-macro ob org org-clock org-agenda
-         org-capture))
+	 org-faces org-entities org-list org-pcomplete org-src
+	 org-footnote org-macro ob org org-clock org-agenda
+	 org-capture))
     This is already done by the lang/org module, however.
     If you want to disable incremental loading altogether, either remove
     `doom-load-packages-incrementally-h' from `emacs-startup-hook' or set
@@ -123,28 +123,28 @@
       (appendq! doom-incremental-packages packages)
     (while packages
       (let ((req (pop packages)))
-        (unless (featurep req)
-          (message "Incrementally loading %s" req)
-          (condition-case e
-              (or (while-no-input
-                    ;; If `default-directory' is a directory that doesn't exist
-                    ;; or is unreadable, Emacs throws up file-missing errors, so
-                    ;; we set it to a directory we know exists and is readable.
-                    (let ((default-directory user-emacs-directory)
-                          (gc-cons-threshold most-positive-fixnum)
-                          file-name-handler-alist)
-                      (require req nil t))
-                    t)
-                  (push req packages))
-            ((error debug)
-             (message "Failed to load '%s' package incrementally, because: %s"
-                      req e)))
-          (if (not packages)
-              (message "Finished incremental loading")
-            (run-with-idle-timer doom-incremental-idle-timer
-                                 nil #'doom-load-packages-incrementally
-                                 packages t)
-            (setq packages nil)))))))
+	(unless (featurep req)
+	  (message "Incrementally loading %s" req)
+	  (condition-case e
+	      (or (while-no-input
+		    ;; If `default-directory' is a directory that doesn't exist
+		    ;; or is unreadable, Emacs throws up file-missing errors, so
+		    ;; we set it to a directory we know exists and is readable.
+		    (let ((default-directory user-emacs-directory)
+			  (gc-cons-threshold most-positive-fixnum)
+			  file-name-handler-alist)
+		      (require req nil t))
+		    t)
+		  (push req packages))
+	    ((error debug)
+	     (message "Failed to load '%s' package incrementally, because: %s"
+		      req e)))
+	  (if (not packages)
+	      (message "Finished incremental loading")
+	    (run-with-idle-timer doom-incremental-idle-timer
+				 nil #'doom-load-packages-incrementally
+				 packages t)
+	    (setq packages nil)))))))
 
 (defun doom-load-packages-incrementally-h ()
   "Begin incrementally loading packages in `doom-incremental-packages'.
@@ -153,8 +153,8 @@
       (mapc #'require (cdr doom-incremental-packages))
     (when (numberp doom-incremental-first-idle-timer)
       (run-with-idle-timer doom-incremental-first-idle-timer
-                           nil #'doom-load-packages-incrementally
-                           (cdr doom-incremental-packages) t))))
+			   nil #'doom-load-packages-incrementally
+			   (cdr doom-incremental-packages) t))))
 
 (add-hook 'emacs-startup-hook #'doom-load-packages-incrementally-h)
 
@@ -168,15 +168,15 @@
   (dolist (keyword '(:defer-incrementally :after-call))
     (push keyword use-package-deferring-keywords)
     (setq use-package-keywords
-          (use-package-list-insert keyword use-package-keywords :after)))
+	  (use-package-list-insert keyword use-package-keywords :after)))
 
   (defalias 'use-package-normalize/:defer-incrementally #'use-package-normalize-symlist)
   (defun use-package-handler/:defer-incrementally (name _keyword targets rest state)
     (use-package-concat
      `((doom-load-packages-incrementally
-        ',(if (equal targets '(t))
-              (list name)
-            (append targets (list name)))))
+	',(if (equal targets '(t))
+	      (list name)
+	    (append targets (list name)))))
      (use-package-process-keywords name rest state))))
 
 (use-package general ; unified way to map keybindings; works with :general in use-package
@@ -235,22 +235,23 @@
     "p"  '(:ignore t :which-key "Project")
     "s"  '(:ignore t :which-key "Yasnippet")
     "t"  '(:ignore t :which-key "Tab")
+
     "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
 
 (add-hook 'after-init-hook ; show startup time
-          (lambda ()
-            "show the startup time"
-            (when (require 'time-date nil t)
-              (message "Emacs init time: %.2f seconds."
-                       (time-to-seconds (time-since emacs-load-start-time))))))
+	  (lambda ()
+	    "show the startup time"
+	    (when (require 'time-date nil t)
+	      (message "Emacs init time: %.2f seconds."
+		       (time-to-seconds (time-since emacs-load-start-time))))))
 
 (add-hook 'emacs-startup-hook ; reset garbage collection settings and file-name-handler-alist
-          (lambda ()
-            "raise the garbage collection threshold to defer garbage collection
-               and unset file-name-handler-alist"
-            (setq gc-cons-threshold 16777216
-                  gc-cons-percentage 0.1
-                  file-name-handler-alist default-file-name-handler-alist)))
+	  (lambda ()
+	    "raise the garbage collection threshold to defer garbage collection
+	       and unset file-name-handler-alist"
+	    (setq gc-cons-threshold 16777216
+		  gc-cons-percentage 0.1
+		  file-name-handler-alist default-file-name-handler-alist)))
 
 ;; Raise gc threshold while minibuffer is active
 (defun doom-defer-garbage-collection-h ()
@@ -279,8 +280,8 @@
 ;; Load config files recursively
 (let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
   (mapc (lambda (dir)
-          (mapc 'load-file
-                (directory-files-recursively dir "\\.el$")))
-        dirs))
+	  (mapc 'load-file
+		(directory-files-recursively dir "\\.el$")))
+	dirs))
 
 (setq custom-file "~/.emacs.d/custom.el")

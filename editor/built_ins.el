@@ -73,6 +73,7 @@
   (my-leader-def
     "oc" #'(calc :which-key "calc")))
 
+;; TODO
 (use-package desktop ; save sessions to a file
   :disabled t
   :ensure nil
@@ -88,8 +89,8 @@
   :hook (prog-mode . electric-pair-mode)
   :config
   (setq electric-pair-inhibit-predicate
-        (lambda (c)
-          (if (char-equal c ?\") t (electric-pair-default-inhibit c)))))
+	(lambda (c)
+	  (if (char-equal c ?\") t (electric-pair-default-inhibit c)))))
 
 (use-package ediff
   :defer t
@@ -105,13 +106,13 @@
   :ensure nil
   :general
   ('normal
-   "za"  #'(outline-toggle-children :which-key "toggle fold")
-   "zo"  #'(outline-show-subtree    :which-key "fully open")
-   "zc"  #'(outline-hide-subtree    :which-key "fully fold")
-   "zk"  #'(org-backward-element    :which-key "go up an outline")
-   "zj"  #'(org-forward-element     :which-key "go down an outline")
-   "zr"  #'(outline-show-all        :which-key "close all folds")
-   "zm"  #'(outline-hide-body       :which-key "open all folds")))
+   "za" #'(outline-toggle-children :which-key "toggle fold")
+   "zo" #'(outline-show-subtree    :which-key "fully open")
+   "zc" #'(outline-hide-subtree    :which-key "fully fold")
+   "zk" #'(org-backward-element    :which-key "go up an outline")
+   "zj" #'(org-forward-element     :which-key "go down an outline")
+   "zr" #'(outline-show-all        :which-key "close all folds")
+   "zm" #'(outline-hide-body       :which-key "open all folds")))
 
 (use-package ispell
   :defer t
@@ -123,11 +124,11 @@
   :ensure nil
   :hook
   (occur-mode . (lambda ()
-                  (evil-local-mode)
-                  (evil-normal-state)))
+		  (evil-local-mode)
+		  (evil-normal-state)))
   :general
   ('normal 'occur-mode-map
-           "q" #'quit-window))
+	   "q" #'quit-window))
 
 (use-package isearch
   :ensure nil
@@ -151,5 +152,5 @@
   (grep-mode . evil-normal-state)
   :general
   ('normal grep-mode-map
-           ";" #'compile-goto-error
-           "q" #'quit-window))
+	   ";" #'compile-goto-error
+	   "q" #'quit-window))

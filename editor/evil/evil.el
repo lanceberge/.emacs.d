@@ -18,13 +18,7 @@
    [remap evil-previous-line]      #'evil-previous-visual-line
    "C-M-d" #'scroll-other-window
    "C-M-u" #'scroll-other-window-down
-   "J" (defun +evil-join ()
-     (interactive)
-     (save-excursion (call-interactively 'evil-join))
-     )
-
-   "gm" (general-simulate-key "@@")
-   )
+   "gm" (general-simulate-key "@@"))
 
   ('evil-ex-completion-map "C-g" 'abort-recursive-edit) ; quit on C-g
   ('insert 'evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
@@ -38,12 +32,11 @@
    "]m"      #'(+forward-global-mark  :which-key "forward mark")
    "[m"      #'(+backward-global-mark :which-key "backward mark")
    [M-right] #'(+forward-global-mark  :which-key "forward mark")
-   [M-left]  #'(+backward-global-mark :which-key "backward mark")
-   )
+   [M-left]  #'(+backward-global-mark :which-key "backward mark"))
 
   ('normal 'evil-operator-state-map
-           "?" #'evil-search-backward
-           "/" #'evil-search-forward)
+	   "?" #'evil-search-backward
+	   "/" #'evil-search-forward)
 
   (my-leader-def
     "bS" #'(evil-write-all                     :which-key "write all buffers")
@@ -57,11 +50,11 @@
    "SPC l" #'(evil-window-move-far-right   :which-key "move window right")
    "d"     #'(evil-quit                    :which-key "delete window")
    "q"     #'(evil-save-modified-and-close :which-key "quit and save window")
-   "SPC q" #'(save-buffers-kill-emacs      :which-key "save buffers & quit emacs")
-   "a"       (defun +evil-window-increase () (interactive)
-               (evil-window-increase-width 5) :which-key "increase size")
-   "x"       (defun +evil-window-decrease () (interactive)
-               (evil-window-decrease-width 5) :which-key "decrease-size"))
+   "SPC q" #'(save-buffers-kill-emacs  :which-key "save buffers & quit emacs")
+   "a" (defun +evil-window-increase () (interactive)
+	      (evil-window-increase-width 5) :which-key "increase size")
+   "x" (defun +evil-window-decrease () (interactive)
+	      (evil-window-decrease-width 5) :which-key "decrease-size"))
 
   ('(normal insert)
    "C-l" #'(evil-ex-nohighlight :which-key "clear highlight"))

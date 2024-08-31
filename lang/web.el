@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package web-mode
-  :mode ("\\.html\\'"   . web-mode)
-  :mode ("\\.css\\'"    . web-mode)
+  :mode ("\\.html\\'" . web-mode)
+  :mode ("\\.css\\'"  . web-mode)
   :custom
   (web-mode-code-indent-offset 2)
   (web-mode-markup-indent-offset 2)
@@ -10,8 +10,7 @@
   (web-mode-engines-alist
    '(("svelte" . "\\.svelte\\'")))
   :config
-  (add-to-list 'auto-mode-alist '("\\.svelte\\'" . web-mode))
-  )
+  (add-to-list 'auto-mode-alist '("\\.svelte\\'" . web-mode)))
 
 (use-package html-mode
   :ensure nil
@@ -23,7 +22,7 @@
   (svelte-mode . emmet-mode)
   :general
   ('insert emmet-mode-keymap
-           "TAB" #'emmet-expand-line))
+	   "TAB" #'emmet-expand-line))
 
 (use-package svelte-mode
   :defer t

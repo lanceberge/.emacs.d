@@ -4,8 +4,7 @@
   :custom (js2-basic-offset 2)
   :config
   (require 'dap-node)
-  (dap-node-setup)
-  )
+  (dap-node-setup))
 
 (use-package typescript-mode
   :mode
@@ -15,8 +14,7 @@
   (typescript-auto-indent-flag t)
   :config
   (require 'dap-node)
-  (dap-node-setup)
-  )
+  (dap-node-setup))
 
 (use-package json-mode
   :defer t)

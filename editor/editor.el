@@ -10,19 +10,19 @@
     "=" #'(+format/buffer :which-key "format"))
   ('normal
    "[of" (defun +format-all-off () (interactive)
-                (format-all-mode -1) :which-key "format-all")
+		(format-all-mode -1) :which-key "format-all")
    "]of" (defun +format-all-on  () (interactive)
-                (format-all-mode 1) :which-key "format all"))
+		(format-all-mode 1) :which-key "format all"))
   :config
   (defvar +format-with-lsp nil)
   (setq-default format-all-formatters
-                '(("TypeScript" prettier)
-                  ("svelte"     prettier)
-                  ("Svelte"     prettier)
-                  ("Go"         gofmt)
-                  ("HTML"       prettier)
-                  ("JSON"       prettier)
-                  ("JavaScript" prettier))))
+		'(("TypeScript" prettier)
+		  ("svelte"     prettier)
+		  ("Svelte"     prettier)
+		  ("Go"         gofmt)
+		  ("HTML"       prettier)
+		  ("JSON"       prettier)
+		  ("JavaScript" prettier))))
 
 (use-package avy ; jump to things in files similar to easymotion for vim
   :custom
@@ -30,12 +30,10 @@
   :general
   ('evil-operator-state-map
    "\\" #'(avy-goto-char-timer :which-key "goto char")
-   "go" #'(avy-goto-char-2     :which-key "goto char")
-   )
+   "go" #'(avy-goto-char-2     :which-key "goto char"))
 
   ('(normal insert)
-   "M-i" #'(avy-goto-char-timer :which-key "goto char")
-   )
+   "M-i" #'(avy-goto-char-timer :which-key "goto char"))
 
   ('isearch-mode-map
    "M-i" #'evil-avy-isearch)
@@ -46,19 +44,17 @@
    "SPC \\"  #'(evil-avy-isearch    :which-key "timer")
    "g SPC o" #'(evil-avy-isearch    :which-key "timer")
    "g SPC m" #'(avy-move-line       :which-key "move line")
-   "g SPC r" #'(avy-move-region     :which-key "move region")
-   )
+   "g SPC r" #'(avy-move-region     :which-key "move region"))
   :config
   (evil-define-avy-motion avy-isearch inclusive)
   ;; https://karthinks.com/software/avy-can-do-anything/
   (defun avy-action-embark (pt)
     "Perform an embark action on the avy target without moving point to it"
     (unwind-protect
-        (save-excursion
-          (avy-action-embark-move pt))
+	(save-excursion
+	  (avy-action-embark-move pt))
       (select-window
-       (cdr (ring-ref avy-ring 0))))
-    t)
+       (cdr (ring-ref avy-ring 0)))) t)
 
   (defun avy-action-embark-move (pt)
     "Perform an embark action on the avy target and move the point to it"
@@ -66,11 +62,9 @@
     (embark-act))
 
   (setq avy-dispatch-alist
-        (list
-         (cons ?\s 'avy-action-embark-move)
-         (cons ?, 'avy-action-embark)
-         ))
-  )
+	(list
+	 (cons ?\s 'avy-action-embark-move)
+	 (cons ?, 'avy-action-embark))))
 
 (use-package embark
   :general
@@ -84,8 +78,7 @@
    "d" #'embark-find-definition
    "g" #'google-this-word)
   ('embark-identifier-map
-   "." #'lsp-execute-code-action)
-  )
+   "." #'lsp-execute-code-action))
 
 (use-package define-word
   :commands (define-word-at-point))
@@ -97,11 +90,9 @@
   (dired-recursive-copies 'always)
   :general
   ('normal
-   "-"  #'(dired-jump :which-key "open dired")
-   )
+   "-"  #'(dired-jump :which-key "open dired"))
   ('normal 'dired-mode-map
-           "q"  #'(evil-switch-to-windows-last-buffer :which-key "quit")
-           )
+	   "q"  #'(evil-switch-to-windows-last-buffer :which-key "quit"))
   :config
   (evil-collection-init 'dired)
 
@@ -125,7 +116,7 @@
   ('normal
    "gp" #'helpful-at-point)
   ('normal helpful-mode-map
-           "q" #'quit-window)
+	   "q" #'quit-window)
 
   ([remap describe-command]  #'helpful-command
    [remap describe-key]      #'helpful-key
@@ -153,8 +144,7 @@
       :defer 0.5
       :hook
       (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
-                      (exec-path-from-shell-initialize))))
-  )
+		      (exec-path-from-shell-initialize)))))
 
 (use-package google-this
   :general
@@ -165,9 +155,7 @@
   (my-localleader-def
     :states 'visual
     "gt" (defun +google-this () (interactive)
-                (google-this-region t t) :which-key "google this")
-    )
-  )
+		(google-this-region t t) :which-key "google this")))
 
 (use-package gptel
   :custom
@@ -184,28 +172,24 @@
     (read-file-contents "~/secrets/claude_key"))
   (setq
    gptel-backend (gptel-make-anthropic "Claude"
-                   :stream t
-                   :key #'gptel-api-key
-                   ))
-  )
-
+		   :stream t
+		   :key #'gptel-api-key)))
 
 (use-package ace-link
   :general
   ('normal
    "g SPC l" #'(ace-link :which-key "goto link")))
 
-
 (use-package wgrep
   :general
   ('normal grep-mode-map
-           "i" #'wgrep-change-to-wgrep-mode)
+	   "i" #'wgrep-change-to-wgrep-mode)
   ('wgrep-mode-map
    [remap evil-write] 'wgrep-save-all-buffers
    [remap evil-save-modified-and-close]
    (defun +wgrep-save-and-quit () (interactive)
-          (wgrep-save-all-buffers)
-          (evil-quit) :which-key "save and quit"))
+	  (wgrep-save-all-buffers)
+	  (evil-quit) :which-key "save and quit"))
   :defer t)
 
 (use-package popper
@@ -241,14 +225,12 @@
 (use-package restart-emacs
   :general
   (my-leader-def
-    "re" #'(+restart-emacs :which-key "restart emacs")
-    )
+    "re" #'(+restart-emacs :which-key "restart emacs"))
   :config
   (defun +restart-emacs ()
     (interactive)
     (setq confirm-kill-emacs nil)
-    (restart-emacs)
-    ))
+    (restart-emacs)))
 
 (use-package hydra
   :general
@@ -258,54 +240,51 @@
 (use-package treesit
   :ensure nil
   :mode (("\\.tsx\\'" . tsx-ts-mode)
-         ("\\.js\\'"  . typescript-ts-mode)
-         ("\\.mjs\\'" . typescript-ts-mode)
-         ("\\.mts\\'" . typescript-ts-mode)
-         ("\\.cjs\\'" . typescript-ts-mode)
-         ("\\.ts\\'"  . typescript-ts-mode)
-         ("\\.jsx\\'" . tsx-ts-mode)
-         ("\\.json\\'" .  json-ts-mode)
-         ("\\.Dockerfile\\'" . dockerfile-ts-mode)
-         ;; More modes defined here...
-         )
+	 ("\\.js\\'"  . typescript-ts-mode)
+	 ("\\.mjs\\'" . typescript-ts-mode)
+	 ("\\.mts\\'" . typescript-ts-mode)
+	 ("\\.cjs\\'" . typescript-ts-mode)
+	 ("\\.ts\\'"  . typescript-ts-mode)
+	 ("\\.jsx\\'" . tsx-ts-mode)
+	 ("\\.json\\'" .  json-ts-mode)
+	 ("\\.Dockerfile\\'" . dockerfile-ts-mode))
   :config
   (dolist (grammar
-           '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
-             (bash "https://github.com/tree-sitter/tree-sitter-bash")
-             (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
-             (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.21.2" "src"))
-             (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
-             (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
-             (go "https://github.com/tree-sitter/tree-sitter-go" "v0.20.0")
-             (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-             (make "https://github.com/alemuller/tree-sitter-make")
-             (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-             (cmake "https://github.com/uyha/tree-sitter-cmake")
-             (c "https://github.com/tree-sitter/tree-sitter-c")
-             (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-             (toml "https://github.com/tree-sitter/tree-sitter-toml")
-             (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
-             (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
-             (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
-             (prisma "https://github.com/victorhqc/tree-sitter-prisma")))
+	   '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
+	     (bash "https://github.com/tree-sitter/tree-sitter-bash")
+	     (html . ("https://github.com/tree-sitter/tree-sitter-html" "v0.20.1"))
+	     (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "v0.21.2" "src"))
+	     (json . ("https://github.com/tree-sitter/tree-sitter-json" "v0.20.2"))
+	     (python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.20.4"))
+	     (go "https://github.com/tree-sitter/tree-sitter-go" "v0.20.0")
+	     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+	     (make "https://github.com/alemuller/tree-sitter-make")
+	     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+	     (cmake "https://github.com/uyha/tree-sitter-cmake")
+	     (c "https://github.com/tree-sitter/tree-sitter-c")
+	     (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+	     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+	     (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
+	     (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
+	     (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
+	     (prisma "https://github.com/victorhqc/tree-sitter-prisma")))
     (add-to-list 'treesit-language-source-alist grammar)
     (unless (treesit-language-available-p (car grammar))
       (treesit-install-language-grammar (car grammar))))
 
   (dolist (mapping
-           '((python-mode . python-ts-mode)
-             (css-mode . css-ts-mode)
-             (typescript-mode . typescript-ts-mode)
-             (js-mode . typescript-ts-mode)
-             (js2-mode . typescript-ts-mode)
-             (c-mode . c-ts-mode)
-             (c++-mode . c++-ts-mode)
-             (c-or-c++-mode . c-or-c++-ts-mode)
-             (bash-mode . bash-ts-mode)
-             (css-mode . css-ts-mode)
-             (json-mode . json-ts-mode)
-             (js-json-mode . json-ts-mode)
-             (sh-mode . bash-ts-mode)
-             (sh-base-mode . bash-ts-mode)))
-    (add-to-list 'major-mode-remap-alist mapping))
-  )
+	   '((python-mode . python-ts-mode)
+	     (css-mode . css-ts-mode)
+	     (typescript-mode . typescript-ts-mode)
+	     (js-mode . typescript-ts-mode)
+	     (js2-mode . typescript-ts-mode)
+	     (c-mode . c-ts-mode)
+	     (c++-mode . c++-ts-mode)
+	     (c-or-c++-mode . c-or-c++-ts-mode)
+	     (bash-mode . bash-ts-mode)
+	     (css-mode . css-ts-mode)
+	     (json-mode . json-ts-mode)
+	     (js-json-mode . json-ts-mode)
+	     (sh-mode . bash-ts-mode)
+	     (sh-base-mode . bash-ts-mode)))
+    (add-to-list 'major-mode-remap-alist mapping)))
