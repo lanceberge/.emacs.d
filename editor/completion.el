@@ -100,6 +100,10 @@
     "sr" #'(yas-reload-all         :which-key "reload"))
   :config
   ;; https://github.com/emacs-evil/evil/issues/254
+  (use-package yasnippet-snippets
+    :demand t)
+  (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer")
+
   (add-hook 'yas-before-expand-snippet-hook
 	    #'(lambda()
 		(when (evil-visual-state-p)
@@ -129,10 +133,6 @@ the user to save the buffer"
 
   (yas-global-mode 1))
 
-(use-package yasnippet-snippets
-  :defer t
-  :config
-  (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer"))
 
 (use-package corfu
   :defer 1.4
@@ -167,7 +167,7 @@ the user to save the buffer"
 (use-package cape
   :after corfu
   :hook
-  (text-mode . +cape-text-mode)
+  (text-mode  . +cape-text-mode)
   (minibuffer-setup . +cape-minibuffer-mode)
   :custom
   (cape-file-directory-must-exist nil)
