@@ -14,8 +14,8 @@
   :ensure nil
   :after evil
   :defer 1
-  :init
-  (winner-mode)
+  :hook
+  (after-init . winner-mode)
   :general
   ('evil-window-map
    "u" #'(winner-undo :which-key "undo window operation")
