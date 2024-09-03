@@ -5,8 +5,7 @@
   :custom
   (xref-show-xrefs-function #'consult-xref)
   :general
-  (
-   [remap projectile-find-file] #'(consult-project-buffer :which-key "project buffer"))
+  ([remap projectile-find-file] #'(consult-project-buffer :which-key "project buffer"))
 
   (my-leader-def
     "SPC" #'(consult-buffer          :which-key "find buffer")
@@ -156,6 +155,7 @@ the user to save the buffer"
    "M-k" #'corfu-previous
    "C-j" #'corfu-next
    ";"   #'corfu-complete
+   [remap evil-normal-state] #'corfu-quit
    "<tab>" #'yas-expand)
 
   ('insert corfu-map
