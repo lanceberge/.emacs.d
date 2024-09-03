@@ -52,3 +52,17 @@
   (interactive)
   (tab-bar-new-tab)
   (call-interactively #'tab-bar-rename-tab))
+
+(use-package windresize
+  :after evil
+  :custom
+  (windresize-default-increment 3)
+  :general
+  ('evil-window-map
+   "r" #'windresize)
+  ('windresize-map
+   "h" #'windresize-left
+   "l" #'windresize-right
+   "k" #'windresize-up
+   "j" #'windresize-down
+   ";" #'windresize-exit))
