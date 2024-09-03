@@ -2,7 +2,6 @@ etc
 custom.el
 straight
 var
-.chatgpt-shell.el
 eln-cache/
 auto-save-list
 tree-sitter/
