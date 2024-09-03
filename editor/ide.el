@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package lsp-mode ; LSP
   :defer 2.0
+  :defer-incrementally (markdown-mode lsp-ui)
   :hook
   ((go-mode
     java-mode
@@ -156,7 +157,7 @@
 	   ";" #'xref-goto-xref))
 
 (use-package eldoc
-  :ensure (:wait t)
+  :ensure nil
   :general
   ('normal
    "gh" #'(eldoc-print-current-symbol-info :which-key "view doc")))

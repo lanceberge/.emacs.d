@@ -65,7 +65,4 @@
    "C-e" #'end-of-line
    "C-a" #'beginning-of-line
    "C-<backspace>" #'evil-delete-backward-word
-   "M-<backspace>" #'evil-delete-backward-word)
-  :config
-  (which-key-add-key-based-replacements
-    "C-c r" "revert-buffer"))
+   "M-<backspace>" #'evil-delete-backward-word))

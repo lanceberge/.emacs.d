@@ -233,6 +233,7 @@
     (restart-emacs)))
 
 (use-package hydra
+  :defer t
   :general
   ('hydra-base-map
    "C-u" nil))

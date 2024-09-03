@@ -1,24 +1,12 @@
 ;;; -*- lexical-binding: t -*-
 (use-package elisp-mode
   :ensure nil
-  :hook
-  (emacs-lisp-mode . (lambda () (flycheck-mode -1)))
   :general
   ('(normal insert) emacs-lisp-mode-map
    :prefix "C-c"
    "C-c" #'eval-buffer)
   ('emacs-lisp-mode-map
-   [remap evil-write] #'+elisp-format-and-check)
-  :config
-;;;###autoload
-  (defun +elisp-format-and-check ()
-    "Format buffer, check parens, and save if balanced."
-    (interactive)
-    (when (eq major-mode 'emacs-lisp-mode)
-      (if (balanced-parens-p)
-	  (progn
-	    (save-buffer))
-	(message "Parens are not balanced, saving canceled")))))
+   [remap evil-write] #'+elisp-format-and-check))
 
 (use-package debug
   :ensure nil
@@ -59,3 +47,13 @@
   ('normal 'lispyville-mode-map
 	   "B" #'lispyville-backward-atom-begin
 	   "E" #'lispyville-forward-atom-end))
+
+;;;###autoload
+  (defun +elisp-format-and-check ()
+    "Format buffer, check parens, and save if balanced."
+    (interactive)
+    (when (eq major-mode 'emacs-lisp-mode)
+      (if (balanced-parens-p)
+	  (progn
+	    (save-buffer))
+	(message "Parens are not balanced, saving canceled"))))

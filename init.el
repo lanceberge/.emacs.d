@@ -216,8 +216,7 @@
     "t" '(:ignore t :which-key "Tramp ssh"))
   ('normal
    "[o" '(:ignore t :which-key "Toggle Off")
-   "]o" '(:ignore t :which-key "Toggle On")
-   )
+   "]o" '(:ignore t :which-key "Toggle On"))
   (my-leader-def
     "b"  '(:ignore t :which-key "Buffers")
     "e"  '(:ignore t :which-key "Elisp")
@@ -267,7 +266,7 @@
 (add-hook 'minibuffer-setup-hook #'doom-defer-garbage-collection-h)
 (add-hook 'minibuffer-exit-hook  #'doom-restore-garbage-collection-h)
 
-(use-package gcmh ; Garbage collect in idle time
+(use-package gcmh			; Garbage collect in idle time
   :defer 2.0
   :commands gcmh-idle-garbage-collect
   :custom
