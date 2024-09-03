@@ -75,6 +75,7 @@
    "%" #'(evilmi-jump-items :which-key "jump to matching pair")))
 
 (use-package evil-exchange ; exchange text selected with gx
+  :after evil
   :general
   ('(normal visual)
    "gx" #'(evil-exchange        :which-key "exchange operator")
@@ -121,5 +122,6 @@
    "g^" #'titlecase-region :which-key "titlecase region"))
 
 (use-package evil-easymotion
+  :defer 1
   :config
   (evilem-default-keybindings "'"))

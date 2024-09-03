@@ -7,15 +7,14 @@
   (evil-split-window-below t)
   (evil-vsplit-window-right t)
   (evil-search-wrap t)
-  (evil-want-keybinding nil)
   (evil-want-fine-undo 'fine) ; save inserts as undo units more often
   (evil-ex-search-persistent-highlight nil)
   (evil-ex-substitute-highlight-all nil)
   (evil-ex-search-persist-highlight nil)
   :general
   ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
-   [remap evil-next-line]          #'evil-next-visual-line
-   [remap evil-previous-line]      #'evil-previous-visual-line
+   [remap evil-next-line] #'evil-next-visual-line
+   [remap evil-previous-line] #'evil-previous-visual-line
    "C-M-d" #'scroll-other-window
    "C-M-u" #'scroll-other-window-down
    "gm" (general-simulate-key "@@"))
@@ -59,4 +58,5 @@
   ('(normal insert)
    "C-l" #'(evil-ex-nohighlight :which-key "clear highlight"))
   :config
+  (setq evil-want-keybinding nil)
   (evil-mode))
