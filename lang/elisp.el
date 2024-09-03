@@ -53,5 +53,9 @@
   :hook (emacs-lisp-mode . lispyville-mode)
   :config
   (lispyville-set-key-theme
-   '(operators c-w text-objects atom-motions additional-motions
-	       commentary slurp/barf-cp)))
+   '(operators c-w text-objects additional-motions
+	       commentary slurp/barf-cp))
+  :general
+  ('normal 'lispyville-mode-map
+	   "B" #'lispyville-backward-atom-begin
+	   "E" #'lispyville-forward-atom-end))
