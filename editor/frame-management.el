@@ -12,6 +12,7 @@
 
 (use-package winner ; Undo and redo window configs
   :ensure nil
+  :after evil
   :defer 1
   :init
   (winner-mode)

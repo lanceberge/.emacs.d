@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package evil-collection ; evil bindings for many modes
   :defer t
+  :after evil
   :custom
   (evil-collection-want-unimpaired-p t)
   (evil-collection-setup-minibuffer t)
