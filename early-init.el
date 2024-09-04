@@ -21,8 +21,8 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
-(setq emacs-load-start-time (current-time)
-      menu-bar-mode nil
+(defvar emacs-load-start-time (current-time))
+(setq menu-bar-mode nil
       tool-bar-mode nil
       scroll-bar-mode nil
       frame-inhibit-implied-resize t
