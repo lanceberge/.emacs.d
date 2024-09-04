@@ -160,6 +160,7 @@
 (use-package gptel
   :custom
   (gptel-model "claude-3-5-sonnet-20240620")
+  (gptel-default-mode 'org-mode)
   :general
   (my-localleader-def
     "gc" #'gptel)
