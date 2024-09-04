@@ -43,7 +43,6 @@
       indent-tabs-mode nil ; tabs are converted to spaces
       apropos-do-all t     ; more extensive apropos searches
       completion-ignore-case t
-      tab-width 4
 
       use-file-dialog nil
       use-dialog-box nil
@@ -53,6 +52,8 @@
       bidi-display-reordering 'left-to-right
       bidi-paragraph-direction 'left-to-right
       cursor-in-non-selected-windows nil)
+
+(setq-default tab-width 4)
 
 (advice-add #'tty-run-terminal-initialization :override #'ignore)
 

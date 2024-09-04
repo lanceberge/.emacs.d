@@ -143,8 +143,7 @@
    "M-j" #'isearch-repeat-forward
    "M-k" #'isearch-repeat-backward
    "C-g" #'isearch-exit
-   ";"   #'isearch-exit
-   ))
+   ";"   #'isearch-exit))
 
 (use-package grep-mode
   :ensure nil
