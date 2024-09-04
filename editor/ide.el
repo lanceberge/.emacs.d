@@ -42,15 +42,15 @@
   (lsp-completion-enable-additional-text-edit t)
   :init
   (defun +lsp-mode-setup-completion ()
-    (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-	  '(orderless basic)))
+    (setq-local completion-styles '(orderless basic)
+		completion-category-defaults nil))
   :hook
   (lsp-completion-mode . +lsp-mode-setup-completion)
   :general
   ('(normal insert) 'lsp-mode-map
    "M-i" #'(lsp-execute-code-action :which-key "code action"))
 
-  ('normal lsp-mode-map
+  ('normal 'lsp-mode-map
 	   "gr" #'(lsp-find-references         :which-key "find references")
 	   "K"  #'(lsp-describe-thing-at-point :which-key "find references")
 	   "ga" #'(lsp-execute-code-action     :which-key "code action")
@@ -157,6 +157,9 @@
 	   ";" #'xref-goto-xref))
 
 (use-package eldoc
+  :preface
+  ;; avoid loading of built-in eldoc, see https://github.com/progfolio/elpaca/issues/236#issuecomment-1879838229
+  (unload-feature 'eldoc t)
   :ensure nil
   :general
   ('normal
