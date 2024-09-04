@@ -1,0 +1,13 @@
+* .emacs.d
+
+  Highly featureful Emacs configuration using:
+
+  - [[https://github.com/progfolio/elpaca][Elpaca]]
+  - [[https://github.com/jwiegley/use-package][use-package]]
+  - [[https://github.com/emacs-evil/evil][Evil]]
+  - [[https://github.com/minad/corfu][corfu]]
+  - [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]]
+  - [[https://github.com/joaotavora/yasnippet][Yasnippet]]
+  - [[https://github.com/minad/consult][Consult]]
+  - [[https://github.com/minad/vertico][Vertico]]
+  - [[https://www.orgroam.com/][Org-roam]]
