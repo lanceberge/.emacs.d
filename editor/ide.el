@@ -158,8 +158,8 @@
 
 (use-package eldoc
   :preface
+  ;; avoid loading of built-in eldoc, see https://github.com/progfolio/elpaca/issues/236#issuecomment-1879838229
   (when IS-LINUX
-	;; avoid loading of built-in eldoc, see https://github.com/progfolio/elpaca/issues/236#issuecomment-1879838229
 	(unload-feature 'eldoc t))
   :ensure nil
   :general
@@ -170,21 +170,29 @@
   :commands (project-switch-project)
   :general
   (my-leader-def
-	"pp"      #'(+project-switch-and-find-file :which-key "switch project")
-	"p SPC p" #'(+project-switch-and-rg        :which-key "switch project")
-	"pf"      #'(project-find-file             :which-key "find file")
-	"ps"      #'(consult-ripgrep               :which-key "ripgrep"))
+	"pp" #'(+project-switch-and-find-file :which-key "switch project")
+	"pg" #'(+project-switch-and-magit-status :which-key "switch project")
+	"pf" #'(project-find-file :which-key "find file")
+	"ps" #'(consult-ripgrep :which-key "ripgrep")
+	"p SPC p" #'(+project-switch-and-rg :which-key "switch project"))
   :config
 ;;;###autoload
   (defun +project-switch-and-rg ()
 	"Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
 	(interactive)
-	(setq project-switch-commands 'consult-ripgrep)
+	(setq project-switch-commands #'consult-ripgrep)
 	(call-interactively 'project-switch-project))
 
 ;;;###autoload
   (defun +project-switch-and-find-file ()
 	"Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
 	(interactive)
-	(setq project-switch-commands 'project-find-file)
+	(setq project-switch-commands #'project-find-file)
+	(call-interactively 'project-switch-project))
+
+;;;###autoload
+  (defun +project-switch-and-magit-status ()
+	"Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+	(interactive)
+	(setq project-switch-commands #'magit-project-status)
 	(call-interactively 'project-switch-project)))
