@@ -3,8 +3,9 @@
   :ensure nil
   :hook (after-init . global-visual-line-mode)
   :custom
-  (idle-update-delay 1.0) ; slow down how often emacs updates its ui
-  (kill-do-not-save-duplicates t)) ; no duplicates in kill ring
+  (idle-update-delay 1.0)	; slow down how often emacs updates its ui
+  (kill-do-not-save-duplicates t)
+  (indent-tabs-mode nil)) ; no duplicates in kill ring
 
 (use-package advice
   :ensure nil
@@ -57,8 +58,7 @@
     :general
     ('normal
      "[os" (defun +flyspell-off () (interactive) (flyspell-mode -1) :which-key "flyspell")
-     "]os" (defun +flyspell-on  () (interactive) (flyspell-mode t)  :which-key "flyspell")
-     )
+     "]os" (defun +flyspell-on  () (interactive) (flyspell-mode t)  :which-key "flyspell"))
     ('(normal insert)
      "M-y" #'(flyspell-auto-correct-word :which-key "fix word"))))
 
@@ -89,8 +89,8 @@
   :hook (prog-mode . electric-pair-mode)
   :config
   (setq electric-pair-inhibit-predicate
-	(lambda (c)
-	  (if (char-equal c ?\") t (electric-pair-default-inhibit c)))))
+        (lambda (c)
+          (if (char-equal c ?\") t (electric-pair-default-inhibit c)))))
 
 (use-package ediff
   :defer t
@@ -124,11 +124,11 @@
   :ensure nil
   :hook
   (occur-mode . (lambda ()
-		  (evil-local-mode)
-		  (evil-normal-state)))
+                  (evil-local-mode)
+                  (evil-normal-state)))
   :general
   ('normal 'occur-mode-map
-	   "q" #'quit-window))
+           "q" #'quit-window))
 
 (use-package isearch
   :ensure nil
@@ -150,6 +150,6 @@
   :hook
   (grep-mode . evil-normal-state)
   :general
-  ('normal grep-mode-map
-	   ";" #'compile-goto-error
-	   "q" #'quit-window))
+  ('normal 'grep-mode-map
+           ";" #'compile-goto-error
+           "q" #'quit-window))
