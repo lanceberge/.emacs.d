@@ -31,29 +31,33 @@
   (emacs-lisp-mode . lispy-mode)
   :general
   ('insert 'lispy-mode-map
-	   "n" #'special-lispy-down
-	   "p" #'special-lispy-up
-	   "[" #'self-insert-command
-	   "]" #'self-insert-command
-	   "\"" #'lispy-doublequote))
+           "n" #'special-lispy-down
+           "p" #'special-lispy-up
+           "[" #'self-insert-command
+           "]" #'self-insert-command
+           "\"" #'lispy-doublequote))
 
 (use-package lispyville
   :hook (emacs-lisp-mode . lispyville-mode)
   :config
   (lispyville-set-key-theme
    '(operators c-w text-objects additional-motions
-	       commentary slurp/barf-cp))
+               commentary slurp/barf-cp))
   :general
   ('normal 'lispyville-mode-map
-	   "B" #'lispyville-backward-atom-begin
-	   "E" #'lispyville-forward-atom-end))
+           "B" #'lispyville-backward-atom-begin
+           "E" #'lispyville-forward-atom-end))
 
 ;;;###autoload
-  (defun +elisp-format-and-check ()
-    "Format buffer, check parens, and save if balanced."
-    (interactive)
-    (when (eq major-mode 'emacs-lisp-mode)
-      (if (balanced-parens-p)
-	  (progn
-	    (save-buffer))
-	(message "Parens are not balanced, saving canceled"))))
+(defun +elisp-format-and-check ()
+  "Format buffer, check parens, and save if balanced."
+  (interactive)
+  (when (eq major-mode 'emacs-lisp-mode)
+    (if (balanced-parens-p)
+        (progn
+          (save-buffer))
+      (message "Parens are not balanced, saving canceled"))))
+
+(use-package aggressive-indent
+  :hook
+  (emacs-lisp-mode . aggressive-indent-mode))
