@@ -55,7 +55,7 @@
   (defun +auto-create-missing-dirs ()
     (let ((target-dir (file-name-directory buffer-file-name)))
       (unless (file-exists-p target-dir)
-	(make-directory target-dir t))))
+        (make-directory target-dir t))))
 
   (add-to-list 'find-file-not-found-functions #'+auto-create-missing-dirs)
 
@@ -87,9 +87,9 @@
   ('yas-keymap
    "<tab>" #'yas-next-field)
   ('visual 'org-mode-map
-	   "ss" (defun +src-snippet () (interactive) (+expand-snippet "highlighted src")))
+           "ss" (defun +src-snippet () (interactive) (+expand-snippet "highlighted src")))
   ('visual 'prog-mode-map
-	   "st" (defun +try-catch-snippet () (interactive) (+expand-snippet "try-catch")))
+           "st" (defun +try-catch-snippet () (interactive) (+expand-snippet "try-catch")))
   ('snippet-mode-map
    "C-c C-c" #'+yas-load-snippet-noconfirm)
   (my-leader-def
@@ -105,13 +105,13 @@
   (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer")
 
   (add-hook 'yas-before-expand-snippet-hook
-	    #'(lambda()
-		(when (evil-visual-state-p)
-		  (let ((p (point))
-			(m (mark)))
-		    (evil-insert-state)
-		    (goto-char p)
-		    (set-mark m)))))
+            #'(lambda()
+                (when (evil-visual-state-p)
+                  (let ((p (point))
+                        (m (mark)))
+                    (evil-insert-state)
+                    (goto-char p)
+                    (set-mark m)))))
 
 ;;;###autoload
   (defun +yas-load-snippet-noconfirm()
@@ -123,12 +123,12 @@ the user to save the buffer"
       (setq-local yas--guessed-modes (yas--compute-major-mode-and-parents buffer-file-name)))
     (let ((template (yas-load-snippet-buffer (cl-first yas--guessed-modes) t)))
       (when (buffer-modified-p)
-	(let ((default-directory (car (cdr (car (yas--guess-snippet-directories
-						 (yas--template-table template))))))
-	      (default-file-name (yas--template-name template)))
-	  (setq buffer-file-name (concat default-directory default-file-name))
-	  (rename-buffer default-file-name t)
-	  (save-buffer)))
+        (let ((default-directory (car (cdr (car (yas--guess-snippet-directories
+                                                 (yas--template-table template))))))
+              (default-file-name (yas--template-name template)))
+          (setq buffer-file-name (concat default-directory default-file-name))
+          (rename-buffer default-file-name t)
+          (save-buffer)))
       (quit-window t)))
 
   (yas-global-mode 1))
@@ -160,7 +160,7 @@ the user to save the buffer"
    "<tab>" #'yas-expand)
 
   ('insert corfu-map
-	   "C-k" #'corfu-previous)
+           "C-k" #'corfu-previous)
   :config
   (global-corfu-mode)
   (advice-add 'evil-escape-func :after #'corfu-quit))
@@ -168,7 +168,7 @@ the user to save the buffer"
 (use-package cape
   :after corfu
   :hook
-  (text-mode  . +cape-text-mode)
+  (text-mode . +cape-text-mode)
   (minibuffer-setup . +cape-minibuffer-mode)
   :custom
   (cape-file-directory-must-exist nil)
@@ -181,5 +181,5 @@ the user to save the buffer"
       (add-to-list 'completion-at-point-functions backend))
     (setq-local corfu-auto-prefix 3))
 
-  (dolist (backend '(cape-file cape-dabbrev))
-    (add-to-list 'completion-at-point-functions backend)))
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file))
