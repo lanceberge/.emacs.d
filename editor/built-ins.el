@@ -153,3 +153,9 @@
   ('normal 'grep-mode-map
            ";" #'compile-goto-error
            "q" #'quit-window))
+
+(use-package xref
+  :ensure nil
+  :general
+  ('normal 'prog-mode-map
+           "gr" #'xref-find-references :which-key "find references"))
