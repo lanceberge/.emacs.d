@@ -82,6 +82,7 @@
   :defer-incrementally (easymenu help-mode yasnippet-snippets)
   :custom
   (yas-snippet-dirs '("~/.emacs.d/snippets"))
+  (yas-indent-line 'fixed)
   :general
   ('yas-keymap
    "<tab>" #'yas-next-field)

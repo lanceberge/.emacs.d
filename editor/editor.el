@@ -241,6 +241,7 @@
 
 (use-package treesit
   :ensure nil
+  :after yasnippet
   :mode (("\\.tsx\\'" . tsx-ts-mode)
 	 ("\\.js\\'"  . typescript-ts-mode)
 	 ("\\.mjs\\'" . typescript-ts-mode)
@@ -289,4 +290,14 @@
 	     (js-json-mode . json-ts-mode)
 	     (sh-mode . bash-ts-mode)
 	     (sh-base-mode . bash-ts-mode)))
+
+    (let ((source-mode (car mapping))
+	  (target-mode (cdr mapping)))
+      (add-hook (intern (concat (symbol-name source-mode) "-hook"))
+		(lambda ()
+		  (yas-activate-extra-mode target-mode)))
+      (add-hook (intern (concat (symbol-name target-mode) "-hook"))
+		(lambda ()
+		  (yas-activate-extra-mode source-mode))))
+
     (add-to-list 'major-mode-remap-alist mapping)))
