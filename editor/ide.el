@@ -4,16 +4,15 @@
   :defer-incrementally (markdown-mode lsp-ui)
   :hook
   ((go-mode
-	java-mode
-	js2-mode
-	python-mode
-	svelte-mode
-	typescript-ts-mode
-	typescript-mode) . lsp-deferred)
+    java-mode
+    js2-mode
+    python-mode
+    svelte-mode
+    typescript-ts-mode
+    typescript-mode) . lsp-deferred)
 
-  (lsp-mode . lsp-completion-mode)
   (lsp-mode-hook . (lambda ()
-					 (add-hook 'before-save-hook #'lsp-organize-imports)))
+                     (add-hook 'before-save-hook #'lsp-organize-imports)))
   :custom
   ;; Disable slow features
   (lsp-enable-file-watchers nil)
@@ -42,23 +41,22 @@
   (lsp-completion-enable-additional-text-edit t)
   :init
   (defun +lsp-mode-setup-completion ()
-	(setq-local completion-styles '(orderless basic)
-				completion-category-defaults nil))
+    (setq-local completion-styles '(orderless basic)
+                completion-category-defaults nil))
   :hook
-  (lsp-completion-mode . +lsp-mode-setup-completion)
+  (lsp-mode . +lsp-mode-setup-completion)
   :general
   ('(normal insert) 'lsp-mode-map
    "M-i" #'(lsp-execute-code-action :which-key "code action"))
 
   ('normal 'lsp-mode-map
-		   "gr" #'(lsp-find-references         :which-key "find references")
-		   "K"  #'(lsp-describe-thing-at-point :which-key "find references")
-		   "ga" #'(lsp-execute-code-action     :which-key "code action")
-		   "gh" #'(lsp-describe-thing-at-point :which-key "view doc"))
+           "K"  #'(lsp-describe-thing-at-point :which-key "find references")
+           "ga" #'(lsp-execute-code-action     :which-key "code action")
+           "gh" #'(lsp-describe-thing-at-point :which-key "view doc"))
 
   (my-localleader-def
-	"h"  #'(lsp-describe-thing-at-point :which-key "view doc")
-	"gr" #'(lsp-rename                  :which-key "rename with lsp"))
+    "h"  #'(lsp-describe-thing-at-point :which-key "view doc")
+    "gr" #'(lsp-rename                  :which-key "rename with lsp"))
 
   ('(normal insert visual) 'lsp-mode-map
    [remap display-local-help]    #'lsp-describe-thing-at-point
@@ -66,36 +64,36 @@
   :config
   ;; lsp-booster
   (when IS-MAC
-	(defun lsp-booster--advice-json-parse (old-fn &rest args)
-	  "Try to parse bytecode instead of json."
-	  (or
-	   (when (equal (following-char) ?#)
-		 (let ((bytecode (read (current-buffer))))
-		   (when (byte-code-function-p bytecode)
-			 (funcall bytecode))))
-	   (apply old-fn args)))
-	(advice-add (if (progn (require 'json)
-						   (fboundp 'json-parse-buffer))
-					'json-parse-buffer
-				  'json-read)
-				:around
-				#'lsp-booster--advice-json-parse)
+    (defun lsp-booster--advice-json-parse (old-fn &rest args)
+      "Try to parse bytecode instead of json."
+      (or
+       (when (equal (following-char) ?#)
+         (let ((bytecode (read (current-buffer))))
+           (when (byte-code-function-p bytecode)
+             (funcall bytecode))))
+       (apply old-fn args)))
+    (advice-add (if (progn (require 'json)
+                           (fboundp 'json-parse-buffer))
+                    'json-parse-buffer
+                  'json-read)
+                :around
+                #'lsp-booster--advice-json-parse)
 
-	(defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-	  "Prepend emacs-lsp-booster command to lsp CMD."
-	  (let ((orig-result (funcall old-fn cmd test?)))
-		(if (and (not test?)                             ;; for check lsp-server-present?
-				 (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
-				 lsp-use-plists
-				 (not (functionp 'json-rpc-connection))  ;; native json-rpc
-				 (executable-find "emacs-lsp-booster"))
-			(progn
-			  (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
-				(setcar orig-result command-from-exec-path))
-			  (message "Using emacs-lsp-booster for %s!" orig-result)
-			  (cons "emacs-lsp-booster" orig-result))
-		  orig-result)))
-	(advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
+    (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+      "Prepend emacs-lsp-booster command to lsp CMD."
+      (let ((orig-result (funcall old-fn cmd test?)))
+        (if (and (not test?)                             ;; for check lsp-server-present?
+                 (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
+                 lsp-use-plists
+                 (not (functionp 'json-rpc-connection))  ;; native json-rpc
+                 (executable-find "emacs-lsp-booster"))
+            (progn
+              (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
+                (setcar orig-result command-from-exec-path))
+              (message "Using emacs-lsp-booster for %s!" orig-result)
+              (cons "emacs-lsp-booster" orig-result))
+          orig-result)))
+    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
 
 (use-package dap-mode
   :defer-incrementally (hydra)
@@ -118,14 +116,14 @@
 
 (use-package lsp-ui
   :custom
-  (lsp-ui-doc-enable t)
+  (lsp-ui-doc-enable nil)
   (evil-lookup-func #'lsp-ui-doc-glance )
   (lsp-ui-doc-show-with-cursor nil)
   (lsp-ui-doc-include-signature t)
   (lsp-ui-doc-position 'at-point)
   :general
-  ('normal lsp-mode-map
-		   "gd" #'lsp-ui-peek-find-implementation))
+  ('normal 'lsp-mode-map
+           "gd" #'lsp-ui-peek-find-implementation))
 
 (use-package flycheck ; code syntax checking
   :hook (prog-mode . flycheck-mode)
@@ -139,14 +137,14 @@
    "]q" #'(flycheck-next-error :which-key "next error"))
 
   (my-leader-def
-	"fe" #'(+flycheck-list-errors :which-key "list errors"))
+    "fe" #'(+flycheck-list-errors :which-key "list errors"))
   :config
   (flycheck-add-mode 'javascript-eslint 'web-mode))
 
 (use-package consult-flycheck
   :general
   (my-leader-def
-	"fe" #'(consult-flycheck :which-key "outline")))
+    "fe" #'(consult-flycheck :which-key "outline")))
 
 (use-package xref
   :commands (xref-find-references xref-auto-jump-first-definition)
@@ -154,14 +152,14 @@
   (xref-prompt-for-identifier nil)
   :general
   ('normal xref--xref-buffer-mode-map
-		   ";" #'xref-goto-xref))
+           ";" #'xref-goto-xref))
 
 (use-package eldoc
+  :ensure nil
   :preface
   ;; avoid loading of built-in eldoc, see https://github.com/progfolio/elpaca/issues/236#issuecomment-1879838229
   (when IS-LINUX
-	(unload-feature 'eldoc t))
-  :ensure nil
+    (unload-feature 'eldoc t))
   :general
   ('normal
    "gh" #'(eldoc-print-current-symbol-info :which-key "view doc")))
@@ -170,29 +168,29 @@
   :commands (project-switch-project)
   :general
   (my-leader-def
-	"pp" #'(+project-switch-and-find-file :which-key "switch project")
-	"pg" #'(+project-switch-and-magit-status :which-key "switch project")
-	"pf" #'(project-find-file :which-key "find file")
-	"ps" #'(consult-ripgrep :which-key "ripgrep")
-	"p SPC p" #'(+project-switch-and-rg :which-key "switch project"))
+    "pp" #'(+project-switch-and-find-file :which-key "switch project")
+    "pg" #'(+project-switch-and-magit-status :which-key "switch project")
+    "pf" #'(project-find-file :which-key "find file")
+    "ps" #'(consult-ripgrep :which-key "ripgrep")
+    "p SPC p" #'(+project-switch-and-rg :which-key "switch project"))
   :config
 ;;;###autoload
   (defun +project-switch-and-rg ()
-	"Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
-	(interactive)
-	(setq project-switch-commands #'consult-ripgrep)
-	(call-interactively 'project-switch-project))
+    "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+    (interactive)
+    (setq project-switch-commands #'consult-ripgrep)
+    (call-interactively 'project-switch-project))
 
 ;;;###autoload
   (defun +project-switch-and-find-file ()
-	"Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
-	(interactive)
-	(setq project-switch-commands #'project-find-file)
-	(call-interactively 'project-switch-project))
+    "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+    (interactive)
+    (setq project-switch-commands #'project-find-file)
+    (call-interactively 'project-switch-project))
 
 ;;;###autoload
   (defun +project-switch-and-magit-status ()
-	"Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
-	(interactive)
-	(setq project-switch-commands #'magit-project-status)
-	(call-interactively 'project-switch-project)))
+    "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+    (interactive)
+    (setq project-switch-commands #'magit-project-status)
+    (call-interactively 'project-switch-project)))

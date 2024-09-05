@@ -1,5 +1,5 @@
 ;;; -*- lexical-binding: t -*-
-(use-package emacs ; initial keybindings of built-in functions
+(use-package emacs         ; initial keybindings of built-in functions
   :ensure nil
   :general
   (my-localleader-def
@@ -18,7 +18,7 @@
     "bq"      #'(+save-and-kill-buffer     :which-key "save and kill buffer")
     "b SPC d" #'(+kill-window-and-buffer   :which-key "kill window and buffer")
     "br"        (defun +revert-buffer () (interactive)
-		       (revert-buffer t t) :which-key "revert buffer")
+                       (revert-buffer t t) :which-key "revert buffer")
     "bn"      #'(next-buffer               :which-key "next buffer")
     "bp"      #'(previous-buffer           :which-key "previous buffer")
 
@@ -30,7 +30,7 @@
 
     ;; Find specific files
     "er" (defun +source-init-file () (interactive)
-		(load-file "~/.emacs.d/init.el") :which-key "source init file"))
+                (load-file "~/.emacs.d/init.el") :which-key "source init file"))
 
   (my-leader-def
     :states 'visual

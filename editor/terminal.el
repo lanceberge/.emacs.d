@@ -4,16 +4,21 @@
   (my-leader-def
     "ot" #'terminal-here-launch :which-key "Launch terminal"))
 
-(use-package tramp ; access remote files within emacs
-  :ensure (:wait t)
-  :defer t)
+(when IS-MAC
+  (use-package tramp ; access remote files within emacs
+    :ensure nil
+    :demand t
+    :ensure (:wait t)))
+
+(when IS-LINUX
+  (require 'tramp))
 
 (use-package vterm
   :disabled t
   :general
   ('normal vterm-mode-map
-	   "N" #'vterm--self-insert
-	   "R" #'vterm--self-insert)
+           "N" #'vterm--self-insert
+           "R" #'vterm--self-insert)
 
   ('(normal insert) vterm-mode-map
    "C-l" #'vterm--self-insert
@@ -28,9 +33,9 @@
     "ov" #'(vterm :which-key "vterm"))
   :config
   (cl-loop for num from 0 to 9 do
-	   (general-define-key :keymaps 'vterm-mode-map
-			       :states '(normal insert)
-			       (number-to-string num) #'vterm--self-insert))
+           (general-define-key :keymaps 'vterm-mode-map
+                               :states '(normal insert)
+                               (number-to-string num) #'vterm--self-insert))
   (evil-collection-init 'vterm)
   (add-hook 'vterm-mode-hook (lambda () (display-line-numbers-mode -1))))
 
