@@ -3,8 +3,6 @@
 # key: defun
 # --
 
-;;;###autoload
 (defun +$1 ()
   (interactive)
-  $0
-)
+  $0)
