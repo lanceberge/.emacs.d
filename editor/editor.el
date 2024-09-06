@@ -179,6 +179,16 @@
                    :stream t
                    :key #'gptel-api-key)))
 
+(use-package elysium
+  :ensure (:host github :repo "lanceberge/elysium")
+  :general
+  ('visual
+   "sq" #'elysium-query)
+  (my-localleader-def
+    "sq" #'elysium-query
+    "so" #'elysium-keep-all-suggested-changes
+    "sm" #'elysium-discard-all-suggested-changes))
+
 (use-package ace-link
   :general
   ('normal
