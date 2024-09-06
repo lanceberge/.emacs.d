@@ -1,11 +1,12 @@
 ;;; -*- lexical-binding: t -*-
 (use-package python-mode
-  :defer t
+  :ensure nil
+  :mode ("\\.py\\'" . python-mode)
   :custom
-  (lsp-pyls-server-command "~/miniconda3/bin/pyls")
+  (lsp-pyls-server-command "~/miniconda3/bin/pylsp")
   ;; https://github.com/emacs-lsp/dap-mode/issues/306
   (dap-python-debugger 'debugpy)
-  :config
+  :init
   (require 'dap-python))
 
 (use-package conda
