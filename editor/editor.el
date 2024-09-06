@@ -187,7 +187,10 @@
   (my-localleader-def
     "sq" #'elysium-query
     "so" #'elysium-keep-all-suggested-changes
-    "sm" #'elysium-discard-all-suggested-changes))
+    "sm" #'elysium-discard-all-suggested-changes
+    "st" #'elysium-toggle-window)
+  ('(insert normal) 'gptel-mode-map
+   "C-<return>" #'elysium-query))
 
 (use-package ace-link
   :general

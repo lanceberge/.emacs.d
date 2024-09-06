@@ -159,3 +159,8 @@
   :general
   ('normal 'prog-mode-map
            "gr" #'xref-find-references :which-key "find references"))
+
+(use-package smerge-mode
+  :ensure nil
+  :hook
+  (prog-mode . smerge-mode))
