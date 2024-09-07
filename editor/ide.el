@@ -9,7 +9,9 @@
     python-mode
     svelte-mode
     typescript-ts-mode
-    typescript-mode) . lsp-deferred)
+    typescript-mode
+    c++-mode
+    c++-ts-mode) . lsp-deferred)
 
   (lsp-mode-hook . (lambda ()
                      (add-hook 'before-save-hook #'lsp-organize-imports)))
