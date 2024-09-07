@@ -15,15 +15,7 @@
                 (format-all-mode 1) :which-key "format all"))
   :config
   (defvar +format-with-lsp nil)
-  (setq-default format-all-formatters
-                '(("TypeScript" prettier)
-                  ("svelte"     prettier)
-                  ("Svelte"     prettier)
-                  ("Go"         gofmt)
-                  ("HTML"       prettier)
-                  ("JSON"       prettier)
-                  ("Python"     black)
-                  ("JavaScript" prettier))))
+  (setq-default format-all-formatters format-all-default-formatters))
 
 (use-package avy ; jump to things in files similar to easymotion for vim
   :custom
@@ -281,12 +273,9 @@
              (elisp "https://github.com/Wilfred/tree-sitter-elisp")
              (cmake "https://github.com/uyha/tree-sitter-cmake")
              (c "https://github.com/tree-sitter/tree-sitter-c")
-             (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-             (toml "https://github.com/tree-sitter/tree-sitter-toml")
-             (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "tsx/src"))
+             (cpp "https://github.com/tree-sitter/tree-sitter-cpp" "v0.22.0")
              (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.20.3" "typescript/src"))
-             (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))
-             (prisma "https://github.com/victorhqc/tree-sitter-prisma")))
+             (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))))
     (add-to-list 'treesit-language-source-alist grammar)
     (unless (treesit-language-available-p (car grammar))
       (treesit-install-language-grammar (car grammar))))
@@ -306,6 +295,7 @@
              (js-json-mode . json-ts-mode)
              (sh-mode . bash-ts-mode)
              (sh-base-mode . bash-ts-mode)))
+    (add-to-list 'major-mode-remap-alist mapping)
 
     (let ((source-mode (car mapping))
           (target-mode (cdr mapping)))
@@ -314,6 +304,4 @@
                   (yas-activate-extra-mode target-mode)))
       (add-hook (intern (concat (symbol-name target-mode) "-hook"))
                 (lambda ()
-                  (yas-activate-extra-mode source-mode))))
-
-    (add-to-list 'major-mode-remap-alist mapping)))
+                  (yas-activate-extra-mode source-mode))))))
