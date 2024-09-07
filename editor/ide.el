@@ -41,7 +41,7 @@
   (lsp-completion-enable-additional-text-edit t)
   :init
   (defun +lsp-mode-setup-completion ()
-    (setq-local completion-styles '(orderless basic)
+    (setq-local completion-styles '(orderless)
                 completion-category-defaults nil))
   :hook
   (lsp-mode . +lsp-mode-setup-completion)
@@ -139,6 +139,10 @@
   (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
   :general
   ('normal
+   "[oq" (defun +flycheck-off () (interactive)
+                (flycheck-mode -1))
+   "]oq" (defun +flycheck-ofn () (interactive)
+                (flycheck-mode 1))
    "[q" #'(flycheck-previous-error :which-key "previous error")
    "]q" #'(flycheck-next-error :which-key "next error"))
 
