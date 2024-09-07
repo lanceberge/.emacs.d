@@ -7,7 +7,7 @@
 (when IS-MAC
   (use-package tramp ; access remote files within emacs
     :ensure nil
-    :demand t
+    :defer t
     :ensure (:wait t)))
 
 (when IS-LINUX
