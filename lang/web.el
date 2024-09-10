@@ -6,11 +6,7 @@
   (web-mode-code-indent-offset 2)
   (web-mode-markup-indent-offset 2)
   (web-mode-enable-auto-closing t)
-  (web-mode-enable-auto-pairing t)
-  (web-mode-engines-alist
-   '(("svelte" . "\\.svelte\\'")))
-  :config
-  (add-to-list 'auto-mode-alist '("\\.svelte\\'" . web-mode)))
+  (web-mode-enable-auto-pairing t))
 
 (use-package html-mode
   :ensure nil
@@ -22,7 +18,7 @@
   (svelte-mode . emmet-mode)
   :general
   ('insert emmet-mode-keymap
-	   "TAB" #'emmet-expand-line))
+           "TAB" #'emmet-expand-line))
 
 (use-package svelte-mode
   :defer t
