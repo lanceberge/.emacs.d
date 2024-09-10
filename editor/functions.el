@@ -6,19 +6,19 @@
   (let ((element (org-element-at-point)))
     (save-excursion
       (let* ((block-beg (save-excursion
-			  (goto-char (org-babel-where-is-src-block-head element))
-			  (line-beginning-position 2)))
-	     (block-end (save-excursion
-			  (goto-char (org-element-property :end element))
-			  (skip-chars-backward " \t\n")
-			  (line-beginning-position)))
-	     (beg (if beg (max beg block-beg) block-beg))
-	     (end (if end (min end block-end) block-end))
-	     (lang (org-element-property :language element))
-	     (major-mode (org-src-get-lang-mode lang)))
-	(if (eq major-mode 'org-mode)
-	    (user-error "Cannot reformat an org src block in org-mode")
-	  (+format/region beg end))))))
+                          (goto-char (org-babel-where-is-src-block-head element))
+                          (line-beginning-position 2)))
+             (block-end (save-excursion
+                          (goto-char (org-element-property :end element))
+                          (skip-chars-backward " \t\n")
+                          (line-beginning-position)))
+             (beg (if beg (max beg block-beg) block-beg))
+             (end (if end (min end block-end) block-end))
+             (lang (org-element-property :language element))
+             (major-mode (org-src-get-lang-mode lang)))
+        (if (eq major-mode 'org-mode)
+            (user-error "Cannot reformat an org src block in org-mode")
+          (+format/region beg end))))))
 
 ;;;###autoload
 (defun +format/buffer ()
@@ -26,14 +26,14 @@
   (interactive)
   (save-excursion ;; TODO try treesitter-save-excursion
     (if (and (eq major-mode 'org-mode)
-	     (org-in-src-block-p t))
-	(+format--org-region nil nil)
+             (org-in-src-block-p t))
+        (+format--org-region nil nil)
       (call-interactively
        (cond ((and +format-with-lsp
-		   (bound-and-true-p lsp-mode)
-		   (lsp-feature? "textDocument/formatting"))
-	      #'lsp-format-buffer)
-	     (#'format-all-buffer))))))
+                   (bound-and-true-p lsp-mode)
+                   (lsp-feature? "textDocument/formatting"))
+              #'lsp-format-buffer)
+             (#'format-all-buffer))))))
 
 ;;;###autoload
 (defun +format/region (beg end)
@@ -43,20 +43,20 @@
    snippets or single lines."
   (interactive "rP")
   (if (and (eq major-mode 'org-mode)
-	   (org-in-src-block-p t))
+           (org-in-src-block-p t))
       (+format--org-region beg end)
     (cond ((and +format-with-lsp
-		(bound-and-true-p lsp-mode)
-		(lsp-feature? "textDocument/rangeFormatting"))
-	   (call-interactively #'lsp-format-region))
-	  ((and +format-with-lsp
-		(bound-and-true-p eglot--managed-mode)
-		(eglot--server-capable :documentRangeFormattingProvider))
-	   (call-interactively #'eglot-format))
-	  ((save-restriction
-	     (narrow-to-region beg end)
-	     (let ((+format-region-p t))
-	       (+format/buffer)))))))
+                (bound-and-true-p lsp-mode)
+                (lsp-feature? "textDocument/rangeFormatting"))
+           (call-interactively #'lsp-format-region))
+          ((and +format-with-lsp
+                (bound-and-true-p eglot--managed-mode)
+                (eglot--server-capable :documentRangeFormattingProvider))
+           (call-interactively #'eglot-format))
+          ((save-restriction
+             (narrow-to-region beg end)
+             (let ((+format-region-p t))
+               (+format/buffer)))))))
 
 (defun +dired/edit ()
   "stay in normal mode to edit dired file names"
@@ -111,8 +111,8 @@
   "Return `t' if parentheses are balanced; otherwise `nil'."
   (condition-case nil
       (progn
-	(check-parens)
-	t)
+        (check-parens)
+        t)
     (error nil)))
 
 ;;;###autoload
@@ -123,8 +123,8 @@
   (let ((error-window (get-buffer-window "*Flycheck errors*" t)))
     (when error-window
       (with-selected-window error-window
-	(let ((window-height (round (* 0.33 (frame-height)))))
-	  (enlarge-window (- window-height (window-height))))))))
+        (let ((window-height (round (* 0.33 (frame-height)))))
+          (enlarge-window (- window-height (window-height))))))))
 
 ;; https://stackoverflow.com/questions/3393834/how-to-move-forward-and-backward-in-emacs-mark-ring
 ;;;###autoload
@@ -138,7 +138,7 @@
   "push mark onto `global-mark-ring' if mark head or tail is not current location"
   (if (not global-mark-ring) (error "global-mark-ring empty")
     (unless (or (marker-is-point-p (car global-mark-ring))
-		(marker-is-point-p (car (reverse global-mark-ring))))
+                (marker-is-point-p (car (reverse global-mark-ring))))
       (push-mark))))
 
 
@@ -167,3 +167,24 @@
 (defun +expand-snippet (snippet-name)
   (interactive)
   (yas-expand-snippet (yas-lookup-snippet snippet-name)))
+
+;;;###autoload
+(defun +project-switch-and-rg ()
+  "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+  (interactive)
+  (setq project-switch-commands #'consult-ripgrep)
+  (call-interactively 'project-switch-project))
+
+;;;###autoload
+(defun +project-switch-and-find-file ()
+  "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+  (interactive)
+  (setq project-switch-commands #'project-find-file)
+  (call-interactively 'project-switch-project))
+
+;;;###autoload
+(defun +project-switch-and-magit-status ()
+  "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
+  (interactive)
+  (setq project-switch-commands #'magit-project-status)
+  (call-interactively 'project-switch-project))
