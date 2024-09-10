@@ -11,11 +11,7 @@
      eshell
      ediff
      (pdf pdf-tools)
-     magit))
-  :general
-  ('normal 'org-mode-map
-	   [remap evil-collection-unimpaired-move-text-up]   #'(org-metaup   :which-key "move up")
-	   [remap evil-collection-unimpaired-move-text-down] #'(org-metadown :which-key "move down")))
+     magit)))
 
 (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
   :hook (pre-command . evil-snipe-mode)
@@ -46,8 +42,8 @@
 (use-package evil-numbers ; increment/decrement numbers w/ vim keys
   :general
   ('normal override
-	   "C-a" #'(evil-numbers/inc-at-pt :which-key "increment number")
-	   "C-x" #'(evil-numbers/dec-at-pt :which-key "decrement number")))
+           "C-a" #'(evil-numbers/inc-at-pt :which-key "increment number")
+           "C-x" #'(evil-numbers/dec-at-pt :which-key "decrement number")))
 
 (use-package evil-lion ; gl as an operator to left-align, gL to right-align
   :hook
@@ -61,11 +57,11 @@
      (save-excursion
        (beginning-of-line)
        (let ((start-pos (line-beginning-position))
-	     (end-pos (progn (forward-line (1+ count)) (point))))
-	 (evil-lion-left 1 start-pos end-pos ?\")
-	 (evil-lion-left 1 start-pos end-pos ?\#)
-	 (evil-lion-left 1 start-pos end-pos ?\()
-	 (evil-lion-left 1 start-pos end-pos ?\:))
+             (end-pos (progn (forward-line (1+ count)) (point))))
+         (evil-lion-left 1 start-pos end-pos ?\")
+         (evil-lion-left 1 start-pos end-pos ?\#)
+         (evil-lion-left 1 start-pos end-pos ?\()
+         (evil-lion-left 1 start-pos end-pos ?\:))
        (format-all-buffer)))))
 
 (use-package evil-matchit ; navigate matching blocks of code with %

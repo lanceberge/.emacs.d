@@ -23,9 +23,9 @@
 
   ;; Latex exports
   (org-export-backends '(html latex md))
-  (org-latex-listings 'minted) ; syntax-highlighted code blocks
+  (org-latex-listings 'minted)        ; syntax-highlighted code blocks
   ;; (org-latex-packages-alist '(("margin=0.5in" "geometry" nil) (nil "minted" "color")))
-  (org-latex-pdf-process ; required to use minted
+  (org-latex-pdf-process                ; required to use minted
    '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-latex-minted-options '(("linenos" "true") ; line numbers in expored src blocks
                               ("frame" "lines")
@@ -112,12 +112,12 @@
   (org-document-title        ((t (:foreground "#fbf1c7" :weight bold :height 1.2))))
   (org-meta-line             ((t (:inherit shadow))))
   (org-target                ((t (:height 0.7 :inherit shadow))))
-  (org-link                  ((t (:foreground "#b8bb26" :background "#282828" :overline nil))))  ;;
-  (org-indent                ((t (:inherit org-hide))))
-  (org-indent                ((t (:inherit (org-hide fixed-pitch)))))
-  (org-footnote              ((t (:foreground "#8ec07c" :background "#32302f" :overline nil))))
-  (org-ref-cite-face         ((t (:foreground "#fabd2f" :background "#32302f" :overline nil))))  ;;
-  (org-ref-ref-face          ((t (:foreground "#83a598" :background "#32302f" :overline nil))))
+  (org-link          ((t (:foreground "#b8bb26" :background "#282828" :overline nil))))
+  (org-indent        ((t (:inherit org-hide))))
+  (org-indent        ((t (:inherit (org-hide fixed-pitch)))))
+  (org-footnote      ((t (:foreground "#8ec07c" :background "#32302f" :overline nil))))
+  (org-ref-cite-face ((t (:foreground "#fabd2f" :background "#32302f" :overline nil))))
+  (org-ref-ref-face  ((t (:foreground "#83a598" :background "#32302f" :overline nil))))
   (org-ref-label-face        ((t (:inherit shadow :box t))))
   (org-drawer                ((t (:inherit shadow))))
   (org-property-value        ((t (:inherit org-document-info))) t)
