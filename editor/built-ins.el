@@ -90,7 +90,13 @@
   :config
   (setq electric-pair-inhibit-predicate
         (lambda (c)
-          (if (char-equal c ?\") t (electric-pair-default-inhibit c)))))
+          (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (setq-local electric-pair-inhibit-predicate
+                          `(lambda (c)
+                             (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
 
 (use-package ediff
   :defer t
