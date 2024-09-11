@@ -14,7 +14,6 @@
   (require 'tramp))
 
 (use-package vterm
-  :disabled t
   :general
   ('normal vterm-mode-map
            "N" #'vterm--self-insert
