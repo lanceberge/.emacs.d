@@ -101,8 +101,7 @@
 
 (use-package evil-escape ; jk to leave insert mode
   :hook
-  (prog-mode . evil-escape-mode)
-  (text-mode . evil-escape-mode)
+  (after-init . evil-escape-mode)
   :custom
   (evil-escape-key-sequence "jk")
   (evil-escape-delay 0.25)
