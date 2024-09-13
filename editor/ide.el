@@ -6,6 +6,7 @@
     java-mode
     js2-mode
     python-mode
+    python-ts-mode
     svelte-mode
     typescript-ts-mode
     typescript-mode
