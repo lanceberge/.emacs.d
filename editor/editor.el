@@ -240,12 +240,6 @@
     (setq confirm-kill-emacs nil)
     (restart-emacs)))
 
-(use-package hydra
-  :defer t
-  :general
-  ('hydra-base-map
-   "C-u" nil))
-
 (use-package treesit
   :ensure nil
   :after yasnippet
