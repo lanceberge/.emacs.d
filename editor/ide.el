@@ -44,7 +44,8 @@
   :init
   (defun +lsp-mode-setup-completion ()
     (setq-local completion-styles '(orderless)
-                completion-category-defaults nil))
+                completion-category-defaults nil)
+    (advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible))
   :hook
   (lsp-mode . +lsp-mode-setup-completion)
   :general

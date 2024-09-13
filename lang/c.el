@@ -3,27 +3,27 @@
   :ensure nil
   :mode ("\\.cu\\'" . c-mode)
   :init
-  (require 'dap-cpptools)
-  (dap-cpptools-setup)
+  (require 'dap-lldb)
   :hook
   (c++-mode . +cpp-mode)
   (c++-ts-mode . +cpp-mode)
   :custom
   (c-basic-offset 4)
   (c-default-style "linux")
+  (dap-lldb-debug-program "/opt/homebrew/opt/llvm/bin/lldb-dap")
   :config
   (defun +cpp-mode ()
-    (setq-local tab-width 4))
+    (setq-local tab-width 4
+                dap-debug-template-configurations nil)
 
-  ;; TODO
-  (dap-register-debug-template
-   "cpptools::Run Configuration"
-   (list :type "cppdbg"
-         :request "launch"
-         :name "cpptools::Run Configuration"
-         :MIMode "gdb"
-         :program "${workspaceFolder}/average_contiguous_subarray"
-         :cwd "${workspaceFolder}")))
+    (dap-register-debug-template
+     "lldb"
+     (list :type "lldb-vscode"
+           :request "launch"
+           :name "lldb"
+           :MIMode "lldb-dap"
+           :program "${workspaceFolder}/average_contiguous_subarray"
+           :cwd "${workspaceFolder}"))))
 
 (use-package gdb-mi
   :ensure nil
