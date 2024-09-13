@@ -35,7 +35,8 @@
            "p" #'special-lispy-up
            "[" #'self-insert-command
            "]" #'self-insert-command
-           "\"" #'lispy-doublequote))
+           "\"" #'lispy-doublequote
+           "<backspace>" #'backward-delete-char-untabify))
 
 (use-package lispyville
   :hook (emacs-lisp-mode . lispyville-mode)
