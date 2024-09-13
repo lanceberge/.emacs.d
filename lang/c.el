@@ -3,8 +3,8 @@
   :ensure nil
   :mode ("\\.cu\\'" . c-mode)
   :init
-  (dap-cpptools-setup)
   (require 'dap-cpptools)
+  (dap-cpptools-setup)
   :hook
   (c++-mode . +cpp-mode)
   (c++-ts-mode . +cpp-mode)
