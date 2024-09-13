@@ -8,19 +8,20 @@
   ([remap projectile-find-file] #'(consult-project-buffer :which-key "project buffer"))
 
   (my-leader-def
-    "SPC" #'(consult-buffer          :which-key "find buffer")
-    "."   #'(find-file               :which-key "find file")
-    "/"   #'(consult-line            :which-key "line")
-    "fr"  #'(consult-recent-file     :which-key "find recent file")
-    "fj"  #'(consult-imenu           :which-key "imenu")
-    "fp"  #'(consult-project-buffer  :which-key "project buffer")
-    "fm"  #'(consult-global-mark     :which-key "mark")
-    "fp"  #'(consult-project-buffer  :which-key "project buffer")
-    "fo"  #'(consult-outline         :which-key "outline")
-    "f."  #'(consult-find            :which-key "file")
-    "fl"  #'(consult-goto-line       :which-key "outline")
-    "fa"  #'(consult-org-agenda      :which-key "agenda")
-    "fs"  #'(consult-ripgrep         :which-key "ripgrep")
+    "SPC" #'(consult-buffer :which-key "find buffer")
+    "." #'(find-file :which-key "find file")
+    "/" #'(consult-line :which-key "line")
+    "fr" #'(consult-recent-file :which-key "find recent file")
+    "fj" #'(consult-imenu :which-key "imenu")
+    "fp" #'(consult-project-buffer :which-key "project buffer")
+    "fm" #'(consult-global-mark :which-key "mark")
+    "fp" #'(consult-project-buffer :which-key "project buffer")
+    "fe" #'consult-flymake
+    "fo" #'(consult-outline :which-key "outline")
+    "f." #'(consult-find :which-key "file")
+    "fl" #'(consult-goto-line :which-key "outline")
+    "fa" #'(consult-org-agenda :which-key "agenda")
+    "fs" #'(consult-ripgrep :which-key "ripgrep")
     "f SPC j" #'(consult-imenu-multi :which-key "imenu"))
 
   ('org-agenda-mode-map
@@ -44,7 +45,7 @@
    "M-k" #'vertico-previous
    "M-u" #'vertico-scroll-down
    "M-d" #'vertico-scroll-up
-   ";"   #'vertico-exit
+   ";" #'vertico-exit
    "M-h" #'vertico-directory-up
    "M-l" #'vertico-directory-enter
    "M-l" #'vertico-directory-enter
@@ -93,11 +94,11 @@
   ('snippet-mode-map
    "C-c C-c" #'+yas-load-snippet-noconfirm)
   (my-leader-def
-    "si" #'(yas-insert-snippet     :which-key "insert")
-    "sn" #'(yas-new-snippet        :which-key "new")
+    "si" #'(yas-insert-snippet :which-key "insert")
+    "sn" #'(yas-new-snippet :which-key "new")
     "sf" #'(yas-visit-snippet-file :which-key "find snippet")
-    "sl" #'(yas-describe-tables    :which-key "list")
-    "sr" #'(yas-reload-all         :which-key "reload"))
+    "sl" #'(yas-describe-tables :which-key "list")
+    "sr" #'(yas-reload-all :which-key "reload"))
   :config
   ;; https://github.com/emacs-evil/evil/issues/254
   (use-package yasnippet-snippets
