@@ -11,9 +11,12 @@
     typescript-mode
     c++-mode
     c++-ts-mode) . eglot-ensure)
+  :custom
+  (eldoc-echo-area-use-multiline-p nil)
   :general
   ('normal
-   "ga" #'eglot-code-actions)
+   "ga" #'eglot-code-actions
+   "gh" #'eldoc-print-current-symbol-info)
   (my-localleader-def
     "gr" #'eglot-rename))
 
