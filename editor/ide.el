@@ -19,7 +19,10 @@
    "ga" #'eglot-code-actions
    "gh" #'eldoc-print-current-symbol-info)
   (my-localleader-def
-    "gr" #'eglot-rename))
+    "gr" #'eglot-rename)
+  :config
+  (add-to-list 'eglot-server-programs
+               '(svelte-mode . ("svelteserver" "--stdio"))))
 
 (use-package dape
   :custom
