@@ -16,7 +16,7 @@
                           (add-hook 'before-save-hook #'lsp-organize-imports)))
   :custom
   (eldoc-echo-area-use-multiline-p nil)
-  (eglot-events-buffer-size 0)
+  (eglot-sync-connect nil)
   :general
   ('normal
    "ga" #'eglot-code-actions
@@ -24,6 +24,7 @@
   (my-localleader-def
     "gr" #'eglot-rename)
   :config
+  (setf (plist-get eglot-events-buffer-config :size) 0)
   (add-to-list 'eglot-server-programs
                '(svelte-mode . ("svelteserver" "--stdio"))))
 
@@ -103,4 +104,5 @@
 (use-package flymake
   :defer t
   :custom
+  (flymake-no-changes-timeout 5)
   (flymake-show-diagnostics-at-end-of-line t))

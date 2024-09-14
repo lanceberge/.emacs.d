@@ -9,10 +9,6 @@
   (c-default-style "linux")
   (dap-lldb-debug-program "/opt/homebrew/opt/llvm/bin/lldb-dap")
   :config
-  ;; TODO
-  (when IS-MAC
-    (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin"))
-
   (defun +cpp-mode ()
     (let ((file-name-base (file-name-base (file-name-nondirectory (buffer-file-name)))))
       (setq-local dape-configs

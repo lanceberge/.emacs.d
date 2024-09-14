@@ -52,6 +52,11 @@
       bidi-paragraph-direction 'left-to-right
       cursor-in-non-selected-windows nil)
 
+(when IS-MAC
+  (dolist (path '("/opt/homebrew/opt/llvm/bin/"
+                  "/opt/homebrew/opt/openjdk/bin/"))
+    (add-to-list 'exec-path path)))
+
 (setq-default
  tab-width 4
  indent-tabs-mode nil) ; tabs are converted to spaces
@@ -268,7 +273,7 @@
 (add-hook 'minibuffer-setup-hook #'doom-defer-garbage-collection-h)
 (add-hook 'minibuffer-exit-hook  #'doom-restore-garbage-collection-h)
 
-(use-package gcmh			; Garbage collect in idle time
+(use-package gcmh ; Garbage collect in idle time
   :defer 2.0
   :commands gcmh-idle-garbage-collect
   :custom
