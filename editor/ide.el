@@ -16,6 +16,7 @@
                           (add-hook 'before-save-hook #'lsp-organize-imports)))
   :custom
   (eldoc-echo-area-use-multiline-p nil)
+  (eglot-events-buffer-size 0)
   :general
   ('normal
    "ga" #'eglot-code-actions
@@ -25,6 +26,12 @@
   :config
   (add-to-list 'eglot-server-programs
                '(svelte-mode . ("svelteserver" "--stdio"))))
+
+(use-package eglot-booster
+  :ensure (:host github :repo "jdtsmith/eglot-booster")
+  :after eglot
+  :config
+  (eglot-booster-mode))
 
 (use-package dape
   :custom
@@ -75,7 +82,9 @@
            ";" #'xref-goto-xref))
 
 (use-package jsonrpc
-  :defer t)
+  :defer t
+  :config
+  (fset #'jsonrpc--log-event #'ignore))
 
 (use-package project
   :commands (project-switch-project)
@@ -92,7 +101,3 @@
   :defer t
   :custom
   (flymake-show-diagnostics-at-end-of-line t))
-
-;; (use-package eldoc
-;;   :defer t
-;;   :ensure (:wait t))
