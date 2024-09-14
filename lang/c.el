@@ -13,17 +13,31 @@
     (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin"))
 
   (defun +cpp-mode ()
-    (let ((filename (file-name-nondirectory (buffer-file-name))))
+    (let* ((file-name (file-name-nondirectory (buffer-file-name)))
+           (file-name-base (file-name-base file-name)))
+
       (setq-local dape-configs
                   `((lldb-dap
                      command "lldb-dap" :type "lldb-dap" modes
                      (c-mode c-ts-mode c++-mode c++-ts-mode)
                      ensure dape-ensure-command
-                     command-cwd filename
-                     :cwd "." :program ,(file-name-base (buffer-file-name)))))
+                     command-cwd file-name
+                     :cwd "." :program file-name-base)))))
 
-      (my-leader-def
-        :keymaps '(c++-mode-map c++-ts-mode-map)
-        "ec" (defun +cpp-compile ()
-               (interactive)
-               (compile (concat "g++-14 " filename " -std=c++20")))))))
+  :general
+  (my-leader-def
+    :keymaps '(c++-mode-map c++-ts-mode-map)
+    "ec" #'+cpp-compile)
+  (my-localleader-def
+    :keymaps '(c++-mode-map c++-ts-mode-map)
+    "dd" (defun +dape-debug ()
+           (interactive)
+           (+cpp-compile)
+           (dape))))
+
+;;;###autoload
+(defun +cpp-compile ()
+  (interactive)
+  (let* ((file-name (file-name-nondirectory (buffer-file-name)))
+         (file-name-base (file-name-base file-name)))
+    (compile (concat "g++-14 " file-name " -o " file-name-base " -std=c++20"))))
