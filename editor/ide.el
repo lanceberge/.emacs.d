@@ -86,23 +86,13 @@
     "pf" #'(project-find-file :which-key "find file")
     "ps" #'(consult-ripgrep :which-key "ripgrep")
     "pr" #'project-query-replace-regexp
-    "p SPC p" #'(+project-switch-and-rg :which-key "switch project"))
-  :config
-  ;;  https://www.reddit.com/r/emacs/comments/nf2k5y/comment/gyjs516/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-  (defun +git-project-finder (dir)
-    "Integrate .git project roots."
-    (let ((dotgit (and (setq dir (locate-dominating-file dir ".git"))
-                       (expand-file-name dir))))
-      (and dotgit
-           (cons 'transient (file-name-directory dotgit)))))
-
-  (add-hook 'project-find-functions '+git-project-finder))
+    "p SPC p" #'(+project-switch-and-rg :which-key "switch project")))
 
 (use-package flymake
   :defer t
   :custom
   (flymake-show-diagnostics-at-end-of-line t))
 
-(use-package eldoc
-  :defer t
-  :ensure (:wait t))
+;; (use-package eldoc
+;;   :defer t
+;;   :ensure (:wait t))
