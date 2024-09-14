@@ -2,7 +2,7 @@
 (use-package format-all ; format code functions
   :hook
   (prog-mode . format-all-mode)
-  (web-mode  . format-all-mode)
+  (web-mode . format-all-mode)
   (json-mode . format-all-mode)
   :general
   (my-leader-def
@@ -23,7 +23,7 @@
   :general
   ('evil-operator-state-map
    "\\" #'(avy-goto-char-timer :which-key "goto char")
-   "go" #'(avy-goto-char-2     :which-key "goto char"))
+   "go" #'(avy-goto-char-2 :which-key "goto char"))
 
   ('(normal insert)
    "M-i" #'(avy-goto-char-timer :which-key "goto char"))
@@ -32,12 +32,12 @@
    "M-i" #'evil-avy-isearch)
 
   ('normal
-   "\\"      #'(avy-goto-char-timer :which-key "2-chars")
-   "go"      #'(avy-goto-char-2     :which-key "2-chars")
-   "SPC \\"  #'(evil-avy-isearch    :which-key "timer")
-   "g SPC o" #'(evil-avy-isearch    :which-key "timer")
-   "g SPC m" #'(avy-move-line       :which-key "move line")
-   "g SPC r" #'(avy-move-region     :which-key "move region"))
+   "\\" #'(avy-goto-char-timer :which-key "2-chars")
+   "go" #'(avy-goto-char-2 :which-key "2-chars")
+   "SPC \\" #'(evil-avy-isearch :which-key "timer")
+   "g SPC o" #'(evil-avy-isearch :which-key "timer")
+   "g SPC m" #'(avy-move-line :which-key "move line")
+   "g SPC r" #'(avy-move-region :which-key "move region"))
   :config
   (evil-define-avy-motion avy-isearch inclusive)
   ;; https://karthinks.com/software/avy-can-do-anything/
@@ -83,16 +83,16 @@
   (dired-recursive-copies 'always)
   :general
   ('normal
-   "-"  #'(dired-jump :which-key "open dired"))
+   "-" #'(dired-jump :which-key "open dired"))
   :config
   (evil-collection-init 'dired)
   (put 'dired-find-alternate-file 'disabled nil)
 
   (general-def 'normal dired-mode-map
     "RET" nil
-    ";"   #'dired-find-alternate-file ; select a directory in the same buffer
-    "i"   #'+dired/edit
-    "-"   #'+dired/up-dir))
+    ";" #'dired-find-alternate-file ; select a directory in the same buffer
+    "i" #'+dired/edit
+    "-" #'+dired/up-dir))
 
 (use-package dired-x
   :ensure nil
@@ -108,11 +108,11 @@
   ('normal helpful-mode-map
            "q" #'quit-window)
 
-  ([remap describe-command]  #'helpful-command
-   [remap describe-key]      #'helpful-key
+  ([remap describe-command] #'helpful-command
+   [remap describe-key] #'helpful-key
    [remap describe-variable] #'helpful-variable
    [remap describe-function] #'helpful-function
-   [remap describe-symbol]   #'helpful-symbol)
+   [remap describe-symbol] #'helpful-symbol)
   :config
   (evil-collection-inhibit-insert-state 'helpful-mode-map))
 
@@ -240,22 +240,11 @@
     (setq confirm-kill-emacs nil)
     (restart-emacs)))
 
-(use-package hydra
-  :defer t
-  :general
-  ('hydra-base-map
-   "C-u" nil))
-
 (use-package treesit
   :ensure nil
   :after yasnippet
-  :mode (("\\.tsx\\'" . tsx-ts-mode)
-         ("\\.js\\'"  . typescript-ts-mode)
-         ("\\.mjs\\'" . typescript-ts-mode)
-         ("\\.mts\\'" . typescript-ts-mode)
-         ("\\.cjs\\'" . typescript-ts-mode)
-         ("\\.ts\\'"  . typescript-ts-mode)
-         ("\\.jsx\\'" . tsx-ts-mode)
+  :mode (("\\.js\\'"  . typescript-ts-mode)
+         ("\\.ts\\'" . typescript-ts-mode)
          ("\\.json\\'" .  json-ts-mode)
          ("\\.Dockerfile\\'" . dockerfile-ts-mode))
   :config
@@ -296,11 +285,20 @@
              (sh-base-mode . bash-ts-mode)))
     (add-to-list 'major-mode-remap-alist mapping)
 
-    (let ((source-mode (car mapping))
-          (target-mode (cdr mapping)))
-      (add-hook (intern (concat (symbol-name source-mode) "-hook"))
-                (lambda ()
-                  (yas-activate-extra-mode target-mode)))
-      (add-hook (intern (concat (symbol-name target-mode) "-hook"))
-                (lambda ()
-                  (yas-activate-extra-mode source-mode))))))
+    (let* ((source-mode (car mapping))
+           (target-mode (cdr mapping))
+           (source-mode-hook (intern (concat (symbol-name source-mode) "-hook")))
+           (target-mode-hook (intern (concat (symbol-name target-mode) "-hook"))))
+
+      (when (and (boundp source-mode-hook)
+                 (boundp target-mode-hook)
+                 (symbol-value source-mode-hook))
+        (dolist (hook (symbol-value source-mode-hook))
+          (add-hook target-mode-hook hook))
+
+        (add-hook source-mode-hook
+                  (lambda ()
+                    (yas-activate-extra-mode target-mode)))
+        (add-hook target-mode-hook
+                  (lambda ()
+                    (yas-activate-extra-mode source-mode)))))))
