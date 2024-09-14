@@ -12,6 +12,8 @@
     typescript-mode
     c++-mode
     c++-ts-mode) . eglot-ensure)
+  (eglot-connect-hook . (lambda ()
+                          (add-hook 'before-save-hook #'lsp-organize-imports)))
   :custom
   (eldoc-echo-area-use-multiline-p nil)
   :general
@@ -83,6 +85,7 @@
     "pg" #'(+project-switch-and-magit-status :which-key "switch project")
     "pf" #'(project-find-file :which-key "find file")
     "ps" #'(consult-ripgrep :which-key "ripgrep")
+    "pr" #'project-query-replace-regexp
     "p SPC p" #'(+project-switch-and-rg :which-key "switch project"))
   :config
   ;;  https://www.reddit.com/r/emacs/comments/nf2k5y/comment/gyjs516/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
