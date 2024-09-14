@@ -9,12 +9,11 @@
   (c-basic-offset 4)
   (c-default-style "linux")
   :config
+  ;; TODO
+  (when IS-MAC
+    (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin"))
+
   (defun +cpp-mode ()
-    (setq-local tab-width 4)
-
-    (when IS-MAC
-      (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin"))
-
     (let ((filename (file-name-nondirectory (buffer-file-name))))
       (setq-local dape-configs
                   `((lldb-dap
