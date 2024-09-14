@@ -24,37 +24,37 @@
   ('insert 'evil-ex-completion-map ";" 'exit-minibuffer) ; use ; to complete : vim commands
 
   ('(normal visual motion)
-   "M-u"     #'evil-scroll-up
-   "M-d"     #'evil-scroll-down
-   ";"       #'evil-ex ; switch ; and :
-   "H"       #'evil-first-non-blank
-   "L"       #'evil-end-of-line
-   "]m"      #'(+forward-global-mark  :which-key "forward mark")
-   "[m"      #'(+backward-global-mark :which-key "backward mark")
-   [M-right] #'(+forward-global-mark  :which-key "forward mark")
-   [M-left]  #'(+backward-global-mark :which-key "backward mark"))
+   "M-u" #'evil-scroll-up
+   "M-d" #'evil-scroll-down
+   ";" #'evil-ex ; switch ; and :
+   "H" #'evil-first-non-blank
+   "L" #'evil-end-of-line
+   "]m" #'(+forward-global-mark :which-key "forward mark")
+   "[m" #'(+backward-global-mark :which-key "backward mark")
+   [M-right] #'(+forward-global-mark :which-key "forward mark")
+   [M-left] #'(+backward-global-mark :which-key "backward mark"))
 
   ('normal 'evil-operator-state-map
-	   "?" #'evil-search-backward
-	   "/" #'evil-search-forward)
+           "?" #'evil-search-backward
+           "/" #'evil-search-forward)
 
   (my-leader-def
-    "bS" #'(evil-write-all                     :which-key "write all buffers")
+    "bS" #'(evil-write-all :which-key "write all buffers")
     "bl" #'(evil-switch-to-windows-last-buffer :which-key "last buffer")
-    "bo" #'(evil-buffer-new                    :which-key "new buffer"))
+    "bo" #'(evil-buffer-new :which-key "new buffer"))
 
   ('evil-window-map
-   "SPC h" #'(evil-window-move-far-left    :which-key "move window left")
+   "SPC h" #'(evil-window-move-far-left :which-key "move window left")
    "SPC j" #'(evil-window-move-very-bottom :which-key "move window down")
-   "SPC k" #'(evil-window-move-very-top    :which-key "move window up")
-   "SPC l" #'(evil-window-move-far-right   :which-key "move window right")
-   "d"     #'(evil-quit                    :which-key "delete window")
-   "q"     #'(evil-save-modified-and-close :which-key "quit and save window")
-   "SPC q" #'(save-buffers-kill-emacs  :which-key "save buffers & quit emacs")
+   "SPC k" #'(evil-window-move-very-top :which-key "move window up")
+   "SPC l" #'(evil-window-move-far-right :which-key "move window right")
+   "d" #'(evil-quit :which-key "delete window")
+   "q" #'(evil-save-modified-and-close :which-key "quit and save window")
+   "SPC q" #'(save-buffers-kill-emacs :which-key "save buffers & quit emacs")
    "a" (defun +evil-window-increase () (interactive)
-	      (evil-window-increase-width 5) :which-key "increase size")
+              (evil-window-increase-width 5) :which-key "increase size")
    "x" (defun +evil-window-decrease () (interactive)
-	      (evil-window-decrease-width 5) :which-key "decrease-size"))
+              (evil-window-decrease-width 5) :which-key "decrease-size"))
 
   ('(normal insert)
    "C-l" #'(evil-ex-nohighlight :which-key "clear highlight"))
