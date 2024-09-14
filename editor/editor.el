@@ -243,13 +243,8 @@
 (use-package treesit
   :ensure nil
   :after yasnippet
-  :mode (("\\.tsx\\'" . tsx-ts-mode)
-         ("\\.js\\'"  . typescript-ts-mode)
-         ("\\.mjs\\'" . typescript-ts-mode)
-         ("\\.mts\\'" . typescript-ts-mode)
-         ("\\.cjs\\'" . typescript-ts-mode)
-         ("\\.ts\\'"  . typescript-ts-mode)
-         ("\\.jsx\\'" . tsx-ts-mode)
+  :mode (("\\.js\\'" . typescript-ts-mode)
+         ("\\.ts\\'" . typescript-ts-mode)
          ("\\.json\\'" .  json-ts-mode)
          ("\\.Dockerfile\\'" . dockerfile-ts-mode))
   :config
@@ -290,11 +285,16 @@
              (sh-base-mode . bash-ts-mode)))
     (add-to-list 'major-mode-remap-alist mapping)
 
-    (let ((source-mode (car mapping))
-          (target-mode (cdr mapping)))
-      (add-hook (intern (concat (symbol-name source-mode) "-hook"))
+    (let* ((source-mode (car mapping))
+           (target-mode (cdr mapping))
+           (source-mode-hook (intern (concat (symbol-name source-mode) "-hook")))
+           (target-mode-hook (intern (concat (symbol-name target-mode) "-hook"))))
+
+      (setq target-mode-hook source-mode-hook)
+
+      (add-hook source-mode-hook
                 (lambda ()
                   (yas-activate-extra-mode target-mode)))
-      (add-hook (intern (concat (symbol-name target-mode) "-hook"))
+      (add-hook target-mode-hook
                 (lambda ()
                   (yas-activate-extra-mode source-mode))))))
