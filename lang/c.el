@@ -21,10 +21,12 @@
                    (c-mode c-ts-mode c++-mode c++-ts-mode)
                    ensure dape-ensure-command
                    command-cwd ,(file-name-directory (buffer-file-name))
-                   :cwd "." :program ,(file-name-base (buffer-file-name)))))))
+                   :cwd "." :program ,(file-name-base (buffer-file-name))))))
 
-(use-package gdb-mi
-  :ensure nil
   :general
-  ('c-mode-map
-   "C-c g" #'(gdb :which-key "gdb")))
+  (my-leader-def
+    :keymaps '(c++-mode-map c++-ts-mode-map)
+    "ec" (defun +cpp-compile ()
+           (interactive)
+           (compile (concat "g++-14 "
+                            (file-name-nondirectory (buffer-file-name)) " -std=c++20")))))
