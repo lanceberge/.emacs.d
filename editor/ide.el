@@ -34,44 +34,44 @@
   (eglot-booster-mode))
 
 (use-package dape
-  :custom
-  (dape-buffer-window-arrangement 'gud)
   :general
   (my-localleader-def
-    "dd" #'dape
+    "dd" (defun +dape ()
+           (interactive)
+           (call-interactively #'dape)
+           (call-interactively #'dape-hydra/body))
     "db" #'dape-breakpoint-toggle)
   :config
-  ;; (defhydra dape-hydra (:color pink :hint nil :foreign-keys run)
-  ;;     "
-  ;; ^Stepping^          ^Breakpoints^               ^Info
-  ;; ^^^^^^^^-----------------------------------------------------------
-  ;; _d_: init           _bb_: Toggle (add/remove)   _si_: Info
-  ;; _n_: Next           _bd_: Delete                _sm_: Memory
-  ;; _i_: Step in        _bD_: Delete all            _ss_: Select Stack
-  ;; _o_: Step out       _bl_: Set log message       _R_: Repl
-  ;; _c_: Continue
-  ;; _r_: Restart
-  ;; _Q_: Disconnect
-  ;; "
-  ;;     ("d" dape)
-  ;;     ("n" dape-next)
-  ;;     ("i" dape-step-in)
-  ;;     ("o" dape-step-out)
-  ;;     ("c" dape-continue)
-  ;;     ("r" dape-restart)
-  ;;     ("ba" dape-breakpoint-toggle)
-  ;;     ("bb" dape-breakpoint-toggle)
-  ;;     ("be" dape-breakpoint-expression)
-  ;;     ("bd" dape-breakpoint-remove-at-point)
-  ;;     ("bD" dape-breakpoint-remove-all)
-  ;;     ("bl" dape-breakpoint-log)
-  ;;     ("si" dape-info)
-  ;;     ("sm" dape-read-memory)
-  ;;     ("ss" dape-select-stack)
-  ;;     ("R"  dape-repl)
-  ;;     ("q" nil "quit" :color blue)
-  ;;     ("Q" dape-kill :color red))
-  )
+  (defhydra dape-hydra (:color pink :hint nil :foreign-keys run)
+    "
+  ^Stepping^          ^Breakpoints^               ^Info
+  ^^^^^^^^-----------------------------------------------------------
+  _d_: init           _bb_: Toggle (add/remove)   _si_: Info
+  _n_: Next           _bd_: Delete                _sm_: Memory
+  _i_: Step in        _bD_: Delete all            _ss_: Select Stack
+  _o_: Step out       _bl_: Set log message       _R_: Repl
+  _c_: Continue
+  _r_: Restart
+  _Q_: Disconnect
+  "
+    ("d" dape)
+    ("n" dape-next)
+    ("i" dape-step-in)
+    ("o" dape-step-out)
+    ("c" dape-continue)
+    ("r" dape-restart)
+    ("ba" dape-breakpoint-toggle)
+    ("bb" dape-breakpoint-toggle)
+    ("be" dape-breakpoint-expression)
+    ("bd" dape-breakpoint-remove-at-point)
+    ("bD" dape-breakpoint-remove-all)
+    ("bl" dape-breakpoint-log)
+    ("si" dape-info)
+    ("sm" dape-read-memory)
+    ("ss" dape-select-stack)
+    ("R"  dape-repl)
+    ("q" nil "quit" :color blue)
+    ("Q" dape-kill :color red)))
 
 (use-package xref
   :commands (xref-find-references xref-auto-jump-first-definition)
