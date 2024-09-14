@@ -290,13 +290,15 @@
            (source-mode-hook (intern (concat (symbol-name source-mode) "-hook")))
            (target-mode-hook (intern (concat (symbol-name target-mode) "-hook"))))
 
-      ;; TODO check if the hook exists
-      (dolist (hook (symbol-value source-mode-hook))
-        (add-hook target-mode-hook hook))
+      (when (and (boundp source-mode-hook)
+                 (boundp target-mode-hook)
+                 (symbol-value source-mode-hook))
+        (dolist (hook (symbol-value source-mode-hook))
+          (add-hook target-mode-hook hook))
 
-      (add-hook source-mode-hook
-                (lambda ()
-                  (yas-activate-extra-mode target-mode)))
-      (add-hook target-mode-hook
-                (lambda ()
-                  (yas-activate-extra-mode source-mode))))))
+        (add-hook source-mode-hook
+                  (lambda ()
+                    (yas-activate-extra-mode target-mode)))
+        (add-hook target-mode-hook
+                  (lambda ()
+                    (yas-activate-extra-mode source-mode)))))))
