@@ -22,6 +22,8 @@
     "gr" #'eglot-rename))
 
 (use-package dape
+  :custom
+  (dape-buffer-window-arrangement 'gud)
   :general
   (my-localleader-def
     "dd" #'dape
@@ -79,3 +81,12 @@
     "pf" #'(project-find-file :which-key "find file")
     "ps" #'(consult-ripgrep :which-key "ripgrep")
     "p SPC p" #'(+project-switch-and-rg :which-key "switch project")))
+
+(use-package flymake
+  :defer t
+  :custom
+  (flymake-show-diagnostics-at-end-of-line t))
+
+(use-package eldoc
+  :defer t
+  :ensure (:wait t))
