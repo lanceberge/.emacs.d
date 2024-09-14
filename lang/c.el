@@ -15,18 +15,17 @@
     (when IS-MAC
       (add-to-list 'exec-path "/opt/homebrew/opt/llvm/bin"))
 
-    (setq-local dape-configs
-                `((lldb-dap
-                   command "lldb-dap" :type "lldb-dap" modes
-                   (c-mode c-ts-mode c++-mode c++-ts-mode)
-                   ensure dape-ensure-command
-                   command-cwd ,(file-name-directory (buffer-file-name))
-                   :cwd "." :program ,(file-name-base (buffer-file-name))))))
+    (let ((filename (file-name-nondirectory (buffer-file-name))))
+      (setq-local dape-configs
+                  `((lldb-dap
+                     command "lldb-dap" :type "lldb-dap" modes
+                     (c-mode c-ts-mode c++-mode c++-ts-mode)
+                     ensure dape-ensure-command
+                     command-cwd filename
+                     :cwd "." :program ,(file-name-base (buffer-file-name)))))
 
-  :general
-  (my-leader-def
-    :keymaps '(c++-mode-map c++-ts-mode-map)
-    "ec" (defun +cpp-compile ()
-           (interactive)
-           (compile (concat "g++-14 "
-                            (file-name-nondirectory (buffer-file-name)) " -std=c++20")))))
+      (my-leader-def
+        :keymaps '(c++-mode-map c++-ts-mode-map)
+        "ec" (defun +cpp-compile ()
+               (interactive)
+               (compile (concat "g++-14 " filename " -std=c++20")))))))
