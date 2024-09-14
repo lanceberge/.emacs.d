@@ -28,15 +28,15 @@
     "ec" #'+cpp-compile)
 
   ;; TODO fix
-  (my-localleader-def
+  (my-leader-def
     :keymaps '(c++-mode-map c++-ts-mode-map c-ts-mode-map)
-    "dd" #'+dape-debug))
+    "ed" #'+dape-debug-cpp))
 
 ;;;###autoload
-(defun +dape-debug ()
+(defun +dape-debug-cpp ()
   (interactive)
   (+cpp-compile "-g")
-  (call-interactively #'dape))
+  (call-interactively #'+dape))
 ;;;###autoload
 
 (defun +cpp-compile (&optional flags)

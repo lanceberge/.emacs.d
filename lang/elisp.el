@@ -21,6 +21,7 @@
   :after evil-collection
   :general
   (my-leader-def
+    :keymaps 'emacs-lisp-mode-map
     "ed" #'(edebug-defun :which-key "debug function")
     "e SPC d" #'(edebug-remove-instrumentation :which-key "remove instrumentation"))
   :config

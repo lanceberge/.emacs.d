@@ -40,8 +40,11 @@
            (interactive)
            (call-interactively #'dape)
            (call-interactively #'dape-hydra/body))
-    "db" #'dape-breakpoint-toggle)
+    "db" #'dape-breakpoint-toggle
+    "dh" #'dape-hydra/body)
   :config
+  (remove-hook 'dape-start-hook 'dape-info)
+  (remove-hook 'dape-start-hook 'dape-repl)
   (defhydra dape-hydra (:color pink :hint nil :foreign-keys run)
     "
   ^Stepping^          ^Breakpoints^               ^Info
