@@ -290,7 +290,9 @@
            (source-mode-hook (intern (concat (symbol-name source-mode) "-hook")))
            (target-mode-hook (intern (concat (symbol-name target-mode) "-hook"))))
 
-      (setq target-mode-hook source-mode-hook)
+      ;; TODO check if the hook exists
+      (dolist (hook (symbol-value source-mode-hook))
+        (add-hook target-mode-hook hook))
 
       (add-hook source-mode-hook
                 (lambda ()
