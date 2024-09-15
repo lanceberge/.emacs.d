@@ -16,8 +16,9 @@
     "fp" #'(consult-project-buffer :which-key "project buffer")
     "fm" #'(consult-global-mark :which-key "mark")
     "fp" (defun +find-package ()
+           "Search all use-packages in .emacs.d."
            (interactive)
-           (consult-ripgrep "~/.emacs.d/" "pack "))
+           (consult-ripgrep "~/.emacs.d/" "use-package "))
     "fe" #'consult-flymake
     "fo" #'(consult-outline :which-key "outline")
     "f." #'(consult-find :which-key "file")
@@ -25,7 +26,6 @@
     "fa" #'(consult-org-agenda :which-key "agenda")
     "fs" #'(consult-ripgrep :which-key "ripgrep")
     "f SPC j" #'(consult-imenu-multi :which-key "imenu"))
-
 
   ('org-agenda-mode-map
    [remap evil-search-forward] #'(consult-line :which-key "line"))
