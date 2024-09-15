@@ -2,6 +2,8 @@
 ;; increase GC threshold until startup (in Initial section under hooks)
 (setq gc-cons-threshold most-positive-fixnum)
 
+(defvar emacs-load-start-time (current-time))
+
 (defconst IS-LINUX (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
 (defconst IS-MAC (eq system-type 'darwin))
@@ -21,7 +23,6 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 
-(defvar emacs-load-start-time (current-time))
 (setq menu-bar-mode nil
       tool-bar-mode nil
       scroll-bar-mode nil
