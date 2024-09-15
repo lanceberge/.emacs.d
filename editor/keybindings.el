@@ -1,5 +1,5 @@
 ;;; -*- lexical-binding: t -*-
-(use-package emacs         ; initial keybindings of built-in functions
+(use-package emacs ; initial keybindings of built-in functions
   :ensure nil
   :general
   (my-localleader-def
