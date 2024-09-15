@@ -134,7 +134,6 @@ the user to save the buffer"
 
   (yas-global-mode 1))
 
-
 (use-package corfu
   :defer 1.4
   :custom
@@ -156,7 +155,7 @@ the user to save the buffer"
    "M-j" #'corfu-next
    "M-k" #'corfu-previous
    "C-j" #'corfu-next
-   ";"   #'corfu-complete
+   ";" #'corfu-complete
    [remap evil-normal-state] #'corfu-quit
    "<tab>" #'yas-expand)
 

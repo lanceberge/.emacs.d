@@ -29,6 +29,7 @@
     "C-c" #'vterm--self-insert)
 
   (my-leader-def
+    "bv" #'(vterm :which-key "vterm")
     "ov" #'(+vterm :which-key "vterm"))
   :config
   (evil-collection-init 'vterm)
