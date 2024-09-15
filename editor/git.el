@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
-(use-package git-commit    :defer t)
-(use-package transient     :defer t)
+(use-package git-commit :defer t)
+(use-package transient :defer t)
 (use-package magit-section :defer t)
 
 (use-package magit
@@ -14,17 +14,17 @@
   (git-commit-mode . evil-insert-state)
   :general
   (my-leader-def
-    "gs"  #'(magit-status                :which-key "status")
-    "gb"  #'(magit-branch-checkout       :which-key "checkout branch")
-    "gd"  #'(magit-file-delete           :which-key "delete file")
-    "gF"  #'(magit-fetch                 :which-key "fetch")
-    "gnb" #'(magit-branch-and-checkout   :which-key "branch")
-    "gnf" #'(magit-commit-fixup          :which-key "fixup commit")
-    "gi"  #'(magit-init                  :which-key "init")
-    "gl"  #'(magit-log                   :which-key "log")
-    "gfc" #'(magit-show-commit           :which-key "show commit")
-    "gfg" #'(magit-find-git-config-file  :which-key "git config file")
-    "gc"  #'(+magit/stage-all-and-commit :which-key "stage all and commit"))
+    "gs" #'(magit-status :which-key "status")
+    "gb" #'(magit-branch-checkout :which-key "checkout branch")
+    "gd" #'(magit-file-delete :which-key "delete file")
+    "gF" #'(magit-fetch :which-key "fetch")
+    "gnb" #'(magit-branch-and-checkout :which-key "branch")
+    "gnf" #'(magit-commit-fixup :which-key "fixup commit")
+    "gi" #'(magit-init :which-key "init")
+    "gl" #'(magit-log :which-key "log")
+    "gfc" #'(magit-show-commit :which-key "show commit")
+    "gfg" #'(magit-find-git-config-file :which-key "git config file")
+    "gc" #'(+magit/stage-all-and-commit :which-key "stage all and commit"))
 
   ('normal 'magit-mode-map
            ";" (general-simulate-key "RET"))
@@ -42,10 +42,10 @@
    "]c" #'(smerge-next :which-key "next conflicting hunk")
    "[c" #'(smerge-prev :which-key "previous conflicting hunk"))
   (my-localleader-def
-    "ml" #'(smerge-keep-upper  :which-key "keep local changes")
+    "ml" #'(smerge-keep-upper :which-key "keep local changes")
     "mo" #'(smerge-keep-lower :which-key "keep other changes")
-    "ma" #'(smerge-keep-all   :which-key "keep all changes")
-    "mm" #'(smerge-ediff      :which-key "merge"))
+    "ma" #'(smerge-keep-all :which-key "keep all changes")
+    "mm" #'(smerge-ediff :which-key "merge"))
   :config
   (evil-collection-init 'ediff))
 

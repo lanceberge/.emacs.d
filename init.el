@@ -40,7 +40,7 @@
       scroll-step 1
 
       ;; General
-      apropos-do-all t     ; more extensive apropos searches
+      apropos-do-all t ; more extensive apropos searches
       completion-ignore-case t
 
       use-file-dialog nil
@@ -225,22 +225,22 @@
    "[o" '(:ignore t :which-key "Toggle Off")
    "]o" '(:ignore t :which-key "Toggle On"))
   (my-leader-def
-    "b"  '(:ignore t :which-key "Buffers")
-    "e"  '(:ignore t :which-key "Elisp")
+    "b" '(:ignore t :which-key "Buffers")
+    "e" '(:ignore t :which-key "Elisp")
     "ei" '(:ignore t :which-key "Ein")
-    "f"  '(:ignore t :which-key "Find")
+    "f" '(:ignore t :which-key "Find")
     "fi" '(:ignore t :which-key "in directory")
-    "g"  '(:ignore t :which-key "Git")
+    "g" '(:ignore t :which-key "Git")
     "gf" '(:ignore t :which-key "Find")
     "gn" '(:ignore t :which-key "New")
-    "o"  '(:ignore t :which-key "Open")
+    "o" '(:ignore t :which-key "Open")
     "of" '(:ignore t :which-key "File")
     "oj" '(:ignore t :which-key "Org Journal")
     "on" '(:ignore t :which-key "Org Note")
     "ov" '(:ignore t :which-key "Vertical")
-    "p"  '(:ignore t :which-key "Project")
-    "s"  '(:ignore t :which-key "Yasnippet")
-    "t"  '(:ignore t :which-key "Tab")
+    "p" '(:ignore t :which-key "Project")
+    "s" '(:ignore t :which-key "Yasnippet")
+    "t" '(:ignore t :which-key "Tab")
 
     "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
 

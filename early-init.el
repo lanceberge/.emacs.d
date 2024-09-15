@@ -2,17 +2,17 @@
 ;; increase GC threshold until startup (in Initial section under hooks)
 (setq gc-cons-threshold most-positive-fixnum)
 
-(defconst IS-LINUX   (eq system-type   'gnu/linux))
+(defconst IS-LINUX (eq system-type 'gnu/linux))
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
-(defconst IS-MAC     (eq system-type   'darwin))
+(defconst IS-MAC (eq system-type 'darwin))
 
 (setq package-enable-at-startup nil) ; disable package.el at startup
 (if (fboundp 'native-comp-available-p)
     (if (native-comp-available-p)
-	(setq comp-speed 2
-	      package-native-compile t
-	      native-comp-async-report-warnings-errors nil
-	      native-comp-deferred-compilation-deny-list nil)))
+        (setq comp-speed 2
+              package-native-compile t
+              native-comp-async-report-warnings-errors nil
+              native-comp-deferred-compilation-deny-list nil)))
 
 (advice-add #'package--ensure-init-file :override #'ignore)
 
@@ -30,10 +30,10 @@
       site-run-file nil)
 
 (set-face-attribute 'default nil ; font
-		    :family "DejaVu Sans Mono"
-		    :height 180
-		    :weight 'normal
-		    :width 'normal)
+                    :family "DejaVu Sans Mono"
+                    :height 180
+                    :weight 'normal
+                    :width 'normal)
 
 (advice-add #'x-apply-session-resources :override #'ignore)
 
@@ -42,9 +42,9 @@
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-			      :ref nil :depth 1
-			      :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-			      :build (:not elpaca--activate-package)))
+                              :ref nil :depth 1
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
        (build (expand-file-name "elpaca/" elpaca-builds-directory))
        (order (cdr elpaca-order))
@@ -54,20 +54,20 @@
     (make-directory repo t)
     (when (< emacs-major-version 28) (require 'subr-x))
     (condition-case-unless-debug err
-	(if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-		 ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-						 ,@(when-let ((depth (plist-get order :depth)))
-						     (list (format "--depth=%d" depth) "--no-single-branch"))
-						 ,(plist-get order :repo) ,repo))))
-		 ((zerop (call-process "git" nil buffer t "checkout"
-				       (or (plist-get order :ref) "--"))))
-		 (emacs (concat invocation-directory invocation-name))
-		 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-				       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-		 ((require 'elpaca))
-		 ((elpaca-generate-autoloads "elpaca" repo)))
-	    (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-	  (error "%s" (with-current-buffer buffer (buffer-string))))
+        (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                 ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                 ,@(when-let ((depth (plist-get order :depth)))
+                                                     (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                 ,(plist-get order :repo) ,repo))))
+                 ((zerop (call-process "git" nil buffer t "checkout"
+                                       (or (plist-get order :ref) "--"))))
+                 (emacs (concat invocation-directory invocation-name))
+                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                 ((require 'elpaca))
+                 ((elpaca-generate-autoloads "elpaca" repo)))
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+          (error "%s" (with-current-buffer buffer (buffer-string))))
       ((error) (warn "%s" err) (delete-directory repo 'recursive))))
   (unless (require 'elpaca-autoloads nil t)
     (require 'elpaca)
@@ -100,13 +100,13 @@
 (use-package display-line-numbers
   :ensure nil
   :custom-face
-  (line-number              ((t (:background ,bg-color))))
+  (line-number ((t (:background ,bg-color))))
   (line-number-current-line ((t (:background ,bg-color))))
   :config
   (unless IS-WINDOWS
     (setq-default display-line-numbers-type 'visual
-		  display-line-numbers-width-start t ; auto count number of lines to start numbers
-		  display-line-numbers-grow-only t)) ; don't shrink line number width
+                  display-line-numbers-width-start t ; auto count number of lines to start numbers
+                  display-line-numbers-grow-only t)) ; don't shrink line number width
 
   (global-display-line-numbers-mode))
 
@@ -117,8 +117,8 @@
 
 (defun +elpaca-seq-build-steps ()
   (append (butlast (if (file-exists-p (expand-file-name "seq" elpaca-builds-directory))
-		       elpaca--pre-built-steps elpaca-build-steps))
-	  (list '+elpaca-unload-seq 'elpaca--activate-package)))
+                       elpaca--pre-built-steps elpaca-build-steps))
+          (list '+elpaca-unload-seq 'elpaca--activate-package)))
 
 (elpaca `(seq :build ,(+elpaca-seq-build-steps)))
 
@@ -130,27 +130,27 @@
 
 ;; Minimalistic mode-line
 (setq-default mode-line-format
-	      '("%e"
-		mode-line-front-space
-		mode-line-mule-info
-		mode-line-client-mode
-		mode-line-modified
-		mode-line-remote
-		mode-line-frame-indentifcation
-		" "
-		mode-line-buffer-identification ; buffer name
-		"  "
-		vc-mode                         ; show git branch
-		" "
-		mode-line-modes                 ; show current mode
-		" "
-		mode-line-misc-info
-		mode-line-end-spaces
-		keycast-mode-line))
+              '("%e"
+                mode-line-front-space
+                mode-line-mule-info
+                mode-line-client-mode
+                mode-line-modified
+                mode-line-remote
+                mode-line-frame-indentifcation
+                " "
+                mode-line-buffer-identification ; buffer name
+                "  "
+                vc-mode ; show git branch
+                " "
+                mode-line-modes ; show current mode
+                " "
+                mode-line-misc-info
+                mode-line-end-spaces
+                keycast-mode-line))
 
 ;; Mode-line faces
-(custom-set-faces `(mode-line           ((t (:background ,bg-color-light :foreground "#928374"))))
-		  `(mode-line-inactive  ((t (:background ,bg-color)))))
+(custom-set-faces `(mode-line ((t (:background ,bg-color-light :foreground "#928374"))))
+                  `(mode-line-inactive ((t (:background ,bg-color)))))
 
 (set-face-foreground 'vertical-border bg-color)
 
@@ -166,8 +166,6 @@
   (minions-mode-line-delimiters '(" " . ""))
   :config
   (minions-mode 1))
-
-(setenv "LSP_USE_PLISTS" "true")
 
 (setq byte-compile-warnings nil
       read-process-output-max (* 1024 1024))
