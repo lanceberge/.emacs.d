@@ -8,8 +8,6 @@
     svelte-mode
     typescript-mode
     c++-mode) . eglot-ensure)
-  (eglot-connect-hook . (lambda ()
-                          (add-hook 'before-save-hook #'lsp-organize-imports)))
   :custom
   (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
