@@ -58,7 +58,7 @@
     :general
     ('normal
      "[os" (defun +flyspell-off () (interactive) (flyspell-mode -1) :which-key "flyspell")
-     "]os" (defun +flyspell-on  () (interactive) (flyspell-mode t)  :which-key "flyspell"))
+     "]os" (defun +flyspell-on  () (interactive) (flyspell-mode t) :which-key "flyspell"))
     ('(normal insert)
      "M-y" #'(flyspell-auto-correct-word :which-key "fix word"))))
 
@@ -113,12 +113,12 @@
   :general
   ('normal
    "za" #'(outline-toggle-children :which-key "toggle fold")
-   "zo" #'(outline-show-subtree    :which-key "fully open")
-   "zc" #'(outline-hide-subtree    :which-key "fully fold")
-   "zk" #'(org-backward-element    :which-key "go up an outline")
-   "zj" #'(org-forward-element     :which-key "go down an outline")
-   "zr" #'(outline-show-all        :which-key "close all folds")
-   "zm" #'(outline-hide-body       :which-key "open all folds")))
+   "zo" #'(outline-show-subtree :which-key "fully open")
+   "zc" #'(outline-hide-subtree :which-key "fully fold")
+   "zk" #'(org-backward-element :which-key "go up an outline")
+   "zj" #'(org-forward-element :which-key "go down an outline")
+   "zr" #'(outline-show-all :which-key "close all folds")
+   "zm" #'(outline-hide-body :which-key "open all folds")))
 
 (use-package ispell
   :defer t
@@ -149,7 +149,7 @@
    "M-j" #'isearch-repeat-forward
    "M-k" #'isearch-repeat-backward
    "C-g" #'isearch-exit
-   ";"   #'isearch-exit))
+   ";" #'isearch-exit))
 
 (use-package grep-mode
   :ensure nil
