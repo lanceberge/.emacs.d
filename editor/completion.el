@@ -102,8 +102,9 @@
   :config
   ;; https://github.com/emacs-evil/evil/issues/254
   (use-package yasnippet-snippets
-    :demand t)
-  (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer")
+    :demand t
+    :config
+    (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer"))
 
   (add-hook 'yas-before-expand-snippet-hook
             #'(lambda()

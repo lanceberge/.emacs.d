@@ -141,7 +141,6 @@
                 (marker-is-point-p (car (reverse global-mark-ring))))
       (push-mark))))
 
-
 ;;;###autoload
 (defun +backward-global-mark ()
   "use `pop-global-mark', pushing current point if not on ring."
@@ -161,7 +160,6 @@
     (call-interactively 'pop-global-mark))
   (call-interactively 'pop-global-mark)
   (setq global-mark-ring (nreverse global-mark-ring)))
-
 
 ;;;###autoload
 (defun +expand-snippet (snippet-name)

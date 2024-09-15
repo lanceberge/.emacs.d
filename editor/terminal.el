@@ -35,7 +35,6 @@
   (evil-collection-init 'vterm)
   (add-hook 'vterm-mode-hook (lambda () (display-line-numbers-mode -1))))
 
-
 ;;;###autoload
 (defun +vterm ()
   "Open or switch to a vterm buffer, changing directory if it's not equal to the cwd."
@@ -47,6 +46,6 @@
           (switch-to-buffer vterm-buffer)
           (unless (string= current-dir (expand-file-name default-directory))
             (vterm-send-string (concat "cd " (shell-quote-argument current-dir)))
-            (vterm-send-return)))
-      (vterm)))
-  (evil-collection-vterm-append))
+            (vterm-send-return))
+          (evil-collection-vterm-append))
+      (vterm))))
