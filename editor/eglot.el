@@ -1,6 +1,5 @@
 ;;; -*- lexical-binding: t -*-
 (use-package eglot
-  ;; TODO eglot-booster
   :hook
   ((go-mode
     java-mode
@@ -89,17 +88,6 @@
   :defer t
   :config
   (fset #'jsonrpc--log-event #'ignore))
-
-(use-package project
-  :commands (project-switch-project)
-  :general
-  (my-leader-def
-    "pp" #'(+project-switch-and-find-file :which-key "switch project")
-    "pg" #'(+project-switch-and-magit-status :which-key "switch project")
-    "pf" #'(project-find-file :which-key "find file")
-    "ps" #'(consult-ripgrep :which-key "ripgrep")
-    "pr" #'project-query-replace-regexp
-    "p SPC p" #'(+project-switch-and-rg :which-key "switch project")))
 
 (use-package flymake
   :defer t

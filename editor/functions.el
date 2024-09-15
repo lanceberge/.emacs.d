@@ -165,24 +165,3 @@
 (defun +expand-snippet (snippet-name)
   (interactive)
   (yas-expand-snippet (yas-lookup-snippet snippet-name)))
-
-;;;###autoload
-(defun +project-switch-and-rg ()
-  "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
-  (interactive)
-  (setq project-switch-commands #'consult-ripgrep)
-  (call-interactively 'project-switch-project))
-
-;;;###autoload
-(defun +project-switch-and-find-file ()
-  "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
-  (interactive)
-  (setq project-switch-commands #'project-find-file)
-  (call-interactively 'project-switch-project))
-
-;;;###autoload
-(defun +project-switch-and-magit-status ()
-  "Temporarily sets projectile-switch-project-action to counsel-rg and then switches project with Projectile."
-  (interactive)
-  (setq project-switch-commands #'magit-project-status)
-  (call-interactively 'project-switch-project))
