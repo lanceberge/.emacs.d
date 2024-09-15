@@ -5,12 +5,9 @@
     java-mode
     js2-mode
     python-mode
-    python-ts-mode
     svelte-mode
-    typescript-ts-mode
     typescript-mode
-    c++-mode
-    c++-ts-mode) . eglot-ensure)
+    c++-mode) . eglot-ensure)
   (eglot-connect-hook . (lambda ()
                           (add-hook 'before-save-hook #'lsp-organize-imports)))
   :custom

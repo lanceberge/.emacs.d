@@ -243,10 +243,6 @@
 (use-package treesit
   :ensure nil
   :after yasnippet
-  :mode (("\\.js\\'"  . typescript-ts-mode)
-         ("\\.ts\\'" . typescript-ts-mode)
-         ("\\.json\\'" .  json-ts-mode)
-         ("\\.Dockerfile\\'" . dockerfile-ts-mode))
   :config
   (dolist (grammar
            '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
