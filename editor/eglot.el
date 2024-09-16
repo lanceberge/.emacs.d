@@ -22,26 +22,28 @@
   (add-to-list 'eglot-server-programs
                '(svelte-mode . ("svelteserver" "--stdio"))))
 
-(use-package eglot-booster
-  :ensure (:host github :repo "jdtsmith/eglot-booster")
-  :after eglot
-  :config
-  (eglot-booster-mode))
+(when IS-MAC
+  (use-package eglot-booster
+    :ensure (:host github :repo "jdtsmith/eglot-booster")
+    :after eglot
+    :config
+    (eglot-booster-mode)))
 
-(use-package dape
-  :general
-  (my-localleader-def
-    "dd" (defun +dape ()
-           (interactive)
-           (call-interactively #'dape)
-           (call-interactively #'dape-hydra/body))
-    "db" #'dape-breakpoint-toggle
-    "dh" #'dape-hydra/body)
-  :config
-  (remove-hook 'dape-start-hook 'dape-info)
-  (remove-hook 'dape-start-hook 'dape-repl)
-  (defhydra dape-hydra (:color pink :hint nil :foreign-keys run)
-    "
+(unless (version<= emacs-version "29.1")
+  (use-package dape
+    :general
+    (my-localleader-def
+      "dd" (defun +dape ()
+             (interactive)
+             (call-interactively #'dape)
+             (call-interactively #'dape-hydra/body))
+      "db" #'dape-breakpoint-toggle
+      "dh" #'dape-hydra/body)
+    :config
+    (remove-hook 'dape-start-hook 'dape-info)
+    (remove-hook 'dape-start-hook 'dape-repl)
+    (defhydra dape-hydra (:color pink :hint nil :foreign-keys run)
+      "
   ^Stepping^          ^Breakpoints^               ^Info
   ^^^^^^^^-----------------------------------------------------------
   _d_: init           _bb_: Toggle (add/remove)   _si_: Info
@@ -52,24 +54,24 @@
   _r_: Restart
   _Q_: Disconnect
   "
-    ("d" dape)
-    ("n" dape-next)
-    ("i" dape-step-in)
-    ("o" dape-step-out)
-    ("c" dape-continue)
-    ("r" dape-restart)
-    ("ba" dape-breakpoint-toggle)
-    ("bb" dape-breakpoint-toggle)
-    ("be" dape-breakpoint-expression)
-    ("bd" dape-breakpoint-remove-at-point)
-    ("bD" dape-breakpoint-remove-all)
-    ("bl" dape-breakpoint-log)
-    ("si" dape-info)
-    ("sm" dape-read-memory)
-    ("ss" dape-select-stack)
-    ("R"  dape-repl)
-    ("q" nil "quit" :color blue)
-    ("Q" dape-kill :color red)))
+      ("d" dape)
+      ("n" dape-next)
+      ("i" dape-step-in)
+      ("o" dape-step-out)
+      ("c" dape-continue)
+      ("r" dape-restart)
+      ("ba" dape-breakpoint-toggle)
+      ("bb" dape-breakpoint-toggle)
+      ("be" dape-breakpoint-expression)
+      ("bd" dape-breakpoint-remove-at-point)
+      ("bD" dape-breakpoint-remove-all)
+      ("bl" dape-breakpoint-log)
+      ("si" dape-info)
+      ("sm" dape-read-memory)
+      ("ss" dape-select-stack)
+      ("R"  dape-repl)
+      ("q" nil "quit" :color blue)
+      ("Q" dape-kill :color red))))
 
 (use-package xref
   :commands (xref-find-references xref-auto-jump-first-definition)
