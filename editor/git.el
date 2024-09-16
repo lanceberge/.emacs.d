@@ -71,6 +71,9 @@
   (magit-push))
 
 (use-package diff-hl
+  :hook
+  (magit-pre-refresh . diff-hl-magit-pre-refresh)
+  (magit-post-refresh . diff-hl-magit-post-refresh)
   :defer 0.5
   :config
   (global-diff-hl-mode)
