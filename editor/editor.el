@@ -22,8 +22,8 @@
   (avy-keys '(?d ?j ?s ?k ?a ?l))
   :general
   ('evil-operator-state-map
-   "\\" #'(avy-goto-char-timer :which-key "goto char")
-   "go" #'(avy-goto-char-2 :which-key "goto char"))
+   "\\" #'(avy-goto-char-2 :which-key "goto char")
+   "go" #'(avy-goto-char-timer :which-key "goto char"))
 
   ('(normal insert)
    "M-i" #'(avy-goto-char-timer :which-key "goto char"))
@@ -32,8 +32,8 @@
    "M-i" #'evil-avy-isearch)
 
   ('normal
-   "\\" #'(avy-goto-char-timer :which-key "2-chars")
-   "go" #'(avy-goto-char-2 :which-key "2-chars")
+   "\\" #'(avy-goto-char-2 :which-key "2-chars")
+   "go" #'(avy-goto-char-timer :which-key "2-chars")
    "g SPC o" #'(evil-avy-isearch :which-key "timer")
    "g SPC m" #'(avy-move-line :which-key "move line"))
   :config
@@ -212,8 +212,6 @@
      "^\\*Embark Collect:"
      "^\\*Embark Export:"
      "\\*Warnings\\*"
-     helpful-mode
-     help-mode
      compilation-mode))
   :general
   (my-leader-def
