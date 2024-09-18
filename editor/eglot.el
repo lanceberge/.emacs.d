@@ -29,8 +29,8 @@
 (use-package eldoc
   :ensure nil
   :preface
-  (when (featurep 'eldoc)
-    (unload-feature 'eldoc t))
+    (when (and IS-LINUX (featurep 'eldoc))
+      (unload-feature 'eldoc t))
   :defer t)
 
 ;; TODO

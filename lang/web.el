@@ -15,12 +15,19 @@
 (use-package emmet-mode
   :hook
   (web-mode . emmet-mode)
-  (svelte-mode . emmet-mode)
-  :general
-  ('insert emmet-mode-keymap
-           "TAB" #'emmet-expand-line))
+  (svelte-mode . emmet-mode))
 
 (use-package svelte-mode
   :defer t
   :custom
   (svelte-basic-offset 2))
+
+(use-package hippie-exp
+  :ensure nil
+  :defer t
+  :general
+  ('insert
+   "TAB" #'hippie-expand)
+  :config
+  (setq-default hippie-expand-try-functions-list
+                '(yas-hippie-try-expand emmet-expand-line)))
