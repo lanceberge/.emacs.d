@@ -27,18 +27,6 @@
   :config
   (evil-collection-init 'edebug))
 
-(use-package lispy
-  :hook
-  (emacs-lisp-mode . lispy-mode)
-  :general
-  ('insert 'lispy-mode-map
-           "n" #'special-lispy-down
-           "p" #'special-lispy-up
-           "[" #'self-insert-command
-           "]" #'self-insert-command
-           "\"" #'lispy-doublequote
-           "<backspace>" #'backward-delete-char-untabify))
-
 (use-package lispyville
   :hook (emacs-lisp-mode . lispyville-mode)
   :config
