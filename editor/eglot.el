@@ -1,5 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package eglot
+  :defer-incrementally
+  (project eldoc flymake)
   :hook
   ((go-mode
     java-mode
@@ -11,6 +13,8 @@
   :custom
   (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
+  (eglot-events-buffer-size 0)
+  :init
   :general
   ('normal
    "ga" #'eglot-code-actions
@@ -22,6 +26,14 @@
   (add-to-list 'eglot-server-programs
                '(svelte-mode . ("svelteserver" "--stdio"))))
 
+(use-package eldoc
+  :ensure nil
+  :preface
+  (when (featurep 'eldoc)
+    (unload-feature 'eldoc t))
+  :defer t)
+
+;; TODO
 (when IS-MAC
   (use-package eglot-booster
     :ensure (:host github :repo "jdtsmith/eglot-booster")
