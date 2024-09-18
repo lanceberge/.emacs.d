@@ -53,4 +53,6 @@
     (setq-local corfu-auto-prefix 3))
 
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'completion-at-point-functions #'cape-file))
+  (add-hook 'completion-at-point-functions #'cape-file)
+
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
