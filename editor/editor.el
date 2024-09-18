@@ -127,17 +127,19 @@
   :config
   (global-undo-tree-mode))
 
-(if (version< emacs-version "29.1")
-    (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
-      :custom
-      (exec-path-from-shell-arguments '("-l"))
-      (sh-shell-file "/usr/bin/zsh")
-      (shell-file-name "zsh")
-      (exec-path (append exec-path '("~/miniconda3/bin")))
-      :hook
-      (after-init . (lambda () (setq exec-path-from-shell-arguments '("-l"))
-                      (exec-path-from-shell-copy-env "PYTHONPATH")
-                      (exec-path-from-shell-initialize)))))
+(when (version< emacs-version "29.1")
+  (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
+    :custom
+    (exec-path-from-shell-arguments '("-l"))
+    (sh-shell-file "/usr/bin/zsh")
+    (shell-file-name "zsh")
+    :config
+    (add-hook 'after-init-hook
+              (lambda ()
+                (setq exec-path-from-shell-arguments '("-l"))
+                (exec-path-from-shell-copy-env "PYTHONPATH")
+                (exec-path-from-shell-initialize)
+                (setq exec-path (append exec-path '("~/miniconda3/bin" "~/go/bin")))))))
 
 (use-package google-this
   :general
