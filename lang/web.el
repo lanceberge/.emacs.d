@@ -26,8 +26,8 @@
   :ensure nil
   :defer t
   :general
-  ('insert
-   "TAB" #'hippie-expand)
+  ('insert 'emmet-mode
+           "TAB" #'hippie-expand)
   :config
   (setq-default hippie-expand-try-functions-list
-                '(yas-hippie-try-expand emmet-expand-line)))
+                '(yas-hippie-try-expand emmet-expand-line indent-for-tab-command)))
