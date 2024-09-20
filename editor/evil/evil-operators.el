@@ -10,7 +10,6 @@
      dired
      eshell
      ediff
-     (pdf pdf-tools)
      magit)))
 
 (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
@@ -23,9 +22,8 @@
    [remap evil-find-char] #'evil-snipe-f
    [remap evil-find-char-backward] #'evil-snipe-F)
 
-  ('motion
-   ":"   #'(evil-snipe-repeat         :which-key "repeat last search")
-   "M-," #'(evil-snipe-repeat-reverse :which-key "repeat last search backwards")))
+  ('(normal motion)
+   ":" #'(evil-snipe-repeat         :which-key "repeat last search")))
 
 (use-package evil-surround ; s as an operator for surrounding
   :hook (pre-command . evil-surround-mode))
