@@ -54,6 +54,7 @@
 
 (when IS-MAC
   (dolist (path '("/opt/homebrew/opt/llvm/bin/"
+                  "~/go/bin"
                   "/opt/homebrew/opt/openjdk/bin/"))
     (add-to-list 'exec-path path)))
 

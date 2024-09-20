@@ -7,7 +7,6 @@
     java-mode
     js2-mode
     python-mode
-    svelte-mode
     typescript-mode
     c++-mode) . eglot-ensure)
   :custom
@@ -22,15 +21,13 @@
   (my-localleader-def
     "gr" #'eglot-rename)
   :config
-  (setf (plist-get eglot-events-buffer-config :size) 0)
-  (add-to-list 'eglot-server-programs
-               '(svelte-mode . ("svelteserver" "--stdio"))))
+  (setf (plist-get eglot-events-buffer-config :size) 0))
 
 (use-package eldoc
   :ensure nil
   :preface
-    (when (and IS-LINUX (featurep 'eldoc))
-      (unload-feature 'eldoc t))
+  (when (and IS-LINUX (featurep 'eldoc))
+    (unload-feature 'eldoc t))
   :defer t)
 
 ;; TODO
