@@ -8,6 +8,7 @@
     js2-mode
     python-mode
     typescript-mode
+    svelte-mode
     c++-mode) . eglot-ensure)
   :custom
   (eldoc-echo-area-use-multiline-p nil)
@@ -21,6 +22,8 @@
   (my-localleader-def
     "gr" #'eglot-rename)
   :config
+  (add-to-list 'eglot-server-programs
+               '(svelte-mode . ("svelteserver" "--stdio")))
   (setf (plist-get eglot-events-buffer-config :size) 0))
 
 (use-package eldoc
