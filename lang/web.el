@@ -19,15 +19,17 @@
 
 (use-package svelte-mode
   :defer t
+  :mode ("\\.svelte\\'" . svelte-mode)
+  :hook
+  (svelte-mode . (lambda () (format-all-mode -1)))
   :custom
   (svelte-basic-offset 2))
 
 (use-package hippie-exp
-  :ensure nil
   :defer t
   :general
-  ('insert 'emmet-mode
-           "TAB" #'hippie-expand)
+  ('emmet-mode-keymap
+   "TAB" #'hippie-expand)
   :config
   (setq-default hippie-expand-try-functions-list
-                '(yas-hippie-try-expand emmet-expand-line indent-for-tab-command)))
+                '(yas-hippie-try-expand emmet-expand-line)))
