@@ -3,7 +3,7 @@
   (use-package treesit
     :ensure nil
     :after yasnippet
-    :config
+    :init
     (dolist (grammar
              '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
                (bash "https://github.com/tree-sitter/tree-sitter-bash")

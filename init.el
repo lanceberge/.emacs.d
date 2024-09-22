@@ -268,7 +268,7 @@
 (defun doom-restore-garbage-collection-h ()
   "Restore the garbage collection threshold"
   (run-at-time
-   1 nil (lambda () (setq gc-cons-threshold 107772160))))
+   1 nil (lambda () (setq gc-cons-threshold 17772160))))
 
 ;; decrease garbage collection when using minibuffer
 (add-hook 'minibuffer-setup-hook #'doom-defer-garbage-collection-h)

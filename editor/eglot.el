@@ -34,9 +34,9 @@
 (when IS-MAC
   (use-package eglot-booster
     :ensure (:host github :repo "jdtsmith/eglot-booster")
-    :after eglot
-    :config
-    (eglot-booster-mode)))
+    :after eglot))
+;; :config
+;; (eglot-booster-mode -1)
 
 (unless (version<= emacs-version "29.1")
   (use-package dape
