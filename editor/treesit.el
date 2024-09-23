@@ -3,7 +3,7 @@
   (use-package treesit
     :ensure nil
     :after yasnippet
-    :init
+    :config
     (dolist (grammar
              '((css . ("https://github.com/tree-sitter/tree-sitter-css" "v0.20.0"))
                (bash "https://github.com/tree-sitter/tree-sitter-bash")
@@ -22,39 +22,38 @@
                (yaml . ("https://github.com/ikatyang/tree-sitter-yaml" "v0.5.0"))))
       (add-to-list 'treesit-language-source-alist grammar)
       (unless (treesit-language-available-p (car grammar))
-        (treesit-install-language-grammar (car grammar))))
+        (treesit-install-language-grammar (car grammar)))))
 
-    (dolist (mapping
-             '((python-mode . python-ts-mode)
-               (css-mode . css-ts-mode)
-               (typescript-mode . typescript-ts-mode)
-               (js-mode . typescript-ts-mode)
-               (js2-mode . typescript-ts-mode)
-               (c-mode . c-ts-mode)
-               (c++-mode . c++-ts-mode)
-               (c-or-c++-mode . c-or-c++-ts-mode)
-               (bash-mode . bash-ts-mode)
-               (css-mode . css-ts-mode)
-               (json-mode . json-ts-mode)
-               (js-json-mode . json-ts-mode)
-               (sh-mode . bash-ts-mode)
-               (sh-base-mode . bash-ts-mode)))
-      (add-to-list 'major-mode-remap-alist mapping)
+  (dolist (mapping
+           '((python-mode . python-ts-mode)
+             (css-mode . css-ts-mode)
+             (typescript-mode . typescript-ts-mode)
+             (js-mode . typescript-ts-mode)
+             (js2-mode . typescript-ts-mode)
+             (c-mode . c-ts-mode)
+             (c++-mode . c++-ts-mode)
+             (bash-mode . bash-ts-mode)
+             (css-mode . css-ts-mode)
+             (json-mode . json-ts-mode)
+             (js-json-mode . json-ts-mode)
+             (sh-mode . bash-ts-mode)
+             (sh-base-mode . bash-ts-mode)))
+    (add-to-list 'major-mode-remap-alist mapping)
 
-      (let* ((source-mode (car mapping))
-             (target-mode (cdr mapping))
-             (source-mode-hook (intern (concat (symbol-name source-mode) "-hook")))
-             (target-mode-hook (intern (concat (symbol-name target-mode) "-hook"))))
+    (let* ((source-mode (car mapping))
+           (target-mode (cdr mapping))
+           (source-mode-hook (intern (concat (symbol-name source-mode) "-hook")))
+           (target-mode-hook (intern (concat (symbol-name target-mode) "-hook"))))
 
-        (when (and (boundp source-mode-hook)
-                   (boundp target-mode-hook)
-                   (symbol-value source-mode-hook))
-          (dolist (hook (symbol-value source-mode-hook))
-            (add-hook target-mode-hook hook))
+      (when (and (boundp source-mode-hook)
+                 (boundp target-mode-hook)
+                 (symbol-value source-mode-hook))
+        (dolist (hook (symbol-value source-mode-hook))
+          (add-hook target-mode-hook hook))
 
-          (add-hook source-mode-hook
-                    (lambda ()
-                      (yas-activate-extra-mode target-mode)))
-          (add-hook target-mode-hook
-                    (lambda ()
-                      (yas-activate-extra-mode source-mode))))))))
+        (add-hook source-mode-hook
+                  (lambda ()
+                    (yas-activate-extra-mode target-mode)))
+        (add-hook target-mode-hook
+                  (lambda ()
+                    (yas-activate-extra-mode source-mode)))))))

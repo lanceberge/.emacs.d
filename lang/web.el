@@ -24,13 +24,3 @@
   (svelte-mode . (lambda () (format-all-mode -1)))
   :custom
   (svelte-basic-offset 2))
-
-(use-package hippie-exp
-  :ensure nil
-  :defer t
-  :general
-  ('emmet-mode-keymap
-   "TAB" #'hippie-expand)
-  :config
-  (setq-default hippie-expand-try-functions-list
-                '(yas-hippie-try-expand emmet-expand-line)))
