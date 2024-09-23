@@ -26,6 +26,7 @@
   (svelte-basic-offset 2))
 
 (use-package hippie-exp
+  :ensure nil
   :defer t
   :general
   ('emmet-mode-keymap

@@ -17,6 +17,7 @@
   :custom
   (evil-snipe-show-prompt nil)
   (evil-snipe-skip-leading-whitespace nil)
+  (evil-snipe-smart-case t)
   :general
   ('normal
    [remap evil-find-char] #'evil-snipe-f
