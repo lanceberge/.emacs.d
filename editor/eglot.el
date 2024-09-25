@@ -6,15 +6,16 @@
   ((go-mode
     java-mode
     js2-mode
-    python-mode
+    python-base-mode
     typescript-mode
+    typescript-ts-mode
     svelte-mode
-    c++-mode) . eglot-ensure)
+    c++-mode
+    c++-ts-mode) . eglot-ensure)
   :custom
   (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
   (eglot-events-buffer-size 0)
-  :init
   :general
   ('normal
    "ga" #'eglot-code-actions

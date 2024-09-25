@@ -4,6 +4,7 @@
   :mode ("\\.cu\\'" . c-mode)
   :hook
   (c++-mode . +cpp-mode)
+  (c++-ts-mode . +cpp-mode)
   :custom
   (c-basic-offset 4)
   (c-default-style "linux")
