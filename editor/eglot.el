@@ -29,7 +29,7 @@
 (use-package eldoc
   :ensure nil
   :preface
-  (when (and IS-LINUX (featurep 'eldoc))
+  (when (and (version<= emacs-version "29.1") (featurep 'eldoc))
     (unload-feature 'eldoc t))
   :defer t)
 
