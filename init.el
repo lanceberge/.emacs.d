@@ -242,17 +242,16 @@
     "p" '(:ignore t :which-key "Project")
     "s" '(:ignore t :which-key "Yasnippet")
     "t" '(:ignore t :which-key "Tab")
-
     "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
 
-(add-hook 'after-init-hook ; show startup time
+(add-hook 'after-init-hook
           (lambda ()
             "show the startup time"
             (when (require 'time-date nil t)
               (message "Emacs init time: %.2f seconds."
                        (time-to-seconds (time-since emacs-load-start-time))))))
 
-(add-hook 'emacs-startup-hook ; reset garbage collection settings and file-name-handler-alist
+(add-hook 'emacs-startup-hook
           (lambda ()
             "raise the garbage collection threshold to defer garbage collection
            and unset file-name-handler-alist"
@@ -261,18 +260,14 @@
                   file-name-handler-alist default-file-name-handler-alist)))
 
 ;; Raise gc threshold while minibuffer is active
-(defun doom-defer-garbage-collection-h ()
-  "Defer garbage collection by setting it to the largest possible number"
-  (setq gc-cons-threshold most-positive-fixnum))
+(add-hook 'minibuffer-setup-hook
+          #'(lambda ()
+              (setq gc-cons-threshold most-positive-fixnum)))
 
-(defun doom-restore-garbage-collection-h ()
-  "Restore the garbage collection threshold"
-  (run-at-time
-   1 nil (lambda () (setq gc-cons-threshold 17772160))))
-
-;; decrease garbage collection when using minibuffer
-(add-hook 'minibuffer-setup-hook #'doom-defer-garbage-collection-h)
-(add-hook 'minibuffer-exit-hook  #'doom-restore-garbage-collection-h)
+(add-hook 'minibuffer-exit-hook
+          #'(lambda ()
+              (run-at-time
+               1 nil (lambda () (setq gc-cons-threshold 17772160)))))
 
 (use-package gcmh ; Garbage collect in idle time
   :defer 2.0
@@ -283,6 +278,9 @@
   :config
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
+
+(when (and IS-LINUX (>= emacs-major-version 29))
+  (set-frame-parameter nil 'undecorated t))
 
 ;; Load config files recursively
 (let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
