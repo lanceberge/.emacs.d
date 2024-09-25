@@ -20,7 +20,7 @@
            "R" #'vterm--self-insert)
 
   ('(normal insert) vterm-mode-map
-   "C-l" #'vterm--self-insert
+   "C-l" #'vterm-clear
    "C-b" #'vterm--self-insert
    "C-c" #'vterm--self-insert)
 

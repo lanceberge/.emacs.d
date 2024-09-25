@@ -1,7 +1,5 @@
 ;;; -*- lexical-binding: t -*-
-(use-package git-commit :defer t)
 (use-package transient :defer t)
-(use-package magit-section :defer t)
 
 (use-package magit
   :defer 1.0
@@ -62,6 +60,7 @@
            "r" #'write-file))
 
 ;;;###autoload
+;; TODO
 (defun +magit/stage-all-and-commit ()
   "stage all files and commit"
   (interactive)
