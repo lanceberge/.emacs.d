@@ -161,7 +161,7 @@
                '(:eval . "never-export"))
 
 
-                                        ;  open links in the current window
+  ;;  open links in the current window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
   (setq org-todo-keyword-faces '(("WAIT" . (:foreground "#7C6f64" :weight bold))
