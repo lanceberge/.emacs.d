@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: bash shell args
+# key: args
+# --
+if [ $# -eq $1 ]; then
+    echo $0
+fi
