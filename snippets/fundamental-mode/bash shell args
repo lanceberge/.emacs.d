@@ -1,7 +1,7 @@
-# -*- mode: snippet -*-
-# name: bash shell args
 # key: args
+# name: bash shell args
 # --
 if [ $# -eq $1 ]; then
-    echo $0
+    echo "Usage: $0"
+    exit 1
 fi
