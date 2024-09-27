@@ -4,14 +4,13 @@
   (project eldoc flymake)
   :hook
   ((go-mode
-    java-mode
+    java-mode java-ts-mode
+    c++-mode c++-ts-mode
+    typescript-mode typescript-ts-mode
     js2-mode
     python-base-mode
-    typescript-mode
-    typescript-ts-mode
-    svelte-mode
-    c++-mode
-    c++-ts-mode) . eglot-ensure)
+    sh-base-mode
+    svelte-mode) . eglot-ensure)
   :custom
   (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
@@ -35,12 +34,12 @@
   :defer t)
 
 ;; TODO
-(when IS-MAC
-  (use-package eglot-booster
-    :ensure (:host github :repo "jdtsmith/eglot-booster")
-    :after eglot))
-;; :config
-;; (eglot-booster-mode -1)
+;; (when IS-MAC
+;;   (use-package eglot-booster
+;;     :ensure (:host github :repo "jdtsmith/eglot-booster")
+;;     :after eglot
+;;     :config
+;;     (eglot-booster-mode -1)))
 
 (unless (version<= emacs-version "29.1")
   (use-package dape
