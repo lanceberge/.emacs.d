@@ -30,8 +30,3 @@
     "st" #'elysium-toggle-window)
   ('(insert normal) 'gptel-mode-map
    "C-<return>" #'elysium-query))
-
-(use-package ace-link
-  :general
-  ('normal
-   "g SPC l" #'(ace-link :which-key "goto link")))
