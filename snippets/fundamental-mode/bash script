@@ -6,7 +6,7 @@
 
 if [ $# $1 $2 ];
    echo "Usage: `(file-name-base (buffer-file-name))` $3"
-   exit 1
+   return 1
 fi
 
 $0

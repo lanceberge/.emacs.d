@@ -3,5 +3,5 @@
 # --
 if [ $# -eq $1 ]; then
     echo "Usage: $0"
-    exit 1
+    return 1
 fi
