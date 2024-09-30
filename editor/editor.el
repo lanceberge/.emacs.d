@@ -158,6 +158,8 @@
    "g SPC l" #'(ace-link :which-key "goto link")))
 
 (use-package wgrep
+  :custom
+  (wgrep-auto-save-buffer t)
   :general
   ('normal grep-mode-map
            "i" #'wgrep-change-to-wgrep-mode)
