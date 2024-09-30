@@ -27,7 +27,10 @@
    ":" #'(evil-snipe-repeat         :which-key "repeat last search")))
 
 (use-package evil-surround ; s as an operator for surrounding
-  :hook (pre-command . evil-surround-mode))
+  :hook (pre-command . evil-surround-mode)
+  :config
+  (add-hook 'org-mode-hook (lambda ()
+                             (push '(?s . ("#+BEGIN_SRC" . "#+END_SRC")) evil-surround-pairs-alist))))
 
 (use-package embrace
   :defer t)
