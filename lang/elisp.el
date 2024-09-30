@@ -31,8 +31,9 @@
   :hook (emacs-lisp-mode . lispyville-mode)
   :config
   (lispyville-set-key-theme
-   '(operators c-w text-objects additional-motions
+   '(operators c-w additional-motions
                commentary slurp/barf-cp))
+  ;; TODO set up function text object
   :general
   ('normal 'lispyville-mode-map
            "B" #'lispyville-backward-atom-begin

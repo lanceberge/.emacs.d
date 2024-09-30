@@ -60,6 +60,7 @@
 
 (setq-default
  tab-width 4
+ require-final-newline t
  indent-tabs-mode nil) ; tabs are converted to spaces
 
 (advice-add #'tty-run-terminal-initialization :override #'ignore)
