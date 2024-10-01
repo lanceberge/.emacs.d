@@ -42,6 +42,8 @@
   ('(normal insert) '(vertico-map minibuffer-inactive-mode-map)
    "C-j" #'vertico-next
    "C-k" #'vertico-previous
+   "C-h" #'vertico-directory-up
+   "C-l" #'vertico-directory-enter
    "C-u" #'vertico-scroll-down
    "C-d" #'vertico-scroll-up
    "M-j" #'vertico-next
@@ -50,7 +52,6 @@
    "M-d" #'vertico-scroll-up
    ";" #'vertico-exit
    "M-h" #'vertico-directory-up
-   "M-l" #'vertico-directory-enter
    "M-l" #'vertico-directory-enter
    "C-w" #'evil-delete-backward-word)
   :config
