@@ -22,6 +22,9 @@
   (my-localleader-def
     "gr" #'eglot-rename)
   :config
+  (advice-add 'eglot-rename :after
+              (lambda (&rest _)
+                (save-some-buffers t)))
   (add-to-list 'eglot-server-programs
                '(svelte-mode . ("svelteserver" "--stdio")))
   (setf (plist-get eglot-events-buffer-config :size) 0))

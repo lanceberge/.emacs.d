@@ -41,13 +41,10 @@
   (add-hook 'org-mode-hook (lambda ()
                              (push '(?s . ("#+BEGIN_SRC" . "#+END_SRC")) evil-surround-pairs-alist))))
 
-(use-package embrace
-  :defer t)
-
 (use-package evil-nerd-commenter ; comment lines like in tpope's commentary
   :general
   ('normal
-   "gc" #'(evilnc-comment-operator          :which-key "comment")
+   "gc" #'(evilnc-comment-operator :which-key "comment")
    "gy" #'(evilnc-copy-and-comment-operator :which-key "copy and comment")))
 
 (use-package evil-numbers ; increment/decrement numbers w/ vim keys
@@ -73,13 +70,13 @@
   :after evil
   :general
   ('(normal visual)
-   "gx" #'(evil-exchange        :which-key "exchange operator")
+   "gx" #'(evil-exchange :which-key "exchange operator")
    "gX" #'(evil-exchange-cancel :which-key "cancel exchange")))
 
 (use-package evil-textobj-anyblock
   :general
   ('evil-inner-text-objects-map "c" #'(evil-textobj-anyblock-inner-block :which-key "nearest text object"))
-  ('evil-outer-text-objects-map "c" #'(evil-textobj-anyblock-a-block     :which-key "nearest text object")))
+  ('evil-outer-text-objects-map "c" #'(evil-textobj-anyblock-a-block :which-key "nearest text object")))
 
 (use-package evil-args ; argument text object: ex. arg1,ar|g2,arg2 - can delete with daa
   :general
@@ -89,13 +86,13 @@
 (use-package evil-indent-plus ; indent level text object
   :general
   ('evil-inner-text-objects-map
-   "i" #'(evil-indent-plus-i-indent         :which-key "indent level")
-   "I" #'(evil-indent-plus-i-indent-up      :which-key "indent level and up")
+   "i" #'(evil-indent-plus-i-indent :which-key "indent level")
+   "I" #'(evil-indent-plus-i-indent-up :which-key "indent level and up")
    "J" #'(evil-indent-plus-i-indent-up-down :which-key "indent level up and down"))
 
   ('evil-outer-text-objects-map
-   "i" #'(evil-indent-plus-a-indent         :which-key "indent level")
-   "I" #'(evil-indent-plus-a-indent-up      :which-key "indent level and up")
+   "i" #'(evil-indent-plus-a-indent :which-key "indent level")
+   "I" #'(evil-indent-plus-a-indent-up :which-key "indent level and up")
    "J" #'(evil-indent-plus-a-indent-up-down :which-key "indent level up and down")))
 
 (use-package evil-escape ; jk to leave insert mode
