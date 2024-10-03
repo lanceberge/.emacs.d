@@ -30,7 +30,7 @@
   ('evil-snipe-parent-transient-map
    ":" #'evil-snipe-repeat-reverse)
 
-  ('(normal)
+  ('normal
    ":" #'(evil-snipe-repeat :which-key "repeat last search"))
   :config
   (define-key evil-snipe-parent-transient-map "," nil))
@@ -71,7 +71,7 @@
   :general
   ('(normal visual)
    "gx" #'(evil-exchange :which-key "exchange operator")
-   "gX" #'(evil-exchange-cancel :which-key "cancel exchange")))
+   "g SPC x" #'(evil-exchange-cancel :which-key "cancel exchange")))
 
 (use-package evil-textobj-anyblock
   :general
