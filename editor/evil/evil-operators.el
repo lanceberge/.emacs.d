@@ -13,18 +13,27 @@
      magit)))
 
 (use-package evil-snipe ; 2 character searches with s (ala vim-sneak)
-  :hook (pre-command . evil-snipe-mode)
   :custom
   (evil-snipe-show-prompt nil)
   (evil-snipe-skip-leading-whitespace nil)
   (evil-snipe-smart-case t)
+  (evil-snipe-enable-highlight nil)
+  (evil-snipe-enable-incremental-highlight nil)
+  (evil-snipe-override-evil-repeat-keys nil)
   :general
   ('normal
+   "s" #'evil-snipe-s
+   "S" #'evil-snipe-S
    [remap evil-find-char] #'evil-snipe-f
    [remap evil-find-char-backward] #'evil-snipe-F)
 
-  ('(normal motion)
-   ":" #'(evil-snipe-repeat         :which-key "repeat last search")))
+  ('evil-snipe-parent-transient-map
+   ":" #'evil-snipe-repeat-reverse)
+
+  ('(normal)
+   ":" #'(evil-snipe-repeat :which-key "repeat last search"))
+  :config
+  (define-key evil-snipe-parent-transient-map "," nil))
 
 (use-package evil-surround ; s as an operator for surrounding
   :hook (pre-command . evil-surround-mode)
