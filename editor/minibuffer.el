@@ -13,12 +13,16 @@
     "/" #'(consult-line :which-key "line")
     "fr" #'(consult-recent-file :which-key "find recent file")
     "fj" #'(consult-imenu :which-key "imenu")
-    "fp" #'(consult-project-buffer :which-key "project buffer")
+    "pb" #'(consult-project-buffer :which-key "project buffer")
     "fm" #'(consult-global-mark :which-key "mark")
     "fp" (defun +find-package ()
            "Search all use-packages in .emacs.d."
            (interactive)
            (consult-ripgrep "~/.emacs.d/" "use-package "))
+    "ft" (defun +find-todos ()
+           "Search all todos."
+           (interactive)
+           (consult-ripgrep (file-name-directory (buffer-file-name)) "TODO"))
     "fe" #'consult-flymake
     "fo" #'(consult-outline :which-key "outline")
     "f." #'(consult-find :which-key "file")

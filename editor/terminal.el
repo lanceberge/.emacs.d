@@ -15,15 +15,8 @@
 
 (use-package vterm
   :general
-  ('normal vterm-mode-map
-           "N" #'vterm--self-insert
-           "R" #'vterm--self-insert)
-
-  ('(normal insert) vterm-mode-map
-   "C-l" #'vterm-clear
-   "C-b" #'vterm--self-insert
-   "C-c" #'vterm--self-insert)
-
+  ('emacs
+   "C-u" #'vterm--self-insert)
   (my-leader-def
     :states 'insert
     "C-c" #'vterm--self-insert)
@@ -32,8 +25,10 @@
     "bv" #'(vterm :which-key "vterm")
     "ov" #'(+vterm :which-key "vterm"))
   :config
-  (evil-collection-init 'vterm)
-  (add-hook 'vterm-mode-hook (lambda () (display-line-numbers-mode -1))))
+  (add-to-list 'evil-emacs-state-modes 'vterm-mode)
+  ;; (evil-collection-init 'vterm)
+  (add-hook 'vterm-mode-hook (lambda ()
+                               (display-line-numbers-mode -1))))
 
 ;;;###autoload
 (defun +vterm ()
@@ -46,6 +41,6 @@
           (switch-to-buffer vterm-buffer)
           (unless (string= current-dir (expand-file-name default-directory))
             (vterm-send-string (concat "cd " (shell-quote-argument current-dir)))
-            (vterm-send-return))
-          (evil-collection-vterm-append))
+            ;; (vterm-send-return)
+            ))
       (vterm))))
