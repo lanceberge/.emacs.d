@@ -7,6 +7,7 @@
     "pg" #'(+project-switch-and-magit-status :which-key "switch project")
     "pf" #'(project-find-file :which-key "find file")
     "ps" #'(consult-ripgrep :which-key "ripgrep")
+    "pe" #'(flymake-show-project-diagnostics :which-key "show errors")
     "pr" #'project-query-replace-regexp
     "p SPC p" #'(+project-switch-and-rg :which-key "switch project")))
 

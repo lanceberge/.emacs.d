@@ -105,8 +105,8 @@
   :defer t
   :general
   ('normal
-   "[e" #'flymake-goto-prev-error
-   "]e" #'flymake-goto-next-error)
+   "[y" #'flymake-goto-prev-error
+   "]y" #'flymake-goto-next-error)
   :custom
   (flymake-no-changes-timeout 5)
   (flymake-show-diagnostics-at-end-of-line t))
