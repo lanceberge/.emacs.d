@@ -87,7 +87,6 @@
   (put 'dired-find-alternate-file 'disabled nil)
 
   (general-def 'normal dired-mode-map
-    "RET" nil
     ";" #'dired-find-alternate-file ; select a directory in the same buffer
     "i" #'+dired/edit
     "-" #'+dired/up-dir))

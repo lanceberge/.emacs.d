@@ -20,9 +20,9 @@
     "gnf" #'(magit-commit-fixup :which-key "fixup commit")
     "gi" #'(magit-init :which-key "init")
     "gl" #'(magit-log :which-key "log")
-    "gfc" #'(magit-show-commit :which-key "show commit")
-    "gfg" #'(magit-find-git-config-file :which-key "git config file")
-    "gc" #'(+magit/stage-all-and-commit :which-key "stage all and commit"))
+    "gf" #'(magit-find-file :which-key "find file")
+    "gw" #'(magit-worktree :which-key "worktree")
+    "gc" #'(magit-show-commit :which-key "show commit"))
 
   ('normal 'magit-mode-map
            ";" (general-simulate-key "RET"))
