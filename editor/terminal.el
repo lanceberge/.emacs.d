@@ -34,13 +34,7 @@
 (defun +vterm ()
   "Open or switch to a vterm buffer, changing directory if it's not equal to the cwd."
   (interactive)
-  (let ((vterm-buffer (get-buffer "*vterm*"))
-        (current-dir (expand-file-name default-directory)))
+  (let ((vterm-buffer (get-buffer "*vterm*")))
     (if vterm-buffer
-        (progn
-          (switch-to-buffer vterm-buffer)
-          (unless (string= current-dir (expand-file-name default-directory))
-            (vterm-send-string (concat "cd " (shell-quote-argument current-dir)))
-            ;; (vterm-send-return)
-            ))
-      (vterm))))
+        (kill-buffer vterm-buffer))
+    (vterm)))
