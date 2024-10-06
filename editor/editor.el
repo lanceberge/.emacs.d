@@ -1,9 +1,10 @@
 ;;; -*- lexical-binding: t -*-
 (use-package format-all ; format code functions
   :hook
-  (prog-mode . format-all-mode)
-  (web-mode . format-all-mode)
-  (json-mode . format-all-mode)
+  ((prog-mode
+    web-mode
+    json-mode
+    svelte-mode) . format-all-mode)
   :general
   (my-leader-def
     :states 'normal

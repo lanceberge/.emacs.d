@@ -20,7 +20,5 @@
 (use-package svelte-mode
   :defer t
   :mode ("\\.svelte\\'" . svelte-mode)
-  :hook
-  (svelte-mode . (lambda () (format-all-mode -1)))
   :custom
   (svelte-basic-offset 2))
