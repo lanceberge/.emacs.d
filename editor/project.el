@@ -9,6 +9,9 @@
     "ps" #'(consult-ripgrep :which-key "ripgrep")
     "pe" #'(flymake-show-project-diagnostics :which-key "show errors")
     "pr" #'project-query-replace-regexp
+    "pt" (defun +project-find-todos ()
+           (interactive)
+           (consult-ripgrep (project-root (project-current t)) "TODO"))
     "p SPC p" #'(+project-switch-and-rg :which-key "switch project")))
 
 ;;;###autoload

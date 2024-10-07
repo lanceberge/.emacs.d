@@ -27,7 +27,7 @@
     "ft" (defun +find-todos ()
            "Search all todos."
            (interactive)
-           (consult-ripgrep (file-name-directory (buffer-file-name)) "TODO"))
+           (consult-line "TODO"))
     "fe" #'consult-flymake
     "fo" #'(consult-outline :which-key "outline")
     "f." #'(consult-find :which-key "file")
