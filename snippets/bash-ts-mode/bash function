@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: bash funcion
+# name: bash function
 # key: shf
 # --
 function $0 () {
