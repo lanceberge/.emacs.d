@@ -6,7 +6,12 @@
     "c" (general-simulate-key "C-c" :which-key "+Mode specific maps"))
 
   (my-leader-def
-    "nf" #'(make-frame :which-key "New Frame")
+    "nf" (defun +make-frame ()
+           (interactive)
+           (let ((frame (make-frame)))
+             (when (and IS-LINUX (>= emacs-major-version 29))
+               (set-frame-parameter frame 'undecorated t)))
+           :which-key "New Frame")
     "h" #'(help-command :which-key "Help")
     ";" #'(shell-command :which-key "shell command")
 

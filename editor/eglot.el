@@ -12,7 +12,7 @@
     sh-base-mode
     svelte-mode) . eglot-ensure)
   :custom
-  (eldoc-echo-area-use-multiline-p nil)
+  (eldoc-echo-area-use-multiline-p t)
   (eglot-sync-connect nil)
   (eglot-events-buffer-size 0)
   :general
@@ -109,4 +109,4 @@
    "]y" #'flymake-goto-next-error)
   :custom
   (flymake-no-changes-timeout 5)
-  (flymake-show-diagnostics-at-end-of-line t))
+  (flymake-show-diagnostics-at-end-of-line 'short))
