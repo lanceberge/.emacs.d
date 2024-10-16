@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package python-mode
   :ensure nil
-  :mode ("\\.py\\'" . python-mode) :init)
+  :mode ("\\.py\\'" . python-mode))
 
 (unless IS-MAC
   (use-package conda

@@ -29,7 +29,7 @@
              (org-in-src-block-p t))
         (+format--org-region nil nil)
       (call-interactively
-       (cond ((and +format-with-lsp
+       (cond ((and (bound-and-true-p +format-with-lsp)
                    (bound-and-true-p lsp-mode)
                    (lsp-feature? "textDocument/formatting"))
               #'lsp-format-buffer)

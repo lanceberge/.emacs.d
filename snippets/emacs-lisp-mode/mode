@@ -1,0 +1,4 @@
+# key: mode
+# name: mode
+# --
+:mode ("\\\\.$1\\\\'" . $0)
