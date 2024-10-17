@@ -59,7 +59,7 @@
   (windresize-default-increment 3)
   :general
   ('evil-window-map
-   "r" #'windresize)
+   "SPC r" #'windresize)
   ('windresize-map
    "h" #'windresize-left
    "l" #'windresize-right
