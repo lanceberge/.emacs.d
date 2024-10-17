@@ -205,5 +205,8 @@
   :config
   (defun +restart-emacs ()
     (interactive)
+    (let ((vterm-buffer (get-buffer "*vterm*")))
+      (if vterm-buffer
+          (kill-buffer vterm-buffer)))
     (setq confirm-kill-emacs nil)
     (restart-emacs)))
