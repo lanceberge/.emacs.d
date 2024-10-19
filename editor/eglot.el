@@ -9,6 +9,7 @@
     typescript-mode typescript-ts-mode
     js2-mode
     python-base-mode
+    php-mode
     sh-base-mode
     svelte-mode) . eglot-ensure)
   :custom
@@ -27,6 +28,7 @@
                 (save-some-buffers t)))
   (add-to-list 'eglot-server-programs
                '(svelte-mode . ("svelteserver" "--stdio")))
+
   (setf (plist-get eglot-events-buffer-config :size) 0))
 
 (use-package eldoc
