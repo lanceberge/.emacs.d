@@ -40,6 +40,7 @@
         (progn
           (switch-to-buffer vterm-buffer)
           (unless (string= current-dir (expand-file-name default-directory))
+            (vterm-send-C-c)
             (vterm-send-escape)
             (vterm-send-string (concat "icd " (shell-quote-argument current-dir)))
             (vterm-send-return)))
