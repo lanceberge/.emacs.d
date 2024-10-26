@@ -15,18 +15,25 @@
 
 (use-package vterm
   :general
-  ('emacs
-   "C-u" #'vterm--self-insert)
+  ('emacs 'vterm-mode-map
+          "C-u" (lambda () (interactive) (+vterm-copy-mode) (evil-scroll-up 0)))
   (my-leader-def
     :states 'insert
     "C-c" #'vterm--self-insert)
+
+  ('normal
+   "C-c C-t" #'+vterm-copy-mode)
+
+  (my-leader-def
+    :mode 'vterm-mode
+    "C-t" #'+vterm-copy-mode)
 
   (my-leader-def
     "bv" #'(vterm :which-key "vterm")
     "ov" #'(+vterm :which-key "vterm"))
   :config
+  (add-to-list 'vterm-keymap-exceptions "C-c C-t")
   (add-to-list 'evil-emacs-state-modes 'vterm-mode)
-  ;; (evil-collection-init 'vterm)
   (add-hook 'vterm-mode-hook (lambda ()
                                (display-line-numbers-mode -1))))
 
@@ -45,3 +52,16 @@
             (vterm-send-string (concat "icd " (shell-quote-argument current-dir)))
             (vterm-send-return)))
       (vterm))))
+
+;;;###autoload
+(defun +vterm-copy-mode ()
+  (interactive)
+  (if (eq evil-state 'emacs)
+      (progn
+        (vterm--enter-copy-mode)
+        (evil-normal-state))
+    (progn
+      (vterm--exit-copy-mode)
+      (evil-emacs-state)
+      (vterm-send-escape)
+      (vterm-send-string "a"))))
