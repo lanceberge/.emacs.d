@@ -15,7 +15,6 @@
    "]of" (defun +format-all-on  () (interactive)
                 (format-all-mode 1) :which-key "format all"))
   :config
-  (defvar +format-with-lsp nil)
   (setq-default format-all-formatters format-all-default-formatters))
 
 (use-package avy ; jump to things in files similar to easymotion for vim
@@ -27,7 +26,7 @@
    "go" #'(avy-goto-char-timer :which-key "goto char"))
 
   ('(normal insert)
-   "M-i" #'(avy-goto-char-timer :which-key "goto char"))
+   "M-i" #'avy-pop-mark)
 
   ('isearch-mode-map
    "M-i" #'evil-avy-isearch)
