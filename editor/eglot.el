@@ -17,9 +17,8 @@
   (eglot-sync-connect nil)
   (eglot-events-buffer-size 0)
   :general
-  ('normal
-   "ga" #'eglot-code-actions
-   "gh" #'eldoc-print-current-symbol-info)
+  ('normal 'eglot-mode-map
+           "ga" #'eglot-code-actions)
   (my-localleader-def
     "gr" #'eglot-rename)
   :config
@@ -36,7 +35,21 @@
   :preface
   (when (and (version<= emacs-version "29.1") (featurep 'eldoc))
     (unload-feature 'eldoc t))
-  :defer t)
+  :defer t
+  :general
+  ('normal 'eglot-mode-map
+           "gh" #'eldoc-print-current-symbol-info
+           "K" #'+eldoc-help)
+  :config
+  (defun +eldoc-help ()
+    "Show eldoc info for current symbol and restore cursor position."
+    (interactive)
+    (let ((win (selected-window)))
+      (with-selected-window win
+        (call-interactively #'eldoc-print-current-symbol-info)
+        (run-with-timer 0.1 nil
+                        (lambda ()
+                          (select-window win)))))))
 
 ;; TODO
 ;; (when IS-MAC
@@ -111,4 +124,4 @@
    "]y" #'flymake-goto-next-error)
   :custom
   (flymake-no-changes-timeout 5)
-  (flymake-show-diagnostics-at-end-of-line 'short))
+  (flymake-show-diagnostics-at-end-of-line nil))
