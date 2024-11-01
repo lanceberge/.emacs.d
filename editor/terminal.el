@@ -15,25 +15,17 @@
 
 (use-package vterm
   :general
-  ('emacs 'vterm-mode-map
-          "C-u" (lambda () (interactive) (+vterm-copy-mode) (evil-scroll-up 0)))
   (my-leader-def
     :states 'insert
     "C-c" #'vterm--self-insert)
 
-  ('normal
-   "C-c C-t" #'+vterm-copy-mode)
-
+  ('normal 'vterm-mode-map
+           "u" nil)
   (my-leader-def
-    :mode 'vterm-mode
-    "C-t" #'+vterm-copy-mode)
-
-  (my-leader-def
-    "bv" #'(vterm :which-key "vterm")
+    "bv" (defun +vterm-last () (interactive) (vterm) (evil-collection-vterm-append))
     "ov" #'(+vterm :which-key "vterm"))
   :config
-  (add-to-list 'vterm-keymap-exceptions "C-c C-t")
-  (add-to-list 'evil-emacs-state-modes 'vterm-mode)
+  (evil-collection-init 'vterm)
   (add-hook 'vterm-mode-hook (lambda ()
                                (display-line-numbers-mode -1))))
 
@@ -47,21 +39,7 @@
         (progn
           (switch-to-buffer vterm-buffer)
           (unless (string= current-dir (expand-file-name default-directory))
-            (vterm-send-C-c)
-            (vterm-send-escape)
-            (vterm-send-string (concat "icd " (shell-quote-argument current-dir)))
+            (vterm-send-string (concat "cd " (shell-quote-argument current-dir)))
             (vterm-send-return)))
-      (vterm))))
-
-;;;###autoload
-(defun +vterm-copy-mode ()
-  (interactive)
-  (if (eq evil-state 'emacs)
-      (progn
-        (vterm--enter-copy-mode)
-        (evil-normal-state))
-    (progn
-      (vterm--exit-copy-mode)
-      (evil-emacs-state)
-      (vterm-send-escape)
-      (vterm-send-string "a"))))
+      (vterm)))
+  (evil-collection-vterm-append))
