@@ -56,7 +56,8 @@
   (dolist (path '("/opt/homebrew/opt/llvm/bin/"
                   "~/go/bin"
                   "/Users/lance/.config/herd-lite/bin/"
-                  "/opt/homebrew/opt/openjdk/bin/"))
+                  "/opt/homebrew/opt/openjdk/bin/"
+                  "~/.config/composer/vendor/bin/"))
     (add-to-list 'exec-path path))
   (setenv "PATH" (mapconcat 'identity exec-path path-separator)))
 
