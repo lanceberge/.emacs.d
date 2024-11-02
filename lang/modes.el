@@ -41,9 +41,6 @@
    :prefix "C-c"
    "t" #'markdown-toc-generate-toc))
 
-(use-package php-mode
-  :mode ("\\.php\\'" . php-mode))
-
 (use-package text-mode
   :defer t
   :ensure nil
