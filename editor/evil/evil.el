@@ -3,7 +3,6 @@
   :demand t
   :custom
   (evil-want-C-u-scroll t)
-  (evil-want-Y-yank-to-eol t)
   (evil-want-keybinding nil)
   (evil-split-window-below t)
   (evil-vsplit-window-right t)
@@ -58,4 +57,5 @@
   ('(normal insert)
    "C-l" #'(evil-ex-nohighlight :which-key "clear highlight"))
   :config
+  (setq evil-want-Y-yank-to-eol t)
   (evil-mode))
