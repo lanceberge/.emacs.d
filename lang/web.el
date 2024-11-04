@@ -2,6 +2,7 @@
 (use-package web-mode
   :mode ("\\.html\\'" . web-mode)
   :mode ("\\.css\\'" . web-mode)
+  :mode ("\\.vue\\'" . web-mode)
   :custom
   (web-mode-code-indent-offset 2)
   (web-mode-markup-indent-offset 2)
