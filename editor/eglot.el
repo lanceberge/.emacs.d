@@ -11,6 +11,7 @@
     python-base-mode
     php-mode
     sh-base-mode
+    vue-mode
     svelte-mode) . eglot-ensure)
   :custom
   (eldoc-echo-area-use-multiline-p t)
@@ -27,6 +28,27 @@
                 (save-some-buffers t)))
   (add-to-list 'eglot-server-programs
                '(svelte-mode . ("svelteserver" "--stdio")))
+
+  ;; https://www.reddit.com/r/emacs/comments/11svcvj/emacs_setup_for_vue_typescript_volar_eglot_webmode/
+  (defun vue-eglot-init-options ()
+    (let ((tsdk-path (expand-file-name
+                      "lib"
+                      (shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\""))))
+      `(:typescript (:tsdk ,tsdk-path
+                           :languageFeatures (:completion
+                                              (:defaultTagNameCase "both"
+                                                                   :defaultAttrNameCase "kebabCase"
+                                                                   :getDocumentNameCasesRequest nil
+                                                                   :getDocumentSelectionRequest nil)
+                                              :diagnostics
+                                              (:getDocumentVersionRequest nil))
+                           :documentFeatures (:documentFormatting
+                                              (:defaultPrintWidth 100
+                                                                  :getDocumentPrintWidthRequest nil)
+                                              :documentSymbol t
+                                              :documentColor t)))))
+  (add-to-list 'eglot-server-programs
+               `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options))))
 
   (setf (plist-get eglot-events-buffer-config :size) 0))
 
