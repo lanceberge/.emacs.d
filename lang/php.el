@@ -3,10 +3,8 @@
   :hook
   (php-mode . +php-mode)
   :general
-  (my-leader-def
-    "=" (lambda () (interactive)
-          (save-buffer)
-          (php-cs-fixer-fix-current))))
+  ('normal 'php-mode-map
+           [remap +format/buffer] #'php-cs-fixer-fix-current))
 
 (defun +php-mode ()
   (add-hook 'after-save-hook #'php-cs-fixer-fix-current nil t)
@@ -16,6 +14,7 @@
 (defun php-cs-fixer-fix-current ()
   "Run PHP CS Fixer on the current file silently."
   (interactive)
+  (save-buffer)
   (when (and buffer-file-name
              (string-match "\\.php\\'" buffer-file-name))
     (let ((command (concat "~/.config/composer/vendor/bin/php-cs-fixer fix --using-cache=no "
