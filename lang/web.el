@@ -22,7 +22,10 @@
 (use-package emmet-mode
   :hook
   (web-mode . emmet-mode)
-  (svelte-mode . emmet-mode))
+  (svelte-mode . emmet-mode)
+  :general
+  ('insert 'emmet-mode-keymap
+           "C-f" #'emmet-expand-line))
 
 (use-package svelte-mode
   :defer t

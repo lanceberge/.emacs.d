@@ -25,7 +25,8 @@
 
 (use-package js2-mode
   :mode ("\\.js\\'" . js2-mode)
-  :custom (js2-basic-offset 2))
+  :custom (js2-basic-offset 2)
+  :hook (js-mode . (lambda () (setq-local tab-width 2))))
 
 (use-package markdown-mode
   :ensure nil
