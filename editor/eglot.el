@@ -16,7 +16,6 @@
   :custom
   (eldoc-echo-area-use-multiline-p t)
   (eglot-sync-connect nil)
-  (eglot-events-buffer-size 0)
   :general
   ('normal 'eglot-mode-map
            "ga" #'eglot-code-actions)
@@ -29,24 +28,15 @@
   (add-to-list 'eglot-server-programs
                '(svelte-mode . ("svelteserver" "--stdio")))
 
-  ;; https://www.reddit.com/r/emacs/comments/11svcvj/emacs_setup_for_vue_typescript_volar_eglot_webmode/
+  ;; https://github.com/joaotavora/eglot/discussions/1184
   (defun vue-eglot-init-options ()
     (let ((tsdk-path (expand-file-name
                       "lib"
-                      (shell-command-to-string "npm list --global --parseable typescript | head -n1 | tr -d \"\n\""))))
-      `(:typescript (:tsdk ,tsdk-path
-                           :languageFeatures (:completion
-                                              (:defaultTagNameCase "both"
-                                                                   :defaultAttrNameCase "kebabCase"
-                                                                   :getDocumentNameCasesRequest nil
-                                                                   :getDocumentSelectionRequest nil)
-                                              :diagnostics
-                                              (:getDocumentVersionRequest nil))
-                           :documentFeatures (:documentFormatting
-                                              (:defaultPrintWidth 100
-                                                                  :getDocumentPrintWidthRequest nil)
-                                              :documentSymbol t
-                                              :documentColor t)))))
+                      (string-trim-right (shell-command-to-string "npm list --global --parseable typescript | head -n1")))))
+      `(:typescript (:tsdk ,tsdk-path)
+                    :vue (:hybridMode :json-false))))
+
+
   (add-to-list 'eglot-server-programs
                `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options))))
 
