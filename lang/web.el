@@ -11,6 +11,7 @@
   :mode ("\\.html\\'" . web-mode)
   :mode ("\\.css\\'" . web-mode)
   :mode ("\\.vue\\'" . vue-mode)
+  :mode ("\\.blade.php\\'" . web-mode)
   :config
   (setf (alist-get "vue" web-mode-engines-auto-pairs) '(("{{ " . " "))))
 
