@@ -87,6 +87,11 @@
 (use-package electric-pair-mode
   :ensure nil
   :hook (prog-mode . electric-pair-mode)
+  :init
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (setq-local electric-pair-pairs
+                          (append electric-pair-pairs '((?< . ?>))))))
   :config
   (setq electric-pair-inhibit-predicate
         (lambda (c)
