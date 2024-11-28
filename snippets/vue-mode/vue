@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: vue
+# key: vue
+# --
+<script setup lang="ts">
+  $1
+</script>
+
+<template>
+  $0
+</template>

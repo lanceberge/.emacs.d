@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: props
+# key: props
+# --
+defineProps<{
+  $0
+}>()

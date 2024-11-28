@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: script setup
+# key: sst
+# --
+<script setup lang="ts">
+  $0
+</script>
