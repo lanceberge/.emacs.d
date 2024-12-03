@@ -53,3 +53,6 @@
 
 (use-package dockerfile-mode
   :defer t)
+
+(use-package terraform-mode
+  :defer t)
