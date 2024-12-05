@@ -51,8 +51,6 @@
    "s-t" #'beginning-of-line)
 
   ('normal
-   "Y" (general-simulate-key "y$" :which-key "yank until end of line")
-
    "C-/" #'(comment-line :which-key "comment")
    "M-/" #'(comment-line :which-key "comment"))
 

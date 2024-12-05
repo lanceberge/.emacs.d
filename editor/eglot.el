@@ -20,6 +20,8 @@
   ('normal 'eglot-mode-map
            "ga" #'eglot-code-actions)
   (my-localleader-def
+    "er" #'eglot-reconnect)
+  (my-localleader-def
     "gr" #'eglot-rename)
   :config
   (advice-add 'eglot-rename :after
