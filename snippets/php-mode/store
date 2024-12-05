@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: store
+# key: store
+# --
+public function store(Request $request) {
+    $validated = $request->validate([
+        '$1' => '$2'
+    ]);
+
+    $0;
+}
