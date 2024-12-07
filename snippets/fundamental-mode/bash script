@@ -4,7 +4,7 @@
 # --
 #!/bin/bash
 
-if [ $# $1 $2 ];
+if [ $# $1 $2 ]; then
    echo "Usage: `(file-name-base (buffer-file-name))` $3"
    return 1
 fi
