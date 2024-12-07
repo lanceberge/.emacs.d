@@ -2,7 +2,6 @@
 # name: construct
 # key: construct
 # --
-public function __construct()
-{
-    $0;
-}
+public function __construct(
+    $0
+) {}
