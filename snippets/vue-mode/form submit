@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: form submit
+# key: submit
+# --
+const submit = () => {
+  form.post(route('$1'))
+}
