@@ -57,5 +57,4 @@
   ('(normal insert)
    "C-l" #'(evil-ex-nohighlight :which-key "clear highlight"))
   :config
-  (setq evil-want-Y-yank-to-eol t)
   (evil-mode))
