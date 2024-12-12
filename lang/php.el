@@ -17,7 +17,7 @@
   (save-buffer)
   (when (and buffer-file-name
              (string-match "\\.php\\'" buffer-file-name))
-    (let ((command (concat "~/.config/composer/vendor/bin/php-cs-fixer fix --using-cache=no "
+    (let ((command (concat "PHP_CS_FIXER_IGNORE_ENV=1 ~/.config/composer/vendor/bin/php-cs-fixer fix --using-cache=no "
                            (shell-quote-argument buffer-file-name)))
           (current-point (point)))
       (call-process-shell-command command nil 0)
