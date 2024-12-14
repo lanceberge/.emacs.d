@@ -13,7 +13,8 @@
   :mode ("\\.vue\\'" . vue-mode)
   :mode ("\\.blade.php\\'" . web-mode)
   :config
-  (setf (alist-get "vue" web-mode-engines-auto-pairs) '(("{{ " . " "))))
+  (setf (alist-get "vue" web-mode-engines-auto-pairs) '(("{{ " . " ")))
+  (setf (alist-get "blade" web-mode-engines-auto-pairs) '(("{{ " . " "))))
 
 (use-package html-mode
   :ensure nil
