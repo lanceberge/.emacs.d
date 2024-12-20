@@ -3,5 +3,5 @@
 # key: construct
 # --
 public function __construct(
-    $0
+    private $0,
 ) {}
