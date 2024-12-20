@@ -37,7 +37,7 @@
   :ensure nil
   :general
   ('normal
-   "]c" #'(smerge-next :which-key "next conflicting hunk")
+   "]c" #'(smerge-vc-next-conflict :which-key "next conflicting hunk")
    "[c" #'(smerge-prev :which-key "previous conflicting hunk"))
   (my-localleader-def
     "ml" #'(smerge-keep-upper :which-key "keep local changes")
