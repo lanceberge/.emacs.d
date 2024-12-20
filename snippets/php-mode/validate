@@ -2,5 +2,7 @@
 # name: validate
 # --
 $validated = $request->validate([
-    $1 => '${2:required}$0',
+    '$1' => 'required$2',
 ]);
+
+\$$1 = $validated['$1'];$0
