@@ -1,0 +1,23 @@
+# key: php
+# name: php
+# --
+<?php
+
+namespace `(let* ((file-path (buffer-file-name))
+                     (project-root (locate-dominating-file file-path "composer.json"))
+                     (relative-path (if project-root
+                                      (file-relative-name file-path project-root)
+                                    (file-name-nondirectory file-path)))
+                     (path-without-ext (file-name-sans-extension relative-path))
+                     (path-parts (split-string path-without-ext "/"))
+                     (filtered-parts (cl-remove-if (lambda (part)
+                                                   (or (string= part "app")
+                                                       (string= part "src")))
+                                                 path-parts))
+                     (namespace-path (mapconcat 'capitalize filtered-parts "\\"))
+                     (final-namespace (if (string-prefix-p "App\\" namespace-path)
+                                        namespace-path
+                                      (concat "App\\" namespace-path))))
+                (substring final-namespace 0 (string-match "\\\\[^\\\\]*$" final-namespace)))`;
+
+$0
