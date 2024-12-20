@@ -1,0 +1,6 @@
+# key: validate
+# name: validate
+# --
+$validated = $request->validate([
+    $1 => '${2:required}$0',
+]);
