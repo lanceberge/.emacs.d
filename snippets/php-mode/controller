@@ -21,6 +21,9 @@ namespace `(let* ((file-path (buffer-file-name))
                                       (concat "App\\" namespace-path))))
                 (substring final-namespace 0 (string-match "\\\\[^\\\\]*$" final-namespace)))`;
 
+use Inertia\Inertia;
+use Illuminate\Http\Request;
+
 class `(file-name-base (buffer-file-name))` extends Controller
 {
     $0
