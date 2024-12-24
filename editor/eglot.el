@@ -14,7 +14,7 @@
     vue-mode
     svelte-mode) . eglot-ensure)
   :custom
-  (eldoc-echo-area-use-multiline-p t)
+  (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
   :general
   ('normal 'eglot-mode-map
