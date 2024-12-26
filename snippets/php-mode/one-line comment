@@ -1,0 +1,4 @@
+# key: cc
+# name: one-line comment
+# --
+/** $0 */

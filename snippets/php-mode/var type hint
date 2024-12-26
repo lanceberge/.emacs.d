@@ -1,5 +1,4 @@
-# -*- mode: snippet -*-
-# name: var type hint
 # key: var
+# name: var type hint
 # --
-/** @var array $0 */
+/** @var array<$0> */

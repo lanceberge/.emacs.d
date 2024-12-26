@@ -2,4 +2,4 @@
 # name: return statement
 # key: ret
 # --
-/** @return $0 */
+@return $0
