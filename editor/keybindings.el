@@ -68,4 +68,16 @@
    "C-e" #'end-of-line
    "C-a" #'beginning-of-line
    "C-<backspace>" #'evil-delete-backward-word
-   "M-<backspace>" #'evil-delete-backward-word))
+   "M-<backspace>" #'evil-delete-backward-word)
+
+  ('(normal insert)
+   '(php-mode-map
+     c++-mode-map)
+   "M-;" #'+append-semicolon))
+
+(defun +append-semicolon ()
+  (interactive)
+  (save-excursion
+    (end-of-line)
+    (unless (looking-back ";" nil)
+      (insert ";"))))
