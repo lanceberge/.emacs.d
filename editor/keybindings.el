@@ -13,7 +13,11 @@
                (set-frame-parameter frame 'undecorated t)))
            :which-key "New Frame")
     "h" #'(help-command :which-key "Help")
-    ";" #'(shell-command :which-key "shell command")
+    ":" #'shell-command
+    ";" #'(lambda ()
+            (interactive)
+            (let ((default-directory (project-root (project-current t))))
+              (call-interactively #'shell-command)))
 
     ;; Windows
     "w" #'(evil-window-map :which-key "Windows") ; window command
