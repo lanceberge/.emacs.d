@@ -56,3 +56,15 @@
 
 (use-package terraform-mode
   :defer t)
+
+(use-package sh-mode
+  :ensure nil
+  :defer t
+  :hook
+  (sh-base-mode
+   .
+   (lambda ()
+     (add-hook 'after-save-hook
+               'executable-make-buffer-file-executable-if-script-p
+               nil
+               t))))
