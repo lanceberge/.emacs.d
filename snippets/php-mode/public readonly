@@ -1,4 +1,4 @@
 # key: ro
-# name: public readonly
+# name: readonly
 # --
-public readonly $0,
+readonly $0,

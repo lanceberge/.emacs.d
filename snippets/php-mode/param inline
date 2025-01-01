@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: param inline
+# key: pc
+# --
+/** @param $0 */

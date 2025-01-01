@@ -2,4 +2,4 @@
 # name: param
 # key: p
 # --
-/** @param $0 */
+@param array<$0>

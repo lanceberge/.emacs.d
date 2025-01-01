@@ -1,0 +1,6 @@
+# key: test
+# name: test
+# --
+test('$1', function () {
+    expect($2)->${0:toBeTrue()};
+});
