@@ -1,5 +1,7 @@
 ;;; -*- lexical-binding: t -*-
-(use-package emacs ; initial keybindings of built-in functions
+
+;; initial keybindings, built-ins
+(use-package emacs
   :ensure nil
   :general
   (my-localleader-def
@@ -77,8 +79,10 @@
   ('(normal insert)
    '(php-mode-map
      c++-mode-map)
-   "M-;" #'+append-semicolon))
+   "M-;" #'+append-semicolon)
+  )
 
+;;;###autoload
 (defun +append-semicolon ()
   (interactive)
   (save-excursion
