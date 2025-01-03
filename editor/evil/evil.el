@@ -16,8 +16,7 @@
    [remap evil-next-line] #'evil-next-visual-line
    [remap evil-previous-line] #'evil-previous-visual-line
    "C-M-d" #'scroll-other-window
-   "C-M-u" #'scroll-other-window-down
-   "gm" (general-simulate-key "@@"))
+   "C-M-u" #'scroll-other-window-down)
 
   ('evil-ex-completion-map "C-g" 'abort-recursive-edit) ; quit on C-g
 

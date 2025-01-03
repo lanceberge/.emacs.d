@@ -204,8 +204,14 @@
   :config
   (defun +restart-emacs ()
     (interactive)
-    (let ((vterm-buffer (get-buffer "*vterm*")))
-      (if vterm-buffer
-          (kill-buffer vterm-buffer)))
+    (let ((vterm- (get-buffer "*vterm*")))
+      (if vterm-
+          (kill-buffer )))
     (setq confirm-kill-emacs nil)
     (restart-emacs)))
+
+(use-package multiple-cursors
+  :custom
+  (mc/always-run-for-all t)
+  :general
+  ('normal "gm" #'mc/mark-all-like-this))
