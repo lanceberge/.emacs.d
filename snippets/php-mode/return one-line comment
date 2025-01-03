@@ -2,4 +2,4 @@
 # name: return one-line comment
 # key: retc
 # --
-/** @return $0 */
+/** @return array<$0> */
