@@ -63,8 +63,11 @@
   ('visual
    "r" #'(replace-string :which-key "replace string")
    "C-/" #'(comment-dwim :which-key "comment")
-   "M-/" #'(comment-dwim :which-key "comment"))
+   "M-/" #'(comment-dwim :which-key "comment")
+   "q" #'apply-macro-to-region-lines)
 
+  ('normal
+   "q" #'+start-or-end-macro)
 
   ('(normal insert)
    :prefix "C-c"
@@ -79,8 +82,7 @@
   ('(normal insert)
    '(php-mode-map
      c++-mode-map)
-   "M-;" #'+append-semicolon)
-  )
+   "M-;" #'+append-semicolon))
 
 ;;;###autoload
 (defun +append-semicolon ()
@@ -89,3 +91,13 @@
     (end-of-line)
     (unless (looking-back ";" nil)
       (insert ";"))))
+
+(defvar +macro-recording nil)
+
+;;;###autoload
+(defun +start-or-end-macro (arg)
+  (interactive "p")
+  (if +macro-recording
+      (kmacro-end-macro arg)
+    (kmacro-start-macro arg))
+  (setq +macro-recording (not +macro-recording)))

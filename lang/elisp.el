@@ -35,8 +35,9 @@
                commentary slurp/barf-cp))
   ;; TODO set up function text object
   :general
+  ('normal
+   "Y" #'lispyville-yank-line)
   ('normal 'lispyville-mode-map
-           "Y" #'lispyville-yank-line
            "B" #'lispyville-backward-atom-begin
            "E" #'lispyville-forward-atom-end))
 
