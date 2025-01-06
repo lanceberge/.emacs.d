@@ -126,6 +126,11 @@
   :config
   (global-undo-tree-mode))
 
+(when IS-LINUX
+  (add-hook 'after-init-hook
+            (lambda ()
+              (setq exec-path (append exec-path '("~/go/bin"))))))
+
 (when (version< emacs-version "29.1")
   (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
     :custom
@@ -138,7 +143,7 @@
                 (setq exec-path-from-shell-arguments '("-l"))
                 (exec-path-from-shell-copy-env "PYTHONPATH")
                 (exec-path-from-shell-initialize)
-                (setq exec-path (append exec-path '("~/miniconda3/bin" "~/go/bin")))))))
+                (setq exec-path (append exec-path '("/home/labergeron/miniconda3/bin" "~/go/bin")))))))
 
 (use-package google-this
   :general

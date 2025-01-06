@@ -12,7 +12,7 @@
     "pt" (defun +project-find-todos ()
            (interactive)
            (consult-ripgrep (project-root (project-current t)) "TODO"))
-    "p SPC p" #'(+project-switch-and-rg :which-key "switch project")
+    "SPC p" #'(+project-switch-and-rg :which-key "switch project")
     "pv" #'(+project-switch-and-vterm :which-key "switch and vterm")))
 
 ;;;###autoload
