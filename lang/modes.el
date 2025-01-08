@@ -49,7 +49,13 @@
   (text-mode-ispell-word-completion nil))
 
 (use-package yaml-mode
-  :mode ("\\.gotmpl\\'" . yaml-mode))
+  :mode ("\\.gotmpl\\'" . yaml-mode)
+  :hook
+  (yaml-mode
+   .
+   (lambda ()
+     (if (string-suffix-p ".yaml.gotmpl" buffer-file-name)
+         (remove-hook 'before-save-hook #'whitespace-cleanup)))))
 
 (use-package dockerfile-mode
   :defer t)
