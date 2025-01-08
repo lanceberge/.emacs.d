@@ -294,3 +294,6 @@
         dirs))
 
 (setq custom-file "~/.emacs.d/custom.el")
+
+;; Start the emacsclient on init
+(add-hook 'after-init-hook #'server-start)

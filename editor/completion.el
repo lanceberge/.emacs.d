@@ -13,6 +13,7 @@
   (corfu-on-exact-match nil)
   (corfu-quit-at-boundary nil)
   (corfu-scroll-margin 5)
+  (completion-ignore-case t)
   :general
   ('corfu-map
    "RET" #'newline
