@@ -1,6 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 (use-package visual-regexp
   :general
+  ('visual
+   "r" #'vr/replace)
   (my-leader-def
     "rp" #'vr/replace))
 
@@ -8,4 +10,4 @@
   :after visual-regexp
   :config
   (setq vr/command-python
-        (replace-regexp-in-string "python" "python3" vr/command-python)))
+        (replace-regexp-in-string "python " "python3 " vr/command-python)))

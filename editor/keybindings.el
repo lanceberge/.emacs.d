@@ -54,6 +54,11 @@
    "[b" #'(previous-buffer :which-key "previous buffer")
    "g C-l" #'(end-of-visual-line :which-key "end of visual line")
    "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line")
+
+   "m" nil
+   "mm" #'(lambda () (interactive)
+            (bookmark-set (file-name-nondirectory buffer-file-name)))
+   "md" #'(bookmark-delete-all :which-key "delete all bookmarks")
    "s-t" #'beginning-of-line)
 
   ('normal
@@ -61,7 +66,6 @@
    "M-/" #'(comment-line :which-key "comment"))
 
   ('visual
-   "r" #'(replace-string :which-key "replace string")
    "C-/" #'(comment-dwim :which-key "comment")
    "M-/" #'(comment-dwim :which-key "comment")
    "q" #'apply-macro-to-region-lines)

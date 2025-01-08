@@ -17,6 +17,7 @@
     "pb" #'(consult-project-buffer :which-key "project buffer")
     "fm" #'(consult-global-mark :which-key "mark")
     "bm" #'(consult-mark :which-key "buffer mark")
+    "fb" #'(consult-bookmark :which-key "find bookmark")
     "fy" #'(consult-yank-from-kill-ring :which-key "yank")
     "f SPC y" #'(consult-yank-replace :which-key "replace yank")
     "fh" #'(consult-man :which-key "help")

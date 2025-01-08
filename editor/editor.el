@@ -127,6 +127,9 @@
   (undo-tree-auto-save-history t)
   (evil-undo-system 'undo-tree)
   :general
+  ('visual
+   "u" #'(lambda (interactive) (undo 1))
+   "C-r" #'(lambda (interactive) (redo 1)))
   (my-leader-def
     "fu" #'(undo-tree-visualize :which-key "undo"))
   :config
