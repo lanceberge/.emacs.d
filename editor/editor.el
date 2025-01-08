@@ -69,7 +69,13 @@
    "d" #'embark-find-definition
    "g" #'google-this-word)
   ('embark-identifier-map
-   "." #'lsp-execute-code-action))
+   "." #'lsp-execute-code-action)
+  :config
+  ;; Noconform actions embark
+  (setq embark-pre-action-hooks
+        (cl-remove-if (lambda (hook)
+                        (eq (car (cdr hook)) 'embark--confirm))
+                      embark-pre-action-hooks)))
 
 (use-package define-word
   :commands (define-word-at-point))
