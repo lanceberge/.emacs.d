@@ -228,4 +228,11 @@
   :custom
   (mc/always-run-for-all t)
   :general
-  ('normal "gm" #'mc/mark-all-like-this))
+  ('normal
+   "gm" #'mc/mark-all-like-this))
+
+(use-package drag-stuff
+  :general
+  ('visual
+   "M-k" #'drag-stuff-up
+   "M-j" #'drag-stuff-down))
