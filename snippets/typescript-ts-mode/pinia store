@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: pinia store
+# key: store
+# --
+import { defineStore } from 'pinia'
+
+export const $1 = defineStore('$1', {
+  state: () => ({
+      $1
+  }),
+  actions: {
+      $0
+  }
+})

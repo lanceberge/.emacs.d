@@ -22,11 +22,15 @@
   :ensure (:host github :repo "lanceberge/elysium")
   :general
   ('visual
-   "sq" #'elysium-query)
+   "sq" #'elysium-query
+   "sc" #'elysium-add-context)
+  ('normal
+   "C-l" #'elysium-clear-buffer)
   (my-localleader-def
     "sq" #'elysium-query
     "so" #'elysium-keep-all-suggested-changes
     "sm" #'elysium-discard-all-suggested-changes
     "st" #'elysium-toggle-window)
   ('(insert normal) 'gptel-mode-map
+   "RET" (lambda () (interactive) (end-of-buffer) (gptel-send))
    "C-<return>" #'elysium-query))
