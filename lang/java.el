@@ -30,4 +30,6 @@
   :ensure nil
   :hook
   (java-mode . (lambda ()
-                 (setq-local indent-tabs-mode nil))))
+                 (setq-local indent-tabs-mode nil)))
+  :config
+  (setenv "JAVA_HOME" "/usr/lib/jvm/java-17-openjdk-amd64"))

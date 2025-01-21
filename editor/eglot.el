@@ -12,6 +12,7 @@
     php-mode
     sh-base-mode
     vue-mode
+    scala-mode
     svelte-mode) . eglot-ensure)
   :custom
   (eldoc-echo-area-use-multiline-p nil)
