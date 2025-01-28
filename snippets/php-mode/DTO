@@ -1,0 +1,17 @@
+# key: dto
+# name: DTO
+# --
+<?php
+
+namespace App\Data;
+
+use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+
+#[TypeScript]
+class $1
+{
+    public function __construct(
+        public $0,
+    ) {
+    }
+}
