@@ -61,7 +61,7 @@
    "md" #'(bookmark-delete-all :which-key "delete all bookmarks")
    "s-t" #'beginning-of-line)
 
-  ('normal
+  ('(normal insert)
    "C-/" #'(comment-line :which-key "comment")
    "M-/" #'(comment-line :which-key "comment"))
 

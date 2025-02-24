@@ -94,3 +94,9 @@
    minibuffer-local-completion-map)
   ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
   (setq sbt:program-options '("-Dsbt.supershell=false")))
+
+(use-package nxml-mode
+  :ensure nil
+  :custom
+  (nxml-auto-insert-xml-declaration-flag nil)
+  (nxml-validate-on-save nil))

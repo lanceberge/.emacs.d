@@ -5,6 +5,8 @@
     web-mode
     json-mode
     svelte-mode) . format-all-mode)
+  :custom
+  (format-all-show-errors 'never)
   :general
   (my-leader-def
     :states 'normal
