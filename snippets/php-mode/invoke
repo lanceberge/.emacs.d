@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: invoke
+# key: invoke
+# --
+public function __invoke(Request $request) {
+    $0
+}

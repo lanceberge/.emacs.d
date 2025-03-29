@@ -30,8 +30,8 @@
     "sq" #'elysium-query
     "so" #'elysium-keep-all-suggested-changes
     "sm" #'elysium-discard-all-suggested-changes
-    "sb" #'elysium-switch-to-buffer
-    "st" #'elysium-toggle-window)
+    "st" #'elysium-toggle-window
+    "sc" #'elysium-add-context)
   ('(insert normal) 'gptel-mode-map
    "RET" (lambda () (interactive) (end-of-buffer) (gptel-send))
    "C-<return>" #'elysium-query))

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: new table
+# key: ntable
+# --
+Schema::create('$1', function (Blueprint $table) {
+    $table->id();
+    $2;
+    $table->timestamps();
+});$0
