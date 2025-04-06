@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: protected
-# key: pro
+# key: prot
 # --
 protected $0

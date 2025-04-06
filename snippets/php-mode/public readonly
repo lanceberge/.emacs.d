@@ -1,4 +1,5 @@
-# key: ro
-# name: readonly
+# -*- mode: snippet -*-
+# name: public readonly
+# key: pro
 # --
-readonly $0,
+public readonly $0
