@@ -100,3 +100,9 @@
   :custom
   (nxml-auto-insert-xml-declaration-flag nil)
   (nxml-validate-on-save nil))
+
+(use-package rust-mode
+  :defer t
+  :init
+  ;; (setq rust-mode-treesitter-derive t)
+  )

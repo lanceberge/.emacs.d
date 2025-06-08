@@ -2,6 +2,7 @@
 (use-package eglot
   :defer-incrementally
   (project eldoc flymake)
+  :commands (eglot-shutdown)
   :hook
   ((go-mode
     java-mode java-ts-mode
@@ -10,10 +11,11 @@
     js2-mode
     python-base-mode
     php-mode
+    rust-mode rust-ts-mode
     sh-base-mode
-    vue-mode
     scala-mode
-    svelte-mode) . eglot-ensure)
+    svelte-mode
+    vue-mode) . eglot-ensure)
   :custom
   (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
@@ -25,12 +27,21 @@
   (my-localleader-def
     "gr" #'eglot-rename)
   :config
+  (setq eglot-events-buffer-size 1000000)  ; Log everything
+  (setq eglot-sync-connect 3)              ; Wait longer for connection
   (advice-add 'eglot-rename :after
               (lambda (&rest _)
                 (save-some-buffers t)))
-  (add-to-list 'eglot-server-programs
-               '(svelte-mode . ("svelteserver" "--stdio")))
+  ;; (add-to-list 'eglot-server-programs
+  ;;              '(svelte-mode . ("svelteserver" "--stdio")))
 
+  (add-to-list 'eglot-server-programs
+               '((rust-ts-mode rust-mode) .
+                 ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
+
+
+  (custom-set-faces
+   '(eglot-highlight-symbol-face ((t (:inherit nil)))))
   ;; https://github.com/joaotavora/eglot/discussions/1184
   (defun vue-eglot-init-options ()
     (let ((tsdk-path (expand-file-name
@@ -41,21 +52,22 @@
 
 
   (add-to-list 'eglot-server-programs
-               `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options))))
-
-  (setf (plist-get eglot-events-buffer-config :size) 0))
+               `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
 
 (use-package eldoc
   :ensure nil
+  :hook (eglot-mode . (lambda () (eldoc-mode -1)))
   :preface
   (when (and (version<= emacs-version "29.1") (featurep 'eldoc))
     (unload-feature 'eldoc t))
+  (global-eldoc-mode -1)
   :defer t
   :general
   ('normal 'eglot-mode-map
            "gh" #'eldoc-print-current-symbol-info
            "K" #'+eldoc-help)
   :config
+  (setq eldoc-idle-delay 9999)
   (defun +eldoc-help ()
     "Show eldoc info for current symbol and restore cursor position."
     (interactive)
@@ -65,14 +77,6 @@
         (run-with-timer 0.1 nil
                         (lambda ()
                           (select-window win)))))))
-
-;; TODO
-;; (when IS-MAC
-;;   (use-package eglot-booster
-;;     :ensure (:host github :repo "jdtsmith/eglot-booster")
-;;     :after eglot
-;;     :config
-;;     (eglot-booster-mode -1)))
 
 (unless (version<= emacs-version "29.1")
   (use-package dape
@@ -139,4 +143,4 @@
    "]y" #'flymake-goto-next-error)
   :custom
   (flymake-no-changes-timeout 5)
-  (flymake-show-diagnostics-at-end-of-line nil))
+  (flymake-show-diagnostics-at-end-of-line t))
