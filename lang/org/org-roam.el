@@ -98,7 +98,7 @@
     "onb" #'(consult-org-roam-backlinks :which-key "view backlinks")
     "onl" #'(consult-org-roam-forward-links :which-key "view forward links")
     "on SPC b" #'(consult-org-roam-backlinks-recursive :which-key "view recursive backlinks")
-    "onf" #'(consult-org-roam-file-find :which-key "find note"))
+    "onf" #'(lambda () (interactive) (+open-project "~/org-roam/" #'consult-org-roam-file-find t)))
   :config
   (consult-org-roam-mode))
 

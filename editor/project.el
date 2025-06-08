@@ -1,6 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 (use-package project
   :commands (project-switch-project)
+  :custom
+  (project-switch-commands #'project-find-file)
   :general
   (my-leader-def
     "pp" #'(+project-switch-and-find-file :which-key "switch project")

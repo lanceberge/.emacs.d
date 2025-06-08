@@ -70,13 +70,17 @@
    ";" #'windresize-exit))
 
 ;;;###autoload
-(defun +open-project (dir)
-  (interactive (list (funcall project-prompter)))
-  (let ((dirname (file-name-nondirectory (directory-file-name (expand-file-name dir))))
-        (tabs (mapcar (lambda (tab) (alist-get 'name tab)) (tab-bar-tabs))))
+(defun +open-project (dir &optional callback always-call-callback)
+  (interactive (list (funcall project-prompter) nil nil))
+  (let* ((dirname (file-name-nondirectory (directory-file-name (expand-file-name dir))))
+         (tabs (mapcar (lambda (tab) (alist-get 'name tab)) (tab-bar-tabs)))
+         (callback (or callback (lambda () (project-switch-project dir)))))
     (if (member dirname tabs)
-        (tab-bar-switch-to-tab dirname)
+        (progn
+          (tab-bar-switch-to-tab dirname)
+          (when always-call-callback
+            (call-interactively callback)))
       (progn
         (tab-bar-new-tab)
         (tab-bar-rename-tab dirname)
-        (project-switch-project dir)))))
+        (funcall callback)))))
