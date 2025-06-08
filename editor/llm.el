@@ -19,7 +19,6 @@
                    :key #'gptel-api-key)))
 
 (use-package elysium
-  :ensure (:host github :repo "lanceberge/elysium")
   :general
   ('visual
    "sq" #'elysium-query
@@ -35,3 +34,15 @@
   ('(insert normal) 'gptel-mode-map
    "RET" (lambda () (interactive) (end-of-buffer) (gptel-send))
    "C-<return>" #'elysium-query))
+
+(use-package aidermacs
+  :general
+  (my-leader-def
+    "a" #'aidermacs-transient-menu)
+  :config
+  (setenv (read-file-contents "~/secrets/claude_key"))
+  :custom
+  (aidermacs-use-architect-mode t)
+  (aidermacs-default-model "sonnet")
+  :config
+  (setq exec-path (append exec-path '("~/.local/bin/"))))

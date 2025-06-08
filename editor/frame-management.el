@@ -46,8 +46,10 @@
     "td" #'(tab-bar-close-tab :which-key "close tab")
     "tu" #'(tab-bar-undo-close-tab :which-key "undo close tab")
     "t SPC r" #'(tab-bar-rename-tab-by-name :which-key "rename tab by name")
+    "po" #'(+open-project :which-key "open project")
     "tr" #'(tab-bar-rename-tab :which-key "rename tab")))
 
+;;;###autoload
 (defun +tab-bar/open-and-rename ()
   (interactive)
   (tab-bar-new-tab)
@@ -66,3 +68,15 @@
    "k" #'windresize-up
    "j" #'windresize-down
    ";" #'windresize-exit))
+
+;;;###autoload
+(defun +open-project (dir)
+  (interactive (list (funcall project-prompter)))
+  (let ((dirname (file-name-nondirectory (directory-file-name (expand-file-name dir))))
+        (tabs (mapcar (lambda (tab) (alist-get 'name tab)) (tab-bar-tabs))))
+    (if (member dirname tabs)
+        (tab-bar-switch-to-tab dirname)
+      (progn
+        (tab-bar-new-tab)
+        (tab-bar-rename-tab dirname)
+        (project-switch-project dir)))))
