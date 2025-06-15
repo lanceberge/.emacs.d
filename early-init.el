@@ -88,15 +88,13 @@
 (setq use-package-verbose t ; show which packages are being loaded on startup and when
       use-package-always-ensure t)
 
-(defconst bg-color-light "#32302f"
-  "gruvbox background color")
 
 (defconst bg-color "#282828"
   "gruvbox background color")
 
-(use-package autothemer :defer t)
-
 (use-package gruvbox-theme
+  :custom-face
+  (mode-line ((t (:background ,bg-color))))
   :config
   (load-theme 'gruvbox t))
 
@@ -125,37 +123,16 @@
 
 (elpaca `(seq :build ,(+elpaca-seq-build-steps)))
 
-(use-package keycast
-  :init
-  (keycast-mode-line-mode)
-  :custom-face
-  (keycast-key ((t (:box nil :background ,bg-color-light :foreground "#b8bb26")))))
-
-;; Minimalistic mode-line
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
                 mode-line-mule-info
-                mode-line-client-mode
                 mode-line-modified
-                mode-line-remote
-                mode-line-frame-indentifcation
-                " "
+                "  "
                 mode-line-buffer-identification ; buffer name
                 "  "
-                vc-mode ; show git branch
-                " "
-                mode-line-modes ; show current mode
-                " "
-                mode-line-misc-info
-                mode-line-end-spaces
-                keycast-mode-line))
+                vc-mode)) ; show git branch
 
-;; Mode-line faces
-(custom-set-faces `(mode-line ((t (:background ,bg-color-light :foreground "#928374"))))
-                  `(mode-line-inactive ((t (:background ,bg-color)))))
-
-(set-face-foreground 'vertical-border bg-color)
 
 (use-package no-littering
   :demand t
