@@ -2,6 +2,7 @@
 (use-package typescript-mode
   :mode
   ("\\.ts\\'" . typescript-mode)
+  ("\\.tsx\\'" . tsx-ts-mode)
   :custom
   (typescript-indent-level 2)
   (typescript-auto-indent-flag t))
@@ -69,6 +70,7 @@
   :hook
   (sh-base-mode
    .
+   ;; make scripts executable on save
    (lambda ()
      (add-hook 'after-save-hook
                'executable-make-buffer-file-executable-if-script-p
@@ -103,6 +105,4 @@
 
 (use-package rust-mode
   :defer t
-  :init
-  ;; (setq rust-mode-treesitter-derive t)
-  )
+  :init)
