@@ -105,3 +105,6 @@
 
 (use-package rust-mode
   :defer t)
+
+(use-package nix-mode
+  :defer t)

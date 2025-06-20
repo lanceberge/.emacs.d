@@ -8,6 +8,7 @@
     java-mode java-ts-mode
     c++-mode c++-ts-mode
     typescript-mode typescript-ts-mode
+    nix-mode
     tsx-ts-mode
     js2-mode
     python-base-mode
