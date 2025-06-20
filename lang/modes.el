@@ -104,5 +104,4 @@
   (nxml-validate-on-save nil))
 
 (use-package rust-mode
-  :defer t
-  :init)
+  :defer t)

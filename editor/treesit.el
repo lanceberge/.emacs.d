@@ -30,8 +30,8 @@
                     (yas-activate-extra-mode target-mode)))
         (add-hook target-mode-hook
                   (lambda ()
-                    (yas-activate-extra-mode source-mode)))))
-    )
+                    (yas-activate-extra-mode source-mode))))))
+
   (use-package treesit-auto
     :custom
     (treesit-auto-install t)
