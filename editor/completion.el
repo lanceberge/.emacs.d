@@ -22,7 +22,6 @@
    "M-k" #'corfu-previous
    "C-j" #'corfu-next
    ";" #'corfu-complete
-   [remap evil-normal-state] #'corfu-quit
    "<tab>" #'yas-expand)
 
   ('insert 'corfu-map

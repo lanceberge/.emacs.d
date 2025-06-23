@@ -7,7 +7,7 @@
   (evil-collection magit-section dash f s with-editor git-commit package eieio lv transient)
   :custom
   (magit-save-repository-buffers nil)
-  (magit-no-confirm '(stage-all-changes))
+  (magit-no-confirm '(stage-all-changes amend-published))
   :hook
   (git-commit-mode . evil-insert-state)
   :general

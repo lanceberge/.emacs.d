@@ -30,7 +30,7 @@
       inhibit-default-init t
       site-run-file nil)
 
-(set-face-attribute 'default nil ; font
+(set-face-attribute 'default nil
                     :family "DejaVu Sans Mono"
                     :height 180
                     :weight 'normal

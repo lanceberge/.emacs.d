@@ -77,19 +77,16 @@
                nil
                t))))
 
-;; Enable scala-mode and sbt-mode
 (use-package scala-mode
   :defer t
   :interpreter ("scala" . scala-mode)
   :config
   (setenv "JAVA_HOME" "/usr/lib/jvm/java-17-openjdk-amd64"))
 
-;; Enable sbt mode for executing sbt commands
 (use-package sbt-mode
   :commands sbt-start sbt-command
   :config
-  ;; WORKAROUND: https://github.com/ensime/emacs-sbt-mode/issues/31
-  ;; allows using SPACE when in the minibuffer
+  ;; https://github.com/ensime/emacs-sbt-mode/issues/31
   (substitute-key-definition
    'minibuffer-complete-word
    'self-insert-command
