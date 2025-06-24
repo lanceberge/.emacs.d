@@ -93,12 +93,13 @@
 (use-package consult-org-roam
   :custom
   (consult-org-roam-grep-func #'consult-ripgrep)
+  :commands
+  (consult-org-roam-file-find)
   :general
   (my-leader-def
     "onb" #'(consult-org-roam-backlinks :which-key "view backlinks")
     "onl" #'(consult-org-roam-forward-links :which-key "view forward links")
-    "on SPC b" #'(consult-org-roam-backlinks-recursive :which-key "view recursive backlinks")
-    "onf" #'(lambda () (interactive) (+open-project "~/org-roam/" #'consult-org-roam-file-find t)))
+    "on SPC b" #'(consult-org-roam-backlinks-recursive :which-key "view recursive backlinks"))
   :config
   (consult-org-roam-mode))
 
