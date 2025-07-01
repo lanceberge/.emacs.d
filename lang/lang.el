@@ -105,3 +105,6 @@
 
 (use-package nix-mode
   :defer t)
+
+(use-package elixir-mode
+  :defer t)
