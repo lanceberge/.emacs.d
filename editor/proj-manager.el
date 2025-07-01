@@ -38,6 +38,7 @@
   (my-leader-def
     :states 'normal
     "SPC p" #'(lambda () (interactive) (+project-switch nil #'consult-ripgrep))
+    "pg" #'(lambda () (interactive) (+project-switch nil #'magit-status))
     "pp" #'+project-switch
     "onf" #'+org-roam-file-find
     "fp" #'+find-package))

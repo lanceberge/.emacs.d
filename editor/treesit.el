@@ -33,6 +33,7 @@
                     (yas-activate-extra-mode source-mode))))))
 
   (use-package treesit-auto
+    :defer t
     :custom
     (treesit-auto-install t)
     :config
