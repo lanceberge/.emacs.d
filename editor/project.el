@@ -13,14 +13,20 @@
     "pt" (defun +project-find-todos ()
            (interactive)
            (consult-ripgrep (project-root (project-current t)) "TODO"))
-    "pv" #'(+project-switch-and-vterm :which-key "switch and vterm"))
+    "pv" #'(+project-switch-and-vterm :which-key "switch and vterm")
+    "rp" #'+project-load-projects)
   :config
-  (dolist (dir '("~/code/" "~/code/phoenix" "~/code/laravel"))
-    (when (file-directory-p dir)
-      (project-remember-projects-under dir))))
+  (+project-load-projects))
 
 ;;;###autoload
 (defun +project-switch-and-vterm ()
   (interactive)
   (setq project-switch-commands #'+vterm-project)
   (call-interactively 'project-switch-project))
+
+;;;###autoload
+(defun +project-load-projects ()
+  (interactive)
+  (dolist (dir '("~/code/" "~/code/phoenix" "~/code/laravel"))
+    (when (file-directory-p dir)
+      (project-remember-projects-under dir))))

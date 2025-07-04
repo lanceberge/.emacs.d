@@ -5,8 +5,8 @@
    "r" #'vr/replace)
   ('normal
    "R" #'+vr/replace)
-  (my-leader-def
-    "rp" #'+vr/replace))
+  (my-localleader-def
+    "r" #'+vr/replace))
 
 (use-package visual-regexp-steroids
   :after visual-regexp
