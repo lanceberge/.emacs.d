@@ -7,10 +7,11 @@
   ((go-mode
     java-mode java-ts-mode
     c++-mode c++-ts-mode
+    elixir-mode
     typescript-mode typescript-ts-mode
     nix-mode
     tsx-ts-mode
-    js2-mode
+    ;; js2-mode
     python-base-mode
     php-mode
     rust-mode rust-ts-mode
@@ -41,6 +42,7 @@
                '((rust-ts-mode rust-mode) .
                  ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
 
+  (add-to-list 'eglot-server-programs '(elixir-mode "~/.local/bin/elixir-ls/language_server.sh"))
 
   (custom-set-faces
    '(eglot-highlight-symbol-face ((t (:inherit nil)))))

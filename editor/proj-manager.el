@@ -31,14 +31,10 @@
   (+open-tab-if-exists ".emacs.d")
   (consult-ripgrep "~/.emacs.d/" "use-package "))
 
-(use-package emacs
-  :ensure nil
-  :after (project consult)
-  :general
-  (my-leader-def
-    :states 'normal
-    "SPC p" #'(lambda () (interactive) (+project-switch nil #'consult-ripgrep))
-    "pg" #'(lambda () (interactive) (+project-switch nil #'magit-status))
-    "pp" #'+project-switch
-    "onf" #'+org-roam-file-find
-    "fp" #'+find-package))
+(my-leader-def
+  :states 'normal
+  "SPC p" #'(lambda () (interactive) (+project-switch nil #'consult-ripgrep))
+  "pg" #'(lambda () (interactive) (+project-switch nil #'magit-status))
+  "pp" #'+project-switch
+  "onf" #'+org-roam-file-find
+  "fp" #'+find-package)
