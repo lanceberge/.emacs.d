@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: elixir src
+# key: sex
+# --
+
+#+BEGIN_SRC elixir
+$0
+#+END_SRC
