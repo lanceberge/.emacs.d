@@ -27,6 +27,9 @@
 ;;;###autoload
 (defun +project-load-projects ()
   (interactive)
-  (dolist (dir '("~/code/" "~/code/phoenix" "~/code/laravel"))
+  (dolist (dir '("~/.emacs.d" "~/.config/nixos" "~/dotfiles"))
+    (when (file-directory-p dir)
+      (project--remember-dir dir)))
+  (dolist (dir '("~/code/" "~/code/phoenix" "~/code/laravel" "~/code/git"))
     (when (file-directory-p dir)
       (project-remember-projects-under dir))))

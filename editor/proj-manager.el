@@ -9,7 +9,6 @@
         (tab-bar-new-tab)
         (tab-bar-rename-tab tab-name)))))
 
-;; TODO customize project-list-file
 ;;;###autoload
 (defun +project-switch (&optional dir callback)
   (interactive)
