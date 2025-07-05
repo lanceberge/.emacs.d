@@ -31,10 +31,18 @@
   (+open-tab-if-exists ".emacs.d")
   (consult-ripgrep "~/.emacs.d/" "use-package "))
 
+;;;###autoload
+(defun +pull-repos ()
+  (interactive)
+  (shell-command "~/dotfiles/bin/pull_repos")
+  (yas-reload-all)
+  (org-roam-db-sync))
+
 (my-leader-def
   :states 'normal
   "SPC p" #'(lambda () (interactive) (+project-switch nil #'consult-ripgrep))
   "pg" #'(lambda () (interactive) (+project-switch nil #'magit-status))
   "pp" #'+project-switch
   "onf" #'+org-roam-file-find
-  "fp" #'+find-package)
+  "fp" #'+find-package
+  "gr" #'+pull-repos)
