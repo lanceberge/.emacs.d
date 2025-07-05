@@ -33,9 +33,13 @@
 ;;;###autoload
 (defun +pull-repos ()
   (interactive)
-  (shell-command "~/dotfiles/bin/pull_repos")
+  (let ((pull-repos-cmd "~/dotfiles/bin/pull_repos"))
+    (if (file-exists-p pull-repos-cmd)
+        (shell-command pull-repos-cmd)
+      (message "pull_repos doesn't exist")))
   (yas-reload-all)
-  (org-roam-db-sync))
+  (org-roam-db-sync)
+  (+source-init-file))
 
 (my-leader-def
   :states 'normal
