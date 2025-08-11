@@ -21,10 +21,11 @@
    "M-j" #'corfu-next
    "M-k" #'corfu-previous
    "C-j" #'corfu-next
-   ";" #'corfu-complete
+   "C-y" #'corfu-complete
    "<tab>" #'yas-expand)
 
   ('insert 'corfu-map
+           "C-y" #'corfu-complete
            "C-k" #'corfu-previous)
   :config
   (global-corfu-mode)

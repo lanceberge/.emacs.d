@@ -11,10 +11,13 @@
   :mode ("\\.html\\'" . web-mode)
   :mode ("\\.css\\'" . web-mode)
   :mode ("\\.vue\\'" . vue-mode)
+  :mode ("\\.heex\\'" . web-mode)
   :mode ("\\.blade.php\\'" . web-mode)
   :config
   (setf (alist-get "vue" web-mode-engines-auto-pairs) '(("{{ " . " ")))
-  (setf (alist-get "blade" web-mode-engines-auto-pairs) '(("{{ " . " "))))
+  (setf (alist-get "blade" web-mode-engines-auto-pairs) '(("{{ " . " ")))
+  (setq web-mode-engines-alist
+        '(("elixir" . "\\.heex\\'"))))
 
 (use-package html-mode
   :ensure nil
