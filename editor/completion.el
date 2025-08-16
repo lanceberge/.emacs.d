@@ -34,7 +34,19 @@
   ('minibuffer-mode-map
    [remap newline] #'exit-minibuffer)
   :config
+  (add-hook 'corfu-mode-hook
+            (lambda ()
+              (setq-local completion-styles '(flex basic)
+                          completion-category-overrides nil
+                          completion-category-defaults nil)))
+  (cl-loop for idx from 0 to 9
+           do
+           (define-key corfu-map (kbd (format "M-%d" idx))
+                       `(lambda () (interactive)
+                          (let ((corfu--index ,idx))
+                            (call-interactively #'corfu-complete)))))
   (global-corfu-mode)
+  (corfu-indexed-mode)
   (advice-add 'evil-escape-func :after #'corfu-quit))
 
 (use-package orderless
