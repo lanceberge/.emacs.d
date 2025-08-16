@@ -73,15 +73,13 @@
   (my-leader-def
     "oc" #'(calc :which-key "calc")))
 
-;; TODO
 (use-package desktop ; save sessions to a file
-  :disabled t
   :ensure nil
   :custom
   (desktop-load-locked-desktop t) ; ignore desktop-lock files
-  (desktop-path (list desktop-dirname))
-  (desktop-save-mode 1)
-  (desktop-base-file-name "emacs.desktop"))
+  (desktop-base-file-name "emacs.desktop")
+  :config
+  (desktop-save-mode))
 
 
 (use-package electric-pair-mode
