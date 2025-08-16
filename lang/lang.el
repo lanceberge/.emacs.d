@@ -96,6 +96,7 @@
 
 (use-package nxml-mode
   :ensure nil
+  :defer t
   :custom
   (nxml-auto-insert-xml-declaration-flag nil)
   (nxml-validate-on-save nil))
@@ -104,7 +105,4 @@
   :defer t)
 
 (use-package nix-mode
-  :defer t)
-
-(use-package elixir-mode
   :defer t)

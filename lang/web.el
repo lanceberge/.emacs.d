@@ -6,6 +6,7 @@
   (web-mode-enable-auto-closing t)
   (web-mode-enable-auto-pairing t)
   (web-mode-script-padding 2)
+  (web-mode-auto-close-style 2)
   :init
   (define-derived-mode vue-mode web-mode "Vue")
   :mode ("\\.html\\'" . web-mode)
@@ -27,6 +28,7 @@
   :hook
   (web-mode . emmet-mode)
   (svelte-mode . emmet-mode)
+  (elixir-ts-mode . emmet-mode)
   :general
   ('insert 'emmet-mode-keymap
            "C-f" #'emmet-expand-line))
