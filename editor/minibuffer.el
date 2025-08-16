@@ -71,8 +71,16 @@
 
   (add-to-list 'find-file-not-found-functions #'+auto-create-missing-dirs)
 
+  (cl-loop for idx from 0 to 9
+           do
+           (define-key vertico-map (kbd (format "M-%d" idx))
+                       `(lambda () (interactive)
+                          (let ((vertico--index ,idx))
+                            (call-interactively #'vertico-exit)))))
+
   (evil-collection-init 'minibuffer)
-  (vertico-mode))
+  (vertico-mode)
+  (vertico-indexed-mode))
 
 (use-package marginalia
   :defer 0.4
