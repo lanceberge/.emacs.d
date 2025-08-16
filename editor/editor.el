@@ -19,9 +19,9 @@
   :config
   (setq-default format-all-formatters format-all-default-formatters))
 
-(use-package avy ; jump to things in files similar to easymotion for vim
+(use-package avy
   :custom
-  (avy-keys '(?d ?j ?s ?k ?a ?l))
+  (avy-keys '(?j ?d ?k ?s ?l ?a))
   :general
   ('evil-operator-state-map
    "\\" #'(avy-goto-char-2 :which-key "goto char")
@@ -34,11 +34,15 @@
    "M-i" #'evil-avy-isearch)
 
   ('normal
-   "\\" #'(avy-goto-char-2 :which-key "2-chars")
+   "s" #'(+avy-goto-char-2-below :which-key "2-chars")
+   "S" #'(+avy-goto-char-2-above :which-key "2-chars")
    "go" #'(avy-goto-char-timer :which-key "2-chars")
    "g SPC o" #'(evil-avy-isearch :which-key "timer")
    "g SPC m" #'(avy-move-line :which-key "move line"))
   :config
+  (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
+                           (avy-goto-char-2-below . avy-order-closest)
+                           (avy-goto-char-2-above . avy-order-closest)))
   (evil-define-avy-motion avy-isearch inclusive)
   ;; https://karthinks.com/software/avy-can-do-anything/
   (defun avy-action-embark (pt)
@@ -244,6 +248,29 @@
   ('visual
    "M-k" #'drag-stuff-up
    "M-j" #'drag-stuff-down))
+
+;;;###autoload
+(defun +avy-goto-char-2-below (char1 char2)
+  (interactive (list (read-char "char 1: " t)
+                     (read-char "char 2: " t)))
+  (forward-char 1)
+  (search-forward  (concat (char-to-string char1) (char-to-string char2)))
+  (backward-char 2)
+  (avy-goto-char-2
+   char1 char2 nil
+   (point) (window-end (selected-window) t)))
+
+;;;###autoload
+(defun +avy-goto-char-2-above (char1 char2)
+  (interactive (list (read-char "char 1: " t)
+                     (read-char "char 2: " t)))
+  (backward-char 1)
+  (search-backward (concat (char-to-string char1) (char-to-string char2)))
+  (forward-char 2)
+  (avy-goto-char-2-above
+   char1 char2))
+
+;;;###autoload
 (defun +wgrep-replace (regexp replace)
   "Replace in wgrep without replacing the read only 'file_name:line:' prefix."
   (interactive (list (read-string "Replace: ")
