@@ -176,7 +176,10 @@
   :custom
   (wgrep-auto-save-buffer t)
   :general
-  ('normal grep-mode-map
+  ('normal 'grep-mode-map
+           "R" (defun +wgrep-edit-and-replace () (interactive)
+                      (wgrep-change-to-wgrep-mode)
+                      (call-interactively #'+wgrep-replace))
            "i" #'wgrep-change-to-wgrep-mode)
   ('wgrep-mode-map
    [remap evil-write] 'wgrep-save-all-buffers
@@ -184,6 +187,9 @@
    (defun +wgrep-save-and-quit () (interactive)
           (wgrep-save-all-buffers)
           (evil-quit) :which-key "save and quit"))
+
+  ('normal wgrep-mode-map
+           "R" #'+wgrep-replace)
   :defer t)
 
 (use-package popper
@@ -238,3 +244,14 @@
   ('visual
    "M-k" #'drag-stuff-up
    "M-j" #'drag-stuff-down))
+(defun +wgrep-replace (regexp replace)
+  "Replace in wgrep without replacing the read only 'file_name:line:' prefix."
+  (interactive (list (read-string "Replace: ")
+                     (read-string "Replace With: ")))
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "^\\([^:]*:[0-9]+:\\)" nil t)
+      (let ((line-end (line-end-position)))
+        (while (re-search-forward regexp line-end t)
+          (replace-match replace t nil))
+        (forward-line 1)))))
