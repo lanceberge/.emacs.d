@@ -33,9 +33,9 @@
                     (yas-activate-extra-mode source-mode))))))
 
   (use-package treesit-auto
-    :defer t
+    :defer 1
     :custom
-    (treesit-auto-install t)
+    (treesit-auto-install 'prompt)
     :config
     (treesit-auto-add-to-auto-mode-alist (cl-remove 'tsx treesit-auto-langs :count 1))
     (global-treesit-auto-mode)))

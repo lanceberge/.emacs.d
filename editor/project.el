@@ -1,7 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 (use-package project
+  :defer 0.1
   :commands
-  (project-switch-project project-prompter)
+  (project-switch-project project-prompter project-root)
   :custom
   (project-switch-commands #'project-find-file)
   :general
@@ -30,6 +31,6 @@
   (dolist (dir '("~/.emacs.d" "~/.config/nixos" "~/dotfiles"))
     (when (file-directory-p dir)
       (project--remember-dir dir)))
-  (dolist (dir '("~/code/" "~/code/phoenix" "~/code/laravel" "~/code/git"))
+  (dolist (dir '("~/code/git" "~/code/phoenix" "~/code/laravel" "~/code/"))
     (when (file-directory-p dir)
       (project-remember-projects-under dir))))

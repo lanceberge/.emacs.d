@@ -36,10 +36,7 @@
   ;; TODO set up function text object
   :general
   ('normal
-   "Y" #'lispyville-yank-line)
-  ('normal 'lispyville-mode-map
-           "B" #'lispyville-backward-atom-begin
-           "E" #'lispyville-forward-atom-end))
+   "Y" #'lispyville-yank-line))
 
 ;;;###autoload
 (defun +elisp-format-and-check ()

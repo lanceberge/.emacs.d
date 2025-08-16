@@ -37,7 +37,6 @@
   (my-leader-def
     "to" #'(+tab-bar/open-and-rename :which-key "new tab")
     "tl" #'(tab-bar-switch-to-recent-tab :which-key "last tab")
-    "t SPC g" #'(tab-bar-select-tab :which-key "choose tab")
     "tg" #'(tab-bar-switch-to-tab :which-key "choose tab by name")
     "tn" #'(tab-bar-switch-to-next-tab :which-key "next tab")
     "tp" #'(tab-bar-switch-to-prev-tab :which-key "previous tab")
