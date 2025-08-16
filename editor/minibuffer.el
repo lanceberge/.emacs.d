@@ -77,7 +77,12 @@
 (use-package marginalia
   :defer 0.4
   :config
-  (marginalia-mode))
+  (marginalia-mode)
+  (setq marginalia-annotators
+        (seq-remove (lambda (x) (memq (car x) '(tab file project-file)))
+                    marginalia-annotators))
+  (setf (alist-get 'function marginalia-annotators)
+        '(marginalia-annotate-command . marginalia-annotate-binding)))
 
 (use-package embark-consult
   :after (consult embark))
