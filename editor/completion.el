@@ -16,17 +16,23 @@
   (completion-ignore-case t)
   :general
   ('corfu-map
-   "RET" #'newline
    "C-k" #'corfu-previous
    "M-j" #'corfu-next
    "M-k" #'corfu-previous
    "C-j" #'corfu-next
    "C-y" #'corfu-complete
+   [remap evil-normal-state] #'(lambda () (interactive) (corfu-quit) (evil-normal-state))
+   "RET" #'newline
    "<tab>" #'yas-expand)
 
   ('insert 'corfu-map
+           "C-j" #'corfu-next
            "C-y" #'corfu-complete
+           "RET" #'newline
            "C-k" #'corfu-previous)
+
+  ('minibuffer-mode-map
+   [remap newline] #'exit-minibuffer)
   :config
   (global-corfu-mode)
   (advice-add 'evil-escape-func :after #'corfu-quit))
