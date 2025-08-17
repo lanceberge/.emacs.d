@@ -8,11 +8,8 @@
             ob org org-agenda org-capture evil-org flyspell
             org-element)
   :custom
-  ;; Directories
   (org-directory "~/org")
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
-
-  ;; General settings
   (org-list-allow-alphabetical t)
   (org-startup-folded t)
   (org-fontify-done-headline t)
@@ -21,17 +18,14 @@
   (org-modules nil)
   (org-image-actual-width nil)
 
-  ;; Latex exports
   (org-export-backends '(html latex md))
-  (org-latex-listings 'minted)        ; syntax-highlighted code blocks
+  (org-latex-listings 'minted) ; syntax-highlighted code blocks
   ;; (org-latex-packages-alist '(("margin=0.5in" "geometry" nil) (nil "minted" "color")))
-  (org-latex-pdf-process                ; required to use minted
+  (org-latex-pdf-process ; required to use minted
    '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-  (org-latex-minted-options '(("linenos" "true") ; line numbers in expored src blocks
+  (org-latex-minted-options '(("linenos" "true")
                               ("frame" "lines")
                               ("style" "emacs")))
-
-  ;; Styling
   (org-pretty-entities t)
   (org-hide-emphasis-markers t)
   :general
@@ -40,27 +34,25 @@
     "t" #'org-set-tags-command)
 
   ('(normal insert) org-mode-map
-   ;; TODOS with M-;, headlines with C-;, add shift to do those above
-   "C-M-;"        #'+org/insert-subheading
-   "C-;"          #'+org/insert-heading
-   "C-:"          #'+org/insert-heading-above
-   "M-;"          #'+org/insert-todo
-   "M-:"          #'+org/insert-todo-above
-   "M-<return>"   #'+org/insert-todo
+   "C-M-;" #'+org/insert-subheading
+   "C-;" #'+org/insert-heading
+   "C-:" #'+org/insert-heading-above
+   "M-;" #'+org/insert-todo
+   "M-:" #'+org/insert-todo-above
+   "M-<return>" #'+org/insert-todo
    "M-S-<return>" #'+org/insert-todo-above
-   "C-<return>"   #'+org/insert-heading
+   "C-<return>" #'+org/insert-heading
    "C-S-<return>" #'+org/insert-heading-above
 
-   ;; Vim keys > arrow keys
-   "M-h"   #'org-metaleft
-   "M-j"   #'org-metadown
-   "M-k"   #'org-metaup
-   "M-l"   #'org-metaright
+   "M-h" #'org-metaleft
+   "M-j" #'org-metadown
+   "M-k" #'org-metaup
+   "M-l" #'org-metaright
 
-   "M-H"   #'org-shiftleft
-   "M-J"   #'org-shiftdown
-   "M-K"   #'org-shiftup
-   "M-L"   #'org-shiftright
+   "M-H" #'org-shiftleft
+   "M-J" #'org-shiftdown
+   "M-K" #'org-shiftup
+   "M-L" #'org-shiftright
 
    "C-M-h" #'org-shiftmetaleft
    "C-M-j" #'org-shiftmetadown
@@ -73,24 +65,23 @@
    "C-S-l" #'org-shiftcontrolright)
 
   ('(normal insert) :prefix "C-c"
-   "e"  #'(org-latex-export-to-pdf     :which-key "export to pdf")
+   "e" #'(org-latex-export-to-pdf :which-key "export to pdf")
    ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
-   "v"  #'(org-toggle-inline-images    :which-key "toggle inline images")
-   "t"  #'(org-todo                    :which-key "todo")
-   "s"  #'(org-sort                    :which-key "sort")
-   ",s" #'(org-schedule                :which-key "schedule")
-   "d"  #'(org-deadline                :which-key "deadline")
-   "q"  #'(org-set-tags-command        :which-key "add tags")
-   "p"  #'(org-latex-preview           :which-key "preview latex")
-   ",p" #'(org-set-property            :which-key "set property"))
+   "v" #'(org-toggle-inline-images :which-key "toggle inline images")
+   "t" #'(org-todo :which-key "todo")
+   "s" #'(org-sort :which-key "sort")
+   ",s" #'(org-schedule :which-key "schedule")
+   "d" #'(org-deadline :which-key "deadline")
+   "q" #'(org-set-tags-command :which-key "add tags")
+   "p" #'(org-latex-preview :which-key "preview latex")
+   ",p" #'(org-set-property :which-key "set property"))
 
   ('normal org-mode-map
-           "zm"  #'(outline-hide-sublevels   :which-key "hide all")
-           "zn"  #'(outline-next-heading     :which-key "next heading")
-           "zp"  #'(outline-previous-heading :which-key "previous heading")
+           "zm" #'(outline-hide-sublevels :which-key "hide all")
+           "zn" #'(outline-next-heading :which-key "next heading")
+           "zp" #'(outline-previous-heading :which-key "previous heading")
            "RET" #'org-return)
 
-  ;; Vim keys calendar maps
   ('calendar-mode-map
    ";" #'exit-minibuffer
    "M-l" #'calendar-forward-day
@@ -136,32 +127,29 @@
 
   (add-hook 'org-mode-hook 'org-mode-company-backends)
 
-  (setq org-tag-alist '(("personal"      . ?p)
-                        ("easy tasks"    . ?t)
-                        ("hard tasks"    . ?T)
-                        ("Work"          . ?w)
+  (setq org-tag-alist '(("personal" . ?p)
+                        ("easy tasks" . ?t)
+                        ("hard tasks" . ?T)
+                        ("Work" . ?w)
                         ("side projects" . ?s)
-                        ("health"        . ?h)
-                        ("relationships" . ?r)
-                        ("Emacs"         . ?e)
-                        ("A"             . ?a)
-                        ("B"             . ?b)
-                        ("C"             . ?c)
-                        ("Music"         . ?m)))
+                        ("health" . ?h)
+                        ("Emacs" . ?e)
+                        ("A" . ?a)
+                        ("B" . ?b)
+                        ("C" . ?c)
+                        ("Music" . ?m)))
 
-  (defvar custom-functions-list '(evil-org-open-above evil-org-open-below  org-return))
+  (defvar custom-functions-list '(evil-org-open-above evil-org-open-below org-return))
 
   (dolist (func custom-functions-list)
     (advice-add func :after
                 (lambda (&rest args)
                   (+org-indent))))
 
-  ;; Don't execute org-babel blocks on export
   (add-to-list 'org-babel-default-header-args
                '(:eval . "never-export"))
 
 
-  ;;  open links in the current window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
   (setq org-todo-keyword-faces '(("WAIT" . (:foreground "#7C6f64" :weight bold))
@@ -170,4 +158,4 @@
         org-todo-keywords '((sequence "TODO(t)" "WAIT(w)"
                                       "OPT.(o)" "WIP.(p)" "|" "DONE")))
 
-  (plist-put org-format-latex-options :scale 1.75)) ; Larger inline org latex
+  (plist-put org-format-latex-options :scale 1.75))
