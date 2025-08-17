@@ -1,6 +1,5 @@
 ;;; -*- lexical-binding: t -*-
 
-;; initial keybindings, built-ins
 (use-package emacs
   :ensure nil
   :general
@@ -61,7 +60,7 @@
    "md" #'(bookmark-delete-all :which-key "delete all bookmarks")
    "s-t" #'beginning-of-line)
 
-  ('(normal insert)
+  ('normal
    "C-/" #'(comment-line :which-key "comment")
    "M-/" #'(comment-line :which-key "comment"))
 
@@ -78,30 +77,16 @@
    "SPC" (general-simulate-key "C-c C-c"))
 
   ('insert
-   "C-e" #'end-of-line
-   "C-a" #'beginning-of-line
    "C-<backspace>" #'evil-delete-backward-word
    "M-<backspace>" #'evil-delete-backward-word)
 
-  ('(normal insert)
-   '(php-mode-map
-     c++-mode-map)
+  ('(normal insert) '(php-mode-map c++-mode-map)
    "M-;" #'+append-semicolon))
 
 ;;;###autoload
 (defun +append-semicolon ()
   (interactive)
-  (save-excursion
-    (end-of-line)
-    (unless (looking-back ";" nil)
-      (insert ";"))))
-
-(defvar +macro-recording nil)
-
-;;;###autoload
-(defun +start-or-end-macro (arg)
-  (interactive "p")
-  (if +macro-recording
-      (kmacro-end-macro arg)
-    (kmacro-start-macro arg))
-  (setq +macro-recording (not +macro-recording)))
+  save-excursion
+  (end-of-line)
+  (unless (looking-back ";" nil)
+    (Insert ";")))

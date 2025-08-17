@@ -31,9 +31,7 @@
   :hook (emacs-lisp-mode . lispyville-mode)
   :config
   (lispyville-set-key-theme
-   '(operators c-w additional-motions
-               commentary slurp/barf-cp))
-  ;; TODO set up function text object
+   '(operators c-w commentary slurp/barf-cp))
   :general
   ('normal
    "Y" #'lispyville-yank-line))

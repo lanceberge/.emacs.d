@@ -50,7 +50,9 @@
       ;; Disable bidirectional text rendering for performance
       bidi-display-reordering 'left-to-right
       bidi-paragraph-direction 'left-to-right
-      cursor-in-non-selected-windows nil)
+      cursor-in-non-selected-windows nil
+
+      mac-command-modifier 'control)
 
 (when IS-MAC
   (dolist (path '("/opt/homebrew/opt/llvm/bin/"
@@ -199,13 +201,13 @@
     :states '(normal visual motion insert emacs)
     :keymaps 'override
     :prefix "SPC"
-    :non-normal-prefix "C-c")
+    :non-normal-prefix "C-c SPC")
 
   (general-create-definer my-localleader-def ; , prefixed bindings
     :states '(normal visual motion insert emacs)
     :keymaps 'override
     :prefix ","
-    :non-normal-prefix "C-,")
+    :non-normal-prefix "C-c ,")
 
   (my-leader-def
     "fm" #'(general-describe-keybindings :which-key "list keybindings")))

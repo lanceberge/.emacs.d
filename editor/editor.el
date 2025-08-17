@@ -24,7 +24,7 @@
   (avy-keys '(?j ?d ?k ?s ?l ?a))
   :general
   ('evil-operator-state-map
-   "\\" #'(avy-goto-char-2 :which-key "goto char")
+   "\\" #'(avy-goto-char-timer :which-key "goto char")
    "go" #'(avy-goto-char-timer :which-key "goto char"))
 
   ('(normal insert)
@@ -35,10 +35,7 @@
 
   ('normal
    "s" #'(+avy-goto-char-2-below :which-key "2-chars")
-   "S" #'(+avy-goto-char-2-above :which-key "2-chars")
-   "go" #'(avy-goto-char-timer :which-key "2-chars")
-   "g SPC o" #'(evil-avy-isearch :which-key "timer")
-   "g SPC m" #'(avy-move-line :which-key "move line"))
+   "S" #'(+avy-goto-char-2-above :which-key "2-chars"))
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)
@@ -133,9 +130,12 @@
   (undo-tree-auto-save-history t)
   (evil-undo-system 'undo-tree)
   :general
+  ('normal
+   "u" #'undo-tree-undo
+   "C-r" #'undo-tree-redo)
   ('visual
-   "u" #'(lambda (interactive) (undo 1))
-   "C-r" #'(lambda (interactive) (redo 1)))
+   "u" #'(lambda () (interactive) (undo 1))
+   "C-r" #'(lambda () (interactive) (redo 1)))
   (my-leader-def
     "fu" #'(undo-tree-visualize :which-key "undo"))
   :config

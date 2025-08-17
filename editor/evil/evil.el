@@ -12,13 +12,13 @@
   (evil-ex-substitute-highlight-all nil)
   (evil-ex-search-persist-highlight nil)
   :general
-  ('normal ; navigate wrapped lines like normal lines, works great with relative line numbers
+  ('normal
    [remap evil-next-line] #'evil-next-visual-line
    [remap evil-previous-line] #'evil-previous-visual-line
-   "C-M-d" #'scroll-other-window
-   "C-M-u" #'scroll-other-window-down)
+   "C-S-d" #'scroll-other-window
+   "C-S-u" #'scroll-other-window-down)
 
-  ('evil-ex-completion-map "C-g" 'abort-recursive-edit) ; quit on C-g
+  ('evil-ex-completion-map "C-g" 'abort-recursive-edit)
 
   ('(normal visual motion)
    "M-u" #'evil-scroll-up
@@ -53,7 +53,12 @@
    "x" (defun +evil-window-decrease () (interactive)
               (evil-window-decrease-width 5) :which-key "decrease-size"))
 
-  ('(normal insert)
+  ('normal
    "C-l" #'(evil-ex-nohighlight :which-key "clear highlight"))
+
+  ('insert
+   "C-o" #'evil-execute-in-normal-state)
+
   :config
+  (setq evil-emacs-state-cursor 'bar)
   (evil-mode))

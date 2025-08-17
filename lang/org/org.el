@@ -33,7 +33,11 @@
     :keymaps 'org-mode-map
     "t" #'org-set-tags-command)
 
-  ('(normal insert) org-mode-map
+  ('normal 'org-mode-map
+           "M-j" #'org-metadown
+           "M-k" #'org-metaup)
+
+  ('(normal insert) 'org-mode-map
    "C-M-;" #'+org/insert-subheading
    "C-;" #'+org/insert-heading
    "C-:" #'+org/insert-heading-above
@@ -45,8 +49,6 @@
    "C-S-<return>" #'+org/insert-heading-above
 
    "M-h" #'org-metaleft
-   "M-j" #'org-metadown
-   "M-k" #'org-metaup
    "M-l" #'org-metaright
 
    "M-H" #'org-shiftleft
