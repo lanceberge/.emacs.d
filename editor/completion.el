@@ -17,9 +17,9 @@
   :general
   ('corfu-map
    "C-k" #'corfu-previous
+   "C-j" #'corfu-next
    "M-j" #'corfu-next
    "M-k" #'corfu-previous
-   "C-j" #'corfu-next
    "C-y" #'corfu-complete
    [remap evil-normal-state] #'(lambda () (interactive) (corfu-quit) (evil-normal-state))
    "RET" #'newline

@@ -11,5 +11,3 @@
   - [[https://github.com/oantolin/embark][Embark]]
   - [[https://github.com/minad/consult][Consult]]
   - [[https://github.com/minad/vertico][Vertico]]
-  - [[https://www.orgroam.com/][Org-roam]]
-  - [[https://github.com/akermu/emacs-libvterm][vterm]]

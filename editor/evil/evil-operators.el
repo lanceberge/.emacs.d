@@ -99,7 +99,7 @@
   :custom
   (evil-escape-key-sequence "jk")
   (evil-escape-delay 0.25)
-  (evil-escape-excluded-major-modes '(org-agenda-mode))
+  (evil-escape-excluded-major-modes '(org-agenda-mode help-mode))
   (evil-escape-excluded-states '(normal visual emacs)))
 
 (use-package titlecase ; title case a line

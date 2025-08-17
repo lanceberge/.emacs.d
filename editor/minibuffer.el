@@ -4,10 +4,8 @@
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :custom
   (xref-show-xrefs-function #'consult-xref)
-  :commands (consult-ripgrep)
   :general
   ([remap projectile-find-file] #'(consult-project-buffer :which-key "project buffer"))
-
   (my-leader-def
     "," #'(consult-buffer :which-key "find buffer")
     "." #'(find-file :which-key "find file")
@@ -49,8 +47,6 @@
   ('(normal insert) '(vertico-map minibuffer-inactive-mode-map)
    "C-j" #'vertico-next
    "C-k" #'vertico-previous
-   "C-h" #'vertico-directory-up
-   "C-l" #'vertico-directory-enter
    "C-u" #'vertico-scroll-down
    "C-d" #'vertico-scroll-up
    "M-j" #'vertico-next
