@@ -1,11 +1,7 @@
 ;;; -*- lexical-binding: t -*-
-
 (use-package emacs
   :ensure nil
   :general
-  (my-localleader-def
-    "c" (general-simulate-key "C-c" :which-key "+Mode specific maps"))
-
   (my-leader-def
     "nf" (defun +make-frame ()
            (interactive)
@@ -20,8 +16,8 @@
             (let ((default-directory (project-root (project-current t))))
               (call-interactively #'shell-command)))
 
-    ;; Windows
-    "w" #'(evil-window-map :which-key "Windows") ; window command
+    "wo" #'delete-other-windows
+    "wd" #'delete-window
 
     ;; Buffers
     "bd" #'(kill-current-buffer :which-key "delete buffer")
@@ -29,7 +25,9 @@
     "b SPC d" #'(+kill-window-and-buffer :which-key "kill window and buffer")
     "br"        (defun +revert-buffer () (interactive)
                        (revert-buffer t t) :which-key "revert buffer")
+    "bl" #'+switch-to-recent-file
     "bn" #'(next-buffer :which-key "next buffer")
+    "bs" #'save-buffer
     "bp" #'(previous-buffer :which-key "previous buffer")
 
     ;; Eval elisp
@@ -42,25 +40,31 @@
     "er" (defun +source-init-file () (interactive)
                 (load-file "~/.emacs.d/init.el") :which-key "source init file"))
 
-  (my-leader-def
-    :states 'visual
-    "eb" #'(eval-region :which-key "execute elisp region"))
 
-  ('normal
-   "gs" #'(+split-line-below :which-key "split line below")
-   "gS" #'(+split-line-above :which-key "split line above")
-   "]b" #'(next-buffer :which-key "next buffer")
-   "[b" #'(previous-buffer :which-key "previous buffer")
-   "g C-l" #'(end-of-visual-line :which-key "end of visual line")
-   "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line")
+  ;; TODO
+  ;; (my-leader-def
+  ;;   :states 'visual
+  ;;   "eb" #'(eval-region :which-key "execute elisp region"))
 
+  ('meow-normal-state-keymap
+   ;; TODO
+   ;; "gs" #'(+split-line-below :which-key "split line below")
+   ;; "gS" #'(+split-line-above :which-key "split line above")
+   ;; "]b" #'(next-buffer :which-key "next buffer")
+   ;; "[b" #'(previous-buffer :which-key "previous buffer")
+   ;; "g C-l" #'(end-of-visual-line :which-key "end of visual line")
+   ;; "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line")
+
+   ;; TODO
+   "C-u" #'scroll-down
+   "C-d" #'scroll-up
    "m" nil
    "mm" #'(lambda () (interactive)
             (bookmark-set (file-name-nondirectory buffer-file-name)))
    "md" #'(bookmark-delete-all :which-key "delete all bookmarks")
    "s-t" #'beginning-of-line)
 
-  ('normal
+  ('meow-normal-state-keymap
    "C-/" #'(comment-line :which-key "comment")
    "M-/" #'(comment-line :which-key "comment"))
 
@@ -69,9 +73,11 @@
    "M-/" #'(comment-dwim :which-key "comment")
    "q" #'apply-macro-to-region-lines)
 
-  ('normal
+  ('meow-normal-state-keymap
    "q" #'+start-or-end-macro)
 
+  ('meow-insert-state-keymap
+   "j" #'+escape)
   ('(normal insert)
    :prefix "C-c"
    "SPC" (general-simulate-key "C-c C-c"))
@@ -90,3 +96,24 @@
   (end-of-line)
   (unless (looking-back ";" nil)
     (Insert ";")))
+
+;;;###autoload
+(defun +switch-to-recent-file ()
+  "Switch to the first recent file that is not the current buffer."
+  (interactive)
+  (let ((current-buffer (current-buffer)))
+    (defun +switch-to-recent-file-helper (files)
+      (if (not files)
+          (message "No other recent files available")
+        (let ((file (car files)))
+          (if (and (file-exists-p file)
+                   (not (eq (get-file-buffer file) current-buffer)))
+              (find-file file)
+            (+switch-to-recent-file-helper (cdr files))))))
+    (+switch-to-recent-file-helper recentf-list)))
+
+(defun +escape (char)
+  (interactive "c")
+  (if (= char ?k)
+      (meow-insert-exit)
+    (insert-char char)))

@@ -6,7 +6,7 @@
   (fretboard-fret-count 12)
   (evil-set-initial-state 'fretboard-mode 'emacs)
   :general
-  ('normal 'fretboard-mode-map
+  ('meow-normal-state-keymap 'fretboard-mode-map
            "n" 'fretboard-next
            "p" 'fretboard-previous
            "k" 'fretboard-next-type

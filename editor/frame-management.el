@@ -28,15 +28,10 @@
   (tab-bar-close-button-show nil)
   (tab-bar-show nil)
   :general
-  ('normal
-   "]t" #'(tab-bar-switch-to-next-tab :which-key "next tab")
-   "[t" #'(tab-bar-switch-to-prev-tab :which-key "next-tab")
-   "]T" #'(tab-bar-move-tab :which-key "move tab right")
-   "[T" #'(tab-bar-move-tab-to :which-key "move tab left"))
-
   (my-leader-def
     "to" #'(+tab-bar/open-and-rename :which-key "new tab")
     "tl" #'(tab-bar-switch-to-recent-tab :which-key "last tab")
+    "t SPC g" #'(tab-bar-select-tab :which-key "choose tab")
     "tg" #'(tab-bar-switch-to-tab :which-key "choose tab by name")
     "tn" #'(tab-bar-switch-to-next-tab :which-key "next tab")
     "tp" #'(tab-bar-switch-to-prev-tab :which-key "previous tab")
@@ -46,7 +41,13 @@
     "tu" #'(tab-bar-undo-close-tab :which-key "undo close tab")
     "t SPC r" #'(tab-bar-rename-tab-by-name :which-key "rename tab by name")
     "po" #'(+open-project :which-key "open project")
-    "tr" #'(tab-bar-rename-tab :which-key "rename tab")))
+    "tr" #'(tab-bar-rename-tab :which-key "rename tab"))
+  ;; ('meow-normal-state-keymap
+  ;;  "]t" #'(tab-bar-switch-to-next-tab :which-key "next tab")
+  ;;  "[t" #'(tab-bar-switch-to-prev-tab :which-key "next-tab")
+  ;;  "]T" #'(tab-bar-move-tab :which-key "move tab right")
+  ;;  "[T" #'(tab-bar-move-tab-to :which-key "move tab left"))
+  )
 
 ;;;###autoload
 (defun +tab-bar/open-and-rename ()
@@ -55,12 +56,10 @@
   (call-interactively #'tab-bar-rename-tab))
 
 (use-package windresize
-  :after evil
   :custom
   (windresize-default-increment 3)
   :general
-  ('evil-window-map
-   "SPC r" #'windresize)
+  ;; TODO
   ('windresize-map
    "h" #'windresize-left
    "l" #'windresize-right

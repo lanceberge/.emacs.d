@@ -1,12 +1,9 @@
 ;;; -*- lexical-binding: t -*-
 (use-package visual-regexp
+  :defer t
   :general
-  ('visual
-   "r" #'vr/replace)
-  ('normal
-   "R" #'+vr/replace)
-  (my-localleader-def
-    "r" #'+vr/replace))
+  ('meow-normal-state-keymap
+   "R" #'+vr/replace))
 
 (use-package visual-regexp-steroids
   :after visual-regexp

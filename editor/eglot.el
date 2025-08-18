@@ -23,12 +23,13 @@
   (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
   :general
-  ('normal 'eglot-mode-map
-           "ga" #'eglot-code-actions)
-  (my-localleader-def
-    "er" #'eglot-reconnect)
-  (my-localleader-def
-    "gr" #'eglot-rename)
+  ('meow-normal-state-keymap 'eglot-mode-map
+                             "ga" #'eglot-code-actions)
+  ;; TODO
+  ;; (my-localleader-def
+  ;;   "er" #'eglot-reconnect)
+  ;; (my-localleader-def
+  ;;   "gr" #'eglot-rename)
   :config
   (setq eglot-events-buffer-size 1000000)  ; Log everything
   (setq eglot-sync-connect 3)              ; Wait longer for connection
@@ -67,9 +68,9 @@
   (global-eldoc-mode -1)
   :defer t
   :general
-  ('normal 'eglot-mode-map
-           "gh" #'eldoc-print-current-symbol-info
-           "K" #'+eldoc-help)
+  ('meow-normal-state-keymap 'eglot-mode-map
+                             "gh" #'eldoc-print-current-symbol-info
+                             "K" #'+eldoc-help)
   :config
   (setq eldoc-idle-delay 9999)
   (defun +eldoc-help ()
@@ -84,14 +85,16 @@
 
 (unless (version<= emacs-version "29.1")
   (use-package dape
+    :after hydra
     :general
-    (my-localleader-def
-      "dd" (defun +dape ()
-             (interactive)
-             (call-interactively #'dape)
-             (call-interactively #'dape-hydra/body))
-      "db" #'dape-breakpoint-toggle
-      "dh" #'dape-hydra/body)
+    ;; TODO
+    ;; (my-localleader-def
+    ;;   "dd" (defun +dape ()
+    ;;          (interactive)
+    ;;          (call-interactively #'dape)
+    ;;          (call-interactively #'dape-hydra/body))
+    ;;   "db" #'dape-breakpoint-toggle
+    ;;   "dh" #'dape-hydra/body)
     :config
     (remove-hook 'dape-start-hook 'dape-info)
     (remove-hook 'dape-start-hook 'dape-repl)
@@ -131,8 +134,8 @@
   :custom
   (xref-prompt-for-identifier nil)
   :general
-  ('normal xref--xref-buffer-mode-map
-           ";" #'xref-goto-xref))
+  ('meow-normal-state-keymap xref--xref-buffer-mode-map
+                             ";" #'xref-goto-xref))
 
 (use-package jsonrpc
   :defer t
@@ -142,9 +145,9 @@
 (use-package flymake
   :defer t
   :general
-  ('normal
-   "[y" #'flymake-goto-prev-error
-   "]y" #'flymake-goto-next-error)
+  ;; ('meow-normal-state-keymap
+  ;;  "[y" #'flymake-goto-prev-error
+  ;;  "]y" #'flymake-goto-next-error)
   :custom
   (flymake-no-changes-timeout 5)
   (flymake-show-diagnostics-at-end-of-line t))

@@ -4,8 +4,8 @@
   (gptel-model 'claude-3-5-sonnet-20240620)
   (gptel-default-mode 'org-mode)
   :general
-  (my-localleader-def
-    "gc" #'gptel)
+  ;; (my-localleader-def
+  ;;   "gc" #'gptel)
 
   ('gptel-mode-map
    "RET" #'gptel-send
@@ -23,26 +23,14 @@
   ('visual
    "sq" #'elysium-query
    "sc" #'elysium-add-context)
-  ('normal
+  ('meow-normal-state-keymap
    "C-l" #'elysium-clear-buffer)
-  (my-localleader-def
-    "sq" #'elysium-query
-    "so" #'elysium-keep-all-suggested-changes
-    "sm" #'elysium-discard-all-suggested-changes
-    "st" #'elysium-toggle-window
-    "sc" #'elysium-add-context)
+  ;; (my-localleader-def
+  ;;   "sq" #'elysium-query
+  ;;   "so" #'elysium-keep-all-suggested-changes
+  ;;   "sm" #'elysium-discard-all-suggested-changes
+  ;;   "st" #'elysium-toggle-window
+  ;;   "sc" #'elysium-add-context)
   ('(insert normal) 'gptel-mode-map
    "RET" (lambda () (interactive) (end-of-buffer) (gptel-send))
    "C-<return>" #'elysium-query))
-
-(use-package aidermacs
-  :general
-  (my-leader-def
-    "a" #'aidermacs-transient-menu)
-  :config
-  (setenv (read-file-contents "~/secrets/claude_key"))
-  :custom
-  (aidermacs-use-architect-mode t)
-  (aidermacs-default-model "sonnet")
-  :config
-  (setq exec-path (append exec-path '("~/.local/bin/"))))

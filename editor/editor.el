@@ -11,11 +11,13 @@
   (my-leader-def
     :states 'normal
     "=" #'(+format/buffer :which-key "format"))
-  ('normal
-   "[of" (defun +format-all-off () (interactive)
-                (format-all-mode -1) :which-key "format-all")
-   "]of" (defun +format-all-on  () (interactive)
-                (format-all-mode 1) :which-key "format all"))
+  ;; :general
+  ;; TODO
+  ;; ('meow-normal-state-keymap
+  ;;  "[of" (defun +format-all-off () (interactive)
+  ;;               (format-all-mode -1) :which-key "format-all")
+  ;;  "]of" (defun +format-all-on  () (interactive)
+  ;;               (format-all-mode 1) :which-key "format all"))
   :config
   (setq-default format-all-formatters format-all-default-formatters))
 
@@ -23,24 +25,20 @@
   :custom
   (avy-keys '(?j ?d ?k ?s ?l ?a))
   :general
-  ('evil-operator-state-map
-   "\\" #'(avy-goto-char-timer :which-key "goto char")
-   "go" #'(avy-goto-char-timer :which-key "goto char"))
-
   ('(normal insert)
    "M-i" #'avy-pop-mark)
 
   ('isearch-mode-map
    "M-i" #'evil-avy-isearch)
 
-  ('normal
-   "s" #'(+avy-goto-char-2-below :which-key "2-chars")
-   "S" #'(+avy-goto-char-2-above :which-key "2-chars"))
+  ;; ('meow-normal-state-keymap
+  ;;  "s" #'(+avy-goto-char-2-below :which-key "2-chars")
+  ;;  "S" #'(+avy-goto-char-2-above :which-key "2-chars"))
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)
                            (avy-goto-char-2-above . avy-order-closest)))
-  (evil-define-avy-motion avy-isearch inclusive)
+  ;; (evil-define-avy-motion avy-isearch inclusive)
   ;; https://karthinks.com/software/avy-can-do-anything/
   (defun avy-action-embark (pt)
     "Perform an embark action on the avy target without moving point to it"
@@ -62,7 +60,7 @@
 
 (use-package embark
   :general
-  ('(insert normal) global-map
+  ('(insert meow-normal-state-keymap) global-map
    "M-." #'embark-act
    "M-," #'embark-export)
   ('embark-general-map
@@ -89,13 +87,12 @@
   (dired-auto-revert-buffer) ; don't prompt to revert
   (dired-recursive-copies 'always)
   :general
-  ('normal
-   "-" #'(dired-jump :which-key "open dired"))
+  (my-leader-def
+    "-" #'(dired-jump :which-key "open dired"))
   :config
-  (evil-collection-init 'dired)
   (put 'dired-find-alternate-file 'disabled nil)
 
-  (general-def 'normal dired-mode-map
+  (general-def 'meow-normal-state-keymap dired-mode-map
     ";" #'dired-find-alternate-file ; select a directory in the same buffer
     "i" #'+dired/edit
     "-" #'+dired/up-dir))
@@ -109,28 +106,25 @@
 (use-package helpful ; better help menu
   :defer 0.7
   :general
-  ('normal
-   "gp" #'helpful-at-point)
-  ('normal helpful-mode-map
-           "q" #'quit-window)
+  ;; ('meow-normal-state-keymap
+  ;;  "gp" #'helpful-at-point)
+  ('meow-normal-state-keymap helpful-mode-map
+                             "q" #'quit-window)
 
   ([remap describe-command] #'helpful-command
    [remap describe-key] #'helpful-key
    [remap describe-variable] #'helpful-variable
    [remap describe-function] #'helpful-function
-   [remap describe-symbol] #'helpful-symbol)
-  :config
-  (evil-collection-inhibit-insert-state 'helpful-mode-map))
+   [remap describe-symbol] #'helpful-symbol))
 
 (use-package undo-tree ; Persistent Undos
   :defer 0.1
-  :hook (evil-local-mode . turn-on-undo-tree-mode)
+  :hook (window-configuration-change . undo-tree-mode)
   :custom
   (undo-limit 10000)
   (undo-tree-auto-save-history t)
-  (evil-undo-system 'undo-tree)
   :general
-  ('normal
+  ('meow-normal-state-keymap
    "u" #'undo-tree-undo
    "C-r" #'undo-tree-redo)
   ('visual
@@ -161,30 +155,23 @@
                 (setq exec-path (append exec-path '("/home/labergeron/miniconda3/bin" "~/go/bin")))))))
 
 (use-package google-this
-  :general
-  (my-localleader-def
-    "gt" #'google-this-symbol
-    "gs" #'google-this-search)
-
-  (my-localleader-def
-    :states 'visual
-    "gt" (defun +google-this () (interactive)
-                (google-this-region t t) :which-key "google this")))
+  :commands (google-this-symbol))
 
 (use-package ace-link
-  :general
-  ('normal
-   "g SPC l" #'(ace-link :which-key "goto link")))
+  ;; :general
+  ;; ('meow-normal-state-keymap
+  ;;  "g SPC l" #'(ace-link :which-key "goto link"))
+  )
 
 (use-package wgrep
   :custom
   (wgrep-auto-save-buffer t)
   :general
-  ('normal 'grep-mode-map
-           "R" (defun +wgrep-edit-and-replace () (interactive)
-                      (wgrep-change-to-wgrep-mode)
-                      (call-interactively #'+wgrep-replace))
-           "i" #'wgrep-change-to-wgrep-mode)
+  ('meow-normal-state-keymap 'grep-mode-map
+                             "R" (defun +wgrep-edit-and-replace () (interactive)
+                                        (wgrep-change-to-wgrep-mode)
+                                        (call-interactively #'+wgrep-replace))
+                             "i" #'wgrep-change-to-wgrep-mode)
   ('wgrep-mode-map
    [remap evil-write] 'wgrep-save-all-buffers
    [remap evil-save-modified-and-close]
@@ -192,36 +179,9 @@
           (wgrep-save-all-buffers)
           (evil-quit) :which-key "save and quit"))
 
-  ('normal wgrep-mode-map
-           "R" #'+wgrep-replace)
+  ('meow-normal-state-keymap wgrep-mode-map
+                             "R" #'+wgrep-replace)
   :defer t)
-
-(use-package popper
-  :defer 0.3
-  :custom
-  (popper-reference-buffers
-   '("\\*Messages\\*"
-     "\\*xref\\*"
-     "Output\\*$"
-     "\\*Async Shell Command\\*"
-     "^\\*lsp-help.*\\*$"
-     "^\\*eldoc"
-     "^\\*Embark Collect:"
-     "^\\*Embark Export:"
-     "\\*Warnings\\*"
-     compilation-mode))
-  :general
-  (my-leader-def
-    "'" #'popper-toggle)
-
-  ('evil-window-map
-   "p" #'popper-toggle-type)
-
-  ('(normal insert visual)
-   "C-'" #'popper-toggle)
-
-  :config
-  (popper-mode +1))
 
 (use-package restart-emacs
   :general
@@ -235,13 +195,6 @@
           (kill-buffer )))
     (setq confirm-kill-emacs nil)
     (restart-emacs)))
-
-(use-package multiple-cursors
-  :custom
-  (mc/always-run-for-all t)
-  :general
-  ('normal
-   "gm" #'mc/mark-all-like-this))
 
 (use-package drag-stuff
   :general

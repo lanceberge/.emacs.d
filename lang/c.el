@@ -20,23 +20,25 @@
                      command-cwd ,(file-name-directory (buffer-file-name))
                      :cwd "." :program ,file-name-base)))))
 
-  :general
-  (my-leader-def
-    :keymaps '(c++-mode-map c++-ts-mode-map)
-    "ec" #'+cpp-compile)
+  ;; TODO
+  ;; :general
+  ;; (my-leader-def
+  ;;   :keymaps '(c++-mode-map c++-ts-mode-map)
+  ;;   "ec" #'+cpp-compile)
 
-  ;; TODO fix
-  (my-leader-def
-    :keymaps '(c++-mode-map c++-ts-mode-map c-ts-mode-map)
-    "ed" #'+dape-debug-cpp))
+  ;; ;; TODO fix
+  ;; (my-leader-def
+  ;;   :keymaps '(c++-mode-map c++-ts-mode-map c-ts-mode-map)
+  ;;   "ed" #'+dape-debug-cpp)
+  )
 
 ;;;###autoload
 (defun +dape-debug-cpp ()
   (interactive)
   (+cpp-compile "-g")
   (call-interactively #'+dape))
-;;;###autoload
 
+;;;###autoload
 (defun +cpp-compile (&optional flags)
   (interactive)
   (let* ((file-name (file-name-nondirectory (buffer-file-name)))

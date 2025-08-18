@@ -10,8 +10,7 @@
     "pf" #'(project-find-file :which-key "find file")
     "ps" #'(consult-ripgrep :which-key "ripgrep")
     "pe" #'(flymake-show-project-diagnostics :which-key "show errors")
-    "pr" #'+project-replace-regex
-    "SPC r" #'project-query-replace-regexp
+    "pr" #'project-query-replace-regexp
     "pt" (defun +project-find-todos ()
            (interactive)
            (consult-ripgrep (project-root (project-current t)) "TODO"))

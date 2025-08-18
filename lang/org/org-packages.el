@@ -1,6 +1,5 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org-agenda
-  :defer 1.5
   :ensure nil
   :custom
   (org-agenda-span 14)              ; show 14 days
@@ -23,10 +22,11 @@
       ((tags-todo "-Work-Emacs-Programming"))
       ((org-agenda-sorting-strategy '(priority-down))))))
   :general
-  ('org-agenda-mode
-   "g" #'ace-link)
   (my-leader-def
     "oa" #'(org-agenda :which-key "org agenda"))
+  ('org-agenda-mode
+   "g" #'ace-link)
+
 
   ('motion 'org-agenda-mode-map
            ";"  #'org-agenda-switch-to
@@ -85,9 +85,9 @@
   :general
   ;; bind evil-org functions manually rather than using evil-org-mode, which has some
   ;; conflicting bindings for my preferences
-  ('normal org-mode-map
-           "o" #'evil-org-open-below
-           "O" #'evil-org-open-above)
+  ('meow-normal-state-keymap org-mode-map
+                             "o" #'evil-org-open-below
+                             "O" #'evil-org-open-above)
 
   ('(normal insert) org-mode-map
    "C-;" #'evil-org-org-insert-heading-respect-content-below
@@ -98,7 +98,6 @@
   :general
   (my-leader-def
     "od" #'(org-drill :which-key "org-drill"))
-  :init
   (setq org-drill-scope
         (if (setq org-drill-scope-list (+org-roam-list-notes-by-tag "Drill"))
             org-drill-scope-list
@@ -119,8 +118,8 @@
   (my-leader-def
     "ojn" #'(org-journal-new-entry :which-key "new"))
 
-  ('normal org-journal-mode-map
-           "za" #'(org-cycle :which-key "open fold")))
+  ('meow-normal-state-keymap org-journal-mode-map
+                             "za" #'(org-cycle :which-key "open fold")))
 
 (use-package ob ; org babel
   :ensure nil

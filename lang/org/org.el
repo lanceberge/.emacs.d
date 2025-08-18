@@ -29,13 +29,14 @@
   (org-pretty-entities t)
   (org-hide-emphasis-markers t)
   :general
-  (my-localleader-def
-    :keymaps 'org-mode-map
-    "t" #'org-set-tags-command)
+  ;; TODO
+  ;; (my-localleader-def
+  ;;   :keymaps 'org-mode-map
+  ;;   "t" #'org-set-tags-command)
 
-  ('normal 'org-mode-map
-           "M-j" #'org-metadown
-           "M-k" #'org-metaup)
+  ('meow-normal-state-keymap 'org-mode-map
+                             "M-j" #'org-metadown
+                             "M-k" #'org-metaup)
 
   ('(normal insert) 'org-mode-map
    "C-M-;" #'+org/insert-subheading
@@ -78,11 +79,11 @@
    "p" #'(org-latex-preview :which-key "preview latex")
    ",p" #'(org-set-property :which-key "set property"))
 
-  ('normal org-mode-map
-           "zm" #'(outline-hide-sublevels :which-key "hide all")
-           "zn" #'(outline-next-heading :which-key "next heading")
-           "zp" #'(outline-previous-heading :which-key "previous heading")
-           "RET" #'org-return)
+  ('meow-normal-state-keymap org-mode-map
+                             "zm" #'(outline-hide-sublevels :which-key "hide all")
+                             "zn" #'(outline-next-heading :which-key "next heading")
+                             "zp" #'(outline-previous-heading :which-key "previous heading")
+                             "RET" #'org-return)
 
   ('calendar-mode-map
    ";" #'exit-minibuffer

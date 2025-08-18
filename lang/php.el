@@ -3,7 +3,7 @@
   :hook
   (php-mode . +php-mode)
   :general
-  ('normal 'php-mode-map
+  ('meow-normal-state-keymap 'php-mode-map
            [remap +format/buffer] #'php-cs-fixer-fix-current))
 
 (defun +php-mode ()

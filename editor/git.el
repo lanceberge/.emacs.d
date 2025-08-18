@@ -4,7 +4,7 @@
 (use-package magit
   :defer 1.0
   :defer-incrementally
-  (evil-collection magit-section dash f s with-editor git-commit package eieio lv transient)
+  (magit-section dash f s with-editor git-commit package eieio lv transient)
   :custom
   (magit-save-repository-buffers nil)
   (magit-no-confirm '(stage-all-changes amend-published))
@@ -23,41 +23,36 @@
     "gf" #'(magit-find-file :which-key "find file")
     "gw" #'(magit-worktree :which-key "worktree")
     "gc" #'(magit-show-commit :which-key "show commit"))
-
-  ('normal 'magit-mode-map
-           ";" (general-simulate-key "RET"))
+  :general
+  ('meow-normal-state-keymap 'magit-mode-map
+                             ";" (general-simulate-key "RET"))
   :config
-  (evil-collection-init 'magit)
-
-  (setq evil-collection-magit-state 'normal
-        evil-collection-magit-use-z-for-folds t
-        magit-auto-revert-mode nil))
+  (setq magit-auto-revert-mode nil))
 
 (use-package smerge-mode
   :ensure nil
   :general
-  ('normal
-   "]c" #'(smerge-vc-next-conflict :which-key "next conflicting hunk")
-   "[c" #'(smerge-prev :which-key "previous conflicting hunk"))
-  (my-localleader-def
-    "ml" #'(smerge-keep-upper :which-key "keep local changes")
-    "mo" #'(smerge-keep-lower :which-key "keep other changes")
-    "ma" #'(smerge-keep-all :which-key "keep all changes")
-    "mm" #'(smerge-ediff :which-key "merge"))
-  :config
-  (evil-collection-init 'ediff))
+  ;; TODO
+  ;; ('meow-normal-state-keymap
+  ;;  "]c" #'(smerge-vc-next-conflict :which-key "next conflicting hunk")
+  ;;  "[c" #'(smerge-prev :which-key "previous conflicting hunk"))
+  ;; (my-localleader-def
+  ;;   "ml" #'(smerge-keep-upper :which-key "keep local changes")
+  ;;   "mo" #'(smerge-keep-lower :which-key "keep other changes")
+  ;;   "ma" #'(smerge-keep-all :which-key "keep all changes")
+  ;;   "mm" #'(smerge-ediff :which-key "merge"))
+  )
 
 (use-package git-timemachine
   :general
   (my-leader-def
     "gt" #'(git-timemachine :which-key "git timemachine"))
-
-  ('normal 'git-timemachine-mode-map
-           "p" #'git-timemachine-show-previous-revision
-           "n" #'git-timemachine-show-next-revision
-           "q" #'git-timemachine-quit
-           "t" #'git-timemachine-show-commit
-           "r" #'write-file))
+  ('meow-normal-state-keymap 'git-timemachine-mode-map
+                             "p" #'git-timemachine-show-previous-revision
+                             "n" #'git-timemachine-show-next-revision
+                             "q" #'git-timemachine-quit
+                             "t" #'git-timemachine-show-commit
+                             "r" #'write-file))
 
 ;;;###autoload
 ;; TODO
@@ -76,7 +71,8 @@
   :defer 0.5
   :config
   (global-diff-hl-mode)
-  :general
-  ('normal
-   "]h" #'diff-hl-next-hunk
-   "[h" #'diff-hl-previous-hunk))
+  ;; :general
+  ;; ('meow-normal-state-keymap
+  ;;  "]h" #'diff-hl-next-hunk
+  ;;  "[h" #'diff-hl-previous-hunk)
+  )

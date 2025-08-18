@@ -50,9 +50,7 @@
       ;; Disable bidirectional text rendering for performance
       bidi-display-reordering 'left-to-right
       bidi-paragraph-direction 'left-to-right
-      cursor-in-non-selected-windows nil
-
-      mac-command-modifier 'control)
+      cursor-in-non-selected-windows nil)
 
 (when IS-MAC
   (dolist (path '("/opt/homebrew/opt/llvm/bin/"
@@ -198,57 +196,103 @@
   :demand t
   :config
   (general-create-definer my-leader-def ; SPC prefixed bindings
-    :states '(normal visual motion insert emacs)
-    :keymaps 'override
+    :keymaps '(meow-normal-state-keymap)
     :prefix "SPC"
-    :non-normal-prefix "C-c SPC")
-
-  (general-create-definer my-localleader-def ; , prefixed bindings
-    :states '(normal visual motion insert emacs)
-    :keymaps 'override
-    :prefix ","
-    :non-normal-prefix "C-c ,")
-
-  (my-leader-def
-    "fm" #'(general-describe-keybindings :which-key "list keybindings")))
-
-(elpaca-wait)
+    :non-normal-prefix "C-c"))
 
 (use-package which-key ; show keybindings following when a prefix is pressed
-  :hook (pre-command . which-key-mode)
   :defer 0.1
   :custom
   (which-key-sort-order #'which-key-prefix-then-key-order)
   (which-key-min-display-lines 6)
   (which-key-add-column-padding 1)
   (which-key-sort-uppercase-first nil)
-  :general
-  ;; Set up all prefixes
-  (my-localleader-def
-    "m" '(:ignore t :which-key "Merge")
-    "g" '(:ignore t :which-key "Miscellaneous")
-    "t" '(:ignore t :which-key "Tramp ssh"))
-  ('normal
-   "[o" '(:ignore t :which-key "Toggle Off")
-   "]o" '(:ignore t :which-key "Toggle On"))
-  (my-leader-def
-    "b" '(:ignore t :which-key "Buffers")
-    "e" '(:ignore t :which-key "Elisp")
-    "ei" '(:ignore t :which-key "Ein")
-    "f" '(:ignore t :which-key "Find")
-    "fi" '(:ignore t :which-key "in directory")
-    "g" '(:ignore t :which-key "Git")
-    "gf" '(:ignore t :which-key "Find")
-    "gn" '(:ignore t :which-key "New")
-    "o" '(:ignore t :which-key "Open")
-    "of" '(:ignore t :which-key "File")
-    "oj" '(:ignore t :which-key "Org Journal")
-    "on" '(:ignore t :which-key "Org Note")
-    "ov" '(:ignore t :which-key "Vertical")
-    "p" '(:ignore t :which-key "Project")
-    "s" '(:ignore t :which-key "Yasnippet")
-    "t" '(:ignore t :which-key "Tab")
-    "f SPC m" #'(which-key-show-top-level :which-key "keybinding")))
+  :config
+  (which-key-mode))
+
+(use-package meow
+  :demand t
+  :init)
+
+(elpaca-wait)
+
+(require 'meow)
+
+(setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+(setq meow-state-mode-alist '((normal . meow-normal-mode)
+                              (insert . meow-insert-mode)
+                              (motion . meow-motion-mode)
+                              (beacon . meow-beacon-mode)))
+(setq meow-use-cursor-position-hack t)
+(meow-global-mode 1)
+(meow-motion-define-key
+ '("j" . meow-next)
+ '("k" . meow-prev)
+ '("<escape>" . ignore))
+(meow-normal-define-key
+ '("0" . meow-expand-0)
+ '("9" . meow-expand-9)
+ '("8" . meow-expand-8)
+ '("7" . meow-expand-7)
+ '("6" . meow-expand-6)
+ '("5" . meow-expand-5)
+ '("4" . meow-expand-4)
+ '("3" . meow-expand-3)
+ '("2" . meow-expand-2)
+ '("1" . meow-expand-1)
+ '("-" . negative-argument)
+ '("SPC" . nil)
+ '(";" . meow-reverse)
+ '("," . meow-inner-of-thing)
+ '("." . meow-bounds-of-thing)
+ '("[" . meow-beginning-of-thing)
+ '("]" . meow-end-of-thing)
+ '("a" . meow-append)
+ '("A" . meow-open-below)
+ '("b" . meow-back-word)
+ '("B" . meow-back-symbol)
+ '("c" . meow-change)
+ '("d" . meow-delete)
+ '("D" . meow-backward-delete)
+ '("e" . meow-next-word)
+ '("E" . meow-next-symbol)
+ '("f" . meow-find)
+ '("g" . meow-cancel-selection)
+ '("G" . meow-grab)
+ '("h" . meow-left)
+ '("H" . meow-left-expand)
+ '("i" . meow-insert)
+ '("I" . meow-open-above)
+ '("j" . meow-next)
+ '("J" . meow-next-expand)
+ '("k" . meow-prev)
+ '("K" . meow-prev-expand)
+ '("l" . meow-right)
+ '("L" . meow-right-expand)
+ '("m" . meow-join)
+ '("n" . meow-search)
+ '("o" . meow-block)
+ '("O" . meow-to-block)
+ '("p" . meow-yank)
+ '("q" . meow-quit)
+ '("Q" . meow-goto-line)
+ '("r" . meow-replace)
+ '("R" . meow-swap-grab)
+ '("s" . meow-kill)
+ '("t" . meow-till)
+ '("u" . meow-undo)
+ '("U" . meow-undo-in-selection)
+ '("v" . meow-visit)
+ '("w" . meow-mark-word)
+ '("W" . meow-mark-symbol)
+ '("x" . meow-line)
+ '("X" . meow-goto-line)
+ '("y" . meow-save)
+ '("Y" . meow-sync-grab)
+ '("z" . meow-pop-selection)
+ '("'" . repeat)
+ '("<escape>" . ignore))
+
 
 (add-hook 'after-init-hook
           (lambda ()
@@ -298,4 +342,8 @@
 (setq custom-file "~/.emacs.d/custom.el")
 
 ;; Start the emacsclient on init
-(add-hook 'after-init-hook #'server-start)
+(use-package server
+  :ensure nil
+  :config
+  (unless (server-running-p)
+    (add-hook 'after-init-hook #'server-start)))

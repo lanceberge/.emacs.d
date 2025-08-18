@@ -23,7 +23,7 @@
 
 (use-package saveplace ; save location in files
   :ensure nil
-  :hook (pre-command . save-place-mode))
+  :hook (after-init . save-place-mode))
 
 (use-package whitespace
   :ensure nil
@@ -31,11 +31,11 @@
 
 (use-package autorevert
   :ensure nil
-  :hook (pre-command . global-auto-revert-mode))
+  :hook (after-init . global-auto-revert-mode))
 
 (use-package savehist ; save command history
   :ensure nil
-  :hook (pre-command . savehist-mode)
+  :hook (after-init . savehist-mode)
   :custom
   (history-length 500)
   (history-delete-duplicates t)
@@ -44,34 +44,28 @@
 (use-package recentf
   :ensure nil
   :defer-incrementally (easymenu tree-widget timer)
-  :hook (pre-command . recentf-mode)
+  :hook (after-init . recentf-mode)
   :custom
   (recentf-auto-cleanup 'never)
   (recentf-max-saved-items 200))
 
-(when (or IS-LINUX IS-MAC)
-  (use-package flyspell ; spellcheck
-    :ensure nil
-    :hook
-    (prog-mode . flyspell-prog-mode)
-    (text-mode . flyspell-mode)
-    :general
-    ('normal
-     "[os" (defun +flyspell-off () (interactive) (flyspell-mode -1) :which-key "flyspell")
-     "]os" (defun +flyspell-on  () (interactive) (flyspell-mode t) :which-key "flyspell"))
-    ('(normal insert)
-     "M-y" #'(flyspell-auto-correct-word :which-key "fix word"))))
+(use-package flyspell
+  :ensure nil
+  :hook
+  (prog-mode . flyspell-prog-mode)
+  (text-mode . flyspell-mode)
+  :init
+  ;; TODO
+  ;; (meow-normal-define-key
+  ;;  "[os" . (defun +flyspell-off () (interactive) (flyspell-mode -1) :which-key "flyspell")
+  ;;  "]os" . (defun +flyspell-on  () (interactive) (flyspell-mode t) :which-key "flyspell"))
+  ;; (meow-insert-define-key
+  ;; '("M-y" . flyspell-auto-correct-word))
+  )
 
 (use-package bookmark
   :ensure nil
   :defer t)
-
-(use-package calc
-  :disabled t
-  :ensure nil
-  :general
-  (my-leader-def
-    "oc" #'(calc :which-key "calc")))
 
 (use-package desktop ; save sessions to a file
   :ensure nil
@@ -113,15 +107,17 @@
 
 (use-package outline-mode
   :ensure nil
-  :general
-  ('normal
-   "za" #'(outline-toggle-children :which-key "toggle fold")
-   "zo" #'(outline-show-subtree :which-key "fully open")
-   "zc" #'(outline-hide-subtree :which-key "fully fold")
-   "zk" #'(org-backward-element :which-key "go up an outline")
-   "zj" #'(org-forward-element :which-key "go down an outline")
-   "zr" #'(outline-show-all :which-key "close all folds")
-   "zm" #'(outline-hide-body :which-key "open all folds")))
+  :defer t
+  ;; TODO
+  ;; (meow-normal-define-key
+  ;;  '("za" . outline-toggle-children)
+  ;;  '("zo" . outline-show-subtree)
+  ;;  '("zc" . outline-hide-subtree)
+  ;;  '("zk" . org-backward-element)
+  ;;  '("zj" . org-forward-element)
+  ;;  '("zr" . outline-show-all)
+  ;;  '("zm" . outline-hide-body))
+  )
 
 (use-package ispell
   :defer t
@@ -136,13 +132,13 @@
                   (evil-local-mode)
                   (evil-normal-state)))
   :general
-  ('normal 'occur-mode-map
-           "q" #'quit-window))
+  ('meow-normal-state-keymap 'occur-mode-map
+                             "q" #'quit-window))
 
 (use-package isearch
   :ensure nil
   :general
-  ('normal
+  ('meow-normal-state-keymap
    "/" #'isearch-forward
    "?" #'isearch-backward)
 
@@ -159,15 +155,15 @@
   :hook
   (grep-mode . evil-normal-state)
   :general
-  ('normal 'grep-mode-map
-           ";" #'compile-goto-error
-           "q" #'quit-window))
+  ('meow-normal-state-keymap 'grep-mode-map
+                             ";" #'compile-goto-error
+                             "q" #'quit-window))
 
 (use-package xref
   :ensure nil
   :general
-  ('normal 'prog-mode-map
-           "gr" #'xref-find-references :which-key "find references"))
+  ('meow-normal-state-keymap 'prog-mode-map
+                             "gr" #'xref-find-references :which-key "find references"))
 
 (use-package smerge-mode
   :ensure nil

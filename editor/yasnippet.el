@@ -7,6 +7,12 @@
   (yas-snippet-dirs '("~/.emacs.d/snippets"))
   (yas-indent-line 'fixed)
   :general
+  (my-leader-def
+    "si" #'(yas-insert-snippet :which-key "insert")
+    "sn" #'(yas-new-snippet :which-key "new")
+    "sf" #'(yas-visit-snippet-file :which-key "find snippet")
+    "sl" #'(yas-describe-tables :which-key "list")
+    "sr" #'(yas-reload-all :which-key "reload"))
   ('yas-keymap
    "<tab>" #'yas-next-field)
   ('visual 'org-mode-map
@@ -15,12 +21,7 @@
            "st" (defun +try-catch-snippet () (interactive) (+expand-snippet "try-catch")))
   ('snippet-mode-map
    "C-c C-c" #'+yas-load-snippet-noconfirm)
-  (my-leader-def
-    "si" #'(yas-insert-snippet :which-key "insert")
-    "sn" #'(yas-new-snippet :which-key "new")
-    "sf" #'(yas-visit-snippet-file :which-key "find snippet")
-    "sl" #'(yas-describe-tables :which-key "list")
-    "sr" #'(yas-reload-all :which-key "reload"))
+
   :config
   (add-hook 'yas-before-expand-snippet-hook
             #'(lambda()

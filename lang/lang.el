@@ -34,7 +34,7 @@
   :custom
   (markdown-fontify-code-blocks-natively t)
   :general
-  ('normal 'markdown-mode-map
+  ('meow-normal-state-keymap 'markdown-mode-map
            "RET" #'markdown-follow-thing-at-point))
 
 (use-package markdown-toc ; create a table of contents

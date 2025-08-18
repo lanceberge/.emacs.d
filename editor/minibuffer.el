@@ -1,11 +1,10 @@
-;;; -*- lexical-binding: t -*-
+'();;; -*- lexical-binding: t -*-
 (use-package consult
   :defer 0.2
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :custom
   (xref-show-xrefs-function #'consult-xref)
   :general
-  ([remap projectile-find-file] #'(consult-project-buffer :which-key "project buffer"))
   (my-leader-def
     "," #'(consult-buffer :which-key "find buffer")
     "." #'(find-file :which-key "find file")
@@ -31,6 +30,7 @@
     "fa" #'(consult-org-agenda :which-key "agenda")
     "fs" #'(consult-ripgrep :which-key "ripgrep")
     "f SPC j" #'(consult-imenu-multi :which-key "imenu"))
+  ([remap projectile-find-file] #'(consult-project-buffer :which-key "project buffer"))
 
   ('org-agenda-mode-map
    [remap evil-search-forward] #'(consult-line :which-key "line"))
@@ -44,7 +44,7 @@
   (vertico-cycle t)
   (vertico-preselect 'first)
   :general
-  ('(normal insert) '(vertico-map minibuffer-inactive-mode-map)
+  ('(vertico-map minibuffer-inactive-mode-map)
    "C-j" #'vertico-next
    "C-k" #'vertico-previous
    "C-u" #'vertico-scroll-down
@@ -53,10 +53,8 @@
    "M-k" #'vertico-previous
    "M-u" #'vertico-scroll-down
    "M-d" #'vertico-scroll-up
-   ";" #'vertico-exit
    "M-h" #'vertico-directory-up
-   "M-l" #'vertico-directory-enter
-   "C-w" #'evil-delete-backward-word)
+   "M-l" #'vertico-directory-enter)
   :config
   ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
 ;;;###autoload
@@ -74,7 +72,6 @@
                           (let ((vertico--index ,idx))
                             (call-interactively #'vertico-exit)))))
 
-  (evil-collection-init 'minibuffer)
   (vertico-mode)
   (vertico-indexed-mode))
 

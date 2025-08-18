@@ -58,7 +58,6 @@
 (add-hook 'window-configuration-change-hook #'+move-file-to-tab)
 
 (my-leader-def
-  :states 'normal
   "SPC p" #'(lambda () (interactive) (+project-switch nil #'consult-ripgrep))
   "pg" #'(lambda () (interactive) (+project-switch nil #'magit-status))
   "pp" #'+project-switch

@@ -26,3 +26,6 @@
   :defer t
   :hook
   (fireplace-mode . (lambda () (display-line-numbers-mode -1))))
+
+(use-package hydra
+  :defer t)
