@@ -23,8 +23,6 @@
   ('visual
    "sq" #'elysium-query
    "sc" #'elysium-add-context)
-  ('meow-normal-state-keymap
-   "C-l" #'elysium-clear-buffer)
   ;; (my-localleader-def
   ;;   "sq" #'elysium-query
   ;;   "so" #'elysium-keep-all-suggested-changes

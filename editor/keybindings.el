@@ -18,13 +18,17 @@
 
     "wo" #'delete-other-windows
     "wd" #'delete-window
+    "wj" #'other-window
+    "wq" #'(lambda () (interactive) (save-buffer) (delete-window))
+    "ws" #'split-window-below
+    "wv" #'split-window-right
 
     ;; Buffers
     "bd" #'(kill-current-buffer :which-key "delete buffer")
     "bq" #'(+save-and-kill-buffer :which-key "save and kill buffer")
     "b SPC d" #'(+kill-window-and-buffer :which-key "kill window and buffer")
-    "br"        (defun +revert-buffer () (interactive)
-                       (revert-buffer t t) :which-key "revert buffer")
+    "br" (defun +revert-buffer () (interactive)
+                (revert-buffer t t) :which-key "revert buffer")
     "bl" #'+switch-to-recent-file
     "bn" #'(next-buffer :which-key "next buffer")
     "bs" #'save-buffer
@@ -58,10 +62,10 @@
    ;; TODO
    "C-u" #'scroll-down
    "C-d" #'scroll-up
-   "m" nil
-   "mm" #'(lambda () (interactive)
-            (bookmark-set (file-name-nondirectory buffer-file-name)))
-   "md" #'(bookmark-delete-all :which-key "delete all bookmarks")
+   ;;    "m" nil
+   ;;    "mm" #'(lambda () (interactive)
+   ;; (bookmark-set (file-name-nondirectory buffer-file-name)))
+   ;;   "md" #'(bookmark-delete-all :which-key "delete all bookmarks")
    "s-t" #'beginning-of-line)
 
   ('meow-normal-state-keymap
@@ -112,8 +116,17 @@
             (+switch-to-recent-file-helper (cdr files))))))
     (+switch-to-recent-file-helper recentf-list)))
 
-(defun +escape (char)
-  (interactive "c")
-  (if (= char ?k)
-      (meow-insert-exit)
-    (insert-char char)))
+;; TODO revisit
+(defun +escape (&optional count)
+  (interactive)
+  (let ((cooldown 0.5))
+    (let ((char (read-char nil nil cooldown)))
+      (if char
+          (let* ((str (char-to-string char))
+                 (command (key-binding str)))
+            (if (= char ?k) (meow-insert-exit)
+              (progn (insert-char ?j)
+                     (if (eq command #'self-insert-command)
+                         (insert-char char)
+                       (funcall command)))))
+        (insert-char ?j)))))
