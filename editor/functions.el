@@ -58,13 +58,6 @@
              (let ((+format-region-p t))
                (+format/buffer)))))))
 
-(defun +dired/edit ()
-  "stay in normal mode to edit dired file names"
-  (interactive)
-  (dired-toggle-read-only)
-  (evil-normal-state)
-  (evil-forward-char))
-
 (defun +dired/up-dir ()
   "navigate up a directory in dired in the same buffer"
   (interactive)
@@ -98,13 +91,6 @@
   (+split-line-below)
   (transpose-lines 1)
   (forward-line -2))
-
-;;;###autoload
-(defun +kill-window-and-buffer ()
-  "kill window and buffer"
-  (interactive)
-  (kill-this-buffer)
-  (evil-quit))
 
 ;;;###autoload
 (defun balanced-parens-p ()

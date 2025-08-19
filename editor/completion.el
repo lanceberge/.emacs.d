@@ -21,7 +21,6 @@
    "M-j" #'corfu-next
    "M-k" #'corfu-previous
    "C-y" #'corfu-complete
-   [remap evil-normal-state] #'(lambda () (interactive) (corfu-quit) (evil-normal-state))
    "RET" #'newline
    "<tab>" #'yas-expand)
 
@@ -46,8 +45,7 @@
                           (let ((corfu--index ,idx))
                             (call-interactively #'corfu-complete)))))
   (global-corfu-mode)
-  (corfu-indexed-mode)
-  (advice-add 'evil-escape-func :after #'corfu-quit))
+  (corfu-indexed-mode))
 
 (use-package orderless
   :after vertico

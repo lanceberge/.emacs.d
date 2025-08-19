@@ -5,14 +5,10 @@
   (aw-scope 'frame)
   :general
   ('(global-map)
-   "M-o" #'ace-window)
-
-  ('evil-window-map
-   "m" #'(ace-swap-window :which-key "move")))
+   "M-o" #'ace-window))
 
 (use-package winner ; Undo and redo window configs
   :ensure nil
-  :after evil
   :defer 1
   :hook
   (after-init . winner-mode)

@@ -16,22 +16,13 @@
   ('yas-keymap
    "<tab>" #'yas-next-field)
   ('region-bindings-mode-map 'org-mode-map
-           "ss" (defun +src-snippet () (interactive) (+expand-snippet "highlighted src")))
+                             "ss" (defun +src-snippet () (interactive) (+expand-snippet "highlighted src")))
   ('region-bindings-mode-map 'prog-mode-map
-           "st" (defun +try-catch-snippet () (interactive) (+expand-snippet "try-catch")))
+                             "st" (defun +try-catch-snippet () (interactive) (+expand-snippet "try-catch")))
   ('snippet-mode-map
    "C-c C-c" #'+yas-load-snippet-noconfirm)
 
   :config
-  (add-hook 'yas-before-expand-snippet-hook
-            #'(lambda()
-                (when (evil-visual-state-p)
-                  (let ((p (point))
-                        (m (mark)))
-                    (evil-insert-state)
-                    (goto-char p)
-                    (set-mark m)))))
-
   (yas-global-mode 1))
 
 (use-package yasnippet-snippets

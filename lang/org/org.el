@@ -5,7 +5,7 @@
   :defer-incrementally
   (calendar find-func format-spec org-macs
             org-faces org-entities org-list org-src
-            ob org org-agenda org-capture evil-org flyspell
+            ob org org-agenda org-capture flyspell
             org-element)
   :custom
   (org-directory "~/org")
@@ -141,13 +141,6 @@
                         ("B" . ?b)
                         ("C" . ?c)
                         ("Music" . ?m)))
-
-  (defvar custom-functions-list '(evil-org-open-above evil-org-open-below org-return))
-
-  (dolist (func custom-functions-list)
-    (advice-add func :after
-                (lambda (&rest args)
-                  (+org-indent))))
 
   (add-to-list 'org-babel-default-header-args
                '(:eval . "never-export"))

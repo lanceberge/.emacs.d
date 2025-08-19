@@ -102,8 +102,7 @@
   (ediff-window-setup-function 'ediff-setup-windows-plain)
   (ediff-use-faces nil)
   :config
-  (setq ediff-diff-options "")
-  (add-hook 'ediff-prepare-buffer-hook #'evil-open-folds))
+  (setq ediff-diff-options ""))
 
 (use-package outline-mode
   :ensure nil
@@ -127,14 +126,9 @@
 
 (use-package occur
   :ensure nil
-  :hook
-  (occur-mode . (lambda ()
-                  (evil-local-mode)
-                  (evil-normal-state)))
   :general
   ('meow-normal-state-keymap 'occur-mode-map
                              "q" #'quit-window))
-
 (use-package isearch
   :ensure nil
   :general
@@ -152,8 +146,6 @@
 
 (use-package grep-mode
   :ensure nil
-  :hook
-  (grep-mode . evil-normal-state)
   :general
   ('meow-normal-state-keymap 'grep-mode-map
                              ";" #'compile-goto-error

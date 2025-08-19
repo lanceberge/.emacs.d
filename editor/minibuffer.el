@@ -1,4 +1,4 @@
-'();;; -*- lexical-binding: t -*-
+;;; -*- lexical-binding: t -*-
 (use-package consult
   :defer 0.2
   :hook (completion-list-mode . consult-preview-at-point-mode)
@@ -31,9 +31,6 @@
     "fs" #'(consult-ripgrep :which-key "ripgrep")
     "f SPC j" #'(consult-imenu-multi :which-key "imenu"))
   ([remap projectile-find-file] #'(consult-project-buffer :which-key "project buffer"))
-
-  ('org-agenda-mode-map
-   [remap evil-search-forward] #'(consult-line :which-key "line"))
 
   ('isearch-mode-map
    "/" #'consult-line))
@@ -87,3 +84,8 @@
 
 (use-package embark-consult
   :after (consult embark))
+
+(use-package isearch
+  :ensure nil
+  :config
+  (setq search-nonincremental-instead nil))

@@ -28,9 +28,6 @@
   ('(normal insert)
    "M-i" #'avy-pop-mark)
 
-  ('isearch-mode-map
-   "M-i" #'evil-avy-isearch)
-
   ;; ('meow-normal-state-keymap
   ;;  "s" #'(+avy-goto-char-2-below :which-key "2-chars")
   ;;  "S" #'(+avy-goto-char-2-above :which-key "2-chars"))
@@ -38,7 +35,6 @@
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)
                            (avy-goto-char-2-above . avy-order-closest)))
-  ;; (evil-define-avy-motion avy-isearch inclusive)
   ;; https://karthinks.com/software/avy-can-do-anything/
   (defun avy-action-embark (pt)
     "Perform an embark action on the avy target without moving point to it"
@@ -173,13 +169,6 @@
                                         (wgrep-change-to-wgrep-mode)
                                         (call-interactively #'+wgrep-replace))
                              "i" #'wgrep-change-to-wgrep-mode)
-  ('wgrep-mode-map
-   [remap evil-write] 'wgrep-save-all-buffers
-   [remap evil-save-modified-and-close]
-   (defun +wgrep-save-and-quit () (interactive)
-          (wgrep-save-all-buffers)
-          (evil-quit) :which-key "save and quit"))
-
   ('meow-normal-state-keymap wgrep-mode-map
                              "R" #'+wgrep-replace)
   :defer t)

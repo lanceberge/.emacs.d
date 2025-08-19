@@ -8,8 +8,6 @@
   :custom
   (magit-save-repository-buffers nil)
   (magit-no-confirm '(stage-all-changes amend-published))
-  :hook
-  (git-commit-mode . evil-insert-state)
   :general
   (my-leader-def
     "gs" #'(magit-status :which-key "status")

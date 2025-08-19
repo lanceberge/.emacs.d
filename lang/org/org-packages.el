@@ -34,9 +34,7 @@
            [remap org-agenda-todo] #'org-agenda-filter)
 
   :config
-  (require 'evil-org-agenda)
   (+org-roam-refresh-agenda-list)
-  (evil-org-agenda-set-keys)
   (which-key-add-key-based-replacements
     "SPC oa" "agenda"))
 
@@ -65,9 +63,7 @@
       "** TODO %?\n %i\n" :prepend t)))
   :general
   (my-leader-def
-    "oc" #'(org-capture :which-key "org capture"))
-  :config
-  (add-hook 'org-capture-mode-hook 'evil-insert-state))
+    "oc" #'(org-capture :which-key "org capture")))
 
 (use-package org-src
   :ensure nil
@@ -80,18 +76,6 @@
   (org-src-window-setup 'current-window)
   :config
   (setq org-src-tab-acts-natively t))
-
-(use-package evil-org ; functions to work with evil-mode in org-mode
-  :general
-  ;; bind evil-org functions manually rather than using evil-org-mode, which has some
-  ;; conflicting bindings for my preferences
-  ('meow-normal-state-keymap org-mode-map
-                             "o" #'evil-org-open-below
-                             "O" #'evil-org-open-above)
-
-  ('(normal insert) org-mode-map
-   "C-;" #'evil-org-org-insert-heading-respect-content-below
-   "M-;" #'evil-org-org-insert-todo-heading-respect-content-below))
 
 (use-package org-drill
   :after org-roam

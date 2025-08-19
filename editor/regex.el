@@ -3,7 +3,9 @@
   :defer t
   :general
   ('meow-normal-state-keymap
-   "R" #'+vr/replace))
+   "R" #'+vr/replace)
+  ('meow-normal-state-keymap 'region-bindings-mode-map
+                             "R" #'vr/replace))
 
 (use-package visual-regexp-steroids
   :after visual-regexp

@@ -5,8 +5,9 @@
   ('(normal insert) emacs-lisp-mode-map
    :prefix "C-c"
    "C-c" #'eval-buffer)
+  :general
   ('emacs-lisp-mode-map
-   [remap evil-write] #'+elisp-format-and-check))
+   [remap save-buffer] #'+elisp-format-and-check))
 
 (use-package debug
   :ensure nil
@@ -22,15 +23,6 @@
   ;;   "ed" #'(edebug-defun :which-key "debug function")
   ;;   "e SPC d" #'(edebug-remove-instrumentation :which-key "remove instrumentation"))
   )
-
-(use-package lispyville
-  :hook (emacs-lisp-mode . lispyville-mode)
-  :config
-  (lispyville-set-key-theme
-   '(operators c-w commentary slurp/barf-cp))
-  :general
-  ('meow-normal-state-keymap
-   "Y" #'lispyville-yank-line))
 
 ;;;###autoload
 (defun +elisp-format-and-check ()

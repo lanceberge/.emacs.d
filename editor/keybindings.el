@@ -33,7 +33,6 @@
                 :which-key "revert buffer")
     "bl" #'+switch-to-recent-file
     "bn" #'(next-buffer :which-key "next buffer")
-    "bs" #'save-buffer
     "bp" #'(previous-buffer :which-key "previous buffer")
 
     ;; Eval elisp
@@ -65,6 +64,7 @@
    "C-d" #'scroll-up)
 
   ('meow-normal-state-keymap
+   "q" #'save-buffer
    "C" #'(lambda () (interactive) (kill-line) (meow-insert-mode))
    "d" #'(lambda () (interactive (delete-char 1))))
 
@@ -94,10 +94,6 @@
   ('(normal insert)
    :prefix "C-c"
    "SPC" (general-simulate-key "C-c C-c"))
-
-  ('insert
-   "C-<backspace>" #'evil-delete-backward-word
-   "M-<backspace>" #'evil-delete-backward-word)
 
   ('(normal insert) '(php-mode-map c++-mode-map)
    "M-;" #'+append-semicolon))
