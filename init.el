@@ -211,8 +211,7 @@
   (which-key-mode))
 
 (use-package meow
-  :demand t
-  :init)
+  :demand t)
 
 (elpaca-wait)
 
@@ -224,6 +223,7 @@
                               (motion . meow-motion-mode)
                               (beacon . meow-beacon-mode)))
 (setq meow-use-cursor-position-hack t)
+(setq meow-use-clipboard t)
 (meow-global-mode 1)
 (meow-motion-define-key
  '("j" . meow-next)
@@ -251,8 +251,6 @@
  '("A" . meow-open-below)
  '("b" . meow-back-word)
  '("B" . meow-back-symbol)
- '("c" . meow-change)
- '("d" . meow-delete)
  '("D" . meow-backward-delete)
  '("e" . meow-next-word)
  '("E" . meow-next-symbol)
@@ -271,17 +269,14 @@
  '("L" . meow-right-expand)
  '("m" . meow-join)
  '("n" . meow-search)
- '("o" . meow-block)
  '("O" . meow-to-block)
  '("p" . meow-yank)
- '("q" . meow-quit)
  '("Q" . meow-goto-line)
  '("r" . meow-replace)
  '("R" . meow-swap-grab)
  '("s" . meow-kill)
  '("t" . meow-till)
  '("u" . meow-undo)
- '("U" . meow-undo-in-selection)
  '("v" . meow-visit)
  '("w" . meow-mark-word)
  '("W" . meow-mark-symbol)
@@ -292,7 +287,6 @@
  '("z" . meow-pop-selection)
  '("'" . repeat)
  '("<escape>" . ignore))
-
 
 (add-hook 'after-init-hook
           (lambda ()

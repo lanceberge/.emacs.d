@@ -60,7 +60,7 @@
 
 (use-package embark
   :general
-  ('(insert meow-normal-state-keymap) global-map
+  ('(meow-insert-state-keymap meow-normal-state-keymap global-map minibuffer-mode-map)
    "M-." #'embark-act
    "M-," #'embark-export)
   ('embark-general-map
@@ -106,8 +106,9 @@
 (use-package helpful ; better help menu
   :defer 0.7
   :general
-  ;; ('meow-normal-state-keymap
-  ;;  "gp" #'helpful-at-point)
+  (my-leader-def
+    "hk" #'helpful-key)
+
   ('meow-normal-state-keymap helpful-mode-map
                              "q" #'quit-window)
 
@@ -127,9 +128,9 @@
   ('meow-normal-state-keymap
    "u" #'undo-tree-undo
    "C-r" #'undo-tree-redo)
-  ('visual
-   "u" #'(lambda () (interactive) (undo 1))
-   "C-r" #'(lambda () (interactive) (redo 1)))
+  ('meow-normal-state-keymap region-binding-mode-map
+                             "u" #'(lambda () (interactive) (undo 1))
+                             "C-r" #'(lambda () (interactive) (redo 1)))
   (my-leader-def
     "fu" #'(undo-tree-visualize :which-key "undo"))
   :config
@@ -198,9 +199,20 @@
 
 (use-package drag-stuff
   :general
-  ('visual
+  ('region-binding-mode-map
    "M-k" #'drag-stuff-up
    "M-j" #'drag-stuff-down))
+
+(use-package expand-region
+  :general
+  ('meow-normal-state-keymap
+   "o" #'er/expand-region)
+  :config
+  (setq er/try-expand-list
+        '(er/mark-inside-quotes
+          er/mark-outside-quotes
+          er/mark-inside-pairs
+          er/mark-outside-pairs)))
 
 ;;;###autoload
 (defun +avy-goto-char-2-below (char1 char2)
@@ -226,12 +238,13 @@
 ;;;###autoload
 (defun +wgrep-replace (regexp replace)
   "Replace in wgrep without replacing the read only 'file_name:line:' prefix."
-  (interactive (list (read-string "Replace: ")
-                     (read-string "Replace With: ")))
+  (interactive (list  (read-string "Replace: ")
+                      (read-string "Replace With: ")))
   (save-excursion
     (goto-char (point-min))
     (while (re-search-forward "^\\([^:]*:[0-9]+:\\)" nil t)
-      (let ((line-end (line-end-position)))
+      (let ((line-end ( line-end-position)))
         (while (re-search-forward regexp line-end t)
           (replace-match replace t nil))
-        (forward-line 1)))))
+        (forward-line 1)
+        (beginning-of-line)))))

@@ -20,7 +20,7 @@
 
 (use-package elysium
   :general
-  ('visual
+  ('region-binding-mode
    "sq" #'elysium-query
    "sc" #'elysium-add-context)
   ;; (my-localleader-def

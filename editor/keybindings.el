@@ -28,7 +28,9 @@
     "bq" #'(+save-and-kill-buffer :which-key "save and kill buffer")
     "b SPC d" #'(+kill-window-and-buffer :which-key "kill window and buffer")
     "br" (defun +revert-buffer () (interactive)
-                (revert-buffer t t) :which-key "revert buffer")
+                (revert-buffer t t)
+                (undo-tree-mode)
+                :which-key "revert buffer")
     "bl" #'+switch-to-recent-file
     "bn" #'(next-buffer :which-key "next buffer")
     "bs" #'save-buffer
@@ -44,13 +46,12 @@
     "er" (defun +source-init-file () (interactive)
                 (load-file "~/.emacs.d/init.el") :which-key "source init file"))
 
-
   ;; TODO
   ;; (my-leader-def
-  ;;   :states 'visual
+  ;;   :states 'region-bindings-mode-map
   ;;   "eb" #'(eval-region :which-key "execute elisp region"))
 
-  ('meow-normal-state-keymap
+  ('(meow-normal-state-keymap meow-motion-state-keymap)
    ;; TODO
    ;; "gs" #'(+split-line-below :which-key "split line below")
    ;; "gS" #'(+split-line-above :which-key "split line above")
@@ -61,24 +62,32 @@
 
    ;; TODO
    "C-u" #'scroll-down
-   "C-d" #'scroll-up
-   ;;    "m" nil
-   ;;    "mm" #'(lambda () (interactive)
-   ;; (bookmark-set (file-name-nondirectory buffer-file-name)))
-   ;;   "md" #'(bookmark-delete-all :which-key "delete all bookmarks")
-   "s-t" #'beginning-of-line)
+   "C-d" #'scroll-up)
+
+  ('meow-normal-state-keymap
+   "C" #'(lambda () (interactive) (kill-line) (meow-insert-mode))
+   "d" #'(lambda () (interactive (delete-char 1))))
+
+  ('meow-normal-state-keymap
+   "c" #'(lambda () (interactive) (if (region-active-p) (meow-change)
+                                    (progn  (delete-char 1) (meow-insert-mode)))))
+
+  ;;    "m" nil
+  ;;    "mm" #'(lambda () (interactive)
+  ;; (bookmark-set (file-name-nondirectory buffer-file-name)))
+  ;;   "md" #'(bookmark-delete-all :which-key "delete all bookmarks")
 
   ('meow-normal-state-keymap
    "C-/" #'(comment-line :which-key "comment")
    "M-/" #'(comment-line :which-key "comment"))
 
-  ('visual
+  ('region-bindings-mode-map
    "C-/" #'(comment-dwim :which-key "comment")
    "M-/" #'(comment-dwim :which-key "comment")
    "q" #'apply-macro-to-region-lines)
 
-  ('meow-normal-state-keymap
-   "q" #'+start-or-end-macro)
+  ;;  ('meow-normal-state-keymap
+  ;;   "q" #'+start-or-end-macro)
 
   ('meow-insert-state-keymap
    "j" #'+escape)
@@ -92,6 +101,9 @@
 
   ('(normal insert) '(php-mode-map c++-mode-map)
    "M-;" #'+append-semicolon))
+
+(use-package region-bindings-mode
+  :hook (after-init . region-bindings-mode-enable))
 
 ;;;###autoload
 (defun +append-semicolon ()

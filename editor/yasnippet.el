@@ -15,9 +15,9 @@
     "sr" #'(yas-reload-all :which-key "reload"))
   ('yas-keymap
    "<tab>" #'yas-next-field)
-  ('visual 'org-mode-map
+  ('region-bindings-mode-map 'org-mode-map
            "ss" (defun +src-snippet () (interactive) (+expand-snippet "highlighted src")))
-  ('visual 'prog-mode-map
+  ('region-bindings-mode-map 'prog-mode-map
            "st" (defun +try-catch-snippet () (interactive) (+expand-snippet "try-catch")))
   ('snippet-mode-map
    "C-c C-c" #'+yas-load-snippet-noconfirm)

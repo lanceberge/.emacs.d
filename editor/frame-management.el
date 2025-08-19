@@ -4,7 +4,7 @@
   (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
   (aw-scope 'frame)
   :general
-  ('(normal visual insert)
+  ('(global-map)
    "M-o" #'ace-window)
 
   ('evil-window-map
@@ -17,9 +17,9 @@
   :hook
   (after-init . winner-mode)
   :general
-  ('evil-window-map
-   "u" #'(winner-undo :which-key "undo window operation")
-   "r" #'(winner-redo :which-key "redo window operation")))
+  (my-leader-def
+    "wu" #'(winner-undo :which-key "undo window operation")
+    "wr" #'(winner-redo :which-key "redo window operation")))
 
 (use-package tab-bar
   :ensure nil
@@ -41,13 +41,7 @@
     "tu" #'(tab-bar-undo-close-tab :which-key "undo close tab")
     "t SPC r" #'(tab-bar-rename-tab-by-name :which-key "rename tab by name")
     "po" #'(+open-project :which-key "open project")
-    "tr" #'(tab-bar-rename-tab :which-key "rename tab"))
-  ;; ('meow-normal-state-keymap
-  ;;  "]t" #'(tab-bar-switch-to-next-tab :which-key "next tab")
-  ;;  "[t" #'(tab-bar-switch-to-prev-tab :which-key "next-tab")
-  ;;  "]T" #'(tab-bar-move-tab :which-key "move tab right")
-  ;;  "[T" #'(tab-bar-move-tab-to :which-key "move tab left"))
-  )
+    "tr" #'(tab-bar-rename-tab :which-key "rename tab")))
 
 ;;;###autoload
 (defun +tab-bar/open-and-rename ()
@@ -59,7 +53,8 @@
   :custom
   (windresize-default-increment 3)
   :general
-  ;; TODO
+  (my-leader-def
+    "wr" #'windresize)
   ('windresize-map
    "h" #'windresize-left
    "l" #'windresize-right
