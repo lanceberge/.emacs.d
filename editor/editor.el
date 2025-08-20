@@ -160,10 +160,9 @@
   :commands (google-this-symbol))
 
 (use-package ace-link
-  ;; :general
-  ;; ('meow-normal-state-keymap
-  ;;  "g SPC l" #'(ace-link :which-key "goto link"))
-  )
+  :general
+  ('(org-mode-map helpful-mode-map)
+   "M-i" #'(ace-link :which-key "goto link")))
 
 (use-package wgrep
   :custom

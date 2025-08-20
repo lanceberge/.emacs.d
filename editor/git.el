@@ -23,6 +23,9 @@
     "gf" #'(magit-find-file :which-key "find file")
     "gw" #'(magit-worktree :which-key "worktree")
     "gc" #'(magit-show-commit :which-key "show commit"))
+  ('magit-mode-map
+   "q" #'magit-commit
+   "x" #'magit-discard)
   :config
   (setq magit-auto-revert-mode nil))
 
@@ -36,6 +39,7 @@
 (use-package smerge-mode
   :ensure nil
   :general
+  :defer t
   ;; TODO
   ;; ('meow-normal-state-keymap
   ;;  "]c" #'(smerge-vc-next-conflict :which-key "next conflicting hunk")

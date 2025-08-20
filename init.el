@@ -362,6 +362,7 @@
 
 ;; Start the emacsclient on init
 (use-package server
+  :defer 4.0
   :ensure nil
   :config
   (unless (server-running-p)

@@ -72,7 +72,6 @@
   (org-edit-src-content-indentation 0) ; leading spaces before the #+begin line
   (org-src-preserve-indentation t)     ; don't preserve leading whitespace on export
   (org-adapt-indentation t)
-
   (org-src-window-setup 'current-window)
   :config
   (setq org-src-tab-acts-natively t))
