@@ -66,10 +66,6 @@
   (when (and (version<= emacs-version "29.1") (featurep 'eldoc))
     (unload-feature 'eldoc t))
   (global-eldoc-mode -1)
-  :general
-  ('meow-normal-state-keymap 'eglot-mode-map
-                             "gh" #'eldoc-print-current-symbol-info
-                             "K" #'+eldoc-help)
   :config
   (setq eldoc-idle-delay 9999)
   (defun +eldoc-help ()

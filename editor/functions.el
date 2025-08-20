@@ -146,3 +146,9 @@
 (defun +expand-snippet (snippet-name)
   (interactive)
   (yas-expand-snippet (yas-lookup-snippet snippet-name)))
+
+;;;###autoload
+(defun +dired/up-dir ()
+  "navigate up a directory in dired in the same buffer"
+  (interactive)
+  (find-alternate-file ".."))

@@ -80,17 +80,15 @@
 (use-package dired
   :ensure nil
   :custom
-  (dired-auto-revert-buffer) ; don't prompt to revert
+  (dired-auto-revert-buffer)
   (dired-recursive-copies 'always)
   :general
   (my-leader-def
     "-" #'(dired-jump :which-key "open dired"))
   ('meow-normal-state-keymap 'dired-mode-map
                              "i" #'+dired/edit)
-  ('meow-normal-state-keymap 'dired-mode-map
-                             "q" )
-  ('dired-mode-map 'meow-motion-state-keymap
-                   "-" #'dired-up-directory)
+  ('dired-mode-map
+   "i" #'dired-toggle-read-only)
   :config
   (put 'dired-find-alternate-file 'disabled nil))
 
