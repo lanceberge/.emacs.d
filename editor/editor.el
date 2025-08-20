@@ -89,6 +89,8 @@
                              "i" #'+dired/edit)
   ('dired-mode-map
    "i" #'dired-toggle-read-only)
+  ('wdired-mode-map
+   [remap save-buffer] #'wdired-finish-edit)
   :config
   (put 'dired-find-alternate-file 'disabled nil))
 

@@ -11,6 +11,8 @@
   :hook
   (git-commit-mode . meow-insert-mode)
   :general
+  ('with-editor-mode-map
+   [remap save-buffer] #'with-editor-finish)
   (my-leader-def
     "gs" #'(magit-status :which-key "status")
     "gb" #'(magit-branch-checkout :which-key "checkout branch")
@@ -25,6 +27,7 @@
     "gc" #'(magit-show-commit :which-key "show commit"))
   ('magit-mode-map
    "q" #'magit-commit
+   "p" #'magit-push
    "x" #'magit-discard)
   :config
   (setq magit-auto-revert-mode nil))
