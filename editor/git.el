@@ -8,6 +8,8 @@
   :custom
   (magit-save-repository-buffers nil)
   (magit-no-confirm '(stage-all-changes amend-published))
+  :hook
+  (git-commit-mode . meow-insert-mode)
   :general
   (my-leader-def
     "gs" #'(magit-status :which-key "status")
@@ -21,11 +23,15 @@
     "gf" #'(magit-find-file :which-key "find file")
     "gw" #'(magit-worktree :which-key "worktree")
     "gc" #'(magit-show-commit :which-key "show commit"))
-  :general
-  ('meow-normal-state-keymap 'magit-mode-map
-                             ";" (general-simulate-key "RET"))
   :config
   (setq magit-auto-revert-mode nil))
+
+(use-package git-timemachine
+  :commands (git-timemachine)
+  :hook (git-timemachine-mode . +meow-motion-mode)
+  :general
+  (my-leader-def
+    "gt" #'git-timemachine))
 
 (use-package smerge-mode
   :ensure nil
@@ -40,27 +46,6 @@
   ;;   "ma" #'(smerge-keep-all :which-key "keep all changes")
   ;;   "mm" #'(smerge-ediff :which-key "merge"))
   )
-
-(use-package git-timemachine
-  :general
-  (my-leader-def
-    "gt" #'(git-timemachine :which-key "git timemachine"))
-  ('meow-normal-state-keymap 'git-timemachine-mode-map
-                             "p" #'git-timemachine-show-previous-revision
-                             "n" #'git-timemachine-show-next-revision
-                             "q" #'git-timemachine-quit
-                             "t" #'git-timemachine-show-commit
-                             "r" #'write-file))
-
-;;;###autoload
-;; TODO
-(defun +magit/stage-all-and-commit ()
-  "stage all files and commit"
-  (interactive)
-  (save-buffer (current-buffer))
-  (magit-stage-modified)
-  (magit-commit-create)
-  (magit-push))
 
 (use-package diff-hl
   :hook

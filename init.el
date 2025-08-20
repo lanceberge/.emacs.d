@@ -279,6 +279,21 @@
                     (progn (setq prefix-arg ,idx)
                            (universal-argument--mode))))))
   :config
+  (defvar-local +meow-desired-state nil)
+
+  (defun +meow-set-desired-state (state)
+    (setq-local +meow-desired-state state))
+
+  (defun +meow-mode-get-state-advice (orig-func &rest args)
+    (if +meow-desired-state
+        +meow-desired-state
+      (apply orig-func args)))
+
+  (advice-add 'meow--mode-get-state :around #'+meow-mode-get-state-advice)
+
+  (defun +meow-motion-mode ()
+    (+meow-set-desired-state 'motion))
+
   (add-to-list 'meow-mode-state-list '(magit-blob-mode . motion)))
 
 (elpaca-wait)

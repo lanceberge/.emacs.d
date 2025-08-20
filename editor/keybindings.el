@@ -29,7 +29,6 @@
     "b SPC d" #'(+kill-window-and-buffer :which-key "kill window and buffer")
     "br" (defun +revert-buffer () (interactive)
                 (revert-buffer t t)
-                (undo-tree-mode)
                 :which-key "revert buffer")
     "bl" #'+switch-to-recent-file
     "bn" #'(next-buffer :which-key "next buffer")

@@ -16,6 +16,7 @@
 
 (use-package edebug
   :ensure nil
+  :defer t
   :general
   ;; TODO
   ;; (my-leader-def

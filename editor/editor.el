@@ -117,7 +117,7 @@
 
 (use-package undo-tree ; Persistent Undos
   :defer 0.1
-  :hook (window-configuration-change . undo-tree-mode)
+  :hook ((prog-mode text-mode) . undo-tree-mode)
   :custom
   (undo-limit 10000)
   (undo-tree-auto-save-history t)
