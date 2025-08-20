@@ -196,9 +196,11 @@
   :demand t
   :config
   (general-create-definer my-leader-def ; SPC prefixed bindings
-    :keymaps '(meow-normal-state-keymap)
+    :keymaps '(meow-normal-state-keymap meow-motion-state-keymap)
     :prefix "SPC"
     :non-normal-prefix "C-c"))
+
+(elpaca-wait)
 
 (use-package which-key ; show keybindings following when a prefix is pressed
   :defer 0.1
@@ -211,11 +213,75 @@
   (which-key-mode))
 
 (use-package meow
-  :demand t)
+  :init
+  (require 'meow)
+  :general
+  ('meow-motion-state-keymap
+   "q" #'meow-quit)
+  ('meow-normal-state-keymap
+   "p" (defun +replace-or-yank () (interactive)
+              (if (region-active-p)
+                  (meow-replace)
+                (meow-yank)))
+   "-"  #'negative-argument
+   "SPC" nil
+   ";" #'meow-reverse
+   "." #'meow-bounds-of-thing
+   "," #'meow-inner-of-thing
+   "#" #'meow-bounds-of-thing
+   "[" #'meow-beginning-of-thing
+   "]" #'meow-end-of-thing
+   "a" #'meow-append
+   "A" #'meow-open-below
+   "b" #'meow-back-word
+   "B" #'meow-back-symbol
+   "D" #'meow-backward-delete
+   "e" #'meow-next-word
+   "E" #'meow-next-symbol
+   "f" #'meow-find
+   "g" #'meow-cancel-selection
+   "G" #'meow-grab
+   "h" #'meow-left
+   "H" #'meow-left-expand
+   "i" #'meow-insert
+   "I" #'meow-open-above
+   "j" #'meow-next
+   "J" #'meow-next-expand
+   "k" #'meow-prev
+   "K" #'meow-prev-expand
+   "l" #'meow-right
+   "L" #'meow-right-expand
+   "m" #'meow-join
+   "n" #'meow-search
+   "O" #'meow-to-block
+   "Q" #'meow-goto-line
+   "R" #'meow-swap-grab
+   "s" #'meow-kill
+   "t" #'meow-till
+   "v" #'meow-visit
+   "w" #'meow-mark-word
+   "W" #'meow-mark-symbol
+   "x" #'meow-line
+   "X" #'meow-goto-line
+   "y" #'meow-save
+   "Y" #'meow-sync-grab
+   "z" #'meow-pop-selection
+   "'" #'repeat
+   "<escape>" #'keyboard-quit)
+  :config
+  (cl-loop for idx from 0 to 9
+           do (general-define-key
+               :keymaps 'meow-normal-state-keymap
+               (number-to-string idx)
+               `(lambda () (interactive)
+                  (if (region-active-p)
+                      (meow-expand ,idx)
+                    (progn (setq prefix-arg ,idx)
+                           (universal-argument--mode))))))
+  :config
+  (add-to-list 'meow-mode-state-list '(magit-blob-mode . motion)))
 
 (elpaca-wait)
-
-(require 'meow)
 
 (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
 (setq meow-state-mode-alist '((normal . meow-normal-mode)
@@ -228,65 +294,8 @@
 (meow-motion-define-key
  '("j" . meow-next)
  '("k" . meow-prev)
- '("<escape>" . ignore))
-(meow-normal-define-key
- '("0" . meow-expand-0)
- '("9" . meow-expand-9)
- '("8" . meow-expand-8)
- '("7" . meow-expand-7)
- '("6" . meow-expand-6)
- '("5" . meow-expand-5)
- '("4" . meow-expand-4)
- '("3" . meow-expand-3)
- '("2" . meow-expand-2)
- '("1" . meow-expand-1)
- '("-" . negative-argument)
- '("SPC" . nil)
- '(";" . meow-reverse)
- '("," . meow-inner-of-thing)
- '("." . meow-bounds-of-thing)
- '("[" . meow-beginning-of-thing)
- '("]" . meow-end-of-thing)
- '("a" . meow-append)
- '("A" . meow-open-below)
- '("b" . meow-back-word)
- '("B" . meow-back-symbol)
- '("D" . meow-backward-delete)
- '("e" . meow-next-word)
- '("E" . meow-next-symbol)
- '("f" . meow-find)
- '("g" . meow-cancel-selection)
- '("G" . meow-grab)
- '("h" . meow-left)
- '("H" . meow-left-expand)
- '("i" . meow-insert)
- '("I" . meow-open-above)
- '("j" . meow-next)
- '("J" . meow-next-expand)
- '("k" . meow-prev)
- '("K" . meow-prev-expand)
- '("l" . meow-right)
- '("L" . meow-right-expand)
- '("m" . meow-join)
- '("n" . meow-search)
- '("O" . meow-to-block)
- '("p" . meow-yank)
- '("Q" . meow-goto-line)
- '("r" . meow-replace)
- '("R" . meow-swap-grab)
- '("s" . meow-kill)
- '("t" . meow-till)
- '("u" . meow-undo)
- '("v" . meow-visit)
- '("w" . meow-mark-word)
- '("W" . meow-mark-symbol)
- '("x" . meow-line)
- '("X" . meow-goto-line)
- '("y" . meow-save)
- '("Y" . meow-sync-grab)
- '("z" . meow-pop-selection)
- '("'" . repeat)
- '("<escape>" . ignore))
+ '("<escape>" . ignore)
+ '("SPC" . nil))
 
 (add-hook 'after-init-hook
           (lambda ()

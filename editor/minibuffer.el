@@ -12,11 +12,12 @@
     "pl" #'(consult-line-multi :which-key "project line")
     "fr" #'(consult-recent-file :which-key "find recent file")
     "fj" #'(consult-imenu :which-key "imenu")
+    "fk" #'consult-kmacro
     "pb" #'(consult-project-buffer :which-key "project buffer")
     "fm" #'(consult-global-mark :which-key "mark")
     "bm" #'(consult-mark :which-key "buffer mark")
     "fb" #'(consult-bookmark :which-key "find bookmark")
-    "fy" #'(consult-yank-from-kill-ring :which-key "yank")
+    "y" #'(consult-yank-from-kill-ring :which-key "yank")
     "f SPC y" #'(consult-yank-replace :which-key "replace yank")
     "fh" #'(consult-man :which-key "help")
     "ft" (defun +find-todos ()
@@ -84,8 +85,3 @@
 
 (use-package embark-consult
   :after (consult embark))
-
-(use-package isearch
-  :ensure nil
-  :config
-  (setq search-nonincremental-instead nil))

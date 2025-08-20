@@ -58,11 +58,6 @@
              (let ((+format-region-p t))
                (+format/buffer)))))))
 
-(defun +dired/up-dir ()
-  "navigate up a directory in dired in the same buffer"
-  (interactive)
-  (find-alternate-file ".."))
-
 ;;;###autoload
 (defun read-file-contents (file-path)
   "Read the contents of FILE-PATH and return it as a string."

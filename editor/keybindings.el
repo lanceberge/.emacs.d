@@ -124,7 +124,7 @@
             (+switch-to-recent-file-helper (cdr files))))))
     (+switch-to-recent-file-helper recentf-list)))
 
-;; TODO revisit
+;; TODO fix in org mode
 (defun +escape (&optional count)
   (interactive)
   (let ((cooldown 0.5))

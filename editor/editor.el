@@ -56,7 +56,7 @@
 
 (use-package embark
   :general
-  ('(meow-insert-state-keymap meow-normal-state-keymap global-map minibuffer-mode-map)
+  ('(meow-insert-state-keymap meow-normal-state-keymap meow-motion-state-keymap global-map minibuffer-mode-map)
    "M-." #'embark-act
    "M-," #'embark-export)
   ('embark-general-map
@@ -85,13 +85,14 @@
   :general
   (my-leader-def
     "-" #'(dired-jump :which-key "open dired"))
+  ('meow-normal-state-keymap 'dired-mode-map
+                             "i" #'+dired/edit)
+  ('meow-normal-state-keymap 'dired-mode-map
+                             "q" )
+  ('dired-mode-map 'meow-motion-state-keymap
+                   "-" #'dired-up-directory)
   :config
-  (put 'dired-find-alternate-file 'disabled nil)
-
-  (general-def 'meow-normal-state-keymap dired-mode-map
-    ";" #'dired-find-alternate-file ; select a directory in the same buffer
-    "i" #'+dired/edit
-    "-" #'+dired/up-dir))
+  (put 'dired-find-alternate-file 'disabled nil))
 
 (use-package dired-x
   :ensure nil
@@ -122,11 +123,15 @@
   (undo-tree-auto-save-history t)
   :general
   ('meow-normal-state-keymap
-   "u" #'undo-tree-undo
-   "C-r" #'undo-tree-redo)
-  ('meow-normal-state-keymap region-binding-mode-map
-                             "u" #'(lambda () (interactive) (undo 1))
-                             "C-r" #'(lambda () (interactive) (redo 1)))
+   "u" (defun +undo () (interactive)
+              (if (region-active-p)
+                  (undo 1)
+                (undo-tree-undo)))
+   "C-r" (defun +redo () (interactive)
+                (if (region-active-p)
+                    (redo 1)
+                  (undo-tree-redo))))
+
   (my-leader-def
     "fu" #'(undo-tree-visualize :which-key "undo"))
   :config
