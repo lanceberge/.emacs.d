@@ -289,6 +289,7 @@
                               (motion . meow-motion-mode)
                               (beacon . meow-beacon-mode)))
 (setq meow-use-cursor-position-hack t)
+(meow-setup-indicator)
 (setq meow-use-clipboard t)
 (meow-global-mode 1)
 (meow-motion-define-key

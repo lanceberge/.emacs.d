@@ -98,9 +98,6 @@
   ('(normal insert) '(php-mode-map c++-mode-map)
    "M-;" #'+append-semicolon))
 
-(use-package region-bindings-mode
-  :hook (after-init . region-bindings-mode-enable))
-
 ;;;###autoload
 (defun +append-semicolon ()
   (interactive)

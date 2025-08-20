@@ -193,7 +193,7 @@
 
 (use-package drag-stuff
   :general
-  ('region-binding-mode-map
+  ('meow-normal-state-keymap
    "M-k" #'drag-stuff-up
    "M-j" #'drag-stuff-down))
 

@@ -37,3 +37,42 @@
 (use-package aggressive-indent
   :hook
   (emacs-lisp-mode . aggressive-indent-mode))
+
+(use-package puni
+  :init
+  (setq +open-chars '(?\( ?\{ ?\[))
+  (setq +close-chars '(?\) ?\} ?\]))
+  :general
+  ('meow-normal-state-keymap
+   "<" #'+slurp-or-barf-left
+   ">" #'+slurp-or-barf-right))
+
+;;;###autoload
+(defun +slurp-or-barf-left (&optional N)
+  (interactive "p")
+  (let ((char-at-point (char-after (point))))
+    (cond ((member char-at-point +open-chars)
+           (progn
+             (forward-char)
+             (puni-slurp-backward N)
+             (backward-sexp)
+             (backward-char)))
+          ((member char-at-point +close-chars)
+           (puni-barf-forward N))
+          (t
+           (progn
+             (forward-sexp)
+             (puni-barf-forward N))))))
+
+;;;###autoload
+(defun +slurp-or-barf-right (&optional N)
+  (interactive "p")
+  (let ((char-at-point (char-after (point))))
+    (cond ((member char-at-point +open-chars)
+           (progn (forward-char) (puni-barf-backward N) (backward-char)))
+          ((member char-at-point +close-chars)
+           (puni-slurp-forward N))
+          (t
+           (progn
+             (forward-sexp)
+             (puni-slurp-forward N))))))
