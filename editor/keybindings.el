@@ -107,20 +107,21 @@
 
 ;;;###autoload
 (defun +switch-to-recent-file ()
-  "Switch to the first recent file that is not the current buffer."
+  "Switch to the first recent file that is open in a buffer and not the current buffer."
   (interactive)
   (let ((current-buffer (current-buffer)))
     (defun +switch-to-recent-file-helper (files)
       (if (not files)
-          (message "No other recent files available")
+          (message "No other recent files open in buffers")
         (let ((file (car files)))
-          (if (and (file-exists-p file)
+          (if (and (get-file-buffer file)
                    (not (eq (get-file-buffer file) current-buffer)))
-              (find-file file)
+              (switch-to-buffer (get-file-buffer file))
             (+switch-to-recent-file-helper (cdr files))))))
     (+switch-to-recent-file-helper recentf-list)))
 
 ;; TODO fix in org mode
+;;;###autoload
 (defun +escape (&optional count)
   (interactive)
   (let ((cooldown 0.5))
