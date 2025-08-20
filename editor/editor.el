@@ -198,7 +198,7 @@
 
 (use-package expand-region
   :general
-  ('meow-normal-state-keymap
+  ('(meow-normal-state-keymap meow-motion-state-keymap)
    "o" #'er/expand-region)
   :config
   (setq er/try-expand-list

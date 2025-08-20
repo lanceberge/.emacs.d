@@ -217,7 +217,9 @@
   (require 'meow)
   :general
   ('meow-motion-state-keymap
-   "q" #'meow-quit)
+   "q" #'meow-quit
+   "x" #'meow-line
+   "y" #'meow-save)
   ('meow-normal-state-keymap
    "p" (defun +replace-or-yank () (interactive)
               (if (region-active-p)

@@ -68,7 +68,6 @@
   :defer t)
 
 (use-package desktop ; save sessions to a file
-  :disabled t
   :ensure nil
   :custom
   (desktop-load-locked-desktop t) ; ignore desktop-lock files

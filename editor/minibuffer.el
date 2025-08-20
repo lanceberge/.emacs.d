@@ -11,7 +11,7 @@
     "/" #'(consult-line :which-key "line")
     "pl" #'(consult-line-multi :which-key "project line")
     "fr" #'(consult-recent-file :which-key "find recent file")
-    "fj" #'(consult-imenu :which-key "imenu")
+    "bj" #'(consult-imenu :which-key "imenu")
     "fk" #'consult-kmacro
     "pb" #'(consult-project-buffer :which-key "project buffer")
     "fm" #'(consult-global-mark :which-key "mark")
@@ -30,7 +30,7 @@
     "fl" #'(consult-goto-line :which-key "outline")
     "fa" #'(consult-org-agenda :which-key "agenda")
     "fs" #'(consult-ripgrep :which-key "ripgrep")
-    "f SPC j" #'(consult-imenu-multi :which-key "imenu"))
+    "fj" #'(consult-imenu-multi :which-key "imenu"))
   ([remap projectile-find-file] #'(consult-project-buffer :which-key "project buffer"))
 
   ('isearch-mode-map

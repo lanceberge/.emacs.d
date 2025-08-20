@@ -40,6 +40,7 @@
 
 (use-package org-capture
   :ensure nil
+  :hook (org-capture-mode . meow-insert-mode)
   :custom
   (org-capture-templates
    '(("a" "A"
@@ -63,7 +64,9 @@
       "** TODO %?\n %i\n" :prepend t)))
   :general
   (my-leader-def
-    "oc" #'(org-capture :which-key "org capture")))
+    "oc" #'(org-capture :which-key "org capture"))
+  ('org-capture-mode-map
+   [remap save-buffer] #'org-capture-finalize))
 
 (use-package org-src
   :ensure nil
