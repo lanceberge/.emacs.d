@@ -44,13 +44,11 @@
 (defun +move-file-to-tab ()
   (interactive)
   (unless (or (minibufferp) (window-minibuffer-p))
-    ;; TODO misc?
     (let ((proj-root (vc-root-dir))
           (filename (buffer-file-name)))
       (when proj-root
         (let ((tab-name (file-name-nondirectory (directory-file-name (expand-file-name proj-root)))))
           (when (not (string= (alist-get 'name (tab-bar--current-tab)) tab-name))
-            ;; TODO can't kill immutable buffers
             (kill-buffer (get-file-buffer filename))
             (+open-tab-if-exists tab-name)
             (find-file filename)))))))

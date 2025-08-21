@@ -24,7 +24,7 @@
 (defun +format/buffer ()
   "Reformat the current buffer using LSP or `format-all-buffer'."
   (interactive)
-  (save-excursion ;; TODO try treesitter-save-excursion
+  (save-excursion
     (if (and (eq major-mode 'org-mode)
              (org-in-src-block-p t))
         (+format--org-region nil nil)

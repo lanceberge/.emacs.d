@@ -54,14 +54,9 @@
   :hook
   (prog-mode . flyspell-prog-mode)
   (text-mode . flyspell-mode)
-  :init
-  ;; TODO
-  ;; (meow-normal-define-key
-  ;;  "[os" . (defun +flyspell-off () (interactive) (flyspell-mode -1) :which-key "flyspell")
-  ;;  "]os" . (defun +flyspell-on  () (interactive) (flyspell-mode t) :which-key "flyspell"))
-  ;; (meow-insert-define-key
-  ;; '("M-y" . flyspell-auto-correct-word))
-  )
+  :general
+  ('meow-insert-state-keymap
+   "M-y" #'flyspell-auto-correct-word))
 
 (use-package bookmark
   :ensure nil

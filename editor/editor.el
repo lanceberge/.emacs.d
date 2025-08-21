@@ -11,26 +11,18 @@
   (my-leader-def
     :states 'normal
     "=" #'(+format/buffer :which-key "format"))
-  ;; :general
-  ;; TODO
-  ;; ('meow-normal-state-keymap
-  ;;  "[of" (defun +format-all-off () (interactive)
-  ;;               (format-all-mode -1) :which-key "format-all")
-  ;;  "]of" (defun +format-all-on  () (interactive)
-  ;;               (format-all-mode 1) :which-key "format all"))
   :config
   (setq-default format-all-formatters format-all-default-formatters))
 
 (use-package avy
   :custom
   (avy-keys '(?j ?d ?k ?s ?l ?a))
-  :general
-  ('(normal insert)
-   "M-i" #'avy-pop-mark)
-
   ;; ('meow-normal-state-keymap
   ;;  "s" #'(+avy-goto-char-2-below :which-key "2-chars")
   ;;  "S" #'(+avy-goto-char-2-above :which-key "2-chars"))
+  :general
+  ('meow-normal-state-keymap
+   "F" #'avy-goto-char-2)
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)
@@ -44,14 +36,8 @@
       (select-window
        (cdr (ring-ref avy-ring 0)))) t)
 
-  (defun avy-action-embark-move (pt)
-    "Perform an embark action on the avy target and move the point to it"
-    (goto-char pt)
-    (embark-act))
-
   (setq avy-dispatch-alist
         (list
-         (cons ?\s 'avy-action-embark-move)
          (cons ?, 'avy-action-embark))))
 
 (use-package embark
@@ -63,8 +49,7 @@
    "$" nil
    ";" #'flyspell-auto-correct-word
    "y" #'define-word-at-point
-   "d" #'embark-find-definition
-   "g" #'google-this-word)
+   "d" #'embark-find-definition)
   ('embark-identifier-map
    "." #'lsp-execute-code-action)
   :config
@@ -157,7 +142,11 @@
                 (setq exec-path (append exec-path '("/home/labergeron/miniconda3/bin" "~/go/bin")))))))
 
 (use-package google-this
-  :commands (google-this-symbol))
+  :after embark
+  :commands (google-this-symbol)
+  :general
+  ('embark-general-map
+   "g" #'google-this-word))
 
 (use-package ace-link
   :general

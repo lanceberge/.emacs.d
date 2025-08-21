@@ -44,21 +44,7 @@
     "er" (defun +source-init-file () (interactive)
                 (load-file "~/.emacs.d/init.el") :which-key "source init file"))
 
-  ;; TODO
-  ;; (my-leader-def
-  ;;   :states 'region-bindings-mode-map
-  ;;   "eb" #'(eval-region :which-key "execute elisp region"))
-
   ('(meow-normal-state-keymap meow-motion-state-keymap)
-   ;; TODO
-   ;; "gs" #'(+split-line-below :which-key "split line below")
-   ;; "gS" #'(+split-line-above :which-key "split line above")
-   ;; "]b" #'(next-buffer :which-key "next buffer")
-   ;; "[b" #'(previous-buffer :which-key "previous buffer")
-   ;; "g C-l" #'(end-of-visual-line :which-key "end of visual line")
-   ;; "g C-h" #'(beginning-of-visual-line :which-key "beginning of visual line")
-
-   ;; TODO
    "C-u" #'scroll-down
    "C-d" #'scroll-up)
 
@@ -70,12 +56,6 @@
   ('meow-normal-state-keymap
    "c" #'(lambda () (interactive) (if (region-active-p) (meow-change)
                                     (progn  (delete-char 1) (meow-insert-mode)))))
-
-  ;;    "m" nil
-  ;;    "mm" #'(lambda () (interactive)
-  ;; (bookmark-set (file-name-nondirectory buffer-file-name)))
-  ;;   "md" #'(bookmark-delete-all :which-key "delete all bookmarks")
-
   ('meow-normal-state-keymap
    "C-/" #'(comment-line :which-key "comment")
    "M-/" #'(comment-line :which-key "comment"))

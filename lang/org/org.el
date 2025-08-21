@@ -29,11 +29,6 @@
   (org-pretty-entities t)
   (org-hide-emphasis-markers t)
   :general
-  ;; TODO
-  ;; (my-localleader-def
-  ;;   :keymaps 'org-mode-map
-  ;;   "t" #'org-set-tags-command)
-
   ('meow-normal-state-keymap 'org-mode-map
                              "M-j" #'org-metadown
                              "M-k" #'org-metaup)
