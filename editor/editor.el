@@ -59,9 +59,6 @@
                         (eq (car (cdr hook)) 'embark--confirm))
                       embark-pre-action-hooks)))
 
-(use-package define-word
-  :commands (define-word-at-point))
-
 (use-package dired
   :ensure nil
   :custom
@@ -73,7 +70,8 @@
   ('meow-normal-state-keymap 'dired-mode-map
                              "i" #'+dired/edit)
   ('dired-mode-map
-   "i" #'dired-toggle-read-only)
+   "i" #'dired-toggle-read-only
+   [remap meow-line] #'dired-do-flagged-delete)
   ('wdired-mode-map
    [remap save-buffer] #'wdired-finish-edit)
   :config
