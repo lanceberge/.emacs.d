@@ -33,7 +33,7 @@
                              "M-j" #'org-metadown
                              "M-k" #'org-metaup)
 
-  ('(normal insert) 'org-mode-map
+  ('org-mode-map
    "C-M-;" #'+org/insert-subheading
    "C-;" #'+org/insert-heading
    "C-:" #'+org/insert-heading-above

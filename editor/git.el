@@ -25,10 +25,17 @@
     "gf" #'(magit-find-file :which-key "find file")
     "gw" #'(magit-worktree :which-key "worktree")
     "gc" #'(magit-show-commit :which-key "show commit"))
-  ('magit-mode-map
+  ('magit-diff-section-map
+   "C-j" #'magit-section-forward)
+  ('magit-status-mode-map
+   "C-j" #'magit-section-forward
+   "C-k" #'magit-section-backward
+   "M-j" #'magit-jump-to-staged
+   "M-k" #'magit-jump-to-unstaged
    "q" #'magit-commit
    "p" #'magit-push
-   "x" #'magit-discard)
+   "x" #'magit-discard
+   [remap meow-line] #'magit-discard)
   :config
   (setq magit-auto-revert-mode nil))
 
@@ -37,7 +44,9 @@
   :hook (git-timemachine-mode . +meow-motion-mode)
   :general
   (my-leader-def
-    "gt" #'git-timemachine))
+    "gt" #'git-timemachine)
+  (git-timemachine-mode-map
+   [remap meow-quit] #'git-timemachine-quit))
 
 (use-package smerge-mode
   :ensure nil

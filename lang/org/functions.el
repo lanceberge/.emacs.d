@@ -1,37 +1,30 @@
 ;;; -*- lexical-binding: t -*-
 ;;;###autoload
-(defun +org/insert-subheading ()
-  "insert a subheading in org mode and go to insert mode"
-  (interactive)
-  (evil-append-line 1)
-  (org-insert-subheading 1))
-
-;;;###autoload
 (defun +org/insert-heading ()
   "insert a subheading in org mode and go to insert mode"
   (interactive)
   (org-insert-heading-respect-content)
-  (evil-insert 1))
+  (meow-insert-mode))
 
 ;;;###autoload
 (defun +org/insert-todo ()
   "insert a subheading in org mode and go to insert mode"
   (interactive)
   (org-insert-todo-heading-respect-content)
-  (evil-insert 1))
+  (meow-insert-mode))
 
 ;;;###autoload
 (defun +org/insert-heading-above ()
   "insert a subheading in org mode and go to insert mode"
   (interactive)
   (org-insert-heading-respect-content)
-  (evil-insert 1))
+  (meow-insert-mode))
 
 ;;;###autoload
 (defun +org/insert-heading-above ()
   "insert an org heading above and jump into insert mode"
   (interactive)
-  (evil-append-line 1)
+  (meow-open-above)
   (move-beginning-of-line nil)
   (org-insert-heading))
 
@@ -39,7 +32,7 @@
 (defun +org/insert-todo-above ()
   "insert an org todo above and jump into insert mode"
   (interactive)
-  (evil-append-line 1)
+  (meow-open-above)
   (move-beginning-of-line nil)
   (org-insert-todo-heading 1))
 

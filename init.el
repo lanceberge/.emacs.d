@@ -218,6 +218,8 @@
   :general
   ('meow-motion-state-keymap
    "q" #'meow-quit
+   "l" #'meow-right
+   "L" #'meow-right-expand
    "x" #'meow-line
    "y" #'meow-save)
   ('meow-normal-state-keymap
@@ -294,9 +296,7 @@
   (advice-add 'meow--mode-get-state :around #'+meow-mode-get-state-advice)
 
   (defun +meow-motion-mode ()
-    (+meow-set-desired-state 'motion))
-
-  (add-to-list 'meow-mode-state-list '(magit-blob-mode . motion)))
+    (+meow-set-desired-state 'motion)))
 
 (elpaca-wait)
 

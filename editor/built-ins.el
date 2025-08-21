@@ -58,6 +58,12 @@
   ('meow-insert-state-keymap
    "M-y" #'flyspell-auto-correct-word))
 
+(use-package minibuffer
+  :ensure nil
+  :hook
+  (minibuffer-setup . meow-insert-mode)
+  (minibuffer-setup . undo-tree-mode))
+
 (use-package bookmark
   :ensure nil
   :defer t)
