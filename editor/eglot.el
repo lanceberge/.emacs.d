@@ -22,14 +22,6 @@
   :custom
   (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
-  :general
-  ('meow-normal-state-keymap 'eglot-mode-map
-                             "ga" #'eglot-code-actions)
-  ;; TODO
-  ;; (my-localleader-def
-  ;;   "er" #'eglot-reconnect)
-  ;; (my-localleader-def
-  ;;   "gr" #'eglot-rename)
   :config
   (setq eglot-events-buffer-size 1000000)  ; Log everything
   (setq eglot-sync-connect 3)              ; Wait longer for connection
@@ -61,6 +53,7 @@
 
 (use-package eldoc
   :ensure nil
+  :defer t
   :hook (eglot-mode . (lambda () (eldoc-mode -1)))
   :preface
   (when (and (version<= emacs-version "29.1") (featurep 'eldoc))
@@ -81,15 +74,7 @@
 (unless (version<= emacs-version "29.1")
   (use-package dape
     :after hydra
-    :general
-    ;; TODO
-    ;; (my-localleader-def
-    ;;   "dd" (defun +dape ()
-    ;;          (interactive)
-    ;;          (call-interactively #'dape)
-    ;;          (call-interactively #'dape-hydra/body))
-    ;;   "db" #'dape-breakpoint-toggle
-    ;;   "dh" #'dape-hydra/body)
+    :defer t
     :config
     (remove-hook 'dape-start-hook 'dape-info)
     (remove-hook 'dape-start-hook 'dape-repl)
@@ -139,10 +124,6 @@
 
 (use-package flymake
   :defer t
-  :general
-  ;; ('meow-normal-state-keymap
-  ;;  "[y" #'flymake-goto-prev-error
-  ;;  "]y" #'flymake-goto-next-error)
   :custom
   (flymake-no-changes-timeout 5)
   (flymake-show-diagnostics-at-end-of-line t))

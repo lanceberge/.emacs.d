@@ -51,17 +51,25 @@
 (use-package smerge-mode
   :ensure nil
   :general
-  :defer t
-  ;; TODO
-  ;; ('meow-normal-state-keymap
-  ;;  "]c" #'(smerge-vc-next-conflict :which-key "next conflicting hunk")
-  ;;  "[c" #'(smerge-prev :which-key "previous conflicting hunk"))
-  ;; (my-localleader-def
-  ;;   "ml" #'(smerge-keep-upper :which-key "keep local changes")
-  ;;   "mo" #'(smerge-keep-lower :which-key "keep other changes")
-  ;;   "ma" #'(smerge-keep-all :which-key "keep all changes")
-  ;;   "mm" #'(smerge-ediff :which-key "merge"))
-  )
+  (my-leader-def
+    "ml" #'(smerge-keep-upper :which-key "keep local changes")
+    "mo" #'(smerge-keep-lower :which-key "keep other changes")
+    "ma" #'(smerge-keep-all :which-key "keep all changes")
+    "mm" #'(smerge-ediff :which-key "merge")
+    "mn" (defun +smerge-vc-next-conflict ()
+           (interactive)
+           (condition-case nil
+               (smerge-next)
+             (error
+              (if (and (buffer-modified-p) buffer-file-name)
+                  (save-buffer))
+              (vc-find-conflicted-file)
+              (unless (looking-at "^<<<<<<<")
+                (let ((prev-pos (point)))
+                  (goto-char (point-min))
+                  (unless (ignore-errors (not (smerge-next)))
+                    (goto-char prev-pos)))))))
+    "mp" #'smerge-prev))
 
 (use-package diff-hl
   :hook
