@@ -6,7 +6,10 @@
   (xref-show-xrefs-function #'consult-xref)
   :general
   (my-leader-def
-    "," #'(consult-buffer :which-key "find buffer")
+    "," (defun +project-buffer () (interactive)
+               (if (vc-root-dir)
+                   (consult-project-buffer)
+                 (consult-buffer)))
     "." #'(find-file :which-key "find file")
     "/" #'(consult-line :which-key "line")
     "pl" #'(consult-line-multi :which-key "project line")

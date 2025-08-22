@@ -87,20 +87,21 @@
 
 ;;;###autoload
 (defun +switch-to-recent-file ()
-  "Switch to the first recent file that is open in a buffer and not the current buffer."
   (interactive)
-  (let ((current-buffer (current-buffer)))
+  (let ((current-buffer (current-buffer))
+        (project-root-dir (vc-root-dir)))
     (defun +switch-to-recent-file-helper (files)
       (if (not files)
           (message "No other recent files open in buffers")
         (let ((file (car files)))
           (if (and (get-file-buffer file)
-                   (not (eq (get-file-buffer file) current-buffer)))
+                   (not (eq (get-file-buffer file) current-buffer))
+                   (or (not project-root-dir)
+                       (string-prefix-p project-root-dir file t)))
               (switch-to-buffer (get-file-buffer file))
             (+switch-to-recent-file-helper (cdr files))))))
     (+switch-to-recent-file-helper recentf-list)))
 
-;; TODO fix in org mode
 ;;;###autoload
 (defun +escape (&optional count)
   (interactive)
