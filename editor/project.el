@@ -10,7 +10,7 @@
     "pf" #'(project-find-file :which-key "find file")
     "ps" #'(consult-ripgrep :which-key "ripgrep")
     "pe" #'(flymake-show-project-diagnostics :which-key "show errors")
-    "pr" #'project-query-replace-regexp
+    "pr" #'+project-replace-regex
     "pt" (defun +project-find-todos ()
            (interactive)
            (consult-ripgrep (project-root (project-current t)) "TODO"))
@@ -42,10 +42,14 @@
   (let* ((project-root (vc-root-dir))
          (default-directory project-root))
     (if project-root
-        (progn
-          (shell-command
-           (format "git ls-files -z | xargs -0 perl -pi -e 's/%s/%s/g'"
-                   (shell-quote-argument search-regex)
-                   (shell-quote-argument replace-string)))
-          (message (format "Replaced")))
+        (progn (shell-command (format "git ls-files -z | xargs -0 perl -pi -e \"s/%s/%s/g\""
+                                      (+perl-shell-quote search-regex)
+                                      (+perl-shell-quote replace-string))
+                              (message (format "Replaced"))))
       (message "fatal: not in a git repository"))))
+
+;;;###autoload
+(defun +perl-shell-quote (str)
+  (let* ((str (replace-regexp-in-string "\"" "\\\\\"" str))
+         (str (replace-regexp-in-string "/" "\\\\/" str)))
+    str))
