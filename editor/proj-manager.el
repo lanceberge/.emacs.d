@@ -41,10 +41,12 @@
   (org-roam-db-sync)
   (+source-init-file))
 
-(defun +move-file-to-tab ()
+;;;###autoload
+(defun +move-buffer-to-tab ()
   (interactive)
+  (require 'project)
   (unless (or (minibufferp) (window-minibuffer-p))
-    (let ((proj-root (vc-root-dir))
+    (let ((proj-root (project-root (project-current t)))
           (filename (buffer-file-name)))
       (when proj-root
         (let ((tab-name (file-name-nondirectory (directory-file-name (expand-file-name proj-root)))))
@@ -53,7 +55,8 @@
             (+open-tab-if-exists tab-name)
             (find-file filename)))))))
 
-(add-hook 'window-configuration-change-hook #'+move-file-to-tab)
+(add-hook 'prog-mode-hook #'+move-buffer-to-tab)
+(add-hook 'text-mode-hook #'+move-buffer-to-tab)
 
 (my-leader-def
   "SPC p" #'(lambda () (interactive) (+project-switch nil #'consult-ripgrep))

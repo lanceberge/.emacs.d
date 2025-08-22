@@ -24,3 +24,8 @@
 
 (use-package hydra
   :defer t)
+
+(use-package fringe
+  :ensure nil
+  :hook
+  (after-init . (lambda () (fringe-mode -1))))

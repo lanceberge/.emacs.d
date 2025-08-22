@@ -89,7 +89,7 @@
 (defun +switch-to-recent-file ()
   (interactive)
   (let ((current-buffer (current-buffer))
-        (project-root-dir (vc-root-dir)))
+        (project-root-dir (project-root (project-current t))))
     (defun +switch-to-recent-file-helper (files)
       (if (not files)
           (message "No other recent files open in buffers")

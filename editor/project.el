@@ -39,7 +39,7 @@
 (defun +project-replace-regex (search-regex replace-string)
   (interactive (list (read-string "Replace: ")
                      (read-string "Replace With: ")))
-  (let* ((project-root (vc-root-dir))
+  (let* ((project-root (project-root (project-current t)))
          (default-directory project-root))
     (if project-root
         (progn (shell-command (format "git ls-files -z | xargs -0 perl -pi -e \"s/%s/%s/g\""

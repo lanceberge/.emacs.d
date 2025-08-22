@@ -7,7 +7,7 @@
   :general
   (my-leader-def
     "," (defun +project-buffer () (interactive)
-               (if (vc-root-dir)
+               (if (project-root (project-current t))
                    (consult-project-buffer)
                  (consult-buffer)))
     "." #'(find-file :which-key "find file")
@@ -15,11 +15,11 @@
     "pl" #'(consult-line-multi :which-key "project line")
     "fr" #'(consult-recent-file :which-key "find recent file")
     "bj" #'(consult-imenu :which-key "imenu")
+    "bb" #'consult-buffer
     "fk" #'consult-kmacro
-    "pb" #'(consult-project-buffer :which-key "project buffer")
     "fm" #'(consult-global-mark :which-key "mark")
+    "fb" #'consult-bookmark
     "bm" #'(consult-mark :which-key "buffer mark")
-    "fb" #'(consult-bookmark :which-key "find bookmark")
     "y" #'(consult-yank-from-kill-ring :which-key "yank")
     "f SPC y" #'(consult-yank-replace :which-key "replace yank")
     "fh" #'(consult-man :which-key "help")

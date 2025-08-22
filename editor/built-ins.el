@@ -3,9 +3,9 @@
   :ensure nil
   :hook (after-init . global-visual-line-mode)
   :custom
-  (idle-update-delay 1.0)	; slow down how often emacs updates its ui
-  (kill-do-not-save-duplicates t)
-  (indent-tabs-mode nil)) ; no duplicates in kill ring
+  (idle-update-delay 1.0) ; slow down how often emacs updates its ui
+  (kill-do-not-save-duplicates t) ; no duplicates in kill ring
+  (indent-tabs-mode nil))
 
 (use-package advice
   :ensure nil

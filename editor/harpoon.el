@@ -23,7 +23,7 @@
     "8" (lambda () (interactive) (+harpoon-goto "8"))
     "9" (lambda () (interactive) (+harpoon-goto "9"))
 
-    "fb" (lambda () (interactive)
+    "pb" (lambda () (interactive)
            (let ((initial-input (+harpoon--get-name)))
              (minibuffer-with-setup-hook
                  (lambda () (insert initial-input))
