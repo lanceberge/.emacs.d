@@ -109,9 +109,18 @@
       (if char
           (let* ((str (char-to-string char))
                  (command (key-binding str)))
-            (if (= char ?k) (meow-insert-exit)
-              (progn (insert-char ?j)
-                     (if (eq command #'self-insert-command)
-                         (insert-char char)
-                       (funcall command)))))
+            (if (= char ?k)
+                (meow-insert-exit)
+              (progn
+                (insert-char ?j)
+                (cond
+                 ((eq command #'self-insert-command)
+                  (insert-char char))
+                 ((eq command #'org-self-insert-command)
+                  (insert-char char))))))
         (insert-char ?j)))))
+
+(use-package keyfreq
+  :hook (after-init . keyfreq-mode)
+  :config
+  (keyfreq-autosave-mode))

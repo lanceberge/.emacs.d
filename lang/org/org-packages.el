@@ -21,18 +21,12 @@
      ("l" "Life"
       ((tags-todo "-Work-Emacs-Programming"))
       ((org-agenda-sorting-strategy '(priority-down))))))
+  :bind
+  (:map org-agenda-mode-map
+        ("g" . ace-link))
   :general
   (my-leader-def
     "oa" #'(org-agenda :which-key "org agenda"))
-  ('org-agenda-mode
-   "g" #'ace-link)
-
-
-  ('motion 'org-agenda-mode-map
-           ";"  #'org-agenda-switch-to
-           "go" #'ace-link
-           [remap org-agenda-todo] #'org-agenda-filter)
-
   :config
   (+org-roam-refresh-agenda-list)
   (which-key-add-key-based-replacements
@@ -62,11 +56,27 @@
      ("e" "Emacs"
       entry (file+headline "~/org-roam/projects/emacs.org" "Tasks")
       "** TODO %?\n %i\n" :prepend t)))
+  :bind
+  (:map org-capture-mode-map
+        ([remap save-buffer] . org-capture-finalize))
   :general
   (my-leader-def
-    "oc" #'(org-capture :which-key "org capture"))
-  ('org-capture-mode-map
-   [remap save-buffer] #'org-capture-finalize))
+    "oc" #'(org-capture :which-key "org capture")))
+
+(use-package calendar
+  :ensure nil
+  :defer t
+  :bind
+  (:map calendar-mode-map
+        (";" . exit-minibuffer)
+        ("M-l" . calendar-forward-day)
+        ("M-h" . calendar-backward-day)
+        ("M-j" . calendar-forward-week)
+        ("M-k" . calendar-backward-week)
+        ("M-H" . calendar-backward-month)
+        ("M-L" . calendar-forward-month)
+        ("M-K" . calendar-backward-year)
+        ("M-J" . calendar-forward-year)))
 
 (use-package org-src
   :ensure nil
@@ -102,37 +112,21 @@
   (org-journal-file-format "%m%d%Y")
   :general
   (my-leader-def
-    "ojn" #'(org-journal-new-entry :which-key "new"))
-
-  ('meow-normal-state-keymap org-journal-mode-map
-                             "za" #'(org-cycle :which-key "open fold")))
+    "ojn" #'(org-journal-new-entry :which-key "new")))
 
 (use-package ob ; org babel
   :ensure nil
   :defer t
   :custom
-  (org-confirm-babel-evaluate nil)
-  :general
-  ('(normal insert) org-mode-map
-   :prefix "C-c"
-   "b"  #'(org-babel-tangle :which-key "tangle file")))
+  (org-confirm-babel-evaluate nil))
 
 (use-package ox ; org exports
   :ensure nil
-  :general
-  ('(normal insert) org-mode-map
-   :prefix "C-c"
-   "e" #'(org-export-dispatch :which-key "export")))
+  :defer t)
 
 (use-package ol ; org links
   :ensure nil
-  :general
-  ('(normal insert) org-mode-map
-   :prefix "C-c"
-   ",l" #'(org-insert-link :which-key "insert link"))
-  ('override
-   :prefix "C-c"
-   "l"  #'(org-store-link :which-key "store link")))
+  :defer t)
 
 ;; autoload org babel functions for specific languages
 (use-package ob-haskell
@@ -163,5 +157,5 @@
   :ensure nil
   :commands org-babel-execute:perl)
 
-(use-package toc-org ; auto-generate tables of contents w/in org and markdown with a :TOC: tag
+(use-package toc-org
   :hook ((org-mode markdown-mode) . toc-org-mode))

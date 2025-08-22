@@ -1,13 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 (use-package elisp-mode
   :ensure nil
-  :general
-  ('(normal insert) emacs-lisp-mode-map
-   :prefix "C-c"
-   "C-c" #'eval-buffer)
-  :general
-  ('emacs-lisp-mode-map
-   [remap save-buffer] #'+elisp-format-and-check))
+  :bind (:map emacs-lisp-mode-map
+              ([remap save-buffer] . +elisp-format-and-check)))
 
 (use-package debug
   :ensure nil
@@ -17,7 +12,6 @@
 (use-package edebug
   :ensure nil
   :defer t
-  :general
   ;; TODO
   ;; (my-leader-def
   ;;   :keymaps 'emacs-lisp-mode-map
@@ -43,10 +37,9 @@
   :init
   (setq +open-chars '(?\( ?\{ ?\[))
   (setq +close-chars '(?\) ?\} ?\]))
-  :general
-  ('meow-normal-state-keymap
-   "<" #'+slurp-or-barf-left
-   ">" #'+slurp-or-barf-right))
+  :bind (:map meow-normal-state-keymap
+              ("<" . +slurp-or-barf-left)
+              (">" . +slurp-or-barf-right)))
 
 ;;;###autoload
 (defun +slurp-or-barf-left (&optional N)
@@ -72,8 +65,10 @@
     (cond ((member char-at-point +open-chars)
            (progn (forward-char) (puni-barf-backward N) (backward-char)))
           ((member char-at-point +close-chars)
-           (puni-slurp-forward N))
+           (progn (puni-slurp-forward N)
+                  (forward-sexp)))
           (t
            (progn
              (forward-sexp)
-             (puni-slurp-forward N))))))
+             (puni-slurp-forward N)
+             (forward-sexp))))))

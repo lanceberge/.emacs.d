@@ -28,68 +28,34 @@
                               ("style" "emacs")))
   (org-pretty-entities t)
   (org-hide-emphasis-markers t)
-  :general
-  ('meow-normal-state-keymap 'org-mode-map
-                             "M-j" #'org-metadown
-                             "M-k" #'org-metaup)
-
-  ('org-mode-map
-   "C-M-;" #'+org/insert-subheading
-   "C-;" #'+org/insert-heading
-   "C-:" #'+org/insert-heading-above
-   "M-;" #'+org/insert-todo
-   "M-:" #'+org/insert-todo-above
-   "M-<return>" #'+org/insert-todo
-   "M-S-<return>" #'+org/insert-todo-above
-   "C-<return>" #'+org/insert-heading
-   "C-S-<return>" #'+org/insert-heading-above
-
-   "M-h" #'org-metaleft
-   "M-l" #'org-metaright
-
-   "M-H" #'org-shiftleft
-   "M-J" #'org-shiftdown
-   "M-K" #'org-shiftup
-   "M-L" #'org-shiftright
-
-   "C-M-h" #'org-shiftmetaleft
-   "C-M-j" #'org-shiftmetadown
-   "C-M-k" #'org-shiftmetaup
-   "C-M-l" #'org-shiftmetaright
-
-   "C-S-h" #'org-shiftcontrolleft
-   "C-S-j" #'org-shiftcontroldown
-   "C-S-k" #'org-shiftcontrolup
-   "C-S-l" #'org-shiftcontrolright)
-
-  ('(normal insert) :prefix "C-c"
-   "e" #'(org-latex-export-to-pdf :which-key "export to pdf")
-   ",v" #'(org-redisplay-inline-images :which-key "redisplay inline images")
-   "v" #'(org-toggle-inline-images :which-key "toggle inline images")
-   "t" #'(org-todo :which-key "todo")
-   "s" #'(org-sort :which-key "sort")
-   ",s" #'(org-schedule :which-key "schedule")
-   "d" #'(org-deadline :which-key "deadline")
-   "q" #'(org-set-tags-command :which-key "add tags")
-   "p" #'(org-latex-preview :which-key "preview latex")
-   ",p" #'(org-set-property :which-key "set property"))
-
-  ('meow-normal-state-keymap org-mode-map
-                             "zm" #'(outline-hide-sublevels :which-key "hide all")
-                             "zn" #'(outline-next-heading :which-key "next heading")
-                             "zp" #'(outline-previous-heading :which-key "previous heading")
-                             "RET" #'org-return)
-
-  ('calendar-mode-map
-   ";" #'exit-minibuffer
-   "M-l" #'calendar-forward-day
-   "M-h" #'calendar-backward-day
-   "M-j" #'calendar-forward-week
-   "M-k" #'calendar-backward-week
-   "M-H" #'calendar-backward-month
-   "M-L" #'calendar-forward-month
-   "M-K" #'calendar-backward-year
-   "M-J" #'calendar-forward-year)
+  :bind
+  (:map org-mode-map
+        ("M-j" . org-metadown)
+        ("M-k" . org-metaup)
+        ("C-M-;" . +org/insert-subheading)
+        ("C-;" . +org/insert-heading)
+        ("C-:" . +org/insert-heading-above)
+        ("M-;" . +org/insert-todo)
+        ("M-:" . +org/insert-todo-above)
+        ("M-RET" . +org/insert-todo)
+        ("M-S-RET" . +org/insert-todo-above)
+        ("C-RET" . +org/insert-heading)
+        ("C-S-RET" . +org/insert-heading-above)
+        ("M-h" . org-metaleft)
+        ("M-l" . org-metaright)
+        ("M-H" . org-shiftleft)
+        ("M-J" . org-shiftdown)
+        ("M-K" . org-shiftup)
+        ("M-L" . org-shiftright)
+        ("C-M-h" . org-shiftmetaleft)
+        ("C-M-j" . org-shiftmetadown)
+        ("C-M-k" . org-shiftmetaup)
+        ("C-M-l" . org-shiftmetaright)
+        ("C-S-h" . org-shiftcontrolleft)
+        ("C-S-j" . org-shiftcontroldown)
+        ("C-S-k" . org-shiftcontrolup)
+        ("C-S-l" . org-shiftcontrolright)
+        ("RET" . org-return))
   :custom-face
   (cursor                    ((t (:foreground "#928374"))))
   (org-block                 ((t (:foreground "#ebdbb2":background ,bg-color :extend t))))

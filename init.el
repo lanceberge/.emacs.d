@@ -202,77 +202,79 @@
 
 (elpaca-wait)
 
-(use-package which-key ; show keybindings following when a prefix is pressed
-  :defer 0.1
-  :custom
-  (which-key-sort-order #'which-key-prefix-then-key-order)
-  (which-key-min-display-lines 6)
-  (which-key-add-column-padding 1)
-  (which-key-sort-uppercase-first nil)
-  :config
-  (which-key-mode))
-
 (use-package meow
-  :init
-  (require 'meow)
-  :general
-  ('meow-motion-state-keymap
-   "q" #'meow-quit
-   "l" #'meow-right
-   "L" #'meow-right-expand
-   "x" #'meow-line
-   "y" #'meow-save)
-  ('meow-normal-state-keymap
-   "p" (defun +replace-or-yank () (interactive)
-              (if (region-active-p)
-                  (meow-replace)
-                (meow-yank)))
-   "-"  #'negative-argument
-   "SPC" nil
-   ";" #'meow-reverse
-   "." #'meow-bounds-of-thing
-   "," #'meow-inner-of-thing
-   "#" #'meow-bounds-of-thing
-   "[" #'meow-beginning-of-thing
-   "]" #'meow-end-of-thing
-   "a" #'meow-append
-   "A" #'meow-open-below
-   "b" #'meow-back-word
-   "B" #'meow-back-symbol
-   "D" #'meow-backward-delete
-   "e" #'meow-next-word
-   "E" #'meow-next-symbol
-   "f" #'meow-find
-   "g" #'meow-cancel-selection
-   "G" #'meow-grab
-   "h" #'meow-left
-   "H" #'meow-left-expand
-   "i" #'meow-insert
-   "I" #'meow-open-above
-   "j" #'meow-next
-   "J" #'meow-next-expand
-   "k" #'meow-prev
-   "K" #'meow-prev-expand
-   "l" #'meow-right
-   "L" #'meow-right-expand
-   "m" #'meow-join
-   "n" #'meow-search
-   "O" #'meow-to-block
-   "Q" #'meow-goto-line
-   "R" #'meow-swap-grab
-   "s" #'meow-kill
-   "t" #'meow-till
-   "v" #'meow-visit
-   "w" #'meow-mark-word
-   "W" #'meow-mark-symbol
-   "x" #'meow-line
-   "X" #'meow-goto-line
-   "y" #'meow-save
-   "Y" #'meow-sync-grab
-   "z" #'meow-pop-selection
-   "'" #'repeat
-   "<escape>" #'keyboard-quit)
+  :demand t
+  :hook (after-init . meow-global-mode)
+  :bind
+  (:map meow-motion-state-keymap
+        ("q" . meow-quit)
+        ("l" . meow-right)
+        ("L" . meow-right-expand)
+        ("j" . meow-next)
+        ("SPC" . nil)
+        ("k" . meow-prev)
+        ("x" . meow-line)
+        ("." . meow-bounds-of-thing)
+        ("," . meow-inner-of-thing)
+        ("y" . meow-save))
+  (:map meow-normal-state-keymap
+        ("p" . (lambda () (interactive)
+                 (if (region-active-p)
+                     (meow-replace)
+                   (meow-yank))))
+        ("-" . negative-argument)
+        ("SPC" . nil)
+        (";" . meow-reverse)
+        ("." . meow-bounds-of-thing)
+        ("," . meow-inner-of-thing)
+        ("#" . meow-bounds-of-thing)
+        ("[" . meow-beginning-of-thing)
+        ("]" . meow-end-of-thing)
+        ("a" . meow-append)
+        ("A" . meow-open-below)
+        ("b" . meow-back-word)
+        ("B" . meow-back-symbol)
+        ("D" . meow-backward-delete)
+        ("e" . meow-next-word)
+        ("E" . meow-next-symbol)
+        ("f" . meow-find)
+        ("g" . meow-cancel-selection)
+        ("G" . meow-grab)
+        ("h" . meow-left)
+        ("H" . meow-left-expand)
+        ("i" . meow-insert)
+        ("I" . meow-open-above)
+        ("j" . meow-next)
+        ("J" . meow-next-expand)
+        ("k" . meow-prev)
+        ("K" . meow-prev-expand)
+        ("l" . meow-right)
+        ("L" . meow-right-expand)
+        ("m" . meow-join)
+        ("n" . meow-search)
+        ("O" . meow-to-block)
+        ("Q" . meow-goto-line)
+        ("R" . meow-swap-grab)
+        ("s" . meow-kill)
+        ("t" . meow-till)
+        ("v" . meow-visit)
+        ("w" . meow-mark-word)
+        ("W" . meow-mark-symbol)
+        ("x" . meow-line)
+        ("X" . meow-goto-line)
+        ("y" . meow-save)
+        ("Y" . meow-sync-grab)
+        ("z" . meow-pop-selection)
+        ("'" . repeat)
+        ("<escape>" . keyboard-quit))
   :config
+  (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+  (setq meow-state-mode-alist '((normal . meow-normal-mode)
+                                (insert . meow-insert-mode)
+                                (motion . meow-motion-mode)
+                                (beacon . meow-beacon-mode)))
+  (setq meow-use-cursor-position-hack t)
+  ;; TODO don't use general
   (cl-loop for idx from 0 to 9
            do (general-define-key
                :keymaps 'meow-normal-state-keymap
@@ -296,24 +298,12 @@
   (advice-add 'meow--mode-get-state :around #'+meow-mode-get-state-advice)
 
   (defun +meow-motion-mode ()
-    (+meow-set-desired-state 'motion)))
+    (+meow-set-desired-state 'motion))
+
+  (meow-setup-indicator)
+  (setq meow-use-clipboard t))
 
 (elpaca-wait)
-
-(setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-(setq meow-state-mode-alist '((normal . meow-normal-mode)
-                              (insert . meow-insert-mode)
-                              (motion . meow-motion-mode)
-                              (beacon . meow-beacon-mode)))
-(setq meow-use-cursor-position-hack t)
-(meow-setup-indicator)
-(setq meow-use-clipboard t)
-(meow-global-mode 1)
-(meow-motion-define-key
- '("j" . meow-next)
- '("k" . meow-prev)
- '("<escape>" . ignore)
- '("SPC" . nil))
 
 (add-hook 'after-init-hook
           (lambda ()
@@ -350,8 +340,26 @@
   (gcmh-mode)
   (add-function :after after-focus-change-function #'gcmh-idle-garbage-collect))
 
+(use-package which-key ; show keybindings following when a prefix is pressed
+  :defer 0.1
+  :custom
+  (which-key-sort-order #'which-key-prefix-then-key-order)
+  (which-key-min-display-lines 6)
+  (which-key-add-column-padding 1)
+  (which-key-sort-uppercase-first nil)
+  :config
+  (which-key-mode))
+
 (when (and IS-LINUX (>= emacs-major-version 29))
   (set-frame-parameter nil 'undecorated t))
+
+;; Start the emacsclient on init
+(use-package server
+  :defer 4.0
+  :ensure nil
+  :config
+  (unless (server-running-p)
+    (add-hook 'after-init-hook #'server-start)))
 
 ;; Load config files recursively
 (let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
@@ -361,11 +369,3 @@
         dirs))
 
 (setq custom-file "~/.emacs.d/custom.el")
-
-;; Start the emacsclient on init
-(use-package server
-  :defer 4.0
-  :ensure nil
-  :config
-  (unless (server-running-p)
-    (add-hook 'after-init-hook #'server-start)))
