@@ -155,13 +155,14 @@
   :custom
   (wgrep-auto-save-buffer t)
   :general
-  ('meow-normal-state-keymap 'grep-mode-map
-                             "R" (defun +wgrep-edit-and-replace () (interactive)
-                                        (wgrep-change-to-wgrep-mode)
-                                        (call-interactively #'+wgrep-replace))
-                             "i" #'wgrep-change-to-wgrep-mode)
-  ('meow-normal-state-keymap wgrep-mode-map
-                             "R" #'+wgrep-replace)
+  ('grep-mode-map
+   "r" (defun +wgrep-edit-and-replace () (interactive)
+              (wgrep-change-to-wgrep-mode)
+              (call-interactively #'+wgrep-replace))
+   "i" #'wgrep-change-to-wgrep-mode)
+  ('wgrep-mode-map
+   [remap save-buffer] #'wgrep-finish-edit
+   "R" #'+wgrep-replace)
   :defer t)
 
 (use-package restart-emacs
@@ -217,14 +218,15 @@
 
 ;;;###autoload
 (defun +wgrep-replace (regexp replace)
-  "Replace in wgrep without replacing the read only 'file_name:line:' prefix."
-  (interactive (list  (read-string "Replace: ")
-                      (read-string "Replace With: ")))
+  "Replace in wgrep without replacing the read-only 'file_name:line:' prefix."
+  (interactive (list (read-string "Replace: ")
+                     (read-string "Replace With: ")))
   (save-excursion
     (goto-char (point-min))
     (while (re-search-forward "^\\([^:]*:[0-9]+:\\)" nil t)
-      (let ((line-end ( line-end-position)))
-        (while (re-search-forward regexp line-end t)
+      (let ((prefix-end (point))
+            (line-end (line-end-position)))
+        (while (re-search-forward regexp (line-end-position) t)
           (replace-match replace t nil))
-        (forward-line 1)
+        (forward-line)
         (beginning-of-line)))))
