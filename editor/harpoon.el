@@ -21,12 +21,21 @@
     "6" (lambda () (interactive) (+harpoon-goto "6"))
     "7" (lambda () (interactive) (+harpoon-goto "7"))
     "8" (lambda () (interactive) (+harpoon-goto "8"))
-    "9" (lambda () (interactive) (+harpoon-goto "9"))))
+    "9" (lambda () (interactive) (+harpoon-goto "9"))
 
-(defun +harpoon--get-name (name)
+    "fb" (lambda () (interactive)
+           (let ((initial-input (+harpoon--get-name)))
+             (minibuffer-with-setup-hook
+                 (lambda () (insert initial-input))
+               (call-interactively #'consult-bookmark))))))
+
+(defun +harpoon--get-name (&optional name)
   (interactive)
-  (let ((project-prefix (or (project-root (project-current t)) "nil")))
-    (format "%s:%s" project-prefix name)))
+  (let ((project-prefix (or (project-root (project-current t)) "nil"))
+        (suffix (if name
+                    (format ":%s" name)
+                  "")))
+    (format "%s%s" project-prefix suffix)))
 
 (defun +harpoon-bookmark (name)
   (interactive "p")
@@ -34,4 +43,8 @@
 
 (defun +harpoon-goto (name)
   (interactive "p")
-  (bookmark-jump (+harpoon--get-name name)))
+  (let ((bookmark-name (+harpoon--get-name name)))
+    (condition-case err
+        (bookmark-jump bookmark-name)
+      (error
+       (+harpoon-bookmark name)))))
