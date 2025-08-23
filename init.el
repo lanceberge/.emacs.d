@@ -332,11 +332,20 @@
 
   (setq meow-use-clipboard t))
 
-
 (elpaca-wait)
 
 (define-key meow-normal-state-keymap (kbd "SPC") +leader-map)
 (define-key meow-motion-state-keymap (kbd "SPC") +leader-map)
+
+(use-package which-key ; show keybindings following when a prefix is pressed
+  :defer 0.1
+  :custom
+  (which-key-sort-order #'which-key-prefix-then-key-order)
+  (which-key-min-display-lines 6)
+  (which-key-add-column-padding 1)
+  (which-key-sort-uppercase-first nil)
+  :config
+  (which-key-mode))
 
 (add-hook 'after-init-hook
           (lambda ()

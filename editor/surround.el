@@ -7,7 +7,7 @@
       (+surround-delete)
     (unless (use-region-p)
       (let ((er/try-expand-list '(er/mark-outside-quotes er/mark-outside-pairs)))
-        (er/expand-region 1)))
+        (+surround--expand-region)))
     (let* ((open-char (cond ((eq char ?g) ?\")
                             ((eq char ?r) ?\()
                             (t char)))
@@ -31,14 +31,18 @@
 ;;;###autoload
 (defun +surround-delete ()
   (interactive)
-  (if (use-region-p)
-      (save-excursion
+  (save-excursion
+    (if (use-region-p)
         (+surround--narrow-to-non-whitespace)
-        (+surround--delete))
-    (let ((er/try-expand-list '(er/mark-outside-quotes er/mark-outside-pairs)))
-      (save-excursion
-        (er/expand-region 1)
-        (+surround--delete)))))
+      (+surround--expand-region))
+    (+surround--delete)))
+
+(defun +surround--expand-region ()
+  (interactive)
+  (let ((original-expand-list er/try-expand-list))
+    (setq-local er/try-expand-list '(er/mark-outside-quotes er/mark-outside-pairs))
+    (er/expand-region 1)
+    (setq er/try-expand-list original-expand-list)))
 
 ;;;###autoload
 (defun +surround--narrow-to-non-whitespace ()
@@ -68,7 +72,6 @@
         (backward-char 1)
         (delete-char 1)
         (goto-char start)
-        (delete-char 1)
-        (keyboard-quit)))))
+        (delete-char 1)))))
 
 (define-key meow-normal-state-keymap (kbd "S") #'+surround)
