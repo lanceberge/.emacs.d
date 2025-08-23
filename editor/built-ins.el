@@ -7,7 +7,9 @@
   (kill-do-not-save-duplicates t) ; no duplicates in kill ring
   (indent-tabs-mode nil)
   :bind
-  (:map meow-normal-state-keymap
+  (:map prog-mode-map
+        ("C-g" . (lambda () (interactive) (lazy-highlight-cleanup t) (keyboard-quit))))
+  (:map text-mode-map
         ("C-g" . (lambda () (interactive) (lazy-highlight-cleanup t) (keyboard-quit)))))
 
 (use-package advice
