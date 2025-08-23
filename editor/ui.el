@@ -22,8 +22,7 @@
   (prog-mode . rainbow-mode)
   (text-mode . rainbow-mode))
 
-(use-package hydra
-  :defer t)
+(use-package hydra)
 
 (use-package fringe
   :ensure nil

@@ -24,9 +24,8 @@
   :bind
   (:map org-agenda-mode-map
         ("g" . ace-link))
-  :general
-  (my-leader-def
-    "oa" #'org-agenda)
+  (:map +leader-map
+        ("oa" . #'org-agenda))
   :config
   (+org-roam-refresh-agenda-list))
 
@@ -57,13 +56,11 @@
   :bind
   (:map org-capture-mode-map
         ([remap save-buffer] . org-capture-finalize))
-  :general
-  (my-leader-def
-    "oc" #'org-capture))
+  (:map +leader-map
+        ("oc" . #'org-capture)))
 
 (use-package calendar
   :ensure nil
-  :defer t
   :bind
   (:map calendar-mode-map
         (";" . exit-minibuffer)
@@ -78,7 +75,6 @@
 
 (use-package org-src
   :ensure nil
-  :defer t
   :custom
   (org-edit-src-content-indentation 0) ; leading spaces before the #+begin line
   (org-src-preserve-indentation t)     ; don't preserve leading whitespace on export
@@ -89,9 +85,10 @@
 
 (use-package org-drill
   :after org-roam
-  :general
-  (my-leader-def
-    "od" #'org-drill)
+  :bind
+  (:map +leader-map
+        ("od" . #'org-drill))
+  :config
   (setq org-drill-scope
         (if (setq org-drill-scope-list (+org-roam-list-notes-by-tag "Drill"))
             org-drill-scope-list
@@ -108,23 +105,20 @@
   :custom
   (org-journal-dir "~/org/journal")
   (org-journal-file-format "%m%d%Y")
-  :general
-  (my-leader-def
-    "ojn" #'org-journal-new-entry))
+  :bind
+  (:map +leader-map
+        ("ojn" . #'org-journal-new-entry)))
 
 (use-package ob ; org babel
   :ensure nil
-  :defer t
   :custom
   (org-confirm-babel-evaluate nil))
 
 (use-package ox ; org exports
-  :ensure nil
-  :defer t)
+  :ensure nil)
 
 (use-package ol ; org links
-  :ensure nil
-  :defer t)
+  :ensure nil)
 
 ;; autoload org babel functions for specific languages
 (use-package ob-haskell

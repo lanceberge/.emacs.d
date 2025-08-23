@@ -24,54 +24,55 @@
         ("p" . #'magit-push)
         ("x" . #'magit-discard)
         ([remap meow-line] . #'magit-discard))
-  :general
-  (my-leader-def
-    "gs" #'magit-status
-    "gb" #'magit-branch-checkout
-    "gd" #'magit-file-delete
-    "gF" #'magit-fetch
-    "gnb" #'magit-branch-and-checkout
-    "gnf" #'magit-commit-fixup
-    "gi" #'magit-init
-    "gl" #'magit-log
-    "gf" #'magit-find-file
-    "gw" #'magit-worktree
-    "gc" #'magit-show-commit)
-
+  (:map +leader-map
+        ("gs" . #'magit-status)
+        ("gb" . #'magit-branch-checkout)
+        ("gd" . #'magit-file-delete)
+        ("gF" . #'magit-fetch)
+        ("gnb" . #'magit-branch-and-checkout)
+        ("gnf" . #'magit-commit-fixup)
+        ("gi" . #'magit-init)
+        ("gl" . #'magit-log)
+        ("gf" . #'magit-find-file)
+        ("gw" . #'magit-worktree)
+        ("gc" . #'magit-show-commit))
   :config
   (setq magit-auto-revert-mode nil))
 
 (use-package git-timemachine
   :commands (git-timemachine)
   :hook (git-timemachine-mode . +meow-motion-mode)
-  :general
-  (my-leader-def
-    "gt" #'git-timemachine)
-  (git-timemachine-mode-map
-   [remap meow-quit] #'git-timemachine-quit))
+  :bind
+  (:map +leader-map
+        ("gt" . #'git-timemachine))
+  (:map git-timemachine-mode-map
+        ([remap meow-quit] . #'git-timemachine-quit)))
 
 (use-package smerge-mode
   :ensure nil
-  :general
-  (my-leader-def
-    "ml" #'smerge-keep-upper
-    "mo" #'smerge-keep-lower
-    "ma" #'smerge-keep-all
-    "mm" #'smerge-ediff
-    "mn" (defun +smerge-vc-next-conflict ()
-           (interactive)
-           (condition-case nil
-               (smerge-next)
-             (error
-              (if (and (buffer-modified-p) buffer-file-name)
-                  (save-buffer))
-              (vc-find-conflicted-file)
-              (unless (looking-at "^<<<<<<<")
-                (let ((prev-pos (point)))
-                  (goto-char (point-min))
-                  (unless (ignore-errors (not (smerge-next)))
-                    (goto-char prev-pos)))))))
-    "mp" #'smerge-prev))
+  :bind
+  (:map +leader-map
+        ("ml" . #'smerge-keep-upper)
+        ("mo" . #'smerge-keep-lower)
+        ("ma" . #'smerge-keep-all)
+        ("mm" . #'smerge-ediff)
+        ("mn" . #'+smerge-vc-next-conflict)
+        ("mp" . #'smerge-prev))
+  :config
+  ;;;###autoload
+  (defun +smerge-vc-next-conflict ()
+    (interactive)
+    (condition-case nil
+        (smerge-next)
+      (error
+       (if (and (buffer-modified-p) buffer-file-name)
+           (save-buffer))
+       (vc-find-conflicted-file)
+       (unless (looking-at "^<<<<<<<")
+         (let ((prev-pos (point)))
+           (goto-char (point-min))
+           (unless (ignore-errors (not (smerge-next)))
+             (goto-char prev-pos))))))))
 
 (use-package diff-hl
   :hook

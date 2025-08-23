@@ -135,12 +135,10 @@
 
 
 (use-package no-littering
-  :demand t
   :config
   (no-littering-theme-backups))
 
 (use-package minions ; hide all minor modes in modeline
-  :demand t
   :custom
   (minions-mode-line-lighter "")
   (minions-mode-line-delimiters '(" " . ""))
@@ -154,3 +152,5 @@
   (progn
     (setopt use-short-answers t)
     (add-to-list 'default-frame-alist '(undecorated-round . t))))
+
+(setq use-package-always-defer t)

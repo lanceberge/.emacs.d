@@ -34,7 +34,6 @@
         ("C-f" . #'emmet-expand-line)))
 
 (use-package svelte-mode
-  :defer t
   :mode ("\\.svelte\\'" . svelte-mode)
   :custom
   (svelte-basic-offset 2))

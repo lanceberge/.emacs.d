@@ -1,35 +1,41 @@
 ;;; -*- lexical-binding: t -*-
 (use-package emacs
   :ensure nil
-  :general
-  (my-leader-def
-    "nf" (defun +make-frame ()
-           (interactive)
-           (let ((frame (make-frame)))
-             (when (and IS-LINUX (>= emacs-major-version 29))
-               (set-frame-parameter frame 'undecorated t))))
-    "h" #'help-command
-    ":" #'shell-command
-    ";" #'(lambda ()
-            (interactive)
-            (let ((default-directory (project-root (project-current t))))
-              (call-interactively #'shell-command)))
+  :bind
+  (:map +leader-map
+        ("nf" . #'+make-frame)
+        ("h" . #'help-command)
+        (";" . #'shell-command)
+        ("p;" . (lambda ()
+                  (interactive)
+                  (let ((default-directory (project-root (project-current t))))
+                    (call-interactively . #'shell-command))))
 
-    ;; Buffers
-    "bd" #'kill-current-buffer
-    "bq" #'+save-and-kill-buffer
-    "b SPC d" #'+kill-window-and-buffer
-    "br" (defun +revert-buffer () (interactive)
-                (revert-buffer t t))
-    "bl" #'+switch-to-recent-file
-    "bn" #'next-buffer
-    "bp" #'previous-buffer
+        ("bd" . #'kill-current-buffer)
+        ("bq" . #'+save-and-kill-buffer)
+        ("b SPC d" . #'+kill-window-and-buffer)
+        ("br" . #'+revert-buffer)
+        ("bl" . #'+switch-to-recent-file)
+        ("bn" . #'next-buffer)
+        ("bp" . #'previous-buffer)
+        ("er" . #'+source-init-file))
+  (:map meow-insert-state-keymap
+        ("j" . #'+escape))
+  :config
+;;;###autoload
+  (defun +make-frame ()
+    (interactive)
+    (let ((frame (make-frame)))
+      (when (and IS-LINUX (>= emacs-major-version 29))
+        (set-frame-parameter frame 'undecorated t))))
 
-    "er" (defun +source-init-file () (interactive)
-                (load-file "~/.emacs.d/init.el")))
+;;;###autoload
+  (defun +revert-buffer () (interactive)
+         (revert-buffer t t))
 
-  ('meow-insert-state-keymap
-   "j" #'+escape))
+;;;###autoload
+  (defun +source-init-file () (interactive)
+         (load-file "~/.emacs.d/init.el")))
 
 ;; TODO
 ;;;###autoload

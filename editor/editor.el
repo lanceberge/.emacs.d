@@ -7,10 +7,9 @@
     svelte-mode) . format-all-mode)
   :custom
   (format-all-show-errors t)
-  :general
-  (my-leader-def
-    :states 'normal
-    "=" #'+format/buffer)
+  :bind
+  (:map +leader-map
+        ("=" . #'+format/buffer))
   :config
   (setq-default format-all-formatters format-all-default-formatters))
 
@@ -62,10 +61,9 @@
   :custom
   (dired-auto-revert-buffer)
   (dired-recursive-copies 'always)
-  :general
-  (my-leader-def
-    "-" #'dired-jump)
   :bind
+  (:map +leader-map
+        ("-" . #'dired-jump))
   (:map dired-mode-map
         ("i" . dired-toggle-read-only)
         ([remap meow-line] . dired-do-flagged-delete)
@@ -87,10 +85,9 @@
 
 (use-package helpful ; better help menu
   :defer 0.7
-  :general
-  (my-leader-def
-    "hk" #'helpful-key)
   :bind
+  (:map +leader-map
+        ("hk" . #'helpful-key))
   (:map meow-normal-state-keymap
         ([remap describe-command] . helpful-command)
         ([remap describe-key] . helpful-key)
@@ -114,9 +111,8 @@
                    (if (region-active-p)
                        (redo 1)
                      (undo-tree-redo)))))
-  :general
-  (my-leader-def
-    "fu" #'undo-tree-visualize)
+  (:map +leader-map
+        ("fu" . #'undo-tree-visualize))
   :config
   (global-undo-tree-mode))
 
@@ -167,7 +163,6 @@
         ("R" . +wgrep-replace)))
 
 (use-package drag-stuff
-  :general
   :bind
   (:map meow-normal-state-keymap
         ("M-k" . drag-stuff-up)

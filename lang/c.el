@@ -18,19 +18,7 @@
                      (c-mode c-ts-mode c++-mode c++-ts-mode)
                      ensure dape-ensure-command
                      command-cwd ,(file-name-directory (buffer-file-name))
-                     :cwd "." :program ,file-name-base)))))
-
-  ;; TODO
-  ;; :general
-  ;; (my-leader-def
-  ;;   :keymaps '(c++-mode-map c++-ts-mode-map)
-  ;;   "ec" #'+cpp-compile)
-
-  ;; ;; TODO fix
-  ;; (my-leader-def
-  ;;   :keymaps '(c++-mode-map c++-ts-mode-map c-ts-mode-map)
-  ;;   "ed" #'+dape-debug-cpp)
-  )
+                     :cwd "." :program ,file-name-base))))))
 
 ;;;###autoload
 (defun +dape-debug-cpp ()

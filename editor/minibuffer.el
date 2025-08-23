@@ -16,40 +16,43 @@
   :bind
   (:map meow-normal-state-keymap
         ("M-q" . #'consult-kmacro))
-
   (:map meow-insert-state-keymap
         ("M-q" . #'consult-kmacro))
-  :general
-  (my-leader-def
-    "," (defun +project-buffer () (interactive)
-               (if (project-root (project-current t))
-                   (consult-project-buffer)
-                 (consult-buffer)))
-    "." #'find-file
-    "/" #'consult-line
-    "pl" #'consult-line-multi
-    "pg" #'consult-git-grep
-    "fr" #'consult-recent-file
-    "bj" #'consult-imenu
-    "bb" #'consult-buffer
-    "fm" #'consult-global-mark
-    "fb" #'consult-bookmark
-    "bm" #'consult-mark
-    "y" #'consult-yank-from-kill-ring
-    "f SPC y" #'consult-yank-replace
-    "fh" #'consult-man
-    "ft" (defun +find-todos ()
-           "Search all todos."
-           (interactive)
-           (consult-line "TODO"))
-    "fe" #'consult-flymake
-    "fo" #'consult-outline
-    "f." #'consult-find
-    "fl" #'consult-goto-line
-    "fa" #'consult-org-agenda
-    "fs" #'consult-ripgrep
-    "fj" #'consult-imenu-multi))
+  (:map +leader-map
+        ("," . #'+project-buffer)
+        ("." . #'find-file)
+        ("/" . #'consult-line)
+        ("pl" . #'consult-line-multi)
+        ("pg" . #'consult-git-grep)
+        ("fr" . #'consult-recent-file)
+        ("bj" . #'consult-imenu)
+        ("bb" . #'consult-buffer)
+        ("fm" . #'consult-global-mark)
+        ("fb" . #'consult-bookmark)
+        ("bm" . #'consult-mark)
+        ("y" . #'consult-yank-from-kill-ring)
+        ("f SPC y" . #'consult-yank-replace)
+        ("fh" . #'consult-man)
+        ("ft" . #'find-todos)
+        ("fe" . #'consult-flymake)
+        ("fo" . #'consult-outline)
+        ("f." . #'consult-find)
+        ("fl" . #'consult-goto-line)
+        ("fa" . #'consult-org-agenda)
+        ("fs" . #'consult-ripgrep)
+        ("fj" . #'consult-imenu-multi)))
 
+;;;###autoload
+(defun +project-buffer ()
+  (interactive)
+  (if (project-root (project-current t))
+      (consult-project-buffer)
+    (consult-buffer)))
+;;;###autoload
+(defun +find-todos ()
+  "Search all todos."
+  (interactive)
+  (consult-line "TODO"))
 (use-package vertico
   :defer 0.1
   :custom

@@ -9,7 +9,6 @@
 
 (use-package advice
   :ensure nil
-  :defer t
   :custom (ad-redefinition-action 'accept)) ; disable warnings from legacy advice system
 
 (use-package files
@@ -19,9 +18,9 @@
   (create-lockfiles nil)
   (auto-mode-case-fold nil)
   (auto-save-default nil)
-  :general
-  (my-leader-def
-    "re" #'+restart-emacs)
+  :bind
+  (:map +leader-map
+        ("re" . #'+restart-emacs))
   :config
   (defun +restart-emacs ()
     (interactive)
@@ -69,17 +68,16 @@
         ("C-y" . #'flyspell-auto-correct-word)))
 
 (use-package bookmark
-  :ensure nil
-  :defer t)
+  :ensure nil)
 
 (use-package desktop ; save sessions to a file
   :ensure nil
+  :demand t
   :custom
   (desktop-load-locked-desktop t) ; ignore desktop-lock files
   (desktop-base-file-name "emacs.desktop")
   :config
   (desktop-save-mode))
-
 
 (use-package electric-pair-mode
   :ensure nil
@@ -101,7 +99,6 @@
                              (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
 
 (use-package ediff
-  :defer t
   :ensure nil
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -111,7 +108,6 @@
 
 (use-package outline-mode
   :ensure nil
-  :defer t
   ;; TODO
   ;; (meow-normal-define-key
   ;;  '("za" . outline-toggle-children)
@@ -124,7 +120,6 @@
   )
 
 (use-package ispell
-  :defer t
   :ensure nil
   :custom
   (ispell-complete-word-dict t))
@@ -144,16 +139,15 @@
   :config
   (setq search-nonincremental-instead nil))
 
-(use-package grep-mode
+(use-package grep
   :ensure nil
-  :general
-  ('meow-normal-state-keymap 'grep-mode-map
-                             ";" #'compile-goto-error
-                             "q" #'quit-window))
+  :bind
+  (:map grep-mode-map
+        (";" . #'compile-goto-error)
+        ("q" . #'quit-window)))
 
 (use-package xref
-  :ensure nil
-  :defer t)
+  :ensure nil)
 
 (use-package smerge-mode
   :ensure nil
@@ -172,19 +166,19 @@
 
 (use-package menu-bar
   :ensure nil
-  :general
-  (my-leader-def
-    "ed" #'toggle-debug-on-error))
+  :bind
+  (:map +leader-map
+        ("ed" . #'toggle-debug-on-error)))
 
 (use-package window
   :ensure nil
-  :general
-  (my-leader-def
-    "wo" #'delete-other-windows
-    "wd" #'delete-window
-    "wj" #'other-window
-    "ws" #'split-window-below
-    "wv" #'split-window-right))
+  :bind
+  (:map +leader-map
+        ("wo" . #'delete-other-windows)
+        ("wd" . #'delete-window)
+        ("wj" . #'other-window)
+        ("ws" . #'split-window-below)
+        ("wv" . #'split-window-right)))
 
 (defvar +kmacro-recording nil)
 

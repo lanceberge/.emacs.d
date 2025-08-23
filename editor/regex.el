@@ -1,6 +1,5 @@
 ;;; -*- lexical-binding: t -*-
 (use-package visual-regexp
-  :defer t
   :bind
   (:map meow-normal-state-keymap
         ("R" . +replace)))

@@ -6,19 +6,17 @@
   :custom
   (yas-snippet-dirs '("~/.emacs.d/snippets"))
   (yas-indent-line 'fixed)
-  :general
-  (my-leader-def
-    "si" #'yas-insert-snippet
-    "sn" #'yas-new-snippet
-    "sf" #'yas-visit-snippet-file
-    "sl" #'yas-describe-tables
-    "sr" #'yas-reload-all)
   :bind
+  (:map +leader-map
+        ("si" . #'yas-insert-snippet)
+        ("sn" . #'yas-new-snippet)
+        ("sf" . #'yas-visit-snippet-file)
+        ("sl" . #'yas-describe-tables)
+        ("sr" . #'yas-reload-all))
   (:map yas-keymap
         ("<tab>" . #'yas-next-field))
   (:map snippet-mode-map
         ("C-c C-c" . #'+yas-load-snippet-noconfirm))
-
   :config
   (yas-global-mode 1))
 

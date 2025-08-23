@@ -193,14 +193,7 @@
             (append targets (list name)))))
      (use-package-process-keywords name rest state))))
 
-(use-package general ; unified way to map keybindings; works with :general in use-package
-  :custom (general-use-package-emit-autoloads t)
-  :demand t
-  :config
-  (general-create-definer my-leader-def ; SPC prefixed bindings
-    :keymaps '(meow-normal-state-keymap meow-motion-state-keymap)
-    :prefix "SPC"
-    :non-normal-prefix "C-c"))
+(defvar +leader-map (make-sparse-keymap))
 
 (elpaca-wait)
 
@@ -213,6 +206,7 @@
         ("h" . #'meow-left)
         ("H" . #'meow-left-expand)
         ("l" . #'meow-right)
+        ("SPC" . nil)
         ("L" . #'meow-right-expand)
         ("j" . #'meow-next)
         ("SPC" . nil)
@@ -286,16 +280,16 @@
                                 (motion . meow-motion-mode)
                                 (beacon . meow-beacon-mode)))
   (setq meow-use-cursor-position-hack t)
-  ;; TODO don't use general
-  (cl-loop for idx from 0 to 9
-           do (general-define-key
-               :keymaps 'meow-normal-state-keymap
-               (number-to-string idx)
-               `(lambda () (interactive)
-                  (if (region-active-p)
-                      (meow-expand ,idx)
-                    (progn (setq prefix-arg ,idx)
-                           (universal-argument--mode))))))
+  (dotimes (i 9)
+    (define-key meow-normal-state-keymap
+                (number-to-string i)
+                `(lambda ()
+                   (interactive)
+                   (if (region-active-p)
+                       (meow-expand ,i)
+                     (progn
+                       (setq prefix-arg ,i)
+                       (universal-argument--mode))))))
   :config
   (defvar-local +meow-desired-state nil)
 
@@ -338,7 +332,11 @@
 
   (setq meow-use-clipboard t))
 
+
 (elpaca-wait)
+
+(define-key meow-normal-state-keymap (kbd "SPC") +leader-map)
+(define-key meow-motion-state-keymap (kbd "SPC") +leader-map)
 
 (add-hook 'after-init-hook
           (lambda ()

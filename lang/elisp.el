@@ -1,14 +1,14 @@
 ;;; -*- lexical-binding: t -*-
 (use-package elisp-mode
   :ensure nil
-  :bind (:map emacs-lisp-mode-map
-              ([remap save-buffer] . +elisp-format-and-check))
-  :general
-  (my-leader-def
-    "es" #'eval-last-sexp
-    "ee" #'eval-expression
-    "eb" #'eval-buffer
-    "ef" #'eval-defun))
+  :bind
+  (:map emacs-lisp-mode-map
+        ([remap save-buffer] . +elisp-format-and-check))
+  (:map +leader-map
+        ("es" . #'eval-last-sexp)
+        ("ee" . #'eval-expression)
+        ("eb" . #'eval-buffer)
+        ("ef" . #'eval-defun)))
 
 (use-package debug
   :ensure nil
@@ -16,8 +16,7 @@
   (debug-on-entry))
 
 (use-package edebug
-  :ensure nil
-  :defer t)
+  :ensure nil)
 
 ;;;###autoload
 (defun +elisp-format-and-check ()

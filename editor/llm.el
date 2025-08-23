@@ -15,6 +15,4 @@
                    :stream t
                    :key #'gptel-api-key)))
 
-(use-package elysium
-  ;; TODO
-  :defer t)
+(use-package elysium)

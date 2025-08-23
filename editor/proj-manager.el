@@ -59,9 +59,8 @@
 (add-hook 'prog-mode-hook #'+move-buffer-to-tab)
 (add-hook 'text-mode-hook #'+move-buffer-to-tab)
 
-(my-leader-def
-  "SPC p" #'(lambda () (interactive) (+project-switch nil #'consult-ripgrep))
-  "pp" #'+project-switch
-  "onf" #'+org-roam-file-find
-  "fp" #'+find-package
-  "gr" #'+pull-repos)
+(define-key +leader-map "SPC p" (lambda () (interactive) (+project-switch nil #'consult-ripgrep)))
+(define-key +leader-map "pp" #'+project-switch)
+(define-key +leader-map "onf" #'+org-roam-file-find)
+(define-key +leader-map "fp" #'+find-package)
+(define-key +leader-map "gr" #'+find-package)

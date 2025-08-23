@@ -1,7 +1,6 @@
 ;; TODO
 (use-package lsp-java
   :disabled t
-  :defer t
   :defer-incrementally (request)
   :custom
   (lsp-prefer-flymake nil)
@@ -26,7 +25,6 @@
           "-Xbootclasspath/a:/home/labergeron/.m2/repository/org/projectlombok/lombok/1.18.34/lombok-1.18.34.jar")))
 
 (use-package java-mode
-  :defer t
   :ensure nil
   :hook
   (java-mode . (lambda ()

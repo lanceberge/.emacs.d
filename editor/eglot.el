@@ -53,7 +53,6 @@
 
 (use-package eldoc
   :ensure nil
-  :defer t
   :hook (eglot-mode . (lambda () (eldoc-mode -1)))
   :preface
   (when (and (version<= emacs-version "29.1") (featurep 'eldoc))
@@ -74,7 +73,6 @@
 (unless (version<= emacs-version "29.1")
   (use-package dape
     :after hydra
-    :defer t
     :config
     (remove-hook 'dape-start-hook 'dape-info)
     (remove-hook 'dape-start-hook 'dape-repl)
@@ -118,12 +116,10 @@
         ("C-t" . #'pop-tag-mark)))
 
 (use-package jsonrpc
-  :defer t
   :config
   (fset #'jsonrpc--log-event #'ignore))
 
 (use-package flymake
-  :defer t
   :custom
   (flymake-no-changes-timeout 5)
   (flymake-show-diagnostics-at-end-of-line t))

@@ -7,20 +7,15 @@
   (typescript-indent-level 2)
   (typescript-auto-indent-flag t))
 
-(use-package csv-mode
-  :defer t)
+(use-package csv-mode)
 
-(use-package json-mode
-  :defer t)
+(use-package json-mode)
 
-(use-package clojure-mode
-  :defer t)
+(use-package clojure-mode)
 
-(use-package cider
-  :defer t)
+(use-package cider)
 
 (use-package go-mode
-  :defer t
   :config
   (setq-local use-tabs-mode t))
 
@@ -34,7 +29,6 @@
   (markdown-fontify-code-blocks-natively t))
 
 (use-package text-mode
-  :defer t
   :ensure nil
   :custom
   (text-mode-ispell-word-completion nil))
@@ -48,15 +42,12 @@
      (if (string-suffix-p ".yaml.gotmpl" buffer-file-name)
          (remove-hook 'before-save-hook #'whitespace-cleanup)))))
 
-(use-package dockerfile-mode
-  :defer t)
+(use-package dockerfile-mode)
 
-(use-package terraform-mode
-  :defer t)
+(use-package terraform-mode)
 
 (use-package sh-mode
   :ensure nil
-  :defer t
   :hook
   (sh-base-mode
    .
@@ -68,7 +59,6 @@
                t))))
 
 (use-package scala-mode
-  :defer t
   :interpreter ("scala" . scala-mode)
   :config
   (setenv "JAVA_HOME" "/usr/lib/jvm/java-17-openjdk-amd64"))
@@ -86,7 +76,6 @@
 
 (use-package nxml-mode
   :ensure nil
-  :defer t
   :bind
   (:map nxml-mode-map
         ([remap save-buffer] .
@@ -98,8 +87,6 @@
   (nxml-auto-insert-xml-declaration-flag nil)
   (nxml-validate-on-save nil))
 
-(use-package rust-mode
-  :defer t)
+(use-package rust-mode)
 
-(use-package nix-mode
-  :defer t)
+(use-package nix-mode)

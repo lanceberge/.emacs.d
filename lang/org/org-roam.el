@@ -30,14 +30,14 @@
       (file+head "public/${slug}.org"
                  "#+title: ${title}\n#+category: ${title}\n")
       :unnarrowed t)))
-  :general
-  (my-leader-def
-    "oni" #'org-roam-node-insert
-    "onn" #'+org-roam-node-insert-immediate
-    "ont" #'+org-roam-add-todo
-    "ond" #'+org-roam-add-drill-tag
-    "onp" #'+org-roam-add-project-tag
-    "onq" #'org-roam-tag-add)
+  :bind
+  (:map +leader-map
+        ("oni" . #'org-roam-node-insert)
+        ("onn" . #'+org-roam-node-insert-immediate)
+        ("ont" . #'+org-roam-add-todo)
+        ("ond" . #'+org-roam-add-drill-tag)
+        ("onp" . #'+org-roam-add-project-tag)
+        ("onq" . #'org-roam-tag-add))
   :config
   (cl-defmethod org-roam-node-slug ((node org-roam-node))
     "Return the slug of NODE."
@@ -65,20 +65,20 @@
   (org-roam-ui-follow t)
   (org-roam-ui-update-on-save t)
   (org-roam-ui-open-on-start t)
-  :general
-  (my-leader-def
-    "ong" #'org-roam-ui-mode))
+  :bind
+  (:map +leader-map
+        ("ong" . #'org-roam-ui-mode)))
 
 (use-package consult-org-roam
   :custom
   (consult-org-roam-grep-func #'consult-ripgrep)
   :commands
   (consult-org-roam-file-find)
-  :general
-  (my-leader-def
-    "onb" #'consult-org-roam-backlinks
-    "onl" #'consult-org-roam-forward-links
-    "on SPC b" #'consult-org-roam-backlinks-recursive)
+  :bind
+  (:map +leader-map
+        ("onb" . #'consult-org-roam-backlinks)
+        ("onl" . #'consult-org-roam-forward-links)
+        ("on SPC b" . #'consult-org-roam-backlinks-recursive))
   :config
   (consult-org-roam-mode))
 
