@@ -1,13 +1,15 @@
 ;;; -*- lexical-binding: t -*-
 (use-package visual-regexp
   :defer t
-  :general
-  ('meow-normal-state-keymap
-   "R" (defun +replace () (interactive)
-              (if (region-active-p)
-                  (call-interactively #'vr/replace)
-                (+vr/replace)))))
+  :bind
+  (:map meow-normal-state-keymap
+        ("R" . +replace)))
 
+(defun +replace ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively #'vr/replace)
+    (+vr/replace)))
 (use-package visual-regexp-steroids
   :after visual-regexp
   :config

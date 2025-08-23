@@ -21,7 +21,7 @@
   (auto-save-default nil)
   :general
   (my-leader-def
-    "re" #'(+restart-emacs :which-key "restart emacs"))
+    "re" #'+restart-emacs)
   :config
   (defun +restart-emacs ()
     (interactive)
@@ -64,15 +64,9 @@
   :hook
   (prog-mode . flyspell-prog-mode)
   (text-mode . flyspell-mode)
-  :general
-  ('meow-insert-state-keymap
-   "M-y" #'flyspell-auto-correct-word))
-
-(use-package minibuffer
-  :ensure nil
-  :hook
-  (minibuffer-setup . meow-insert-mode)
-  (minibuffer-setup . undo-tree-mode))
+  :bind
+  (:map meow-insert-state-keymap
+        ("C-y" . #'flyspell-auto-correct-word)))
 
 (use-package bookmark
   :ensure nil
@@ -135,24 +129,18 @@
   :custom
   (ispell-complete-word-dict t))
 
-(use-package occur
-  :ensure nil
-  :general
-  ('meow-normal-state-keymap 'occur-mode-map
-                             "q" #'quit-window))
 (use-package isearch
   :ensure nil
-  :general
-  ('meow-normal-state-keymap
-   "/" #'isearch-forward
-   "?" #'isearch-backward)
-
-  ('isearch-mode-map
-   "C-j" #'isearch-repeat-forward
-   "C-k" #'isearch-repeat-backward
-   "M-j" #'isearch-repeat-forward
-   "M-k" #'isearch-repeat-backward
-   "C-g" #'isearch-exit)
+  :bind
+  (:map meow-normal-state-keymap
+        ("/" . #'isearch-forward)
+        ("?" . #'isearch-backward))
+  (:map isearch-mode-map
+        ("C-j" . #'isearch-repeat-forward)
+        ("C-k" . #'isearch-repeat-backward)
+        ("M-j" . #'isearch-repeat-forward)
+        ("M-k" . #'isearch-repeat-backward)
+        ("C-g" . #'isearch-exit))
   :config
   (setq search-nonincremental-instead nil))
 
@@ -165,11 +153,44 @@
 
 (use-package xref
   :ensure nil
-  :general
-  ('meow-normal-state-keymap 'prog-mode-map
-                             "gr" #'xref-find-references :which-key "find references"))
+  :defer t)
 
 (use-package smerge-mode
   :ensure nil
   :hook
   (prog-mode . smerge-mode))
+
+(use-package kmacro
+  :ensure nil
+  :bind
+  (:map meow-normal-state-keymap
+        ("Q" . #'+kmacro-record-or-end))
+  (:map meow-normal-state-keymap
+        ("C-q" . #'kmacro-call-macro))
+  (:map meow-insert-state-keymap
+        ("C-q" . #'kmacro-call-macro)))
+
+(use-package menu-bar
+  :ensure nil
+  :general
+  (my-leader-def
+    "ed" #'toggle-debug-on-error))
+
+(use-package window
+  :ensure nil
+  :general
+  (my-leader-def
+    "wo" #'delete-other-windows
+    "wd" #'delete-window
+    "wj" #'other-window
+    "ws" #'split-window-below
+    "wv" #'split-window-right))
+
+(defvar +kmacro-recording nil)
+
+(defun +kmacro-record-or-end ()
+  (interactive)
+  (if +kmacro-recording
+      (call-interactively #'kmacro-end-macro)
+    (call-interactively #'kmacro-start-macro))
+  (setq +kmacro-recording (not +kmacro-recording)))

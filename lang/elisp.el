@@ -2,7 +2,13 @@
 (use-package elisp-mode
   :ensure nil
   :bind (:map emacs-lisp-mode-map
-              ([remap save-buffer] . +elisp-format-and-check)))
+              ([remap save-buffer] . +elisp-format-and-check))
+  :general
+  (my-leader-def
+    "es" #'eval-last-sexp
+    "ee" #'eval-expression
+    "eb" #'eval-buffer
+    "ef" #'eval-defun))
 
 (use-package debug
   :ensure nil
@@ -11,13 +17,7 @@
 
 (use-package edebug
   :ensure nil
-  :defer t
-  ;; TODO
-  ;; (my-leader-def
-  ;;   :keymaps 'emacs-lisp-mode-map
-  ;;   "ed" #'(edebug-defun :which-key "debug function")
-  ;;   "e SPC d" #'(edebug-remove-instrumentation :which-key "remove instrumentation"))
-  )
+  :defer t)
 
 ;;;###autoload
 (defun +elisp-format-and-check ()

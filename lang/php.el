@@ -2,9 +2,11 @@
   :mode ("\\.php\\'" . php-mode)
   :hook
   (php-mode . +php-mode)
-  :general
-  ('meow-normal-state-keymap 'php-mode-map
-           [remap +format/buffer] #'php-cs-fixer-fix-current))
+
+
+  :bind
+  (:map php-mode-map
+        ([remap +format/buffer] . #'php-cs-fixer-fix-current)))
 
 (defun +php-mode ()
   (add-hook 'after-save-hook #'php-cs-fixer-fix-current nil t)
@@ -12,7 +14,6 @@
 
 ;;;###autoload
 (defun php-cs-fixer-fix-current ()
-  "Run PHP CS Fixer on the current file silently."
   (interactive)
   (save-buffer)
   (when (and buffer-file-name

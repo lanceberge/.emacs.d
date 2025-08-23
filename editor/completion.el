@@ -14,24 +14,15 @@
   (corfu-quit-at-boundary nil)
   (corfu-scroll-margin 5)
   (completion-ignore-case t)
-  :general
-  ('corfu-map
-   "C-k" #'corfu-previous
-   "C-j" #'corfu-next
-   "M-j" #'corfu-next
-   "M-k" #'corfu-previous
-   "C-y" #'corfu-complete
-   "RET" #'newline
-   "<tab>" #'yas-expand)
-
-  ('insert 'corfu-map
-           "C-j" #'corfu-next
-           "C-y" #'corfu-complete
-           "RET" #'newline
-           "C-k" #'corfu-previous)
-
-  ('minibuffer-mode-map
-   [remap newline] #'exit-minibuffer)
+  :bind
+  (:map corfu-map
+        ("C-k" . #'corfu-previous)
+        ("C-j" . #'corfu-next)
+        ("M-j" . #'corfu-next)
+        ("M-k" . #'corfu-previous)
+        ("C-y" . #'corfu-complete)
+        ("RET" . #'newline)
+        ("<tab>" . #'yas-expand))
   :config
   (add-hook 'corfu-mode-hook
             (lambda ()

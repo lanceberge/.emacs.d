@@ -10,21 +10,16 @@
   :general
   (my-leader-def
     :states 'normal
-    "=" #'(+format/buffer :which-key "format"))
+    "=" #'+format/buffer)
   :config
   (setq-default format-all-formatters format-all-default-formatters))
 
 (use-package avy
   :custom
   (avy-keys '(?j ?d ?k ?s ?l ?a))
-  ;; ('meow-normal-state-keymap
-  ;;  "s" #'(+avy-goto-char-2-below :which-key "2-chars")
-  ;;  "S" #'(+avy-goto-char-2-above :which-key "2-chars"))
   :bind
   (:map meow-normal-state-keymap
-        ("F" . avy-goto-char-2))
-  (:map meow-motion-state-keymap
-        ("F" . avy-goto-char-2))
+        ("F" . #'avy-goto-char-2))
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)
@@ -40,17 +35,21 @@
          (cons ?, 'avy-action-embark))))
 
 (use-package embark
-  :general
-  ('(meow-insert-state-keymap meow-normal-state-keymap meow-motion-state-keymap global-map minibuffer-mode-map)
-   "M-." #'embark-act
-   "M-," #'embark-export)
-  ('embark-general-map
-   "$" nil
-   ";" #'flyspell-auto-correct-word
-   "y" #'define-word-at-point
-   "d" #'embark-find-definition)
-  ('embark-identifier-map
-   "." #'lsp-execute-code-action)
+  :bind
+  (:map minibuffer-mode-map
+        ("M-." . #'embark-act)
+        ("M-," . #'embark-export))
+  (:map meow-motion-mode-hook
+        ("M-." . #'embark-act))
+  (:map meow-normal-state-keymap
+        ("M-." . #'embark-act))
+  (:map embark-general-map
+        (";" . #'flyspell-auto-correct-word)
+        ("y" . #'define-word-at-point)
+        ("d" . #'embark-find-definition)
+        ("g" . #'google-this-word))
+  (:map embark-identifier-map
+        ("SPC" . #'eglot-code-actions))
   :config
   ;; Noconform actions embark
   (setq embark-pre-action-hooks
@@ -65,7 +64,7 @@
   (dired-recursive-copies 'always)
   :general
   (my-leader-def
-    "-" #'(dired-jump :which-key "open dired"))
+    "-" #'dired-jump)
   :bind
   (:map dired-mode-map
         ("i" . dired-toggle-read-only)
@@ -117,7 +116,7 @@
                      (undo-tree-redo)))))
   :general
   (my-leader-def
-    "fu" #'(undo-tree-visualize :which-key "undo"))
+    "fu" #'undo-tree-visualize)
   :config
   (global-undo-tree-mode))
 
@@ -148,8 +147,11 @@
         ("g" . google-this-word)))
 
 (use-package ace-link
-  :bind (:map org-mode-map
-              ("M-i" . ace-link)))
+  :bind
+  (:map org-mode-map
+        ("M-i" . ace-link))
+  (:map helpful-mode-map
+        ("M-i" . ace-link)))
 
 (use-package wgrep
   :custom

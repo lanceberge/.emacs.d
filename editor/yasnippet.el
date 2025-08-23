@@ -8,19 +8,16 @@
   (yas-indent-line 'fixed)
   :general
   (my-leader-def
-    "si" #'(yas-insert-snippet :which-key "insert")
-    "sn" #'(yas-new-snippet :which-key "new")
-    "sf" #'(yas-visit-snippet-file :which-key "find snippet")
-    "sl" #'(yas-describe-tables :which-key "list")
-    "sr" #'(yas-reload-all :which-key "reload"))
-  ('yas-keymap
-   "<tab>" #'yas-next-field)
-  ('region-bindings-mode-map 'org-mode-map
-                             "ss" (defun +src-snippet () (interactive) (+expand-snippet "highlighted src")))
-  ('region-bindings-mode-map 'prog-mode-map
-                             "st" (defun +try-catch-snippet () (interactive) (+expand-snippet "try-catch")))
-  ('snippet-mode-map
-   "C-c C-c" #'+yas-load-snippet-noconfirm)
+    "si" #'yas-insert-snippet
+    "sn" #'yas-new-snippet
+    "sf" #'yas-visit-snippet-file
+    "sl" #'yas-describe-tables
+    "sr" #'yas-reload-all)
+  :bind
+  (:map yas-keymap
+        ("<tab>" . #'yas-next-field))
+  (:map snippet-mode-map
+        ("C-c C-c" . #'+yas-load-snippet-noconfirm))
 
   :config
   (yas-global-mode 1))

@@ -113,9 +113,9 @@
   :commands (xref-find-references xref-auto-jump-first-definition)
   :custom
   (xref-prompt-for-identifier nil)
-  :general
-  ('meow-normal-state-keymap xref--xref-buffer-mode-map
-                             ";" #'xref-goto-xref))
+  :bind
+  (:map meow-normal-state-keymap
+        ("C-t" . #'pop-tag-mark)))
 
 (use-package jsonrpc
   :defer t

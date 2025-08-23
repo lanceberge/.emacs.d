@@ -7,82 +7,31 @@
            (interactive)
            (let ((frame (make-frame)))
              (when (and IS-LINUX (>= emacs-major-version 29))
-               (set-frame-parameter frame 'undecorated t)))
-           :which-key "New Frame")
-    "h" #'(help-command :which-key "Help")
+               (set-frame-parameter frame 'undecorated t))))
+    "h" #'help-command
     ":" #'shell-command
     ";" #'(lambda ()
             (interactive)
             (let ((default-directory (project-root (project-current t))))
               (call-interactively #'shell-command)))
 
-    "wo" #'delete-other-windows
-    "wd" #'delete-window
-    "wj" #'other-window
-    "wq" #'(lambda () (interactive) (save-buffer) (delete-window))
-    "ws" #'split-window-below
-    "wv" #'split-window-right
-
     ;; Buffers
-    "bd" #'(kill-current-buffer :which-key "delete buffer")
-    "bq" #'(+save-and-kill-buffer :which-key "save and kill buffer")
-    "b SPC d" #'(+kill-window-and-buffer :which-key "kill window and buffer")
+    "bd" #'kill-current-buffer
+    "bq" #'+save-and-kill-buffer
+    "b SPC d" #'+kill-window-and-buffer
     "br" (defun +revert-buffer () (interactive)
-                (revert-buffer t t)
-                :which-key "revert buffer")
+                (revert-buffer t t))
     "bl" #'+switch-to-recent-file
-    "bn" #'(next-buffer :which-key "next buffer")
-    "bp" #'(previous-buffer :which-key "previous buffer")
+    "bn" #'next-buffer
+    "bp" #'previous-buffer
 
-    ;; Eval elisp
-    "es" #'(eval-last-sexp :which-key "execute elisp sexp")
-    "ee" #'(eval-expression :which-key "evaluate elisp expression")
-    "eb" #'(eval-buffer :which-key "evaluate elisp buffer")
-    "ef" #'(eval-defun :which-key "evaluate elisp defun")
-
-    ;; Find specific files
     "er" (defun +source-init-file () (interactive)
-                (load-file "~/.emacs.d/init.el") :which-key "source init file"))
-
-  ('(meow-normal-state-keymap meow-motion-state-keymap)
-   "C-u" #'scroll-down
-   "C-d" #'scroll-up)
-
-  ('meow-normal-state-keymap
-   "q" #'save-buffer
-   "C" #'(lambda () (interactive) (kill-line) (meow-insert-mode))
-   "d" #'(lambda () (interactive (delete-char 1))))
-
-  ('meow-normal-state-keymap
-   "c" #'(lambda () (interactive)
-           (if (region-active-p)
-               (progn
-                 (meow-change)
-                 (indent-according-to-mode))
-             (progn
-               (delete-char 1)
-               (meow-insert-mode)))))
-  ('meow-normal-state-keymap
-   "C-/" #'(comment-line :which-key "comment")
-   "M-/" #'(comment-line :which-key "comment"))
-
-  ('region-bindings-mode-map
-   "C-/" #'(comment-dwim :which-key "comment")
-   "M-/" #'(comment-dwim :which-key "comment")
-   "q" #'apply-macro-to-region-lines)
-
-  ;;  ('meow-normal-state-keymap
-  ;;   "q" #'+start-or-end-macro)
+                (load-file "~/.emacs.d/init.el")))
 
   ('meow-insert-state-keymap
-   "j" #'+escape)
-  ('(normal insert)
-   :prefix "C-c"
-   "SPC" (general-simulate-key "C-c C-c"))
+   "j" #'+escape))
 
-  ('(normal insert) '(php-mode-map c++-mode-map)
-   "M-;" #'+append-semicolon))
-
+;; TODO
 ;;;###autoload
 (defun +append-semicolon ()
   (interactive)

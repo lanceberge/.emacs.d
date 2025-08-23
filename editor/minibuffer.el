@@ -1,62 +1,72 @@
 ;;; -*- lexical-binding: t -*-
+(use-package minibuffer
+  :ensure nil
+  :hook
+  (minibuffer-setup . meow-insert-mode)
+  (minibuffer-setup . undo-tree-mode)
+  :bind
+  (:map minibuffer-mode-map
+        ([remap newline] . #'exit-minibuffer)))
+
 (use-package consult
   :defer 0.2
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :custom
   (xref-show-xrefs-function #'consult-xref)
+  :bind
+  (:map meow-normal-state-keymap
+        ("M-q" . #'consult-kmacro))
+
+  (:map meow-insert-state-keymap
+        ("M-q" . #'consult-kmacro))
   :general
   (my-leader-def
     "," (defun +project-buffer () (interactive)
                (if (project-root (project-current t))
                    (consult-project-buffer)
                  (consult-buffer)))
-    "." #'(find-file :which-key "find file")
-    "/" #'(consult-line :which-key "line")
-    "pl" #'(consult-line-multi :which-key "project line")
+    "." #'find-file
+    "/" #'consult-line
+    "pl" #'consult-line-multi
     "pg" #'consult-git-grep
-    "fr" #'(consult-recent-file :which-key "find recent file")
-    "bj" #'(consult-imenu :which-key "imenu")
+    "fr" #'consult-recent-file
+    "bj" #'consult-imenu
     "bb" #'consult-buffer
-    "fk" #'consult-kmacro
-    "fm" #'(consult-global-mark :which-key "mark")
+    "fm" #'consult-global-mark
     "fb" #'consult-bookmark
-    "bm" #'(consult-mark :which-key "buffer mark")
-    "y" #'(consult-yank-from-kill-ring :which-key "yank")
-    "f SPC y" #'(consult-yank-replace :which-key "replace yank")
-    "fh" #'(consult-man :which-key "help")
+    "bm" #'consult-mark
+    "y" #'consult-yank-from-kill-ring
+    "f SPC y" #'consult-yank-replace
+    "fh" #'consult-man
     "ft" (defun +find-todos ()
            "Search all todos."
            (interactive)
            (consult-line "TODO"))
     "fe" #'consult-flymake
-    "fo" #'(consult-outline :which-key "outline")
-    "f." #'(consult-find :which-key "file")
-    "fl" #'(consult-goto-line :which-key "outline")
-    "fa" #'(consult-org-agenda :which-key "agenda")
-    "fs" #'(consult-ripgrep :which-key "ripgrep")
-    "fj" #'(consult-imenu-multi :which-key "imenu"))
-  ([remap projectile-find-file] #'(consult-project-buffer :which-key "project buffer"))
-
-  ('isearch-mode-map
-   "/" #'consult-line))
+    "fo" #'consult-outline
+    "f." #'consult-find
+    "fl" #'consult-goto-line
+    "fa" #'consult-org-agenda
+    "fs" #'consult-ripgrep
+    "fj" #'consult-imenu-multi))
 
 (use-package vertico
   :defer 0.1
   :custom
   (vertico-cycle t)
   (vertico-preselect 'first)
-  :general
-  ('(vertico-map minibuffer-inactive-mode-map)
-   "C-j" #'vertico-next
-   "C-k" #'vertico-previous
-   "C-u" #'vertico-scroll-down
-   "C-d" #'vertico-scroll-up
-   "M-j" #'vertico-next
-   "M-k" #'vertico-previous
-   "M-u" #'vertico-scroll-down
-   "M-d" #'vertico-scroll-up
-   "M-h" #'vertico-directory-up
-   "M-l" #'vertico-directory-enter)
+  :bind
+  (:map vertico-map
+        ("C-j" . #'vertico-next)
+        ("C-k" . #'vertico-previous)
+        ("C-u" . #'vertico-scroll-down)
+        ("C-d" . #'vertico-scroll-up)
+        ("M-j" . #'vertico-next)
+        ("M-k" . #'vertico-previous)
+        ("M-u" . #'vertico-scroll-down)
+        ("M-d" . #'vertico-scroll-up)
+        ("M-h" . #'vertico-directory-up)
+        ("M-l" . #'vertico-directory-enter))
   :config
   ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
 ;;;###autoload

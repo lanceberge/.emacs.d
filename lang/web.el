@@ -29,9 +29,9 @@
   (web-mode . emmet-mode)
   (svelte-mode . emmet-mode)
   (elixir-ts-mode . emmet-mode)
-  :general
-  ('insert 'emmet-mode-keymap
-           "C-f" #'emmet-expand-line))
+  :bind
+  (:map emmet-mode-keymap
+        ("C-f" . #'emmet-expand-line)))
 
 (use-package svelte-mode
   :defer t

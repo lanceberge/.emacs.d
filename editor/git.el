@@ -10,32 +10,34 @@
   (magit-no-confirm '(stage-all-changes amend-published))
   :hook
   (git-commit-mode . meow-insert-mode)
+  :bind
+  (:map with-editor-mode-map
+        ([remap save-buffer] . #'with-editor-finish))
+  (:map magit-diff-section-map
+        ("C-j" . #'magit-section-forward))
+  (:map magit-status-mode-map
+        ("C-j" . #'magit-section-forward)
+        ("C-k" . #'magit-section-backward)
+        ("M-j" . #'magit-jump-to-staged)
+        ("M-k" . #'magit-jump-to-unstaged)
+        ("q" . #'magit-commit)
+        ("p" . #'magit-push)
+        ("x" . #'magit-discard)
+        ([remap meow-line] . #'magit-discard))
   :general
-  ('with-editor-mode-map
-   [remap save-buffer] #'with-editor-finish)
   (my-leader-def
-    "gs" #'(magit-status :which-key "status")
-    "gb" #'(magit-branch-checkout :which-key "checkout branch")
-    "gd" #'(magit-file-delete :which-key "delete file")
-    "gF" #'(magit-fetch :which-key "fetch")
-    "gnb" #'(magit-branch-and-checkout :which-key "branch")
-    "gnf" #'(magit-commit-fixup :which-key "fixup commit")
-    "gi" #'(magit-init :which-key "init")
-    "gl" #'(magit-log :which-key "log")
-    "gf" #'(magit-find-file :which-key "find file")
-    "gw" #'(magit-worktree :which-key "worktree")
-    "gc" #'(magit-show-commit :which-key "show commit"))
-  ('magit-diff-section-map
-   "C-j" #'magit-section-forward)
-  ('magit-status-mode-map
-   "C-j" #'magit-section-forward
-   "C-k" #'magit-section-backward
-   "M-j" #'magit-jump-to-staged
-   "M-k" #'magit-jump-to-unstaged
-   "q" #'magit-commit
-   "p" #'magit-push
-   "x" #'magit-discard
-   [remap meow-line] #'magit-discard)
+    "gs" #'magit-status
+    "gb" #'magit-branch-checkout
+    "gd" #'magit-file-delete
+    "gF" #'magit-fetch
+    "gnb" #'magit-branch-and-checkout
+    "gnf" #'magit-commit-fixup
+    "gi" #'magit-init
+    "gl" #'magit-log
+    "gf" #'magit-find-file
+    "gw" #'magit-worktree
+    "gc" #'magit-show-commit)
+
   :config
   (setq magit-auto-revert-mode nil))
 
@@ -52,10 +54,10 @@
   :ensure nil
   :general
   (my-leader-def
-    "ml" #'(smerge-keep-upper :which-key "keep local changes")
-    "mo" #'(smerge-keep-lower :which-key "keep other changes")
-    "ma" #'(smerge-keep-all :which-key "keep all changes")
-    "mm" #'(smerge-ediff :which-key "merge")
+    "ml" #'smerge-keep-upper
+    "mo" #'smerge-keep-lower
+    "ma" #'smerge-keep-all
+    "mm" #'smerge-ediff
     "mn" (defun +smerge-vc-next-conflict ()
            (interactive)
            (condition-case nil
@@ -77,9 +79,4 @@
   (magit-post-refresh . diff-hl-magit-post-refresh)
   :defer 0.5
   :config
-  (global-diff-hl-mode)
-  ;; :general
-  ;; ('meow-normal-state-keymap
-  ;;  "]h" #'diff-hl-next-hunk
-  ;;  "[h" #'diff-hl-previous-hunk)
-  )
+  (global-diff-hl-mode))

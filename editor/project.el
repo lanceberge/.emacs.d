@@ -7,14 +7,14 @@
   (project-switch-commands #'project-find-file)
   :general
   (my-leader-def
-    "pf" #'(project-find-file :which-key "find file")
-    "ps" #'(consult-ripgrep :which-key "ripgrep")
-    "pe" #'(flymake-show-project-diagnostics :which-key "show errors")
+    "pf" #'project-find-file
+    "ps" #'consult-ripgrep
+    "pe" #'flymake-show-project-diagnostics
     "pr" #'+project-replace-regex
     "pt" (defun +project-find-todos ()
            (interactive)
            (consult-ripgrep (project-root (project-current t)) "TODO"))
-    "pv" #'(+project-switch-and-vterm :which-key "switch and vterm")
+    "pv" #'(+project-switch-and-vterm)
     "rp" #'+project-load-projects)
   :config
   (+project-load-projects))

@@ -26,11 +26,9 @@
         ("g" . ace-link))
   :general
   (my-leader-def
-    "oa" #'(org-agenda :which-key "org agenda"))
+    "oa" #'org-agenda)
   :config
-  (+org-roam-refresh-agenda-list)
-  (which-key-add-key-based-replacements
-    "SPC oa" "agenda"))
+  (+org-roam-refresh-agenda-list))
 
 (use-package org-capture
   :ensure nil
@@ -61,7 +59,7 @@
         ([remap save-buffer] . org-capture-finalize))
   :general
   (my-leader-def
-    "oc" #'(org-capture :which-key "org capture")))
+    "oc" #'org-capture))
 
 (use-package calendar
   :ensure nil
@@ -93,7 +91,7 @@
   :after org-roam
   :general
   (my-leader-def
-    "od" #'(org-drill :which-key "org-drill"))
+    "od" #'org-drill)
   (setq org-drill-scope
         (if (setq org-drill-scope-list (+org-roam-list-notes-by-tag "Drill"))
             org-drill-scope-list
@@ -112,7 +110,7 @@
   (org-journal-file-format "%m%d%Y")
   :general
   (my-leader-def
-    "ojn" #'(org-journal-new-entry :which-key "new")))
+    "ojn" #'org-journal-new-entry))
 
 (use-package ob ; org babel
   :ensure nil

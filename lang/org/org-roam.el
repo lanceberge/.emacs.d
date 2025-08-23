@@ -32,12 +32,12 @@
       :unnarrowed t)))
   :general
   (my-leader-def
-    "oni" #'(org-roam-node-insert :which-key "insert link")
-    "onn" #'(+org-roam-node-insert-immediate :which-key "insert now")
-    "ont" #'(+org-roam-add-todo :which-key "add todo")
-    "ond" #'(+org-roam-add-drill-tag :which-key "add drill tag")
-    "onp" #'(+org-roam-add-project-tag :which-key "add project tag")
-    "onq" #'(org-roam-tag-add :which-key "add tag"))
+    "oni" #'org-roam-node-insert
+    "onn" #'+org-roam-node-insert-immediate
+    "ont" #'+org-roam-add-todo
+    "ond" #'+org-roam-add-drill-tag
+    "onp" #'+org-roam-add-project-tag
+    "onq" #'org-roam-tag-add)
   :config
   (cl-defmethod org-roam-node-slug ((node org-roam-node))
     "Return the slug of NODE."
@@ -67,7 +67,7 @@
   (org-roam-ui-open-on-start t)
   :general
   (my-leader-def
-    "ong" #'(org-roam-ui-mode :which-key "org roam graph")))
+    "ong" #'org-roam-ui-mode))
 
 (use-package consult-org-roam
   :custom
@@ -76,9 +76,9 @@
   (consult-org-roam-file-find)
   :general
   (my-leader-def
-    "onb" #'(consult-org-roam-backlinks :which-key "view backlinks")
-    "onl" #'(consult-org-roam-forward-links :which-key "view forward links")
-    "on SPC b" #'(consult-org-roam-backlinks-recursive :which-key "view recursive backlinks"))
+    "onb" #'consult-org-roam-backlinks
+    "onl" #'consult-org-roam-forward-links
+    "on SPC b" #'consult-org-roam-backlinks-recursive)
   :config
   (consult-org-roam-mode))
 
