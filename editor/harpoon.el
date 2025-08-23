@@ -1,16 +1,14 @@
-(use-package emacs
-  :ensure nil
-  :config
-  (dotimes (i 10)
-    (let ((num (number-to-string i)))
-      (define-key +leader-map num
-                  `(lambda ()
-                     (interactive)
-                     (+harpoon-goto ,num)))
-      (define-key +leader-map (kbd (format "SPC %s" num))
-                  `(lambda ()
-                     (interactive)
-                     (+harpoon-bookmark ,num))))))
+;;; -*- lexical-binding: t -*-
+(dotimes (i 10)
+  (let ((num (number-to-string i)))
+    (define-key +leader-map num
+                `(lambda ()
+                   (interactive)
+                   (+harpoon-goto ,num)))
+    (define-key +leader-map (kbd (format "SPC %s" num))
+                `(lambda ()
+                   (interactive)
+                   (+harpoon-bookmark ,num)))))
 
 (defun +harpoon--get-name (&optional name)
   (interactive)

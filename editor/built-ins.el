@@ -8,9 +8,16 @@
   (indent-tabs-mode nil)
   :bind
   (:map prog-mode-map
-        ("C-g" . (lambda () (interactive) (lazy-highlight-cleanup t) (keyboard-quit))))
+        ("C-g" . #'+isearch-clear-highlighting))
   (:map text-mode-map
-        ("C-g" . (lambda () (interactive) (lazy-highlight-cleanup t) (keyboard-quit)))))
+        ("C-g" . #'+isearch-clear-highlighting)))
+
+;;;###autoload
+(defun +isearch-clear-highlighting ()
+  (interactive)
+  (lazy-highlight-cleanup)
+  (isearch-exit)
+  (keyboard-quit))
 
 (use-package advice
   :ensure nil
@@ -29,9 +36,6 @@
   :config
   (defun +restart-emacs ()
     (interactive)
-    (let ((vterm-buffer (get-buffer "*vterm*")))
-      (if vterm-buffer
-          (kill-buffer )))
     (setq confirm-kill-emacs nil)
     (restart-emacs)))
 
@@ -141,8 +145,7 @@
         ("C-j" . #'isearch-repeat-forward)
         ("C-k" . #'isearch-repeat-backward)
         ("M-j" . #'isearch-repeat-forward)
-        ("M-k" . #'isearch-repeat-backward)
-        ("C-g" . #'isearch-exit))
+        ("M-k" . #'isearch-repeat-backward))
   :config
   (setq search-nonincremental-instead nil))
 
@@ -152,9 +155,6 @@
   (:map grep-mode-map
         (";" . #'compile-goto-error)
         ("q" . #'quit-window)))
-
-(use-package xref
-  :ensure nil)
 
 (use-package smerge-mode
   :ensure nil

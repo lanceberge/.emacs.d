@@ -20,22 +20,24 @@
         ("bp" . #'previous-buffer)
         ("er" . #'+source-init-file))
   (:map meow-insert-state-keymap
-        ("j" . #'+escape))
-  :config
-;;;###autoload
-  (defun +make-frame ()
-    (interactive)
-    (let ((frame (make-frame)))
-      (when (and IS-LINUX (>= emacs-major-version 29))
-        (set-frame-parameter frame 'undecorated t))))
+        ("j" . #'+escape)))
 
 ;;;###autoload
-  (defun +revert-buffer () (interactive)
-         (revert-buffer t t))
+(defun +make-frame ()
+  (interactive)
+  (let ((frame (make-frame)))
+    (when (and IS-LINUX (>= emacs-major-version 29))
+      (set-frame-parameter frame 'undecorated t))))
 
 ;;;###autoload
-  (defun +source-init-file () (interactive)
-         (load-file "~/.emacs.d/init.el")))
+(defun +revert-buffer ()
+  (interactive)
+  (revert-buffer t t))
+
+;;;###autoload
+(defun +source-init-file ()
+  (interactive)
+  (load-file "~/.emacs.d/init.el"))
 
 ;; TODO
 ;;;###autoload
