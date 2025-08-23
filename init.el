@@ -257,7 +257,6 @@
         ("l" . #'meow-right)
         ("L" . #'meow-right-expand)
         ("m" . #'meow-join)
-        ("n" . #'meow-search)
         ("O" . #'meow-to-block)
         ("Q" . #'meow-goto-line)
         ("r" . #'+meow-swap-grab-or-replace)

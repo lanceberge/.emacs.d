@@ -6,7 +6,8 @@
   (minibuffer-setup . undo-tree-mode)
   :bind
   (:map minibuffer-mode-map
-        ([remap newline] . #'exit-minibuffer)))
+        ([remap newline] . #'exit-minibuffer)
+        ("C-g" . #'abort-minibuffers)))
 
 (use-package consult
   :defer 0.2

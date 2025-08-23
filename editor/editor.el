@@ -103,14 +103,8 @@
   (undo-tree-auto-save-history t)
   :bind
   (:map meow-normal-state-keymap
-        ("u" . (lambda  () (interactive)
-                 (if (region-active-p)
-                     (undo 1)
-                   (undo-tree-undo))))
-        ("C-r" . (lambda () (interactive)
-                   (if (region-active-p)
-                       (redo 1)
-                     (undo-tree-redo)))))
+        ("u" . #'undo-tree-undo)
+        ("C-r" . #'undo-tree-redo))
   (:map +leader-map
         ("fu" . #'undo-tree-visualize))
   :config
