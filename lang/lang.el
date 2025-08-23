@@ -8,7 +8,7 @@
   (typescript-auto-indent-flag t))
 
 (use-package csv-mode
-  :hook (csv-mode . csv-align-mode))
+  :defer t)
 
 (use-package json-mode
   :defer t)
@@ -35,7 +35,7 @@
   (markdown-fontify-code-blocks-natively t)
   :general
   ('meow-normal-state-keymap 'markdown-mode-map
-           "RET" #'markdown-follow-thing-at-point))
+                             "RET" #'markdown-follow-thing-at-point))
 
 (use-package markdown-toc ; create a table of contents
   :general
@@ -97,6 +97,13 @@
 (use-package nxml-mode
   :ensure nil
   :defer t
+  :bind
+  (:map nxml-mode-map
+        ([remap save-buffer] .
+         (lambda () (interactive)
+           (undo-tree-mode -1)
+           (save-buffer)
+           (undo-tree-mode))))
   :custom
   (nxml-auto-insert-xml-declaration-flag nil)
   (nxml-validate-on-save nil))

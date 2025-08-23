@@ -14,12 +14,22 @@
 
 (use-package files
   :ensure nil
-  :defer t
   :custom
   (make-backup-files nil)
   (create-lockfiles nil)
   (auto-mode-case-fold nil)
-  (auto-save-default nil))
+  (auto-save-default nil)
+  :general
+  (my-leader-def
+    "re" #'(+restart-emacs :which-key "restart emacs"))
+  :config
+  (defun +restart-emacs ()
+    (interactive)
+    (let ((vterm-buffer (get-buffer "*vterm*")))
+      (if vterm-buffer
+          (kill-buffer )))
+    (setq confirm-kill-emacs nil)
+    (restart-emacs)))
 
 (use-package saveplace ; save location in files
   :ensure nil

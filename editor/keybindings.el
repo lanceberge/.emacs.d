@@ -54,8 +54,14 @@
    "d" #'(lambda () (interactive (delete-char 1))))
 
   ('meow-normal-state-keymap
-   "c" #'(lambda () (interactive) (if (region-active-p) (meow-change)
-                                    (progn  (delete-char 1) (meow-insert-mode)))))
+   "c" #'(lambda () (interactive)
+           (if (region-active-p)
+               (progn
+                 (meow-change)
+                 (indent-according-to-mode))
+             (progn
+               (delete-char 1)
+               (meow-insert-mode)))))
   ('meow-normal-state-keymap
    "C-/" #'(comment-line :which-key "comment")
    "M-/" #'(comment-line :which-key "comment"))

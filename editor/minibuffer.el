@@ -13,6 +13,7 @@
     "." #'(find-file :which-key "find file")
     "/" #'(consult-line :which-key "line")
     "pl" #'(consult-line-multi :which-key "project line")
+    "pg" #'consult-git-grep
     "fr" #'(consult-recent-file :which-key "find recent file")
     "bj" #'(consult-imenu :which-key "imenu")
     "bb" #'consult-buffer

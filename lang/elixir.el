@@ -9,6 +9,7 @@
   :lighter " Web"
   :keymap elixir-web-mode-map)
 
+;;;###autoload
 (defun maybe-elixir-web-mode ()
   "Enable `elixir-web-mode' if the module is '*Web.'"
   (save-excursion
@@ -31,5 +32,4 @@
           (backward-char (+ 2 (length tag-name))))))))
 
 (use-package elixir-ts-mode
-  :defer t
   :hook (elixir-ts-mode . maybe-elixir-web-mode))

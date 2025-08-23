@@ -43,6 +43,8 @@
       apropos-do-all t ; more extensive apropos searches
       completion-ignore-case t
 
+      global-mark-ring-max 64
+
       use-file-dialog nil
       use-dialog-box nil
       pop-up-frames nil
@@ -212,6 +214,7 @@
         ("L" . meow-right-expand)
         ("j" . meow-next)
         ("SPC" . nil)
+        ("g" . meow-cancel-selection)
         ("k" . meow-prev)
         ("x" . meow-line)
         ("." . meow-bounds-of-thing)
@@ -254,7 +257,7 @@
         ("n" . meow-search)
         ("O" . meow-to-block)
         ("Q" . meow-goto-line)
-        ("R" . meow-swap-grab)
+        ("r" . +meow-swap-grab-or-replace)
         ("s" . meow-kill)
         ("t" . meow-till)
         ("v" . meow-visit)
@@ -301,6 +304,19 @@
     (+meow-set-desired-state 'motion))
 
   (meow-setup-indicator)
+
+  (defun +meow-replace-char (char)
+    (interactive "cChar:")
+    (save-excursion
+      (delete-char 1)
+      (insert-char char)))
+
+  (defun +meow-swap-grab-or-replace ()
+    (interactive)
+    (if (region-active-p)
+        (call-interactively #'meow-swap-grab)
+      (call-interactively #'+meow-replace-char)))
+
   (setq meow-use-clipboard t))
 
 (elpaca-wait)

@@ -51,16 +51,16 @@
       (when proj-root
         (let ((tab-name (file-name-nondirectory (directory-file-name (expand-file-name proj-root)))))
           (when (not (string= (alist-get 'name (tab-bar--current-tab)) tab-name))
-            (kill-buffer (get-file-buffer filename))
-            (+open-tab-if-exists tab-name)
-            (find-file filename)))))))
+            (when filename
+              (kill-buffer (get-file-buffer filename))
+              (+open-tab-if-exists tab-name)
+              (find-file filename))))))))
 
 (add-hook 'prog-mode-hook #'+move-buffer-to-tab)
 (add-hook 'text-mode-hook #'+move-buffer-to-tab)
 
 (my-leader-def
   "SPC p" #'(lambda () (interactive) (+project-switch nil #'consult-ripgrep))
-  "pg" #'(lambda () (interactive) (+project-switch nil #'magit-status))
   "pp" #'+project-switch
   "onf" #'+org-roam-file-find
   "fp" #'+find-package

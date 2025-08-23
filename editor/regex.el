@@ -3,7 +3,7 @@
   :defer t
   :general
   ('meow-normal-state-keymap
-   "r" (defun +replace () (interactive)
+   "R" (defun +replace () (interactive)
               (if (region-active-p)
                   (call-interactively #'vr/replace)
                 (+vr/replace)))))

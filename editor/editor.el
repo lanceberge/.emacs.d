@@ -20,9 +20,11 @@
   ;; ('meow-normal-state-keymap
   ;;  "s" #'(+avy-goto-char-2-below :which-key "2-chars")
   ;;  "S" #'(+avy-goto-char-2-above :which-key "2-chars"))
-  :general
-  ('meow-normal-state-keymap
-   "F" #'avy-goto-char-2)
+  :bind
+  (:map meow-normal-state-keymap
+        ("F" . avy-goto-char-2))
+  (:map meow-motion-state-keymap
+        ("F" . avy-goto-char-2))
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)
@@ -64,15 +66,19 @@
   :general
   (my-leader-def
     "-" #'(dired-jump :which-key "open dired"))
-  ('meow-normal-state-keymap 'dired-mode-map
-                             "i" #'+dired/edit)
-  ('dired-mode-map
-   "i" #'dired-toggle-read-only
-   [remap meow-line] #'dired-do-flagged-delete)
-  ('wdired-mode-map
-   [remap save-buffer] #'wdired-finish-edit)
+  :bind
+  (:map dired-mode-map
+        ("i" . dired-toggle-read-only)
+        ([remap meow-line] . dired-do-flagged-delete)
+        ([remap negative-argument] . #'+dired/up-dir))
   :config
   (put 'dired-find-alternate-file 'disabled nil))
+
+(use-package wdired
+  :ensure nil
+  :bind
+  (:map wdired-mode-map
+        ([remap save-buffer] . wdired-finish-edit)))
 
 (use-package dired-x
   :ensure nil
@@ -85,15 +91,13 @@
   :general
   (my-leader-def
     "hk" #'helpful-key)
-
-  ('meow-normal-state-keymap helpful-mode-map
-                             "q" #'quit-window)
-
-  ([remap describe-command] #'helpful-command
-   [remap describe-key] #'helpful-key
-   [remap describe-variable] #'helpful-variable
-   [remap describe-function] #'helpful-function
-   [remap describe-symbol] #'helpful-symbol))
+  :bind
+  (:map meow-normal-state-keymap
+        ([remap describe-command] . helpful-command)
+        ([remap describe-key] . helpful-key)
+        ([remap describe-variable] . helpful-variable)
+        ([remap describe-function] . helpful-function)
+        ([remap describe-symbol] . helpful-symbol)))
 
 (use-package undo-tree ; Persistent Undos
   :defer 0.1
@@ -101,17 +105,17 @@
   :custom
   (undo-limit 10000)
   (undo-tree-auto-save-history t)
+  :bind
+  (:map meow-normal-state-keymap
+        ("u" . (lambda  () (interactive)
+                 (if (region-active-p)
+                     (undo 1)
+                   (undo-tree-undo))))
+        ("C-r" . (lambda () (interactive)
+                   (if (region-active-p)
+                       (redo 1)
+                     (undo-tree-redo)))))
   :general
-  ('meow-normal-state-keymap
-   "u" (defun +undo () (interactive)
-              (if (region-active-p)
-                  (undo 1)
-                (undo-tree-undo)))
-   "C-r" (defun +redo () (interactive)
-                (if (region-active-p)
-                    (redo 1)
-                  (undo-tree-redo))))
-
   (my-leader-def
     "fu" #'(undo-tree-visualize :which-key "undo"))
   :config
@@ -139,52 +143,40 @@
 (use-package google-this
   :after embark
   :commands (google-this-symbol)
-  :general
-  ('embark-general-map
-   "g" #'google-this-word))
+  :bind
+  (:map embark-general-map
+        ("g" . google-this-word)))
 
 (use-package ace-link
-  :general
-  ('(org-mode-map helpful-mode-map)
-   "M-i" #'(ace-link :which-key "goto link")))
+  :bind (:map org-mode-map
+              ("M-i" . ace-link)))
 
 (use-package wgrep
   :custom
   (wgrep-auto-save-buffer t)
-  :general
-  ('grep-mode-map
-   "r" (defun +wgrep-edit-and-replace () (interactive)
-              (wgrep-change-to-wgrep-mode)
-              (call-interactively #'+wgrep-replace))
-   "i" #'wgrep-change-to-wgrep-mode)
-  ('wgrep-mode-map
-   [remap save-buffer] #'wgrep-finish-edit
-   "R" #'+wgrep-replace)
-  :defer t)
-
-(use-package restart-emacs
-  :general
-  (my-leader-def
-    "re" #'(+restart-emacs :which-key "restart emacs"))
-  :config
-  (defun +restart-emacs ()
-    (interactive)
-    (let ((vterm- (get-buffer "*vterm*")))
-      (if vterm-
-          (kill-buffer )))
-    (setq confirm-kill-emacs nil)
-    (restart-emacs)))
+  :bind
+  (:map grep-mode-map
+        ("r" .  (lambda () (interactive)
+                  (wgrep-change-to-wgrep-mode)
+                  (call-interactively #'+wgrep-replace)))
+        ("i" . wgrep-change-to-wgrep-mode))
+  (:map wgrep-mode-map
+        ([remap save-buffer] . wgrep-finish-edit)
+        ("R" . +wgrep-replace)))
 
 (use-package drag-stuff
   :general
-  ('meow-normal-state-keymap
-   "M-k" #'drag-stuff-up
-   "M-j" #'drag-stuff-down))
+  :bind
+  (:map meow-normal-state-keymap
+        ("M-k" . drag-stuff-up)
+        ("M-j" . drag-stuff-down)))
 
 (use-package expand-region
-  :general
-  ('(meow-normal-state-keymap meow-motion-state-keymap)
-   "o" #'er/expand-region)
+  :bind
+  (:map meow-normal-state-keymap
+        ("o" . er/expand-region))
+  (:map meow-motion-state-keymap
+        ("o" . er/expand-region))
   :config
   (setq er/try-expand-list
         '(er/mark-inside-quotes
