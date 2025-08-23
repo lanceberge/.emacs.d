@@ -1,5 +1,5 @@
 ;;; -*- lexical-binding: t -*-
-(use-package transient :defer t)
+(use-package transient)
 
 (use-package magit
   :defer 1.0

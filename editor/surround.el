@@ -39,6 +39,7 @@
 
 (defun +surround--expand-region ()
   (interactive)
+  (require 'expand-region)
   (let ((original-expand-list er/try-expand-list))
     (setq-local er/try-expand-list '(er/mark-outside-quotes er/mark-outside-pairs))
     (er/expand-region 1)
@@ -72,6 +73,7 @@
         (backward-char 1)
         (delete-char 1)
         (goto-char start)
-        (delete-char 1)))))
+        (delete-char 1)
+        (keyboard-quit)))))
 
 (define-key meow-normal-state-keymap (kbd "S") #'+surround)

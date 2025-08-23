@@ -9,7 +9,7 @@
 (defvar +kmacro--last-name nil)
 
 (defun +kmacro-record-or-end (&optional n)
-  "If a macro is being recorded, end it. If c is input, call the last macro.
+  "If a macro is being recorded, end it. If 'l' is input, call the last macro.
 Otherwise, create a named macro with the char input."
   (interactive "p")
   (if defining-kbd-macro
@@ -25,6 +25,7 @@ Otherwise, create a named macro with the char input."
           (setq +kmacro--last-name (+kmacro--get-name name)))))))
 
 (defun +kmacro-call-named-macro (char-name &optional n)
+  "Call the macro at name `char-name'. If 'l' is input, call the last macro."
   (interactive "cName: \np")
   (if (= char-name ?l)
       (+kmacro--apply-to-region-or-lines n nil)

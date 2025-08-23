@@ -195,8 +195,6 @@
 
 (defvar +leader-map (make-sparse-keymap))
 
-(elpaca-wait)
-
 (use-package meow
   :demand t
   :hook (after-init . meow-global-mode)

@@ -12,7 +12,6 @@
         ("pe" . #'flymake-show-project-diagnostics)
         ("pr" . #'+project-replace-regex)
         ("pt" . #'+project-find-todos)
-        ("pv" . #'+project-switch-and-vterm)
         ("rp" . #'+project-load-projects))
   :config
   (+project-load-projects))
@@ -21,11 +20,6 @@
 (defun +project-find-todos ()
   (interactive)
   (consult-ripgrep (project-root (project-current t)) "TODO"))
-;;;###autoload
-(defun +project-switch-and-vterm ()
-  (interactive)
-  (let ((project-switch-commands #'+vterm-project))
-    (call-interactively 'project-switch-project)))
 
 ;;;###autoload
 (defun +project-load-projects ()

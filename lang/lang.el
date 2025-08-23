@@ -7,9 +7,11 @@
   (typescript-indent-level 2)
   (typescript-auto-indent-flag t))
 
-(use-package csv-mode)
+(use-package csv-mode
+  :ensure nil)
 
-(use-package json-mode)
+(use-package json-mode
+  :ensure nil)
 
 (use-package clojure-mode)
 
@@ -25,6 +27,7 @@
   :hook (js-mode . (lambda () (setq-local tab-width 2))))
 
 (use-package markdown-mode
+  :ensure nil
   :custom
   (markdown-fontify-code-blocks-natively t))
 
@@ -34,6 +37,7 @@
   (text-mode-ispell-word-completion nil))
 
 (use-package yaml-mode
+  :ensure nil
   :mode ("\\.gotmpl\\'" . yaml-mode)
   :hook
   (yaml-mode

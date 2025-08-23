@@ -9,6 +9,7 @@
   (if (region-active-p)
       (call-interactively #'vr/replace)
     (+vr/replace)))
+
 (use-package visual-regexp-steroids
   :after visual-regexp
   :config

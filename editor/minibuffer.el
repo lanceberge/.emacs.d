@@ -54,6 +54,7 @@
   "Search all todos."
   (interactive)
   (consult-line "TODO"))
+
 (use-package vertico
   :defer 0.1
   :custom

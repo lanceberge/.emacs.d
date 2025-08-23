@@ -46,6 +46,7 @@
   (call-interactively #'tab-bar-rename-tab))
 
 (use-package windresize
+  :ensure nil
   :custom
   (windresize-default-increment 3)
   :bind

@@ -144,6 +144,7 @@
         ("M-i" . ace-link)))
 
 (use-package wgrep
+  :ensure nil
   :custom
   (wgrep-auto-save-buffer t)
   :bind
