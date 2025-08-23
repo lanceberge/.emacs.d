@@ -5,7 +5,10 @@
   :custom
   (idle-update-delay 1.0) ; slow down how often emacs updates its ui
   (kill-do-not-save-duplicates t) ; no duplicates in kill ring
-  (indent-tabs-mode nil))
+  (indent-tabs-mode nil)
+  :bind
+  (:map meow-normal-state-keymap
+        ("C-g" . (lambda () (interactive) (lazy-highlight-cleanup t) (keyboard-quit)))))
 
 (use-package advice
   :ensure nil
@@ -129,7 +132,9 @@
   :bind
   (:map meow-normal-state-keymap
         ("/" . #'isearch-forward)
-        ("?" . #'isearch-backward))
+        ("?" . #'isearch-backward)
+        ("n" . #'isearch-repeat-forward)
+        ("N" . #'isearch-repeat-backward))
   (:map isearch-mode-map
         ("C-j" . #'isearch-repeat-forward)
         ("C-k" . #'isearch-repeat-backward)
@@ -154,16 +159,6 @@
   :hook
   (prog-mode . smerge-mode))
 
-(use-package kmacro
-  :ensure nil
-  :bind
-  (:map meow-normal-state-keymap
-        ("Q" . #'+kmacro-record-or-end))
-  (:map meow-normal-state-keymap
-        ("C-q" . #'kmacro-call-macro))
-  (:map meow-insert-state-keymap
-        ("C-q" . #'kmacro-call-macro)))
-
 (use-package menu-bar
   :ensure nil
   :bind
@@ -179,12 +174,3 @@
         ("wj" . #'other-window)
         ("ws" . #'split-window-below)
         ("wv" . #'split-window-right)))
-
-(defvar +kmacro-recording nil)
-
-(defun +kmacro-record-or-end ()
-  (interactive)
-  (if +kmacro-recording
-      (call-interactively #'kmacro-end-macro)
-    (call-interactively #'kmacro-start-macro))
-  (setq +kmacro-recording (not +kmacro-recording)))
