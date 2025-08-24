@@ -277,7 +277,7 @@
                                 (motion . meow-motion-mode)
                                 (beacon . meow-beacon-mode)))
   (setq meow-use-cursor-position-hack t)
-  (dotimes (i 9)
+  (dotimes (i 10)
     (define-key meow-normal-state-keymap
                 (number-to-string i)
                 `(lambda ()

@@ -6,11 +6,7 @@
         ("nf" . #'+make-frame)
         ("h" . #'help-command)
         (";" . #'shell-command)
-        ("p;" . (lambda ()
-                  (interactive)
-                  (let ((default-directory (project-root (project-current t))))
-                    (call-interactively . #'shell-command))))
-
+        ("SPC ;" . #'+project-shell-command)
         ("bd" . #'kill-current-buffer)
         ("bq" . #'+save-and-kill-buffer)
         ("b SPC d" . #'+kill-window-and-buffer)
@@ -22,6 +18,11 @@
   (:map meow-insert-state-keymap
         ("j" . #'+escape)))
 
+;;;###autoload
+(defun +project-shell-command ()
+  (interactive)
+  (let ((default-directory (project-root (project-current t))))
+    (call-interactively #'shell-command)))
 ;;;###autoload
 (defun +make-frame ()
   (interactive)
@@ -46,7 +47,7 @@
   save-excursion
   (end-of-line)
   (unless (looking-back ";" nil)
-    (Insert ";")))
+    (insert ";")))
 
 ;;;###autoload
 (defun +switch-to-recent-file ()
