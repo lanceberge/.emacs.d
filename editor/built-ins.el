@@ -7,6 +7,8 @@
   (kill-do-not-save-duplicates t) ; no duplicates in kill ring
   (indent-tabs-mode nil)
   :bind
+  (:map meow-normal-state-keymap
+        ("RET" . #'newline))
   (:map prog-mode-map
         ("C-g" . #'+isearch-clear-highlighting))
   (:map text-mode-map
@@ -32,12 +34,13 @@
   (auto-save-default nil)
   :bind
   (:map +leader-map
-        ("re" . #'+restart-emacs))
-  :config
-  (defun +restart-emacs ()
-    (interactive)
-    (setq confirm-kill-emacs nil)
-    (restart-emacs)))
+        ("re" . #'+restart-emacs)))
+
+;;;###autoload
+(defun +restart-emacs ()
+  (interactive)
+  (setq confirm-kill-emacs nil)
+  (restart-emacs))
 
 (use-package saveplace ; save location in files
   :ensure nil
@@ -71,10 +74,7 @@
   :ensure nil
   :hook
   (prog-mode . flyspell-prog-mode)
-  (text-mode . flyspell-mode)
-  :bind
-  (:map meow-insert-state-keymap
-        ("C-y" . #'flyspell-auto-correct-word)))
+  (text-mode . flyspell-mode))
 
 (use-package bookmark
   :ensure nil)
@@ -135,6 +135,7 @@
 
 (use-package isearch
   :ensure nil
+  :hook   (isearch-mode-end . +isearch-exit-at-start)
   :bind
   (:map meow-normal-state-keymap
         ("/" . #'isearch-forward)
@@ -145,9 +146,20 @@
         ("C-j" . #'isearch-repeat-forward)
         ("C-k" . #'isearch-repeat-backward)
         ("M-j" . #'isearch-repeat-forward)
-        ("M-k" . #'isearch-repeat-backward))
+        ("M-k" . #'isearch-repeat-backward)
+        ("M-q" . #'avy-isearch))
   :config
   (setq search-nonincremental-instead nil))
+
+(defun +isearch-exit-at-start ()
+  "Exit search at the beginning of the current match."
+  (unless (or isearch-mode-end-hook-quit
+              (bound-and-true-p isearch-suspended)
+              (not isearch-forward)
+              (not isearch-other-end)
+              (and (boundp 'avy-command)
+                   (eq avy-command 'avy-isearch)))
+    (goto-char isearch-other-end)))
 
 (use-package grep
   :ensure nil
@@ -156,23 +168,8 @@
         (";" . #'compile-goto-error)
         ("q" . #'quit-window)))
 
-(use-package smerge-mode
-  :ensure nil
-  :hook
-  (prog-mode . smerge-mode))
-
 (use-package menu-bar
   :ensure nil
   :bind
   (:map +leader-map
         ("ed" . #'toggle-debug-on-error)))
-
-(use-package window
-  :ensure nil
-  :bind
-  (:map +leader-map
-        ("wo" . #'delete-other-windows)
-        ("wd" . #'delete-window)
-        ("wj" . #'other-window)
-        ("ws" . #'split-window-below)
-        ("wv" . #'split-window-right)))
