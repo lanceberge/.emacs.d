@@ -31,5 +31,8 @@
           (insert (format "</%s>" tag-name))
           (backward-char (+ 2 (length tag-name))))))))
 
+(use-package elixir-mode
+  :defer t)
+
 (use-package elixir-ts-mode
   :hook (elixir-ts-mode . maybe-elixir-web-mode))

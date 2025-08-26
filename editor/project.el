@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package project
   :defer 0.1
+  :demand t
   :commands
   (project-switch-project project-prompter project-root)
   :custom
@@ -27,7 +28,7 @@
   (dolist (dir '("~/.emacs.d" "~/.config/nixos" "~/dotfiles"))
     (when (file-directory-p dir)
       (project--remember-dir dir)))
-  (dolist (dir '("~/code/git" "~/code/phoenix" "~/code/laravel" "~/code/"))
+  (dolist (dir '("~/code/git" "~/code/phoenix" "~/code/laravel" "~/code/elixir/" "~/code/"))
     (when (file-directory-p dir)
       (project-remember-projects-under dir))))
 

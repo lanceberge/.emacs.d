@@ -25,6 +25,4 @@
 (use-package hydra)
 
 (use-package fringe
-  :ensure nil
-  :hook
-  (after-init . (lambda () (fringe-mode -1))))
+  :ensure nil)

@@ -3,8 +3,8 @@
   :ensure nil
   :bind
   (:map meow-normal-state-keymap
-        ("Q" . #'+kmacro-record-or-end)
-        ("Z" . #'+kmacro-call-named-macro)))
+        ("M-r" . #'+kmacro-record-or-end)
+        ("M-m" . #'+kmacro-call-named-macro)))
 
 (defvar +kmacro--last-name nil)
 

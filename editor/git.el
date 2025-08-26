@@ -50,6 +50,8 @@
 
 (use-package smerge-mode
   :ensure nil
+  :hook
+  (prog-mode . smerge-mode)
   :bind
   (:map +leader-map
         ("ml" . #'smerge-keep-upper)

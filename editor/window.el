@@ -68,6 +68,7 @@
 
 ;;;###autoload
 (defun +switch-to-recent-file ()
+  "Switch to the most recent open buffer in the same vc-root-dir as the current buffer."
   (interactive)
   (let ((current-buffer (current-buffer))
         (project-root-dir (project-root (project-current t))))
