@@ -32,7 +32,12 @@
        (cond ((and (bound-and-true-p +format-with-lsp)
                    (bound-and-true-p lsp-mode)
                    (lsp-feature? "textDocument/formatting"))
-              #'lsp-format-buffer)
+              (lsp-format-buffer))
+             ((and +format-with-lsp
+                   (bound-and-true-p eglot--managed-mode)
+                   (eglot--server-capable :documentRangeFormattingProvider))
+              (call-interactively #'eglot-format))
+
              (#'format-all-buffer))))))
 
 ;;;###autoload

@@ -1,13 +1,15 @@
 ;;; -*- lexical-binding: t -*-
-
-;;;###autoload
-(defun +open-tab-if-exists (tab-name)
-  (let ((tabs (mapcar (lambda (tab) (alist-get 'name tab)) (tab-bar-tabs))))
-    (if (member tab-name tabs)
-        (tab-bar-switch-to-tab tab-name)
-      (progn
-        (tab-bar-new-tab)
-        (tab-bar-rename-tab tab-name)))))
+(use-package +proj-manager
+  :ensure nil
+  :hook
+  ((prog-mode text-mode) . +move-buffer-to-tab)
+  :bind
+  (:map +leader-map
+        ("SPC p" . #'+project-ripgrep)
+        ("pp" . #'+project-switch)
+        ("onf" . #'+org-roam-file-find)
+        ("fp" . #'+find-package)
+        ("gr" . #'+find-package)))
 
 ;;;###autoload
 (defun +project-switch (&optional dir callback)
@@ -42,7 +44,13 @@
   (+source-init-file))
 
 ;;;###autoload
+(defun +project-ripgrep ()
+  (interactive)
+  (+project-switch nil #'consult-ripgrep))
+
+;;;###autoload
 (defun +move-buffer-to-tab ()
+  "Move the current buffer to the tab corresponding to it's vc root."
   (interactive)
   (require 'project)
   (unless (or (minibufferp) (window-minibuffer-p))
@@ -55,12 +63,3 @@
               (kill-buffer (get-file-buffer filename))
               (+open-tab-if-exists tab-name)
               (find-file filename))))))))
-
-(add-hook 'prog-mode-hook #'+move-buffer-to-tab)
-(add-hook 'text-mode-hook #'+move-buffer-to-tab)
-
-(define-key +leader-map (kbd "SPC p") (lambda () (interactive) (+project-switch nil #'consult-ripgrep)))
-(define-key +leader-map "pp" #'+project-switch)
-(define-key +leader-map "onf" #'+org-roam-file-find)
-(define-key +leader-map "fp" #'+find-package)
-(define-key +leader-map "gr" #'+find-package)

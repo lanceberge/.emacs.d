@@ -10,6 +10,23 @@
                    (interactive)
                    (+harpoon-bookmark ,num)))))
 
+;;;###autoload
+(defun +harpoon-bookmark (n)
+  "Take a number `n' and create a formatted project-local bookmark based on `n'"
+  (interactive "p")
+  (bookmark-set (+harpoon--get-name n)))
+
+;;;###autoload
+(defun +harpoon-goto (name)
+  "Goto a bookmark if it exists otherwise create one."
+  (interactive "p")
+  (let ((bookmark-name (+harpoon--get-name name)))
+    (condition-case err
+        (bookmark-jump bookmark-name)
+      (error
+       (+harpoon-bookmark name)))))
+
+;;;###autoload
 (defun +harpoon--get-name (&optional name)
   (interactive)
   (let ((project-prefix (or (project-root (project-current t)) "nil"))
@@ -17,15 +34,3 @@
                     (format ":%s" name)
                   "")))
     (format "%s%s" project-prefix suffix)))
-
-(defun +harpoon-bookmark (name)
-  (interactive "p")
-  (bookmark-set (+harpoon--get-name name)))
-
-(defun +harpoon-goto (name)
-  (interactive "p")
-  (let ((bookmark-name (+harpoon--get-name name)))
-    (condition-case err
-        (bookmark-jump bookmark-name)
-      (error
-       (+harpoon-bookmark name)))))
