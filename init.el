@@ -2,57 +2,63 @@
 (if (version< emacs-version "27.1")
     (load-file (expand-file-name "early-init.el" user-emacs-directory)))
 
-(setq default-file-name-handler-alist file-name-handler-alist
-      ;; unset file-name-handler-alist until its set again in Hooks heading (improve startup time)
-      file-name-handler-alist nil
+(setopt default-file-name-handler-alist file-name-handler-alist
+        ;; unset file-name-handler-alist until its set again in Hooks heading (improve startup time)
+        file-name-handler-alist nil
 
-      ;; raise garbage collection threshold until its set again in Hooks heading
-      gc-cons-threshold most-positive-fixnum
-      gc-cons-percentage 0.6
+        ;; raise garbage collection threshold until its set again in Hooks heading
+        gc-cons-threshold most-positive-fixnum
+        gc-cons-percentage 0.6
 
-      load-prefer-newer noninteractive
-      locale-coding-system 'utf-8
-      message-log-max 5000 ; longer number of max messages
-      ring-bell-function 'ignore
+        load-prefer-newer noninteractive
+        locale-coding-system 'utf-8
+        message-log-max 5000 ; longer number of max messages
+        ring-bell-function 'ignore
 
-      ;; startup.el settings
-      inhibit-startup-screen t
-      inhibit-startup-message t
-      inhibit-startup-echo-area-message user-login-name
+        ;; startup.el settings
+        inhibit-startup-screen t
+        inhibit-startup-message t
+        inhibit-startup-echo-area-message user-login-name
 
-      ;; inhibit-default-init t
-      initial-scratch-message nil ; empty scratch file
-      initial-major-mode 'fundamental-mode ; start in an empty mode
+        ;; inhibit-default-init t
+        initial-scratch-message nil ; empty scratch file
+        initial-major-mode 'fundamental-mode ; start in an empty mode
 
-      find-file-visit-truename t ; auto go to symlinks
-      vc-follow-symlinks t
-      confirm-kill-emacs 'y-or-n-p
-      kill-buffer-query-functions nil
-      inhibit-compacting-font-caches t ; inhibit font compacting
-      highlight-nonselected-windows nil
-      ffap-machine-p-known 'reject ; don't ping things that look like domain names
-      bidi-inhibit-bpa t
-      fast-but-imprecise-scrolling t ; faster scrolling over unfontified regions
+        find-file-visit-truename t ; auto go to symlinks
+        vc-follow-symlinks t
+        confirm-kill-emacs 'y-or-n-p
+        kill-buffer-query-functions nil
+        inhibit-compacting-font-caches t ; inhibit font compacting
+        highlight-nonselected-windows nil
+        ffap-machine-p-known 'reject ; don't ping things that look like domain names
+        bidi-inhibit-bpa t
+        fast-but-imprecise-scrolling t ; faster scrolling over unfontified regions
 
-      ;; Scrolling
-      scroll-conservatively 1000
-      scroll-margin 4
-      scroll-step 1
+        ;; Scrolling
+        scroll-conservatively 1000
+        scroll-margin 4
+        scroll-preserve-screen-position t
+        scroll-step 1
 
-      ;; General
-      apropos-do-all t ; more extensive apropos searches
-      completion-ignore-case t
+        ;; General
+        apropos-do-all t ; more extensive apropos searches
+        completion-ignore-case t
+        kill-whole-line t
 
-      global-mark-ring-max 64
+        global-mark-ring-max 64
 
-      use-file-dialog nil
-      use-dialog-box nil
-      pop-up-frames nil
+        use-file-dialog nil
+        use-dialog-box nil
+        pop-up-frames nil
 
-      ;; Disable bidirectional text rendering for performance
-      bidi-display-reordering 'left-to-right
-      bidi-paragraph-direction 'left-to-right
-      cursor-in-non-selected-windows nil)
+        debugger-stack-frame-as-list t
+
+        history-delete-duplicates t
+
+        ;; Disable bidirectional text rendering for performance
+        bidi-display-reordering 'left-to-right
+        bidi-paragraph-direction 'left-to-right
+        cursor-in-non-selected-windows nil)
 
 (when IS-MAC
   (dolist (path '("/opt/homebrew/opt/llvm/bin/"
@@ -209,6 +215,8 @@
         ("j" . #'meow-next)
         ("SPC" . nil)
         ("g" . #'meow-cancel-selection)
+        ("[" . #'meow-beginning-of-thing)
+        ("]" . #'meow-end-of-thing)
         ("k" . #'meow-prev)
         ("C-u" . #'scroll-down)
         ("C-d" . #'scroll-up)
@@ -231,7 +239,7 @@
         ("C-d" . #'scroll-up)
         ("q" . #'save-buffer)
         ("[" . #'meow-beginning-of-thing)
-        ("d" . (lambda () (interactive (delete-char 1))))
+        ("d" . #'delete-char)
         ("]" . #'meow-end-of-thing)
         ("c" . #'+meow-change)
         ("a" . #'meow-append)

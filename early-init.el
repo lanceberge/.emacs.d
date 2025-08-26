@@ -83,11 +83,11 @@
 (elpaca-wait)
 
 ;; defer elisp compilation, great with native-comp branch
-(setq comp-deferred-compilation t)
-
-(setq use-package-verbose t ; show which packages are being loaded on startup and when
-      use-package-always-ensure t)
-
+(setopt comp-deferred-compilation t
+        use-package-verbose t ; show which packages are being loaded on startup and when
+        use-package-always-ensure t
+        byte-compile-warnings nil
+        read-process-output-max (* 1024 1024))
 
 (defconst bg-color "#282828"
   "gruvbox background color")
@@ -105,9 +105,9 @@
   (line-number-current-line ((t (:background ,bg-color))))
   :config
   (unless IS-WINDOWS
-    (setq-default display-line-numbers-type 'visual
-                  display-line-numbers-width-start t ; auto count number of lines to start numbers
-                  display-line-numbers-grow-only t)) ; don't shrink line number width
+    (setopt display-line-numbers-type 'visual
+            display-line-numbers-width-start t ; auto count number of lines to start numbers
+            display-line-numbers-grow-only t)) ; don't shrink line number width
 
   (global-display-line-numbers-mode))
 
@@ -145,12 +145,9 @@
   :config
   (minions-mode 1))
 
-(setq byte-compile-warnings nil
-      read-process-output-max (* 1024 1024))
-
 (when (>= emacs-major-version 29)
   (progn
     (setopt use-short-answers t)
     (add-to-list 'default-frame-alist '(undecorated-round . t))))
 
-(setq use-package-always-defer t)
+(setopt use-package-always-defer t)
