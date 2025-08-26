@@ -52,3 +52,37 @@
   "indent in major mode - org-src-tab-acts-natively gave me issues"
   (interactive)
   (org-agenda-filter-by-tag t ?\t))
+
+;;;###autoload
+(defun +org-insert-below ()
+  (interactive)
+  (deactivate-mark)
+  (end-of-visual-line)
+  (if (org-insert-item)
+      (meow-insert)
+    (meow-open-below)))
+
+;;;###autoload
+(defun +org-insert-above ()
+  (interactive)
+  (deactivate-mark)
+  (beginning-of-visual-line)
+  (if (org-insert-item)
+      (meow-insert)
+    (meow-open-above)))
+
+;;;###autoload
+(defun +org-drag-stuff-up ()
+  (interactive)
+  (condition-case err
+      (org-move-item-up)
+    (error
+     (org-move-subtree-up))))
+
+;;;###autoload
+(defun +org-drag-stuff-down ()
+  (interactive)
+  (condition-case err
+      (org-move-item-down)
+    (error
+     (org-move-subtree-down))))
