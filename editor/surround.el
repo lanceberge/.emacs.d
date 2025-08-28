@@ -1,42 +1,92 @@
 ;;; -*- lexical-binding: t -*-
 
+(setq +surround-pairs '((?r . ("(" . ")"))
+                        (?s . ("[" . "]"))
+                        (?g . ("\"" . "\""))))
+
 ;;;###autoload
 (defun +surround (char)
-  (interactive "cCharacter to surround with: ")
-  (if (eq char ?d)
-      (+surround-delete)
-    (unless (use-region-p)
-      (let ((er/try-expand-list '(er/mark-outside-quotes er/mark-outside-pairs)))
-        (+surround--expand-region)))
-    (let* ((open-char (cond ((eq char ?g) ?\")
-                            ((eq char ?r) ?\()
-                            (t char)))
-           (close-char (cond ((eq char ?g) ?\")
-                             ((eq char ?r) ?\))
-                             ((eq char ?\() ?\))
-                             ((eq char ?\{) ?\})
-                             ((eq char ?\[) ?\])
-                             (t char))))
-      (+surround--narrow-to-non-whitespace)
-      (let ((start (region-beginning))
-            (end (region-end)))
-        (when (> end start)
-          (save-excursion
-            (goto-char end)
-            (insert close-char)
-            (goto-char start)
-            (insert open-char)))))
-    (keyboard-quit)))
+  (interactive "c")
+  (cond ((eq char ?d)
+         (+surround-delete))
+        ((eq char ?x)
+         (call-interactively #'+surround-change))
+        (t
+         (+surround-surround char))))
+
+;;;###autoload
+(defun +surround-surround (char)
+  (interactive "c")
+  (save-excursion
+    (+surround--select-region)
+    (let* ((pairs (+surround--get-pairs char))
+           (open-string (car pairs))
+           (close-string (cdr pairs))
+           (start (region-beginning))
+           (end (region-end)))
+      (when (> end start)
+        (goto-char end)
+        (insert close-string)
+        (goto-char start)
+        (insert open-string)
+        (keyboard-quit)))))
 
 ;;;###autoload
 (defun +surround-delete ()
   (interactive)
   (save-excursion
-    (if (use-region-p)
-        (+surround--narrow-to-non-whitespace)
-      (+surround--expand-region))
-    (+surround--delete)))
+    (+surround--select-region)
+    (+surround-delete)))
 
+;;;###autoload
+(defun +surround-change (char)
+  (interactive "cReplace:")
+  (save-excursion
+    (+surround--select-region)
+    (let* ((start (region-beginning))
+           (end (region-end))
+           (pairs (+surround--get-pairs char))
+           (open-string (car pairs))
+           (close-string (cdr pairs)))
+      (when (> end start)
+        (goto-char end)
+        (backward-char 1)
+        (delete-char 1)
+        (insert close-string)
+        (goto-char start)
+        (delete-char 1)
+        (insert open-string)
+        (keyboard-quit)))))
+
+;;;###autoload
+(defun +surround-delete ()
+  (interactive)
+  (+surround--select-region)
+  (let* ((start (region-beginning))
+         (end (region-end)))
+    (when (> end start)
+      (goto-char end)
+      (backward-char 1)
+      (delete-char 1)
+      (goto-char start)
+      (delete-char 1)
+      (keyboard-quit))))
+
+;;;###autoload
+(defun +surround--get-pairs (char)
+  (let* ((pair (cdr (assoc char +surround-pairs)))
+         (default-pair (char-to-string char))
+         (open-string (or (car pair) default-pair))
+         (close-string (or (cdr pair) default-pair)))
+    (cons open-string close-string)))
+
+;;;###autoload
+(defun +surround--select-region ()
+  (if (region-active-p)
+      (+surround--narrow-to-non-whitespace)
+    (+surround--expand-region)))
+
+;;;###autoload
 (defun +surround--expand-region ()
   (interactive)
   (require 'expand-region)
@@ -62,18 +112,5 @@
         (set-mark non-whitespace-end)
         (activate-mark))
     (user-error "No active region")))
-
-;;;###autoload
-(defun +surround--delete ()
-  (when (region-active-p)
-    (let ((start (region-beginning))
-          (end (region-end)))
-      (when (> (- end start) 1)
-        (goto-char end)
-        (backward-char 1)
-        (delete-char 1)
-        (goto-char start)
-        (delete-char 1)
-        (keyboard-quit)))))
 
 (define-key meow-normal-state-keymap (kbd "S") #'+surround)
