@@ -61,16 +61,17 @@
 ;;;###autoload
 (defun +surround-delete ()
   (interactive)
-  (+surround--select-region)
-  (let* ((start (region-beginning))
-         (end (region-end)))
-    (when (> end start)
-      (goto-char end)
-      (backward-char 1)
-      (delete-char 1)
-      (goto-char start)
-      (delete-char 1)
-      (keyboard-quit))))
+  (save-excursion
+    (+surround--select-region)
+    (let* ((start (region-beginning))
+           (end (region-end)))
+      (when (> end start)
+        (goto-char end)
+        (backward-char 1)
+        (delete-char 1)
+        (goto-char start)
+        (delete-char 1)
+        (keyboard-quit)))))
 
 ;;;###autoload
 (defun +surround--get-pairs (char)
