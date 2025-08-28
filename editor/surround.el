@@ -82,17 +82,15 @@
 
 ;;;###autoload
 (defun +surround--select-region ()
-  (if (region-active-p)
-      (+surround--narrow-to-non-whitespace)
-    (+surround--expand-region)))
-
-;;;###autoload
-(defun +surround--expand-region ()
-  (interactive)
+  (when (region-active-p)
+    (deactivate-mark))
   (require 'expand-region)
   (let ((original-expand-list er/try-expand-list))
-    (setq-local er/try-expand-list '(er/mark-outside-quotes er/mark-outside-pairs))
-    (er/expand-region 1)
+    (setq-local er/try-expand-list '(er/mark-inside-quotes
+                                     er/mark-inside-pairs
+                                     er/mark-outside-quotes
+                                     er/mark-outside-pairs))
+    (er/expand-region 2)
     (setq er/try-expand-list original-expand-list)))
 
 ;;;###autoload
