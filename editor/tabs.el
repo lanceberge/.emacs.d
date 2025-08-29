@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package tab-bar
   :ensure nil
+  :hook (after-init . tab-bar-history-mode)
   :custom
   (tab-bar-new-button-show nil)
   (tab-bar-close-button-show nil)
@@ -19,7 +20,9 @@
         ("tu" . #'tab-bar-undo-close-tab)
         ("t SPC r" . #'tab-bar-rename-tab-by-name)
         ("po" . #'+open-project)
-        ("tr" . #'tab-bar-rename-tab)))
+        ("tr" . #'tab-bar-rename-tab)
+        ("wu" . #'tab-bar-history-back)
+        ("wr" . #'tab-bar-history-forward)))
 
 ;;;###autoload
 (defun +tab-bar/open-and-rename ()

@@ -28,11 +28,11 @@
         ("pl" . #'consult-line-multi)
         ("pg" . #'consult-git-grep)
         ("fr" . #'consult-recent-file)
-        ("bj" . #'consult-imenu)
+        ("fj" . #'consult-imenu)
         ("bb" . #'consult-buffer)
-        ("fm" . #'consult-global-mark)
+        ("pm" . #'consult-global-mark)
         ("fb" . #'consult-bookmark)
-        ("bm" . #'consult-mark)
+        ("fm" . #'consult-mark)
         ("y" . #'consult-yank-from-kill-ring)
         ("f SPC y" . #'consult-yank-replace)
         ("fh" . #'consult-man)
@@ -43,7 +43,7 @@
         ("fl" . #'consult-goto-line)
         ("fa" . #'consult-org-agenda)
         ("fs" . #'consult-ripgrep)
-        ("fj" . #'consult-imenu-multi)))
+        ("pj" . #'consult-imenu-multi)))
 
 ;;;###autoload
 (defun +project-buffer ()

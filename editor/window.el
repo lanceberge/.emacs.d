@@ -31,6 +31,7 @@
         ("M-o" . #'ace-window)))
 
 (use-package winner ; Undo and redo window configs
+  :disabled t
   :ensure nil
   :defer 1
   :hook

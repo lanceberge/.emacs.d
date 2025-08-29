@@ -1,5 +1,10 @@
 ;;; -*- lexical-binding: t -*-
-(use-package transient)
+(use-package transient
+  :bind
+  (:map transient-base-map
+        ("M-p" . #'transient-reset))
+  :config
+  (transient-bind-q-to-quit))
 
 (use-package magit
   :defer 1.0

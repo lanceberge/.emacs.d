@@ -13,6 +13,12 @@
   :config
   (setq-default format-all-formatters format-all-default-formatters))
 
+(use-package goto-chg
+  :bind
+  (:map meow-normal-state-keymap
+        ("C-p" . goto-last-change)
+        ("C-n" . goto-last-change-reverse)))
+
 (use-package avy
   :custom
   (avy-keys '(?j ?d ?k ?s ?l ?a))

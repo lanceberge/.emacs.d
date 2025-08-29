@@ -285,6 +285,9 @@
                                 (motion . meow-motion-mode)
                                 (beacon . meow-beacon-mode)))
   (setq meow-use-cursor-position-hack t)
+  (setq meow--kbd-forward-line "<down>"
+        meow--kbd-backward-line "<up>"
+        meow--kbd-forward-char "<right>")
   (dotimes (i 10)
     (define-key meow-normal-state-keymap
                 (number-to-string i)
