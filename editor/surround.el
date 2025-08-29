@@ -1,8 +1,19 @@
 ;;; -*- lexical-binding: t -*-
 
-(setq +surround-pairs '((?r . ("(" . ")"))
-                        (?s . ("[" . "]"))
-                        (?g . ("\"" . "\""))))
+(defvar +surround-pairs '((?r . ("(" . ")"))
+                          (?s . ("[" . "]"))
+                          (?g . ("\"" . "\""))))
+
+(use-package +surround
+  :ensure nil
+  :hook
+  (org-mode . +setup-org-pairs)
+  :bind
+  (:map meow-normal-state-keymap
+        ("S" . #'+surround)))
+
+(defun +setup-org-pairs ()
+  (add-to-list '+surround-pairs '(?e . ("#+BEGIN_SRC elixir\n" . "\n#+END_SRC\n"))))
 
 ;;;###autoload
 (defun +surround (char)
@@ -83,16 +94,16 @@
 
 ;;;###autoload
 (defun +surround--select-region ()
-  (when (region-active-p)
-    (deactivate-mark))
-  (require 'expand-region)
-  (let ((original-expand-list er/try-expand-list))
-    (setq-local er/try-expand-list '(er/mark-inside-quotes
-                                     er/mark-inside-pairs
-                                     er/mark-outside-quotes
-                                     er/mark-outside-pairs))
-    (er/expand-region 2)
-    (setq er/try-expand-list original-expand-list)))
+  (if (region-active-p)
+      (+surround--narrow-to-non-whitespace)
+    (require 'expand-region)
+    (let ((original-expand-list er/try-expand-list))
+      (setq-local er/try-expand-list '(er/mark-inside-quotes
+                                       er/mark-inside-pairs
+                                       er/mark-outside-quotes
+                                       er/mark-outside-pairs))
+      (er/expand-region 2)
+      (setq er/try-expand-list original-expand-list))))
 
 ;;;###autoload
 (defun +surround--narrow-to-non-whitespace ()
@@ -111,5 +122,3 @@
         (set-mark non-whitespace-end)
         (activate-mark))
     (user-error "No active region")))
-
-(define-key meow-normal-state-keymap (kbd "S") #'+surround)
