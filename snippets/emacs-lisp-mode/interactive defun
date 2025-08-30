@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: interactive defun
+# key: idefun
+# --
+;;;###autoload
+(defun +$1 ()
+  (interactive)
+  ($0))
