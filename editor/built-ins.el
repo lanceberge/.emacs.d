@@ -70,12 +70,6 @@
   (recentf-auto-cleanup 'never)
   (recentf-max-saved-items 200))
 
-(use-package flyspell
-  :ensure nil
-  :hook
-  (prog-mode . flyspell-prog-mode)
-  (text-mode . flyspell-mode))
-
 (use-package bookmark
   :ensure nil)
 
@@ -129,6 +123,7 @@
   )
 
 (use-package ispell
+  :disabled t
   :ensure nil
   :custom
   (ispell-complete-word-dict t))
