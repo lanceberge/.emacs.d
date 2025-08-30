@@ -35,7 +35,14 @@
                '((rust-ts-mode rust-mode) .
                  ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
 
-  (add-to-list 'eglot-server-programs '(elixir-mode "~/.local/bin/elixir-ls/language_server.sh"))
+
+  ;; (add-to-list 'eglot-server-programs '((elixir-mode elixir-ts-mode) .
+  ;;                                       ("~/.local/bin/expert_darwin_arm64")))
+
+  (let ((elixir-lsp-path (if (eq system-type 'darwin)
+                             "~/.local/bin/expert_darwin_arm64"
+                           "~/.local/bin/expert_linux_amd64")))
+    (add-to-list 'eglot-server-programs (list '(elixir-mode elixir-ts-mode) elixir-lsp-path)))
 
   (custom-set-faces
    '(eglot-highlight-symbol-face ((t (:inherit nil)))))
@@ -46,7 +53,6 @@
                       (string-trim-right (shell-command-to-string "npm list --global --parseable typescript | head -n1")))))
       `(:typescript (:tsdk ,tsdk-path)
                     :vue (:hybridMode :json-false))))
-
 
   (add-to-list 'eglot-server-programs
                `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
