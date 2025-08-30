@@ -22,6 +22,15 @@
         ("ws" . #'split-window-below)
         ("wv" . #'split-window-right)))
 
+(use-package windmove
+  :ensure nil
+  :bind
+  (:map +leader-map
+        ("wj" . #'windmove-down)
+        ("wk" . #'windmove-up)
+        ("wl" . #'windmove-right)
+        ("wh" . #'windmove-left)))
+
 (use-package ace-window
   :custom
   (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
