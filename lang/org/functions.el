@@ -86,3 +86,16 @@
       (org-move-item-down)
     (error
      (org-move-subtree-down))))
+
+;;;###autoload
+(defun +org-cycle ()
+  (interactive)
+  (cond
+   ((org-at-heading-p)
+    (org-cycle))
+   ((save-excursion
+      (beginning-of-visual-line)
+      (org-at-heading-p))
+    (outline-toggle-children))
+   ((not (org-cycle))
+    (outline-toggle-children))))
