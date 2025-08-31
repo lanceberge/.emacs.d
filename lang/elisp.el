@@ -34,8 +34,8 @@
 
 (use-package puni
   :init
-  (setq +open-chars '(?\( ?\{ ?\[))
-  (setq +close-chars '(?\) ?\} ?\]))
+  (setq +open-chars '(?\( ?\{ ?\[ ))
+  (setq +close-chars '(?\) ?\} ?\] ?\"))
   :bind (:map meow-normal-state-keymap
               ("<" . +slurp-or-barf-left)
               (">" . +slurp-or-barf-right)))
