@@ -25,19 +25,18 @@
   :config
   (setq eglot-events-buffer-size 1000000)  ; Log everything
   (setq eglot-sync-connect 3)              ; Wait longer for connection
+
+  ;; save buffers after eglot-renaming
   (advice-add 'eglot-rename :after
               (lambda (&rest _)
                 (save-some-buffers t)))
-  ;; (add-to-list 'eglot-server-programs
-  ;;              '(svelte-mode . ("svelteserver" "--stdio")))
+
+  (add-to-list 'eglot-server-programs
+               '(svelte-mode . ("svelteserver" "--stdio")))
 
   (add-to-list 'eglot-server-programs
                '((rust-ts-mode rust-mode) .
                  ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
-
-
-  ;; (add-to-list 'eglot-server-programs '((elixir-mode elixir-ts-mode) .
-  ;;                                       ("~/.local/bin/expert_darwin_arm64")))
 
   (let ((elixir-lsp-path (if (eq system-type 'darwin)
                              "~/.local/bin/expert_darwin_arm64"
@@ -53,6 +52,8 @@
                       (string-trim-right (shell-command-to-string "npm list --global --parseable typescript | head -n1")))))
       `(:typescript (:tsdk ,tsdk-path)
                     :vue (:hybridMode :json-false))))
+
+  (add-to-list 'eglot-server-programs '(python-ts-mode . ("/opt/homebrew/bin/pyright-langserver" "--stdio")))
 
   (add-to-list 'eglot-server-programs
                `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
