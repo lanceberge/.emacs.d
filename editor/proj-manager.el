@@ -2,7 +2,7 @@
 (use-package +proj-manager
   :ensure nil
   :hook
-  ((prog-mode text-mode) . +move-buffer-to-tab)
+  (window-configuration-change . +move-buffer-to-tab)
   :bind
   (:map +leader-map
         ("SPC p" . #'+project-ripgrep)

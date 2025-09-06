@@ -21,8 +21,8 @@
         ("t SPC r" . #'tab-bar-rename-tab-by-name)
         ("po" . #'+open-project)
         ("tr" . #'tab-bar-rename-tab)
-        ("wu" . #'tab-bar-history-back)
-        ("wr" . #'tab-bar-history-forward)))
+        ("wp" . #'tab-bar-history-back)
+        ("wn" . #'tab-bar-history-forward)))
 
 ;;;###autoload
 (defun +tab-bar/open-and-rename ()

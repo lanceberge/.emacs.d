@@ -111,16 +111,11 @@
 
 (use-package outline-mode
   :ensure nil
-  ;; TODO
-  ;; (meow-normal-define-key
-  ;;  '("za" . outline-toggle-children)
-  ;;  '("zo" . outline-show-subtree)
-  ;;  '("zc" . outline-hide-subtree)
-  ;;  '("zk" . org-backward-element)
-  ;;  '("zj" . org-forward-element)
-  ;;  '("zr" . outline-show-all)
-  ;;  '("zm" . outline-hide-body))
-  )
+  :bind
+  (:map +leader-map
+        ("ot" . #'outline-show-subtree)
+        ("or" . #'outline-show-all)
+        ("om" . #'outline-hide-sublevels)))
 
 (use-package ispell
   :disabled t

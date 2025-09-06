@@ -72,20 +72,22 @@
     (meow-open-above)))
 
 ;;;###autoload
-(defun +org-drag-stuff-up ()
-  (interactive)
+(defun +org-drag-stuff-up (n)
+  (interactive "p")
   (condition-case err
-      (org-move-item-up)
+      (dotimes (_ n)
+        (org-move-item-up))
     (error
-     (org-move-subtree-up))))
+     (org-move-subtree-up n))))
 
 ;;;###autoload
-(defun +org-drag-stuff-down ()
-  (interactive)
+(defun +org-drag-stuff-down (n)
+  (interactive "p")
   (condition-case err
-      (org-move-item-down)
+      (dotimes (_ n)
+        (org-move-item-down))
     (error
-     (org-move-subtree-down))))
+     (org-move-subtree-down n))))
 
 ;;;###autoload
 (defun +org-cycle ()

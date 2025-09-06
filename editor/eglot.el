@@ -7,7 +7,7 @@
   ((go-mode
     java-mode java-ts-mode
     c++-mode c++-ts-mode
-    elixir-mode
+    elixir-mode elixir-ts-mode
     typescript-mode typescript-ts-mode
     nix-mode
     tsx-ts-mode
@@ -24,7 +24,7 @@
   (eglot-sync-connect nil)
   :config
   (setq eglot-events-buffer-size 1000000)  ; Log everything
-  (setq eglot-sync-connect 3)              ; Wait longer for connection
+  (setq eglot-sync-connect 3) ; Wait longer for connection
 
   ;; save buffers after eglot-renaming
   (advice-add 'eglot-rename :after
@@ -60,13 +60,13 @@
 
 (use-package eldoc
   :ensure nil
-  :hook (eglot-mode . (lambda () (eldoc-mode -1)))
+  :hook (emacs-lisp-mode . eldoc-mode)
   :preface
   (when (and (version<= emacs-version "29.1") (featurep 'eldoc))
     (unload-feature 'eldoc t))
   (global-eldoc-mode -1)
   :config
-  (setq eldoc-idle-delay 9999)
+  (setq eldoc-idle-delay 1)
   (defun +eldoc-help ()
     "Show eldoc info for current symbol and restore cursor position."
     (interactive)
@@ -129,4 +129,4 @@
 (use-package flymake
   :custom
   (flymake-no-changes-timeout 5)
-  (flymake-show-diagnostics-at-end-of-line t))
+  (flymake-show-diagnostics-at-end-of-line nil))

@@ -2,6 +2,7 @@
 
 (defvar +surround-pairs '((?r . ("(" . ")"))
                           (?s . ("[" . "]"))
+                          (?c . ("{" . "}"))
                           (?g . ("\"" . "\""))))
 
 (use-package +surround
