@@ -34,5 +34,25 @@
 (use-package elixir-mode
   :defer t)
 
+(defun elixir-module-name-from-file ()
+  "Generate Elixir module name from current file path relative to project lib/ directory."
+  (interactive)
+  (let* ((file-path (buffer-file-name))
+         (project-root (project-root (project-current t)))
+         (lib-path (expand-file-name "lib/" project-root))
+         (relative-path (file-relative-name file-path lib-path))
+         (path-without-ext (file-name-sans-extension relative-path))
+         (parts (split-string path-without-ext "/" t))
+         (module-parts (mapcar (lambda (part)
+                                 (mapconcat (lambda (word)
+                                              (concat (upcase (substring word 0 1))
+                                                      (substring word 1)))
+                                            (split-string part "_")
+                                            ""))
+                               parts))
+         (module-name (mapconcat 'identity module-parts ".")))
+    module-name))
+
+
 (use-package elixir-ts-mode
   :hook (elixir-ts-mode . maybe-elixir-web-mode))
