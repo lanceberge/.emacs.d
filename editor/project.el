@@ -1,6 +1,5 @@
 ;;; -*- lexical-binding: t -*-
 (use-package project
-  :defer 0.1
   :demand t
   :commands
   (project-switch-project project-prompter project-root)

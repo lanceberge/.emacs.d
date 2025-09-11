@@ -54,8 +54,9 @@
   (interactive)
   (require 'project)
   (unless (or (minibufferp) (window-minibuffer-p))
-    (let ((proj-root (project-root (project-current t)))
-          (filename (buffer-file-name)))
+    (let* ((current-proj (project-current nil))
+           (proj-root (when current-proj (project-root current-proj)))
+           (filename (buffer-file-name)))
       (when proj-root
         (let ((tab-name (file-name-nondirectory (directory-file-name (expand-file-name proj-root)))))
           (when (not (string= (alist-get 'name (tab-bar--current-tab)) tab-name))
