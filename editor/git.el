@@ -28,6 +28,9 @@
         ("q" . #'magit-commit)
         ("p" . #'magit-push)
         ("x" . #'magit-discard)
+        ("V" . #'set-mark-command)
+        ([remap meow-next] . #'magit-next-line)
+        ([remap meow-prev] . #'magit-previous-line)
         ([remap meow-line] . #'magit-discard))
   (:map +leader-map
         ("gs" . #'magit-status)
