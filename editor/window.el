@@ -8,7 +8,6 @@
         ("bq" . #'+save-and-kill-buffer)
         ("b SPC d" . #'+kill-window-and-buffer)
         ("br" . #'+revert-buffer)
-        ("bl" . #'+switch-to-recent-project-file)
         ("bn" . #'next-buffer)
         ("bp" . #'previous-buffer)))
 
@@ -74,33 +73,3 @@
 (defun +revert-buffer ()
   (interactive)
   (revert-buffer t t))
-
-;;;###autoload
-(defun +switch-to-recent-project-file ()
-  "Switch to the most recent open buffer in the same project as the current buffer."
-  (interactive)
-  (if-let ((current-project-root (when-let ((proj (project-current)))
-                                   (project-root proj))))
-      (let ((current-buffer (current-buffer)))
-        (defun +switch-to-recent-file-helper (buffer-names)
-          (if (not buffer-names)
-              (message "No other recent files open in buffers from the same project")
-            (let* ((raw-buffer-name (car buffer-names))
-                   ;; remove non-ascii characters in consult--buffer-history
-                   (buffer-name (replace-regexp-in-string "[^\x20-\x7E]" "" raw-buffer-name))
-                   (buffer (get-buffer buffer-name)))
-              (if (and buffer
-                       (not (eq buffer current-buffer))
-                       (buffer-live-p buffer))
-                  ;; Check if this buffer belongs to the same project
-                  (if-let ((buffer-project-root
-                            (with-current-buffer buffer
-                              (when-let ((proj (project-current)))
-                                (project-root proj)))))
-                      (if (string= current-project-root buffer-project-root)
-                          (switch-to-buffer buffer)
-                        (+switch-to-recent-file-helper (cdr buffer-names)))
-                    (+switch-to-recent-file-helper (cdr buffer-names)))
-                (+switch-to-recent-file-helper (cdr buffer-names))))))
-        (+switch-to-recent-file-helper consult--buffer-history))
-    (message "Not in a project")))

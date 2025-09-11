@@ -8,8 +8,8 @@
         ("SPC p" . #'+project-ripgrep)
         ("pp" . #'+project-switch)
         ("onf" . #'+org-roam-file-find)
-        ("fp" . #'+find-package)
-        ("gr" . #'+find-package)))
+        ("l" . #'+switch-to-other-project-buffer)
+        ("fp" . #'+find-package)))
 
 ;;;###autoload
 (defun +project-switch (&optional dir callback)
@@ -63,3 +63,19 @@
               (kill-buffer (get-file-buffer filename))
               (+open-tab-if-exists tab-name)
               (find-file filename))))))))
+
+(defun +switch-to-other-project-buffer ()
+  "Switch to the most recent open buffer in the same vc-root-dir as the current buffer.
+Recurse through the buffer-list but skipping the first value since that's the current buffer."
+  (interactive)
+  (let ((current-buffer (current-buffer))
+        (project-root-dir (expand-file-name (project-root (project-current t)))))
+    (defun +switch-to-recent-buffer-helper (buffer-list)
+      (if (not buffer-list)
+          (message "No other recent files open in buffers")
+        (let ((buffer (car buffer-list)))
+          (if (or (not project-root-dir)
+                  (string-prefix-p project-root-dir (buffer-file-name buffer) t))
+              (switch-to-buffer buffer)
+            (+switch-to-recent-buffer-helper (cdr buffer-list))))))
+    (+switch-to-recent-buffer-helper (cdr (buffer-list)))))
