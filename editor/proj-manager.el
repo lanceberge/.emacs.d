@@ -69,6 +69,7 @@
   "Switch to the most recent open buffer in the same vc-root-dir as the current buffer.
 Recurse through the buffer-list but skipping the first value since that's the current buffer."
   (interactive)
+  (require 'project)
   (let ((current-buffer (current-buffer))
         (project-root-dir (expand-file-name (project-root (project-current t)))))
     (defun +switch-to-recent-buffer-helper (buffer-list)
