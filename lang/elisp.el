@@ -48,9 +48,10 @@
   (let ((char-at-point (char-after (point))))
     (cond ((member char-at-point +open-chars)
            (progn
-             (forward-char)
-             (puni-slurp-backward N)
-             (search-backward (char-to-string char-at-point))))
+             (dotimes (_ N)
+               (forward-char)
+               (puni-slurp-backward)
+               (search-backward (char-to-string char-at-point)))))
           ((member char-at-point +close-chars)
            (puni-barf-forward N))
           (t
@@ -64,15 +65,17 @@
   (let ((char-at-point (char-after (point))))
     (cond ((member char-at-point +open-chars)
            (progn
-             (forward-char)
-             (puni-barf-backward N)
-             (backward-char)))
+             (dotimes (_ N)
+               (forward-char)
+               (puni-barf-backward)
+               (backward-char))))
           ((member char-at-point +close-chars)
            (progn
-             (puni-slurp-forward N)
-             (search-forward (char-to-string char-at-point))
-             (backward-char)))
+             (dotimes (_ N)
+               (puni-slurp-forward)
+               (search-forward (char-to-string char-at-point))
+               (backward-char))))
           (t
            (progn
              (skip-chars-forward (concat "^" +all-chars))
-             (+slurp-or-barf-right))))))
+             (+slurp-or-barf-right N))))))
