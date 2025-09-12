@@ -74,20 +74,24 @@
 ;;;###autoload
 (defun +org-drag-stuff-up (n)
   (interactive "p")
-  (condition-case err
-      (dotimes (_ n)
-        (org-move-item-up))
-    (error
-     (org-move-subtree-up n))))
+  (if (region-active-p)
+      (drag-stuff-up n)
+    (condition-case err
+        (dotimes (_ n)
+          (org-move-item-up))
+      (error
+       (org-move-subtree-up n)))))
 
 ;;;###autoload
 (defun +org-drag-stuff-down (n)
   (interactive "p")
-  (condition-case err
-      (dotimes (_ n)
-        (org-move-item-down))
-    (error
-     (org-move-subtree-down n))))
+  (if (region-active-p)
+      (drag-stuff-down n)
+    (condition-case err
+        (dotimes (_ n)
+          (org-move-item-down))
+      (error
+       (org-move-subtree-down n)))))
 
 ;;;###autoload
 (defun +org-cycle ()

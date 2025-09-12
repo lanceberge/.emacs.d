@@ -56,8 +56,11 @@
            (puni-barf-forward N))
           (t
            (progn
-             (skip-chars-forward (concat "^" +all-chars))
-             (+slurp-or-barf-left N))))))
+             (let ((orig-point (point)))
+               (skip-chars-forward (concat "^" +all-chars))
+               (if (member (char-after (point)) (append +open-chars +close-chars))
+                   (+slurp-or-barf-left N)
+                 (goto-char orig-point))))))))
 
 ;;;###autoload
 (defun +slurp-or-barf-right (&optional N)
@@ -77,5 +80,8 @@
                (backward-char))))
           (t
            (progn
-             (skip-chars-forward (concat "^" +all-chars))
-             (+slurp-or-barf-right N))))))
+             (let ((orig-point (point)))
+               (skip-chars-forward (concat "^" +all-chars))
+               (if (member (char-after (point)) (append +open-chars +close-chars))
+                   (+slurp-or-barf-right N)
+                 (goto-char orig-point))))))))
