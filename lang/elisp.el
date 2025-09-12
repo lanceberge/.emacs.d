@@ -46,38 +46,33 @@
 (defun +slurp-or-barf-left (&optional N)
   (interactive "p")
   (let ((char-at-point (char-after (point))))
-    (cond ((seq-contains +open-chars char-at-point)
+    (cond ((member char-at-point +open-chars)
            (progn
              (forward-char)
              (puni-slurp-backward N)
              (search-backward (char-to-string char-at-point))))
-          ((seq-contains +close-chars char-at-point)
+          ((member char-at-point +close-chars)
            (puni-barf-forward N))
           (t
            (progn
-             (skip-chars-backward (concat "^" +open-chars))
-             (let ((current-open-char (char-after (- (point) 1))))
-               (puni-slurp-backward N)
-               (search-backward (char-to-string current-open-char))))))))
+             (skip-chars-forward (concat "^" +all-chars))
+             (+slurp-or-barf-left N))))))
 
 ;;;###autoload
 (defun +slurp-or-barf-right (&optional N)
   (interactive "p")
   (let ((char-at-point (char-after (point))))
-    (cond ((seq-contains +open-chars char-at-point)
+    (cond ((member char-at-point +open-chars)
            (progn
              (forward-char)
              (puni-barf-backward N)
              (backward-char)))
-          ((seq-contains +close-chars char-at-point)
+          ((member char-at-point +close-chars)
            (progn
              (puni-slurp-forward N)
              (search-forward (char-to-string char-at-point))
              (backward-char)))
           (t
            (progn
-             (skip-chars-forward (concat "^" +close-chars))
-             (let ((current-close-char (char-after)))
-               (puni-slurp-forward N)
-               (search-forward (char-to-string current-close-char))
-               (backward-char)))))))
+             (skip-chars-forward (concat "^" +all-chars))
+             (+slurp-or-barf-right))))))
