@@ -40,6 +40,8 @@
          (cons ?, 'avy-action-embark))))
 
 (use-package embark
+  :custom
+  (prefix-help-command 'embark-prefix-help-command)
   :bind
   (:map minibuffer-mode-map
         ("M-." . #'+embark-act)
