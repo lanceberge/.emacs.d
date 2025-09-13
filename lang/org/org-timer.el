@@ -2,18 +2,25 @@
   :ensure nil
   :bind
   (:map +leader-map
-        ("ot" . +org-timer-toggle)))
+        ("ot" . #'+org-timer-toggle)
+        ("SPC ot" . #'+org-timer-open-file)))
 
 (defvar +org-timer-running nil)
 (defvar +org-timer-start-time nil)
 (defvar +org-timer-start-date nil)
 (defvar +org-timer-log-file "~/org-roam/Time_Log.org")
 
+(defun +org-timer-open-file ()
+  (interactive)
+  (+open-tab-if-exists "org-roam")
+  (find-file +org-timer-log-file))
+
 (defun +format-current-time ()
   (format-time-string "%I:%M:%S %p"))
 
 ;;;###autoload
 (defun +org-timer-toggle ()
+  ;; TODO prompt for a category and proj
   (interactive)
   ;; if the timer is running
   (if org-timer-start-time
@@ -32,16 +39,36 @@
   (save-window-excursion
     (find-file +org-timer-log-file)
     (goto-char (point-min))
+    ;; if the heading is there, insert the current elapsed and update total elapsed
     (if (re-search-forward (concat "^\\* " (regexp-quote +org-timer-start-date)) nil t)
         (progn
           (goto-char (point-max))
-          (+insert--time-logs elapsed-time start-time end-time))
+          ;; Skip above the total elapsed line at the end
+          (previous-line 2)
+          (end-of-line)
+          (insert "\n")
+          (+org-timer--insert-time-logs elapsed-time start-time end-time nil)
+          (next-line)
+          (beginning-of-line)
+          (when (re-search-forward "Total Elapsed: " nil t)
+            ;; update elapsed time
+            (let ((previous-elapsed-time
+                   (buffer-substring-no-properties (point) (line-end-position))))
+              (delete-region (point) (line-end-position))
+              (insert (+org-timer--sum-hms-times previous-elapsed-time elapsed-time)))))
+      ;; otherwise, insert the heading, current elapsed, and total elapsed (equal to cur elapsed)
       (progn
         (goto-char (point-max))
         (insert (format "\n* %s\n\n" +org-timer-start-date))
-        (+insert--time-logs elapsed-time start-time end-time)))))
+        (+org-timer--insert-time-logs elapsed-time start-time end-time)
+        (insert (format "  - Total Elapsed: %s\n" elapsed-time))))))
 
-(defun +insert--time-logs (elapsed-time start-time end-time)
-  (insert (format "  - start: %s, end: %s, elapsed: %s\n" start-time end-time elapsed-time)))
+(defun +org-timer--insert-time-logs (elapsed-time start-time end-time &optional trailing-newline)
+  (let ((newline-character (if trailing-newline "\n" "")))
+    (insert (format "  - Start: %s, End: %s, Elapsed: %s%s" start-time end-time elapsed-time newline-character))))
 
-;; TODO compute the total elapsed time in a function called by insert-elapsed-time-to-buffer
+(defun +org-timer--sum-hms-times (first second)
+  "Sum two time strings FIRST and SECOND in HH:MM:SS format, return result in same format."
+  (org-timer-secs-to-hms
+   (+ (org-timer-hms-to-secs first)
+      (org-timer-hms-to-secs second))))
