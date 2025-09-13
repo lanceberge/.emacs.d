@@ -24,7 +24,7 @@
   ;; TODO prompt for a category and proj
   (interactive)
   ;; if the timer is running
-  (if org-timer-start-time
+  (if +org-timer-start-time
       (let ((elapsed-time (org-timer-value-string)))
         (org-timer-stop)
         (+insert-elapsed-time-to-buffer nil elapsed-time +org-timer-start-time (+format-current-time))

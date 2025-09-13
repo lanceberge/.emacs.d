@@ -268,7 +268,7 @@
         ("r" . #'+meow-swap-grab-or-replace)
         ("s" . #'meow-kill)
         ("t" . #'meow-till)
-        ("v" . #'meow-visit)
+        ("v" . #'+meow-visit)
         ("w" . #'meow-mark-word)
         ("W" . #'meow-mark-symbol)
         ("x" . #'meow-line)
@@ -339,6 +339,30 @@
         (meow-insert-mode))))
 
   (setq meow-use-clipboard t))
+
+;;;###autoload
+(defun +meow-visit (arg)
+  (interactive "P")
+  (let* ((reverse arg)
+         (pos (point))
+         (raw-text (meow--prompt-symbol-and-words
+                    (if arg "Visit backward: " "Visit: ")
+                    (point-min) (point-max) t))
+         (text (replace-regexp-in-string "\\\\\_<\\|\\\\\_>" "" raw-text)))
+    (let ((found nil))
+      (if reverse
+          (isearch-backward nil 1)
+        (isearch-forward nil 1))
+      (isearch-yank-string text)
+      (setq found isearch-success)
+      (isearch-exit)
+      (unless found
+        (goto-char (if reverse (point-max) (point-min)))
+        (if reverse
+            (isearch-backward nil 1)
+          (isearch-forward nil 1))
+        (isearch-yank-string text)
+        (isearch-exit)))))
 
 (elpaca-wait)
 
