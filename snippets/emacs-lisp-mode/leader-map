@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: leader-map
+# key: lm
+# --
+:bind
+(:map +leader-map
+  ("$1" . $0))
