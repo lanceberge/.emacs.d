@@ -29,7 +29,7 @@
 ;;;###autoload
 (defun +harpoon--get-name (&optional name)
   (interactive)
-  (let ((project-prefix (or (project-root (project-current t)) "nil"))
+  (let ((project-prefix (or (project-root (project-current nil)) "nil"))
         (suffix (if name
                     (format ":%s" name)
                   "")))

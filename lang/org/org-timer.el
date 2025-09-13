@@ -9,6 +9,7 @@
 (defvar +org-timer-start-time nil)
 (defvar +org-timer-start-date nil)
 (defvar +org-timer-log-file "~/org-roam/Time_Log.org")
+(defvar +org-timer--start-proj nil)
 
 (defun +org-timer-open-file ()
   (interactive)
@@ -29,11 +30,13 @@
         (+insert-elapsed-time-to-buffer nil elapsed-time +org-timer-start-time (+format-current-time))
         (message "Elapsed time: %s" elapsed-time)
         (setq +org-timer-start-time nil)
-        (setq +org-timer-start-date nil))
+        (setq +org-timer-start-date nil)
+        (setq +org-timer--start-proj nil))
     (progn
       (org-timer-start)
       (setq +org-timer-start-time (+format-current-time))
-      (setq +org-timer-start-date (format-time-string "%m/%d/%y")))))
+      (setq +org-timer-start-date (format-time-string "%m/%d/%y"))
+      (setq +org-timer--start-proj (+current-proj-tab-name)))))
 
 (defun +insert-elapsed-time-to-buffer (log-file elapsed-time start-time end-time)
   (save-window-excursion
@@ -47,7 +50,7 @@
           (previous-line 2)
           (end-of-line)
           (insert "\n")
-          (+org-timer--insert-time-logs elapsed-time start-time end-time nil)
+          (+org-timer--insert-time-logs elapsed-time start-time end-time t)
           (next-line)
           (beginning-of-line)
           (when (re-search-forward "Total Elapsed: " nil t)
@@ -61,11 +64,12 @@
         (goto-char (point-max))
         (insert (format "\n* %s\n\n" +org-timer-start-date))
         (+org-timer--insert-time-logs elapsed-time start-time end-time)
-        (insert (format "  - Total Elapsed: %s\n" elapsed-time))))))
+        (insert (format "  - Total Elapsed: %s\n" elapsed-time))))
+    (save-buffer)))
 
-(defun +org-timer--insert-time-logs (elapsed-time start-time end-time &optional trailing-newline)
-  (let ((newline-character (if trailing-newline "\n" "")))
-    (insert (format "  - Start: %s, End: %s, Elapsed: %s%s" start-time end-time elapsed-time newline-character))))
+(defun +org-timer--insert-time-logs (elapsed-time start-time end-time &optional omit-newline)
+  (let ((newline-character (if omit-newline "" "\n")))
+    (insert (format "  - Start: %s, End: %s, Elapsed: %s, Proj: %s%s" start-time end-time elapsed-time +org-timer--start-proj newline-character))))
 
 (defun +org-timer--sum-hms-times (first second)
   "Sum two time strings FIRST and SECOND in HH:MM:SS format, return result in same format."

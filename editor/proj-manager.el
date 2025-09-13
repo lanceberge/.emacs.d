@@ -54,16 +54,20 @@
   (interactive)
   (require 'project)
   (unless (or (minibufferp) (window-minibuffer-p))
-    (let* ((current-proj (project-current nil))
-           (proj-root (when current-proj (project-root current-proj)))
+    (let* ((tab-name (+current-proj-tab-name))
            (filename (buffer-file-name)))
-      (when proj-root
-        (let ((tab-name (file-name-nondirectory (directory-file-name (expand-file-name proj-root)))))
-          (when (not (string= (alist-get 'name (tab-bar--current-tab)) tab-name))
-            (when filename
-              (kill-buffer (get-file-buffer filename))
-              (+open-tab-if-exists tab-name)
-              (find-file filename))))))))
+      (when (and tab-name
+                 (not (string= (alist-get 'name (tab-bar--current-tab)) tab-name))
+                 filename)
+        (kill-buffer (get-file-buffer filename))
+        (+open-tab-if-exists tab-name)
+        (find-file filename)))))
+
+(defun +current-proj-tab-name ()
+  (let* ((current-proj (project-current nil))
+         (proj-root (when current-proj (project-root current-proj))))
+    (when proj-root
+      (file-name-nondirectory (directory-file-name (expand-file-name proj-root))))))
 
 (defun +switch-to-other-project-buffer ()
   "Switch to the most recent open buffer in the same vc-root-dir as the current buffer.
