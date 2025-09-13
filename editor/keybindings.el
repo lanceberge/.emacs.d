@@ -57,6 +57,16 @@
   :ensure nil
   :bind
   (:map meow-normal-state-keymap
-        ([remap scroll-up-command] . #'rectangle-mark-mode)) ; C-v
+        ([remap scroll-up-command] . #'+rectangle-mode)) ; C-v
   (:map rectangle-mark-mode-map
-        ([remap delete-char] . #'kill-rectangle)))
+        ([remap delete-char] . #'kill-rectangle)
+        ([remap meow-insert] . #'string-insert-rectangle)
+        ([remap +meow-change] . #'replace-rectangle)
+        ([remap meow-next-word] . #'forward-word)
+        ([remap meow-back-word] . #'backward-word)))
+
+;;;###autoload
+(defun +rectangle-mode ()
+  (interactive)
+  (rectangle-mark-mode)
+  (forward-char))
