@@ -16,7 +16,7 @@
   (:map yas-keymap
         ("<tab>" . #'yas-next-field))
   (:map snippet-mode-map
-        ("C-c C-c" . #'+yas-load-snippet-noconfirm))
+        ([remap save-buffer] . #'+yas-load-snippet-noconfirm))
   :config
   (yas-global-mode 1))
 

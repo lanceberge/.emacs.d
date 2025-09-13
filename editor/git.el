@@ -31,7 +31,9 @@
         ("V" . #'set-mark-command)
         ([remap meow-next] . #'magit-next-line)
         ([remap meow-prev] . #'magit-previous-line)
-        ([remap meow-line] . #'magit-discard))
+        ([remap meow-line] . #'magit-discard)
+        ([remap meow-right] . #'magit-log-head)
+        ([remap meow-right-expand] . #'magit-log))
   (:map +leader-map
         ("gs" . #'magit-status)
         ("gb" . #'magit-branch-checkout)
@@ -40,7 +42,6 @@
         ("gnb" . #'magit-branch-and-checkout)
         ("gnf" . #'magit-commit-fixup)
         ("gi" . #'magit-init)
-        ("gl" . #'magit-log)
         ("gf" . #'magit-find-file)
         ("gw" . #'magit-worktree)
         ("gc" . #'magit-show-commit))
@@ -91,3 +92,10 @@
   :defer 0.5
   :config
   (global-diff-hl-mode))
+
+(use-package git-link
+  :custom
+  (git-link-use-commit t)
+  :bind
+  (:map +leader-map
+        ("gl" . #'git-link)))
