@@ -32,7 +32,7 @@
 
 (set-face-attribute 'default nil
                     :family "DejaVu Sans Mono"
-                    :height 180
+                    :height 170
                     :weight 'normal
                     :width 'normal)
 
@@ -73,7 +73,7 @@
   (unless (require 'elpaca-autoloads nil t)
     (require 'elpaca)
     (elpaca-generate-autoloads "elpaca" repo)
-    (load "./elpaca-autoloads")))
+    (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
@@ -93,16 +93,13 @@
   "gruvbox background color")
 
 (use-package gruvbox-theme
-  :custom-face
-  (mode-line ((t (:background ,bg-color))))
+  :ensure (:host github :repo "lanceberge/emacs-theme-gruvbox")
+  :demand t
   :config
   (load-theme 'gruvbox t))
 
 (use-package display-line-numbers
   :ensure nil
-  :custom-face
-  (line-number ((t (:background ,bg-color))))
-  (line-number-current-line ((t (:background ,bg-color))))
   :config
   (unless IS-WINDOWS
     (setopt display-line-numbers-type 'visual

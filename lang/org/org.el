@@ -55,34 +55,7 @@
         ("C-S-j" . org-shiftcontroldown)
         ("C-S-k" . org-shiftcontrolup)
         ("C-S-l" . org-shiftcontrolright))
-  :custom-face
-  (cursor                    ((t (:foreground "#928374"))))
-  (org-block                 ((t (:foreground "#ebdbb2":background ,bg-color :extend t))))
-  (org-block-begin-line      ((t (:inherit org-block :background ,bg-color :foreground "#665c54" :extend t))))
-  (org-block-end-line        ((t (:inherit org-block-begin-line :background ,bg-color))))
-  (org-code                  ((t (:inherit org-verbatim :background ,bg-color :foreground "#fe8019"))))
-  (org-document-info         ((t (:foreground "#d5c4a1" :weight bold))))
-  (org-document-info-keyword ((t (:inherit shadow))))
-  (org-document-title        ((t (:foreground "#fbf1c7" :weight bold :height 1.2))))
-  (org-meta-line             ((t (:inherit shadow))))
-  (org-target                ((t (:height 0.7 :inherit shadow))))
-  (org-link                  ((t (:foreground "#b8bb26" :background ,bg-color :overline nil))))
-  (org-indent                ((t (:inherit org-hide))))
-  (org-indent                ((t (:inherit (org-hide fixed-pitch)))))
-  (org-footnote              ((t (:foreground "#8ec07c" :background "#32302f" :overline nil))))
-  (org-ref-cite-face         ((t (:foreground "#fabd2f" :background "#32302f" :overline nil))))
-  (org-ref-ref-face          ((t (:foreground "#83a598" :background "#32302f" :overline nil))))
-  (org-ref-label-face        ((t (:inherit shadow :box t))))
-  (org-drawer                ((t (:inherit shadow))))
-  (org-property-value        ((t (:inherit org-document-info))) t)
-  (org-tag                   ((t (:inherit shadow))))
-  (org-date                  ((t (:foreground "#83a598" :underline t))))
-  (org-verbatim              ((t (:inherit org-block :background "#3c3836" :foreground "#d5c4a1"))))
-  (org-quote                 ((t (:inherit org-block :slant italic))))
-  (org-level-1               ((t (:foreground "#83a598" :background ,bg-color :height 1.05 :overline nil :extend t))))
-  (org-level-2               ((t (:foreground "#fe8019" :background ,bg-color :height 1.05 :overline nil :extend t))))
-  (org-level-3               ((t (:foreground "#d3869b" :background ,bg-color :height 1.05 :overline nil :extend t))))
-  (org-level-4               ((t (:foreground "#b8bb26" :background ,bg-color :height 1.05 :overline nil :extend t))))
+
   :config
   (defun org-mode-company-backends ()
     (setq-local company-backends
@@ -108,10 +81,10 @@
 
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
-  (setq org-todo-keyword-faces '(("WAIT" . (:foreground "#7C6f64" :weight bold))
-                                 ("OPT." . (:foreground "#fe8019" :weight bold)))
+  ;; (setq org-todo-keyword-faces '(("WAIT" . (:foreground "#7C6f64" :weight bold))
+  ;;                                ("OPT." . (:foreground "#fe8019" :weight bold)))
 
-        org-todo-keywords '((sequence "TODO(t)" "WAIT(w)"
-                                      "OPT.(o)" "WIP.(p)" "|" "DONE")))
+  ;;       org-todo-keywords '((sequence "TODO(t)" "WAIT(w)"
+  ;;                                     "OPT.(o)" "WIP.(p)" "|" "DONE")))
 
   (plist-put org-format-latex-options :scale 1.75))

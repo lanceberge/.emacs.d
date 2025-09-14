@@ -26,3 +26,71 @@
 
 (use-package fringe
   :ensure nil)
+
+(use-package +themes
+  :bind
+  (:map +leader2-map
+        ("tn" . #'+themes-rotate)
+        ("tl" . #'+themes-toggle-dark-light)
+        ("tp" . #'+themes-prev))
+  :ensure nil)
+
+(use-package ef-themes)
+
+(setq +themes-dark-themes '(gruvbox ef-elea-dark ef-owl ef-dream ef-autumn))
+(setq +themes-light-themes '(tango ef-cyprus ef-kassio ef-reverie leuven modus-operandi))
+
+;; ef-day ef-frost ef-maris-light ef-spring ef-light ef-arbutus
+;; tango-dark
+
+(defvar +themes-dark-theme-index 1
+  "Index of the current dark theme in `+themes-dark-themes'.")
+(defvar +themes-light-theme-index 0
+  "Index of the current light theme in `+themes-light-themes'.")
+
+(defvar +themes-current-style 'dark)
+
+(defun +themes-toggle-dark-light ()
+  (interactive)
+  (if (eq +themes-current-style 'dark)
+      (progn
+        (setq +themes-current-style 'light)
+        (setq +themes-light-theme-index -1)
+        (+themes-rotate-light))
+    (progn
+      (setq +themes-current-style 'dark)
+      (setq +themes-dark-theme-index -1)
+      (+themes-rotate-dark))))
+
+;;;###autoload
+(defun +themes--rotate (themes index-var &optional reverse)
+  (if (null themes)
+      (error "No themes provided to rotate")
+    (let* ((index (symbol-value index-var))
+           (increment (if reverse -1 1))
+           (next-index (mod (+ increment index) (length themes)))
+           (next-theme (nth next-index themes)))
+      (set index-var next-index)
+      (mapc #'disable-theme custom-enabled-themes)
+      (message "Loading theme: %s" next-theme)
+      (load-theme next-theme t))))
+
+
+;;;###autoload
+(defun +themes-rotate (&optional reverse)
+  (interactive)
+  (if (eq +themes-current-style 'dark)
+      (+themes-rotate-dark reverse)
+    (+themes-rotate-light reverse)))
+
+(defun +themes-prev ()
+  (interactive)
+  (+themes-rotate t))
+
+(defun +themes-rotate-dark (&optional reverse)
+  (interactive)
+  (+themes--rotate +themes-dark-themes '+themes-dark-theme-index reverse))
+
+(defun +themes-rotate-light (&optional reverse)
+  (interactive)
+  (+themes--rotate +themes-light-themes '+themes-light-theme-index reverse))
