@@ -94,6 +94,8 @@
 (defconst bg-color "#282828"
   "gruvbox background color")
 
+(setq ignored-local-variables '(lexical-binding eval))
+
 (use-package gruvbox-theme
   :ensure (:host github :repo "lanceberge/emacs-theme-gruvbox")
   :demand t

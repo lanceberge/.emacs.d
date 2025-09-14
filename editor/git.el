@@ -46,9 +46,19 @@
         ("g SPC l" . #'magit-log)
         ("gf" . #'magit-find-file)
         ("gw" . #'magit-worktree)
+        ("gh" . #'+magit-diff-head-n)
         ("gc" . #'magit-show-commit))
   :config
+  (cl-loop for n from 1 to 9
+           do (let ((key (number-to-string n))
+                    (desc (format "Diff HEAD~%d" n)))
+                (transient-append-suffix 'magit-diff "d"
+                  `(,key ,desc (lambda () (interactive) (+magit-diff-head-n ,n))))))
   (setq magit-auto-revert-mode nil))
+
+(defun +magit-diff-head-n (n)
+  (interactive "nEnter number of commits: ")
+  (magit-diff-range (format "HEAD~%d" n)))
 
 (use-package git-timemachine
   :commands (git-timemachine)

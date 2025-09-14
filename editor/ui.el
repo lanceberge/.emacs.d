@@ -36,7 +36,7 @@
   :ensure nil)
 
 (use-package ef-themes)
-(use-package nordic-night-themes)
+(use-package nordic-night-theme)
 (use-package doom-themes)
 
 (setq +themes-dark-themes '(gruvbox nordic-night doom-monokai-machine doom-badger doom-nord-aurora ef-owl))

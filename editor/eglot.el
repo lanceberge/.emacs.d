@@ -2,6 +2,7 @@
 (use-package eglot
   :defer-incrementally
   (project eldoc flymake)
+  :defer 1.4
   :commands (eglot-shutdown)
   :hook
   ((go-mode
@@ -23,7 +24,7 @@
   (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
   :config
-  (setq eglot-events-buffer-size 1000000)  ; Log everything
+  (setq eglot-events-buffer-size 1000000) ; Log everything
   (setq eglot-sync-connect 3) ; Wait longer for connection
 
   ;; save buffers after eglot-renaming
