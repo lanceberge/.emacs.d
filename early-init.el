@@ -88,6 +88,8 @@
         use-package-always-ensure t
         byte-compile-warnings nil
         read-process-output-max (* 1024 1024))
+(defvar +leader-map (make-sparse-keymap))
+(defvar +leader2-map (make-sparse-keymap))
 
 (defconst bg-color "#282828"
   "gruvbox background color")

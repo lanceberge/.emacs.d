@@ -199,8 +199,6 @@
             (append targets (list name)))))
      (use-package-process-keywords name rest state))))
 
-(defvar +leader-map (make-sparse-keymap))
-
 (use-package meow
   :demand t
   :hook (after-init . meow-global-mode)
@@ -264,7 +262,6 @@
         ("L" . #'meow-right-expand)
         ("m" . #'meow-join)
         ("O" . #'meow-to-block)
-        ("Q" . #'meow-goto-line)
         ("r" . #'+meow-swap-grab-or-replace)
         ("s" . #'meow-kill)
         ("t" . #'meow-till)
@@ -276,7 +273,7 @@
         ("y" . #'meow-save)
         ("Y" . #'meow-sync-grab)
         ("z" . #'meow-pop-selection)
-        ("'" . #'repeat)
+        ("^" . #'repeat)
         ("<escape>" . #'keyboard-quit))
   :config
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -368,6 +365,8 @@
 
 (define-key meow-normal-state-keymap (kbd "SPC") +leader-map)
 (define-key meow-motion-state-keymap (kbd "SPC") +leader-map)
+(define-key meow-normal-state-keymap (kbd "'") +leader2-map)
+(define-key meow-motion-state-keymap (kbd "'") +leader2-map)
 
 (add-hook 'after-init-hook
           (lambda ()

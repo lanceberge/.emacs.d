@@ -36,7 +36,9 @@
   (aw-scope 'frame)
   :bind
   (:map global-map
-        ("M-o" . #'ace-window)))
+        ("M-o" . #'ace-window))
+  (:map +leader-map
+        ("w SPC" . #'ace-swap-window)))
 
 (use-package winner ; Undo and redo window configs
   :disabled t

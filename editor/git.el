@@ -42,6 +42,8 @@
         ("gnb" . #'magit-branch-and-checkout)
         ("gnf" . #'magit-commit-fixup)
         ("gi" . #'magit-init)
+        ("gl" . #'magit-log-head)
+        ("g SPC l" . #'magit-log)
         ("gf" . #'magit-find-file)
         ("gw" . #'magit-worktree)
         ("gc" . #'magit-show-commit))
@@ -97,5 +99,5 @@
   :custom
   (git-link-use-commit t)
   :bind
-  (:map +leader-map
+  (:map +leader2-map
         ("gl" . #'git-link)))

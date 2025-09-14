@@ -36,12 +36,14 @@
   :ensure nil)
 
 (use-package ef-themes)
+(use-package nordic-night-themes)
+(use-package doom-themes)
 
-(setq +themes-dark-themes '(gruvbox ef-elea-dark ef-owl ef-dream ef-autumn))
-(setq +themes-light-themes '(tango ef-cyprus ef-kassio ef-reverie leuven modus-operandi))
+(setq +themes-dark-themes '(gruvbox nordic-night doom-monokai-machine doom-badger doom-nord-aurora ef-owl))
+(setq +themes-light-themes '(doom-nord-light tango ef-maris-light doom-earl-grey doom-oksolar-light))
 
-;; ef-day ef-frost ef-maris-light ef-spring ef-light ef-arbutus
-;; tango-dark
+;; (setq +themes-light-themes '(modus-operandi ef-cyprus ef-maris-light ef-spring ef-light ef-frost ef-day))
+;; (setq +themes-dark-themes '(ef-dream modus-vivendi ef-elea-dark))
 
 (defvar +themes-dark-theme-index 1
   "Index of the current dark theme in `+themes-dark-themes'.")
