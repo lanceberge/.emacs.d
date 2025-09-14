@@ -178,8 +178,53 @@
 (use-package drag-stuff
   :bind
   (:map meow-normal-state-keymap
+        ("M-h" . #'+drag-stuff-word-left)
+        ("M-l" . #'+drag-stuff-word-right)
+        ("M-H" . #'drag-stuff-left)
+        ("M-L" . #'drag-stuff-right)
         ("M-k" . drag-stuff-up)
         ("M-j" . drag-stuff-down)))
+
+;;;###autoload
+(defun goto-start-of-region ()
+  (if (region-active-p)
+      (if (> (point) (region-beginning))
+          (exchange-point-and-mark))
+    (user-error "region is not active")))
+
+(defun goto-end-of-region ()
+  (if (region-active-p)
+      (if (< (point) (region-beginning))
+          (exchange-point-and-mark))
+    (user-error "region is not active")))
+
+;;;###autoload
+(defun +drag-stuff--word (&optional arg left)
+  "Drag region one word right or left if `left' is set"
+  (unless (region-active-p) (meow-mark-word 1))
+  (let ((point-at-beginning (< (point) (region-beginning))))
+    (if left
+        (goto-start-of-region)
+      (goto-end-of-region))
+    (let ((move-word-function (if left #'backward-word #'forward-word))
+          (drag-stuff-function (if left #'drag-stuff-region-left #'drag-stuff-region-right)))
+      (dotimes (_ arg)
+        (let ((current-point (point))
+              (moved-word-point (save-excursion (funcall move-word-function) (point))))
+          (dotimes (_ (abs (- current-point moved-word-point)))
+            (funcall drag-stuff-function 1)))))
+    (if (and (point-at-beginning (> (point) (region-beginning))))
+        (exchange-point-and-mark))))
+
+;;;###autoload
+(defun +drag-stuff-word-left (&optional arg)
+  (interactive "p")
+  (+drag-stuff--word arg t))
+
+;;;###autoload
+(defun +drag-stuff-word-right (&optional arg)
+  (interactive "p")
+  (+drag-stuff--word arg nil))
 
 (use-package expand-region
   :bind
