@@ -1,0 +1,6 @@
+# key: bind
+# name: bind
+# --
+:bind
+  (:map $1
+    ("$2" . #'$0))
