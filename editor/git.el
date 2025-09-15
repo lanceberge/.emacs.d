@@ -57,7 +57,14 @@
   (setq magit-auto-revert-mode nil))
 
 (defun +magit-diff-head-n (n)
-  (interactive "nEnter number of commits: ")
+  "Show the diff of HEAD and the previous `n' commits. Prompts for `n'
+unless a nonzero and non-negative prefix is provided."
+  (interactive
+   (list
+    (if (and current-prefix-arg
+             (> (prefix-numeric-value current-prefix-arg) 0))
+        (prefix-numeric-value current-prefix-arg)
+      (read-number "Enter number of commits: " 1))))
   (magit-diff-range (format "HEAD~%d" n)))
 
 (use-package git-timemachine
