@@ -420,5 +420,3 @@
           (mapc 'load-file
                 (directory-files-recursively dir "\\.el$")))
         dirs))
-
-(setq custom-file "~/.emacs.d/custom.el")

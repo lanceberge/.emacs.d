@@ -9,6 +9,9 @@
 (defconst IS-MAC (eq system-type 'darwin))
 
 (setq package-enable-at-startup nil) ; disable package.el at startup
+
+(setq custom-file "~/.emacs.d/custom.el")
+
 (if (fboundp 'native-comp-available-p)
     (if (native-comp-available-p)
         (setq comp-speed 2
