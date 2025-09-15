@@ -51,7 +51,9 @@
              (dotimes (_ N)
                (forward-char)
                (puni-slurp-backward)
-               (search-backward (char-to-string char-at-point)))))
+               (if (char-equal char-at-point ?\()
+                   (progn (backward-sexp) (backward-char))
+                 (search-backward (char-to-string char-at-point))))))
           ((member char-at-point +close-chars)
            (puni-barf-forward N))
           (t
@@ -76,8 +78,11 @@
            (progn
              (dotimes (_ N)
                (puni-slurp-forward)
-               (search-forward (char-to-string char-at-point))
-               (backward-char))))
+               (message (char-to-string char-at-point))
+               (if (char-equal char-at-point ?\))
+                   (progn (forward-sexp))
+                 (progn (search-forward (char-to-string char-at-point))
+                        (backward-char))))))
           (t
            (progn
              (let ((orig-point (point)))
