@@ -44,22 +44,16 @@
   (prefix-help-command 'embark-prefix-help-command)
   :bind
   (:map minibuffer-mode-map
-        ("M-." . #'+embark-act)
+        ("M-." . #'embark-act)
         ("M-," . #'embark-export))
   (:map meow-motion-mode-hook
-        ("M-." . #'+embark-act))
+        ("M-." . #'embark-act))
   (:map meow-normal-state-keymap
-        ("M-." . #'+embark-act))
+        ("M-." . #'embark-act))
   (:map embark-general-map
-        ("S" . #'+surround)
-        (";" . #'flyspell-auto-correct-word)
-        ("y" . #'define-word-at-point)
         ("d" . #'embark-find-definition)
         ("g" . #'google-this-word))
-  (:map embark-symbol-map
-        ("S" . #'+surround))
   (:map embark-identifier-map
-        ("S" . #'+surround)
         ("SPC" . #'eglot-code-actions))
   :config
   ;; Noconform actions embark
@@ -67,12 +61,6 @@
         (cl-remove-if (lambda (hook)
                         (eq (car (cdr hook)) 'embark--confirm))
                       embark-pre-action-hooks)))
-
-;;;###autoload
-(defun +embark-act ()
-  (interactive)
-  (deactivate-mark)
-  (call-interactively #'embark-act))
 
 (use-package helpful ; better help menu
   :defer 0.7
