@@ -1,5 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-
 (defvar +surround-pairs '((?r . ("(" . ")"))
                           (?s . ("[" . "]"))
                           (?c . ("{" . "}"))
