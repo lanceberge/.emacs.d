@@ -1,24 +1,48 @@
-;;; -*- lexical-binding: t -*-(use-package drag-stuff
+;;; -*- lexical-binding: t -*-
 (use-package drag-stuff
   :bind
   (:map meow-normal-state-keymap
         ("M-H" . #'+drag-stuff-word-left)
         ("M-L" . #'+drag-stuff-word-right)
-        ("M-h" . #'+drag-stuff-left)
-        ("M-l" . #'+drag-stuff-right)
+        ("M-h" . #'+drag-stuff-left-dwim)
+        ("M-l" . #'+drag-stuff-right-dwim)
         ("M-k" . #'drag-stuff-up)
         ("M-j" . #'drag-stuff-down))
   (:map meow-insert-state-keymap
         ("M-H" . #'+drag-stuff-word-left)
         ("M-L" . #'+drag-stuff-word-right)
-        ("M-h" . #'+drag-stuff-left)
-        ("M-l" . #'+drag-stuff-right)
+        ("M-h" . #'+drag-stuff-left-dwim)
+        ("M-l" . #'+drag-stuff-right-dwim)
         ("M-k" . #'drag-stuff-up)
         ("M-j" . #'drag-stuff-down)))
 
-(defun +drag-stuff--horizontal (&optional arg left)
-  (let ((region-active (region-active-p))
-        (drag-stuff-function (if left #'drag-stuff-left #'drag-stuff-right)))
+(defun full-line-region-p ()
+  (and (eq (region-beginning) (line-beginning-position))
+       (eq (region-end) (line-end-position))))
+
+(defun +drag-stuff-left-dwim (arg)
+  (interactive "p")
+  (let ((deactivate-mark nil))
+    (if (full-line-region-p)
+        (save-excursion
+          (beginning-of-visual-line)
+          (dotimes (_ arg)
+            (if (looking-at "\\s-")
+                (delete-char 1))))
+      (+drag-stuff--horizontal arg #'drag-stuff-left))))
+
+(defun +drag-stuff-right-dwim (arg)
+  (interactive "p")
+  (let ((deactivate-mark nil))
+    (if (full-line-region-p)
+        (save-excursion
+          (beginning-of-visual-line)
+          (dotimes (_ arg)
+            (insert " ")))
+      (+drag-stuff--horizontal arg #'drag-stuff-right))))
+
+(defun +drag-stuff--horizontal (&optional arg drag-stuff-function)
+  (let ((region-active (region-active-p)))
     (unless region-active
       (set-mark (point))
       (forward-char)
@@ -27,14 +51,6 @@
     (unless region-active
       (deactivate-mark)
       (backward-char))))
-
-(defun +drag-stuff-left (arg)
-  (interactive "p")
-  (+drag-stuff--horizontal arg t))
-
-(defun +drag-stuff-right (arg)
-  (interactive "p")
-  (+drag-stuff--horizontal arg nil))
 
 ;;;###autoload
 (defun goto-start-of-region ()

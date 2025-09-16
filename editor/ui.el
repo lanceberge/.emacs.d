@@ -39,7 +39,7 @@
 (use-package nordic-night-theme)
 (use-package doom-themes)
 
-(setq +themes-dark-themes '(gruvbox doom-monokai-machine nordic-night doom-badger doom-nord-aurora ef-owl))
+(setq +themes-dark-themes '(gruvbox  doom-badger nordic-night doom-monokai-machine  doom-nord-aurora ef-owl))
 (setq +themes-light-themes '(tango doom-nord-light ef-maris-light doom-earl-grey doom-oksolar-light))
 
 ;; (setq +themes-light-themes '(modus-operandi ef-cyprus ef-maris-light ef-spring ef-light ef-frost ef-day))

@@ -105,3 +105,17 @@
     (outline-toggle-children))
    ((not (org-cycle))
     (outline-toggle-children))))
+
+(defun +org-metaleft-dwim (arg)
+  (interactive "p")
+  (if (and (org-at-heading-p)
+           (not (region-active-p)))
+      (org-metaleft arg)
+    (+drag-stuff-left-dwim arg)))
+
+(defun +org-metaright-dwim (arg)
+  (interactive "p")
+  (if (and (org-at-heading-p)
+           (not (region-active-p)))
+      (org-metaright arg)
+    (+drag-stuff-right-dwim arg)))

@@ -68,12 +68,12 @@
         ("C-k" . #'vertico-previous)
         ("C-u" . #'vertico-scroll-down)
         ("C-d" . #'vertico-scroll-up)
-        ("M-j" . #'vertico-next)
-        ("M-k" . #'vertico-previous)
+        ([remap drag-stuff-down] . #'vertico-next)
+        ([remap drag-stuff-up] . #'vertico-previous)
         ("M-u" . #'vertico-scroll-down)
         ("M-d" . #'vertico-scroll-up)
-        ("M-h" . #'vertico-directory-up)
-        ("M-l" . #'vertico-directory-enter))
+        ([remap +drag-stuff-left-dwim] . #'vertico-directory-up)
+        ([remap +drag-stuff-right-dwim] . #'vertico-directory-enter))
   :config
   ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
 ;;;###autoload
