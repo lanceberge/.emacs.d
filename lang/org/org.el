@@ -39,7 +39,6 @@
         ([remap meow-open-above] . +org-insert-above)
         ([remap drag-stuff-up] . #'+org-drag-stuff-up)
         ([remap drag-stuff-down] . #'+org-drag-stuff-down)
-        ([remap org-cycle] . #'+org-cycle)
         ([remap +drag-stuff-left-dwim] . #'+org-metaleft-dwim)
         ([remap +drag-stuff-right-dwim] . #'+org-metaright-dwim)
         ("M-H" . org-shiftleft)
@@ -53,6 +52,8 @@
         ("C-S-h" . org-shiftcontrolleft)
         ("C-S-j" . org-shiftcontroldown)
         ("C-S-k" . org-shiftcontrolup)
+        ([remap meow-next] . #'+org-down)
+        ([remap meow-prev] . #'+org-up)
         ("C-S-l" . org-shiftcontrolright))
 
   :config
@@ -87,3 +88,23 @@
   ;;                                     "OPT.(o)" "WIP.(p)" "|" "DONE")))
 
   (plist-put org-format-latex-options :scale 1.75))
+
+(defun +org-up ()
+  (interactive)
+  (previous-line)
+  (if (and
+       (eolp)
+       (save-excursion
+         (beginning-of-visual-line)
+         (org-at-heading-p)))
+      (backward-char)))
+
+(defun +org-down ()
+  (interactive)
+  (next-line)
+  (if (and
+       (eolp)
+       (save-excursion
+         (beginning-of-visual-line)
+         (org-at-heading-p)))
+      (backward-char)))

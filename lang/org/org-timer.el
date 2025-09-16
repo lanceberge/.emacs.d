@@ -1,7 +1,7 @@
 (use-package org-timer
   :ensure nil
   :bind
-  (:map +leader-map
+  (:map +leader2-map
         ("ot" . #'+org-timer-toggle)
         ("SPC ot" . #'+org-timer-open-file)))
 

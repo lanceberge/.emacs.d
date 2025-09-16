@@ -24,7 +24,7 @@
   :bind
   (:map org-agenda-mode-map
         ("g" . ace-link))
-  (:map +leader-map
+  (:map +leader2-map
         ("oa" . #'org-agenda))
   :config
   (+org-roam-refresh-agenda-list))

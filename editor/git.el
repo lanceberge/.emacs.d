@@ -16,6 +16,8 @@
   :hook
   (git-commit-mode . meow-insert-mode)
   :bind
+  (:map git-commit-mode
+        ([remap delete-window] . #'with-editor-cancel))
   (:map with-editor-mode-map
         ([remap save-buffer] . #'with-editor-finish))
   (:map magit-diff-section-map

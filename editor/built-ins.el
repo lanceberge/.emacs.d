@@ -125,7 +125,7 @@
 
 (use-package isearch
   :ensure nil
-  :hook   (isearch-mode-end . +isearch-exit-at-start)
+  :hook (isearch-mode-end . +isearch-exit-at-start)
   :bind
   (:map meow-normal-state-keymap
         ("/" . #'isearch-forward)
