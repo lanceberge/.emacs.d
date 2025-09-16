@@ -52,8 +52,9 @@
 ;;;###autoload
 (defun +drag-stuff--word (&optional arg left)
   "Drag region one word right or left if `left' is set"
-  (unless (region-active-p) (meow-mark-word 1))
-  (let ((point-at-beginning (< (point) (region-beginning))))
+  (let ((orig-point-at-beginning (eq (point) (region-beginning)))
+        (orig-region-active (region-active-p)))
+    (unless orig-region-active (meow-mark-word 1))
     (if left
         (goto-start-of-region)
       (goto-end-of-region))
@@ -62,10 +63,13 @@
       (dotimes (_ arg)
         (let ((current-point (point))
               (moved-word-point (save-excursion (funcall move-word-function) (point))))
-          (dotimes (_ (abs (- current-point moved-word-point)))
-            (funcall drag-stuff-function 1)))))
-    (if (and (point-at-beginning (> (point) (region-beginning))))
-        (exchange-point-and-mark))))
+          (funcall drag-stuff-function (abs (- current-point moved-word-point))))))
+    ;; restore point to beginning/end of the region
+    (if orig-point-at-beginning
+        (when (> (point (region-beginning))
+                 (exchange-point-and-mark)))
+      (when (< (point) (region-end))
+        (exchange-point-and-mark)))))
 
 ;;;###autoload
 (defun +drag-stuff-word-left (&optional arg)

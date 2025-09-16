@@ -30,8 +30,6 @@
   (org-hide-emphasis-markers t)
   :bind
   (:map org-mode-map
-        ("M-j" . org-metadown)
-        ("M-k" . org-metaup)
         ("M-<return>" . +org/insert-todo)
         ("M-S-<return>" . +org/insert-todo-above)
         ("C-<return>" . +org/insert-heading)
@@ -42,7 +40,8 @@
         ([remap drag-stuff-up] . #'+org-drag-stuff-up)
         ([remap drag-stuff-down] . #'+org-drag-stuff-down)
         ([remap org-cycle] . #'+org-cycle)
-        ("M-l" . org-metaright)
+        ("M-[" . org-metaleft)
+        ("M-]" . org-metaright)
         ("M-H" . org-shiftleft)
         ("M-J" . org-shiftdown)
         ("M-K" . org-shiftup)

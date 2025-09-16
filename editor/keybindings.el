@@ -8,7 +8,33 @@
         ("SPC ;" . #'+project-shell-command)
         ("er" . #'+source-init-file))
   (:map meow-insert-state-keymap
-        ("j" . #'+escape)))
+        ("j" . #'+escape))
+  (:map meow-normal-state-keymap
+        ("RET" . #'insert-newline-dwim)))
+
+(defun insert-newline-dwim ()
+  (interactive)
+  (if (region-active-p)
+      (insert-newline-preserving-region)
+    (progn
+      (newline)
+      (indent-for-tab-command))))
+
+(defun insert-newline-preserving-region ()
+  "Insert a newline at point while preserving the region."
+  (interactive)
+  (let* ((was-active (region-active-p))
+         (old-point (point))
+         (old-mark (and (region-active-p) (mark t)))
+         (deactivate-mark nil)
+         (point-at-end (eq old-point (region-end)))
+         (region-len (abs (- old-point old-mark))))
+    (insert "\n")
+    (indent-according-to-mode)
+    (when point-at-end
+      (goto-char old-point)
+      (set-mark (- (point) region-len))
+      (activate-mark))))
 
 ;;;###autoload
 (defun +project-shell-command ()
