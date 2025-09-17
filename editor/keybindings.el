@@ -10,7 +10,9 @@
   (:map meow-insert-state-keymap
         ("j" . #'+escape))
   (:map meow-normal-state-keymap
-        ("RET" . #'insert-newline-dwim)))
+        ("{ SPC" . #'+insert-newlines-above)
+        ("} SPC" . #'+insert-newlines-below)
+        ([remap newlinw] . #'insert-newline-dwim)))
 
 (defun insert-newline-dwim ()
   (interactive)
@@ -96,3 +98,19 @@
   (interactive)
   (rectangle-mark-mode)
   (forward-char))
+
+;;;###autoload
+(defun +insert-newlines-above (arg)
+  (interactive "p")
+  (save-excursion
+    (beginning-of-line)
+    (dotimes (_ arg)
+      (newline))))
+
+;;;###autoload
+(defun +insert-newlines-below (arg)
+  (interactive "p")
+  (save-excursion
+    (end-of-line)
+    (dotimes (_ arg)
+      (newline))))

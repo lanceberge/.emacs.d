@@ -14,6 +14,13 @@
   :config
   (put 'dired-find-alternate-file 'disabled nil))
 
+;;;###autoload
+(defun +dired/up-dir ()
+  "navigate up a directory in dired in the same buffer"
+  (interactive)
+  (find-alternate-file ".."))
+
+
 (use-package wdired
   :ensure nil
   :bind

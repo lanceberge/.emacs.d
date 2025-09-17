@@ -113,7 +113,8 @@
   :ensure nil
   :bind
   (:map +leader-map
-        ("ot" . #'outline-show-subtree)
+        ("oa" . #'outline-toggle-children)
+        ("oo" . #'outline-show-subtree)
         ("or" . #'outline-show-all)
         ("om" . #'outline-hide-sublevels)))
 

@@ -73,21 +73,6 @@
   (kill-current-buffer))
 
 ;;;###autoload
-(defun +split-line-below ()
-  "split the line below at point"
-  (interactive)
-  (newline)
-  (indent-according-to-mode))
-
-;;;###autoload
-(defun +split-line-above ()
-  "split the line above at point"
-  (interactive)
-  (+split-line-below)
-  (transpose-lines 1)
-  (forward-line -2))
-
-;;;###autoload
 (defun balanced-parens-p ()
   "Return `t' if parentheses are balanced; otherwise `nil'."
   (condition-case nil
@@ -146,9 +131,3 @@
 (defun +expand-snippet (snippet-name)
   (interactive)
   (yas-expand-snippet (yas-lookup-snippet snippet-name)))
-
-;;;###autoload
-(defun +dired/up-dir ()
-  "navigate up a directory in dired in the same buffer"
-  (interactive)
-  (find-alternate-file ".."))

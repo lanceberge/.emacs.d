@@ -89,22 +89,15 @@
 
   (plist-put org-format-latex-options :scale 1.75))
 
-(defun +org-up ()
-  (interactive)
-  (previous-line)
-  (if (and
-       (eolp)
-       (save-excursion
-         (beginning-of-visual-line)
-         (org-at-heading-p)))
-      (backward-char)))
+(defun +org-up (&optional arg)
+  (interactive "p")
 
-(defun +org-down ()
-  (interactive)
-  (next-line)
-  (if (and
-       (eolp)
-       (save-excursion
-         (beginning-of-visual-line)
-         (org-at-heading-p)))
-      (backward-char)))
+  (previous-line arg)
+  (when (eolp)
+    (org-end-of-line)))
+
+(defun +org-down (&optional arg)
+  (interactive "p")
+  (next-line arg)
+  (when (eolp)
+    (org-end-of-line)))

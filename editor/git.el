@@ -89,22 +89,22 @@ unless a nonzero and non-negative prefix is provided."
         ("ma" . #'smerge-keep-all)
         ("mm" . #'smerge-ediff)
         ("mn" . #'+smerge-vc-next-conflict)
-        ("mp" . #'smerge-prev))
-  :config
-  ;;;###autoload
-  (defun +smerge-vc-next-conflict ()
-    (interactive)
-    (condition-case nil
-        (smerge-next)
-      (error
-       (if (and (buffer-modified-p) buffer-file-name)
-           (save-buffer))
-       (vc-find-conflicted-file)
-       (unless (looking-at "^<<<<<<<")
-         (let ((prev-pos (point)))
-           (goto-char (point-min))
-           (unless (ignore-errors (not (smerge-next)))
-             (goto-char prev-pos))))))))
+        ("mp" . #'smerge-prev)))
+
+;;;###autoload
+(defun +smerge-vc-next-conflict ()
+  (interactive)
+  (condition-case nil
+      (smerge-next)
+    (error
+     (if (and (buffer-modified-p) buffer-file-name)
+         (save-buffer))
+     (vc-find-conflicted-file)
+     (unless (looking-at "^<<<<<<<")
+       (let ((prev-pos (point)))
+         (goto-char (point-min))
+         (unless (ignore-errors (not (smerge-next)))
+           (goto-char prev-pos)))))))
 
 (use-package diff-hl
   :hook
