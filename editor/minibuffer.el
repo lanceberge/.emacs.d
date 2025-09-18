@@ -24,8 +24,8 @@
   (:map +leader-map
         ("," . #'+project-buffer)
         ("." . #'find-file)
-        ("/" . #'consult-line)
-        ("pl" . #'consult-line-multi)
+        ("/" . #'+consult-line)
+        ("SPC /" . #'+consult-line-multi)
         ("pg" . #'consult-git-grep)
         ("fr" . #'consult-recent-file)
         ("fj" . #'consult-imenu)
@@ -45,12 +45,34 @@
         ("fs" . #'consult-ripgrep)
         ("pj" . #'consult-imenu-multi)))
 
+(defcustom last-line-search 'isearch
+  "Last line-based search"
+  :type '(choice
+          (const :tag "Consult line" 'consult-line)
+          (const :tag "Consult multi line" 'consult-line-multi)
+          (const :tag "Isearch" 'isearch)))
+
+;;;###autoload
+(defun +consult-line ()
+  (interactive)
+  (setq last-line-search 'consult-line)
+  (call-interactively #'consult-line)
+  (+isearch-update-last-search (car consult--line-history)))
+
+;;;###autoload
+(defun +consult-line-multi ()
+  (interactive)
+  (setq last-line-search 'consult-line-multi)
+  (call-interactively #'consult-line-multi)
+  (+isearch-update-last-search (car consult--line-multi-history)))
+
 ;;;###autoload
 (defun +project-buffer ()
   (interactive)
   (if (project-root (project-current t))
       (consult-project-buffer)
     (consult-buffer)))
+
 ;;;###autoload
 (defun +find-todos ()
   "Search all todos."

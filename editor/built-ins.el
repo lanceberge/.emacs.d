@@ -129,8 +129,6 @@
   :hook (isearch-mode-end . +isearch-exit-at-start)
   :bind
   (:map meow-normal-state-keymap
-        ("/" . #'isearch-forward)
-        ("?" . #'isearch-backward)
         ("n" . #'isearch-repeat-forward)
         ("N" . #'isearch-repeat-backward))
   (:map isearch-mode-map
@@ -151,6 +149,16 @@
               (and (boundp 'avy-command)
                    (eq avy-command 'avy-isearch)))
     (goto-char isearch-other-end)))
+
+(defun +isearch-update-last-search (search-string)
+  "Update isearch state to use SEARCH-STRING as the last search to be used by isearch-repeat."
+  (when search-string
+    (setq isearch-string search-string)
+    (isearch-update-ring search-string isearch-regexp)
+    (setq isearch-message (mapconcat 'isearch-text-char-description
+                                     isearch-string ""))
+    (setq isearch-case-fold-search isearch-last-case-fold-search)
+    (setq isearch-success t)))
 
 (use-package grep
   :ensure nil
