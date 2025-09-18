@@ -74,6 +74,7 @@
 
 (use-package dot-mode
   :ensure (:host github :repo "wyrickre/dot-mode")
+  :hook ((prog-mode text-mode) . dot-mode-on)
   :custom
   (dot-mode-ignore-undo t)
   :bind

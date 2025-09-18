@@ -7,9 +7,25 @@
   (:map +leader-map
         ("SPC p" . #'+project-ripgrep)
         ("pp" . #'+project-switch)
+        ("pk" . #'+project-kill-buffers)
         ("onf" . #'+org-roam-file-find)
         ("l" . #'+switch-to-other-project-buffer)
         ("fp" . #'+find-package)))
+
+;;;###autoload
+(defun +project-kill-buffers ()
+  (interactive)
+  (let* ((dir (funcall project-prompter))
+         (tab-name (+proj-tab-name dir)))
+    (project-kill-buffers t (+vc-project-info dir))
+    (tab-bar-close-tab-by-name tab-name)))
+
+;;;###autoload
+(defun +vc-project-info (dir)
+  "Return VC project info for DIR in the format (vc BACKEND DIR)."
+  (let ((expanded-dir (expand-file-name dir)))
+    (when-let ((backend (vc-responsible-backend expanded-dir)))
+      (list 'vc backend expanded-dir))))
 
 ;;;###autoload
 (defun +project-switch (&optional dir callback)
@@ -63,11 +79,14 @@
         (+open-tab-if-exists tab-name)
         (find-file filename)))))
 
+(defun +proj-tab-name (proj-root)
+  (file-name-nondirectory (directory-file-name (expand-file-name proj-root))))
+
 (defun +current-proj-tab-name ()
   (let* ((current-proj (project-current nil))
          (proj-root (when current-proj (project-root current-proj))))
     (when proj-root
-      (file-name-nondirectory (directory-file-name (expand-file-name proj-root))))))
+      (+proj-tab-name proj-root))))
 
 (defun +switch-to-other-project-buffer ()
   "Switch to the most recent open buffer in the same vc-root-dir as the current buffer.
