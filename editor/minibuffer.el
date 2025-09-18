@@ -45,26 +45,21 @@
         ("fs" . #'consult-ripgrep)
         ("pj" . #'consult-imenu-multi)))
 
-(defcustom last-line-search 'isearch
-  "Last line-based search"
-  :type '(choice
-          (const :tag "Consult line" 'consult-line)
-          (const :tag "Consult multi line" 'consult-line-multi)
-          (const :tag "Isearch" 'isearch)))
-
 ;;;###autoload
 (defun +consult-line ()
   (interactive)
-  (setq last-line-search 'consult-line)
   (call-interactively #'consult-line)
-  (+isearch-update-last-search (car consult--line-history)))
+  (let ((consult-search (car consult--line-history)))
+    (unless (string-match-p " " consult-search)
+      (+isearch-update-last-search consult-search))))
 
 ;;;###autoload
 (defun +consult-line-multi ()
   (interactive)
-  (setq last-line-search 'consult-line-multi)
   (call-interactively #'consult-line-multi)
-  (+isearch-update-last-search (car consult--line-multi-history)))
+  (let ((consult-search (car consult--line-multi-history)))
+    (unless (string-match-p " " consult-search)
+      (+isearch-update-last-search consult-search))))
 
 ;;;###autoload
 (defun +project-buffer ()
