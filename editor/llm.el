@@ -30,4 +30,14 @@
       (switch-to-buffer (gptel (format "gptel-%s" gptel-buffer-name)))))
   (meow-insert-mode))
 
-(use-package elysium)
+(use-package elysium
+  :bind
+  (:map +leader2-map
+        ("sq" . #'elysium-query)
+        ("so" . #'elysium)
+        ("sc" . #'elysium-add-context)
+        ("sw" . #'elysium-toggle-window)
+        ("s'" . #'elysium-clear-buffer))
+  (:map +leader-map
+        ("m SPC" . #'elysium-keep-all-suggested-changes)
+        ("m-" . #'elysium-discard-all-suggested-changes)))

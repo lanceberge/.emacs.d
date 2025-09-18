@@ -1,5 +1,5 @@
 ;;; -*- lexical-binding: t -*-
-(use-package +essentials
+(use-package +keybindings
   :ensure nil
   :bind
   (:map +leader-map
@@ -10,10 +10,27 @@
   (:map meow-insert-state-keymap
         ("j" . #'+escape))
   (:map meow-normal-state-keymap
-        ("{ SPC" . #'+insert-newlines-above)
-        ("} SPC" . #'+insert-newlines-below)
-        ([remap newlinw] . #'insert-newline-dwim)))
+        ("SPC [" . #'+insert-newlines-above)
+        ("SPC ]" . #'+insert-newlines-below)
+        ([remap newline] . #'insert-newline-dwim)
+        ("S-<return>" . #'+split-line-above)))
 
+;;;###autoload
+(defun insert-newline-indent ()
+  (interactive)
+  (save-excursion
+    (newline)
+    (indent-for-tab-command)))
+
+;;;###autoload
+(defun +split-line-above ()
+  (interactive)
+  (insert-newline-indent)
+  (save-excursion
+    (forward-line)
+    (drag-stuff-up 1)))
+
+;;;###autoload
 (defun insert-newline-dwim ()
   (interactive)
   (if (region-active-p)
@@ -22,9 +39,25 @@
       (newline)
       (indent-for-tab-command))))
 
+;;;###autoload
+(defun insert-newline-above-dwim ()
+  "split the line above at point"
+  (interactive)
+  (let ((deactivate-mark nil))
+    (if (region-active-p)
+        (progn
+          (insert-newline-preserving-region)
+          (save-excursion
+            (next-line)
+            (indent-for-tab-command)))
+      (progn
+        (insert-newline-dwim)
+        (drag-stuff-up 1)
+        (indent-for-tab-command)))))
+
+;;;###autoload
 (defun insert-newline-preserving-region ()
   "Insert a newline at point while preserving the region."
-  (interactive)
   (let* ((was-active (region-active-p))
          (old-point (point))
          (old-mark (and (region-active-p) (mark t)))
