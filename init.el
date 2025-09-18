@@ -273,7 +273,7 @@
         ("X" . #'meow-goto-line)
         ("y" . #'meow-save)
         ("Y" . #'meow-sync-grab)
-        ("z" . #'meow-pop-selection)
+        ("z" . #'+meow-pop-selection)
         ("^" . #'repeat)
         ("<escape>" . #'keyboard-quit))
   :config
@@ -412,6 +412,13 @@ To search backward, use \\[negative-argument]."
           #'(lambda ()
               (run-at-time
                1 nil (lambda () (setq gc-cons-threshold 17772160)))))
+
+;;;###autoload
+(defun +meow-pop-selection ()
+  (interactive)
+  (if (region-active-p)
+      (meow-pop-selection)
+    (set-mark-command 1)))
 
 (use-package gcmh ; Garbage collect in idle time
   :defer 2.0

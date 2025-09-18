@@ -50,9 +50,11 @@
         ("M-a" . #'embark-act-all)
         ("C-c C-e" . #'embark-export))
   (:map meow-motion-mode-hook
-        ("M-." . #'embark-act))
+        ("M-." . #'embark-act)
+        ("M-'" . #'embark-dwim))
   (:map meow-normal-state-keymap
-        ("M-." . #'embark-act))
+        ("M-." . #'embark-act)
+        ("M-'" . #'embark-dwim))
   (:map embark-general-map
         ("d" . #'embark-find-definition)
         ("g" . #'google-this-word))
@@ -144,10 +146,10 @@
 
 (use-package ace-link
   :bind
-  (:map org-mode-map
-        ("M-i" . ace-link))
+  (:map text-mode-map
+        ("M-i" . #'ace-link))
   (:map helpful-mode-map
-        ("M-i" . ace-link)))
+        ("M-i" . #'ace-link)))
 
 (use-package wgrep
   :bind
@@ -163,10 +165,10 @@
 (use-package expand-region
   :bind
   (:map meow-normal-state-keymap
-        ("o" . er/expand-region)
-        ("O" . +expand-region-2))
+        ("o" . #'+expand-region)
+        ("O" . #'+expand-region-2))
   (:map meow-motion-state-keymap
-        ("o" . er/expand-region)
+        ("o" . #'+expand-region)
         ("O" . +expand-region-2))
   :config
   (setq er/try-expand-list
@@ -176,9 +178,15 @@
           er/mark-outside-pairs)))
 
 ;;;###autoload
+(defun +expand-region ()
+  (interactive)
+  (er/expand-region 1)
+  (exchange-point-and-mark))
+;;;###autoload
 (defun +expand-region-2 ()
   (interactive)
-  (er/expand-region 2))
+  (er/expand-region 2)
+  (exchange-point-and-mark))
 
 ;;;###autoload
 (defun +avy-goto-char-2-below (char1 char2)
