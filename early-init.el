@@ -10,7 +10,7 @@
 
 (setq package-enable-at-startup nil) ; disable package.el at startup
 
-(setq custom-file "~/.emacs.d/custom.el")
+(setq custom-file (make-temp-file "emacs-custom-"))
 
 (if (fboundp 'native-comp-available-p)
     (if (native-comp-available-p)
@@ -97,13 +97,17 @@
 (defconst bg-color "#282828"
   "gruvbox background color")
 
-(setq ignored-local-variables '(lexical-binding eval))
+(setq enable-local-variables nil)
 
-(use-package gruvbox-theme
-  :ensure (:host github :repo "lanceberge/emacs-theme-gruvbox")
+(use-package doom-themes
   :demand t
   :config
-  (load-theme 'gruvbox t))
+  (require 'doom-badger-theme)
+  (mapc #'disable-theme custom-enabled-themes)
+  (load-theme 'doom-badger t))
+
+(use-package gruvbox-theme
+  :ensure (:host github :repo "lanceberge/emacs-theme-gruvbox"))
 
 (use-package display-line-numbers
   :ensure nil

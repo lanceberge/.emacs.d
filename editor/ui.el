@@ -1,4 +1,19 @@
 ;;; -*- lexical-binding: t -*-
+(use-package frameset
+  :ensure nil
+  :demand t
+  :config
+  (setq frameset-filter-alist
+        (append '((background-color . :never)
+                  (foreground-color . :never)
+                  (background-mode . :never)
+                  (cursor-color . :never)
+                  (mouse-color . :never)
+                  (border-color . :never)
+                  (scroll-bar-foreground . :never)
+                  (scroll-bar-background . :never))
+                frameset-filter-alist)))
+
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -37,12 +52,11 @@
 
 (use-package ef-themes)
 (use-package nordic-night-theme)
-(use-package doom-themes)
 
-(setq +themes-dark-themes '(gruvbox doom-badger nordic-night doom-nord-aurora ef-owl))
+(setq +themes-dark-themes '(doom-badger gruvbox nordic-night doom-nord-aurora))
 (setq +themes-light-themes '(tango doom-nord-light doom-earl-grey doom-oksolar-light))
 
-;; (setq +themes-light-themes '(modus-operandi ef-maris-light ef-maris-light ef-spring ef-light ef-frost ef-day))
+;; (setq +themes-light-themes '(modus-operandi ef-maris-light ef-owl ef-maris-light ef-spring ef-light ef-frost ef-day))
 ;; (setq +themes-dark-themes '(doom-monokai-machine modus-vivendi ef-elea-dark))
 
 (defvar +themes-dark-theme-index 0
