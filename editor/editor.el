@@ -62,6 +62,22 @@
                         (eq (car (cdr hook)) 'embark--confirm))
                       embark-pre-action-hooks)))
 
+(use-package dot-mode
+  :ensure (:host github :repo "wyrickre/dot-mode")
+  :custom
+  (dot-mode-ignore-undo t)
+  :bind
+  (:map dot-mode-map
+        ("C-." . #'+meow-dot-mode-execute)))
+
+;;;###autoload
+(defun +meow-dot-mode-execute ()
+  (interactive)
+  (with-undo-amalgamate
+    (meow-insert)
+    (call-interactively #'dot-mode-execute)
+    (meow-insert-exit)))
+
 (use-package helpful ; better help menu
   :defer 0.7
   :bind
@@ -125,7 +141,7 @@
 (use-package wgrep
   :bind
   (:map grep-mode-map
-        ("r" .  (lambda () (interactive)
+        ("R" .  (lambda () (interactive)
                   (wgrep-change-to-wgrep-mode)
                   (call-interactively #'+wgrep-replace)))
         ("i" . wgrep-change-to-wgrep-mode))
