@@ -39,13 +39,13 @@
 (use-package nordic-night-theme)
 (use-package doom-themes)
 
-(setq +themes-dark-themes '(gruvbox  doom-badger nordic-night doom-monokai-machine  doom-nord-aurora ef-owl))
-(setq +themes-light-themes '(tango doom-nord-light ef-maris-light doom-earl-grey doom-oksolar-light))
+(setq +themes-dark-themes '(gruvbox doom-badger nordic-night doom-nord-aurora ef-owl))
+(setq +themes-light-themes '(tango doom-nord-light doom-earl-grey doom-oksolar-light))
 
-;; (setq +themes-light-themes '(modus-operandi ef-cyprus ef-maris-light ef-spring ef-light ef-frost ef-day))
-;; (setq +themes-dark-themes '(ef-dream modus-vivendi ef-elea-dark))
+;; (setq +themes-light-themes '(modus-operandi ef-maris-light ef-maris-light ef-spring ef-light ef-frost ef-day))
+;; (setq +themes-dark-themes '(doom-monokai-machine modus-vivendi ef-elea-dark))
 
-(defvar +themes-dark-theme-index 1
+(defvar +themes-dark-theme-index 0
   "Index of the current dark theme in `+themes-dark-themes'.")
 (defvar +themes-light-theme-index 0
   "Index of the current light theme in `+themes-light-themes'.")
@@ -57,12 +57,10 @@
   (if (eq +themes-current-style 'dark)
       (progn
         (setq +themes-current-style 'light)
-        (setq +themes-light-theme-index -1)
-        (+themes-rotate-light))
+        (+themes-load-theme (nth +themes-light-theme-index +themes-light-themes)))
     (progn
       (setq +themes-current-style 'dark)
-      (setq +themes-dark-theme-index -1)
-      (+themes-rotate-dark))))
+      (+themes-load-theme (nth +themes-dark-theme-index +themes-dark-themes)))))
 
 ;;;###autoload
 (defun +themes--rotate (themes index-var &optional reverse)
@@ -73,10 +71,12 @@
            (next-index (mod (+ increment index) (length themes)))
            (next-theme (nth next-index themes)))
       (set index-var next-index)
-      (mapc #'disable-theme custom-enabled-themes)
-      (message "Loading theme: %s" next-theme)
-      (load-theme next-theme t))))
+      (+themes-load-theme next-theme))))
 
+(defun +themes-load-theme (theme)
+  (mapc #'disable-theme custom-enabled-themes)
+  (message "Loading theme: %s" theme)
+  (load-theme theme t))
 
 ;;;###autoload
 (defun +themes-rotate (&optional reverse)
