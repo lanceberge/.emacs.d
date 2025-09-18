@@ -13,12 +13,12 @@
   :custom
   (magit-save-repository-buffers nil)
   (magit-no-confirm '(stage-all-changes amend-published))
+  (magit-diff-visit-prefer-worktree t)
   :hook
   (git-commit-mode . meow-insert-mode)
   :bind
-  (:map git-commit-mode
-        ([remap delete-window] . #'with-editor-cancel))
   (:map with-editor-mode-map
+        ([remap delete-window] . #'with-editor-cancel)
         ([remap save-buffer] . #'with-editor-finish))
   (:map magit-diff-section-map
         ("C-j" . #'magit-section-forward))
