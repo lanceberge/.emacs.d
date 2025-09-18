@@ -24,9 +24,11 @@
 ;;;###autoload
 (defun +project-load-projects ()
   (interactive)
+  ;; dirs to remember
   (dolist (dir '("~/.emacs.d" "~/.config/nixos" "~/dotfiles"))
     (when (file-directory-p dir)
       (project--remember-dir dir)))
+  ;; dirs to remember recursively
   (dolist (dir '("~/code/git" "~/code/phoenix" "~/code/laravel" "~/code/elixir/" "~/code/"))
     (when (file-directory-p dir)
       (project-remember-projects-under dir))))

@@ -42,10 +42,13 @@
 (use-package embark
   :custom
   (prefix-help-command 'embark-prefix-help-command)
+  (embark-confirm-act-all nil)
   :bind
   (:map minibuffer-mode-map
         ("M-." . #'embark-act)
-        ("M-," . #'embark-export))
+        ("M-," . #'+embark-select)
+        ("M-a" . #'embark-act-all)
+        ("C-c C-e" . #'embark-export))
   (:map meow-motion-mode-hook
         ("M-." . #'embark-act))
   (:map meow-normal-state-keymap
@@ -61,6 +64,13 @@
         (cl-remove-if (lambda (hook)
                         (eq (car (cdr hook)) 'embark--confirm))
                       embark-pre-action-hooks)))
+
+;;;###autoload
+(defun +embark-select ()
+  (interactive)
+  (let ((vertico-cycle nil))
+    (embark-select)
+    (vertico-next)))
 
 (use-package dot-mode
   :ensure (:host github :repo "wyrickre/dot-mode")
