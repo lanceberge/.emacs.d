@@ -166,10 +166,10 @@
 (use-package expand-region
   :bind
   (:map meow-normal-state-keymap
-        ("o" . #'+expand-region)
+        ("o" . #'er/expand-region)
         ("O" . #'+expand-region-2))
   (:map meow-motion-state-keymap
-        ("o" . #'+expand-region)
+        ("o" . #'expand-region)
         ("O" . +expand-region-2))
   :config
   (setq er/try-expand-list
@@ -178,16 +178,19 @@
           er/mark-inside-pairs
           er/mark-outside-pairs)))
 
-;;;###autoload
-(defun +expand-region ()
-  (interactive)
-  (er/expand-region 1)
-  (exchange-point-and-mark))
+(defun +expand-region (&optional arg)
+  (interactive "p")
+  (if (region-active-p)
+      (let ((point-at-beginning (eq (point) (region-beginning))))
+        (unless point-at-beginning
+          (exchange-point-and-mark))
+        (er/expand-region arg))
+    (er/expand-region arg)))
+
 ;;;###autoload
 (defun +expand-region-2 ()
   (interactive)
-  (er/expand-region 2)
-  (exchange-point-and-mark))
+  (+expand-region 2))
 
 ;;;###autoload
 (defun +avy-goto-char-2-below (char1 char2)

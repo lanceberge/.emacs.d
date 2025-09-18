@@ -232,7 +232,6 @@
         (";" . #'meow-reverse)
         ("." . #'meow-bounds-of-thing)
         ("," . #'meow-inner-of-thing)
-        ("#" . #'meow-bounds-of-thing)
         ("C-u" . #'scroll-down)
         ("C-d" . #'scroll-up)
         ("q" . #'save-buffer)
@@ -274,7 +273,6 @@
         ("y" . #'meow-save)
         ("Y" . #'meow-sync-grab)
         ("z" . #'+meow-pop-selection)
-        ("^" . #'repeat)
         ("<escape>" . #'keyboard-quit))
   :config
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -318,10 +316,10 @@
     (interactive "cChar:")
     (save-excursion
       (when (and (region-active-p) (eq (point) (region-end)))
-        (backward-char)
-        (progn
-          (delete-char 1)
-          (insert-char char)))))
+        (backward-char))
+      (progn
+        (delete-char 1)
+        (insert-char char))))
 
   (defun +meow-swap-grab-or-replace ()
     (interactive)
