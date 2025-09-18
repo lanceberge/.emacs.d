@@ -112,11 +112,18 @@
 (use-package outline-mode
   :ensure nil
   :bind
+  (:repeat-map outline-repeat-map
+               ("a" . #'outline-toggle-children)
+               ("o" . #'outline-show-subtree))
   (:map +leader-map
         ("oa" . #'outline-toggle-children)
         ("oo" . #'outline-show-subtree)
         ("or" . #'outline-show-all)
         ("om" . #'outline-hide-sublevels)))
+
+(use-package repeat
+  :ensure nil
+  :hook ((prog-mode text-mode) . repeat-mode))
 
 (use-package ispell
   :disabled t

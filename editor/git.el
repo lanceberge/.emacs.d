@@ -83,13 +83,22 @@ unless a nonzero and non-negative prefix is provided."
   :hook
   (prog-mode . smerge-mode)
   :bind
+  (:map smerge-basic-map
+        ("n" . #'+smerge-vc-next-conflict))
   (:map +leader-map
-        ("ml" . #'smerge-keep-upper)
+        ("RET" . #'smerge-keep-current)
+        ("mu" . #'smerge-keep-upper)
         ("mo" . #'smerge-keep-lower)
         ("ma" . #'smerge-keep-all)
         ("mm" . #'smerge-ediff)
         ("mn" . #'+smerge-vc-next-conflict)
-        ("mp" . #'smerge-prev)))
+        ("mp" . #'smerge-prev))
+  :config
+  (map-keymap
+   (lambda (_key cmd)
+     (when (symbolp cmd)
+       (put cmd 'repeat-map 'smerge-basic-map)))
+   smerge-basic-map))
 
 ;;;###autoload
 (defun +smerge-vc-next-conflict ()

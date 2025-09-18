@@ -7,6 +7,12 @@
   (tab-bar-close-button-show nil)
   (tab-bar-show nil)
   :bind
+  (:repeat-map tab-bar-repeat-map
+               ("n" . #'tab-bar-switch-to-next-tab)
+               ("p" . #'tab-bar-switch-to-prev-tab))
+  (:repeat-map window-repeat-map
+               ("p" . #'tab-bar-history-back)
+               ("n" . #'tab-bar-history-forward))
   (:map +leader-map
         ("to" . #'+tab-bar/open-and-rename)
         ("tl" . #'tab-bar-switch-to-recent-tab)

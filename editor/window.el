@@ -2,6 +2,9 @@
 (use-package +window
   :ensure nil
   :bind
+  (:repeat-map buffer-repeat-map
+               ("n" . #'next-buffer)
+               ("p" . #'previous-buffer))
   (:map +leader-map
         ("nf" . #'+make-frame)
         ("bd" . #'kill-current-buffer)
