@@ -3,12 +3,30 @@
   :ensure nil
   :bind
   (:map meow-normal-state-keymap
-        ("M-r" . #'+kmacro-record-or-end)
-        ("M-m" . #'+kmacro-call-named-macro)))
+        ("M-r" . #'+kmacro-record-or-end-unnamed)
+        ("M-m" . #'+kmacro-execute)
+        ("M-R" . #'+kmacro-record-or-end)
+        ("M-M" . #'+kmacro-call-named-macro)))
 
 (defvar +kmacro--last-name nil)
 
-(defun +kmacro-record-or-end (&optional n)
+(defun +kmacro-record-or-end-unnamed ()
+  (interactive)
+  ;; execute
+  (if defining-kbd-macro
+      (call-interactively #'kmacro-end-macro)
+    (call-interactively #'kmacro-start-macro)))
+
+(defun +kmacro-execute (&optional arg)
+  (interactive "p")
+  (with-undo-amalgamate
+    (if (region-active-p)
+        (progn
+          (call-interactively #'apply-macro-to-region-lines)
+          (deactivate-mark))
+      (kmacro-call-macro arg))))
+
+(defun +kmacro-record-or-end (&optional n char)
   "If a macro is being recorded, end it. If 'l' is input, call the last macro.
 Otherwise, create a named macro with the char input."
   (interactive "p")
@@ -17,7 +35,7 @@ Otherwise, create a named macro with the char input."
         (call-interactively #'kmacro-end-macro)
         (kmacro-name-last-macro +kmacro--last-name)
         (setq +kmacro--last-name nil))
-    (let ((name (read-char "Name: ")))
+    (let ((name (or char (read-char "Name: "))))
       (if (= name ?l)
           (+kmacro--apply-to-region-or-lines n nil)
         (progn
