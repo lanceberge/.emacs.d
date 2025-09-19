@@ -141,9 +141,7 @@
   (:map isearch-mode-map
         ("C-j" . #'isearch-repeat-forward)
         ("C-k" . #'isearch-repeat-backward)
-        ("M-j" . #'isearch-repeat-forward)
-        ("M-k" . #'isearch-repeat-backward)
-        ("M-q" . #'avy-isearch))
+        ("M-j" . #'avy-isearch))
   :config
   (setq search-nonincremental-instead nil))
 
