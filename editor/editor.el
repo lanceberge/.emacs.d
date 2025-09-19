@@ -77,10 +77,15 @@
         ("M-." . #'embark-act)
         ("M-," . #'+embark-select)
         ("M-a" . #'embark-act-all)
+        ("M-r" . #'embark-become)
         ("C-c C-e" . #'embark-export))
   (:map meow-motion-mode-hook
         ("M-." . #'embark-act)
         ("M-'" . #'embark-dwim))
+  (:map embark-become-help-map
+        ("v" . #'helpful-variable)
+        ("f" . #'helpful-function)
+        ("k" . #'helpful-key))
   (:map meow-normal-state-keymap
         ("M-." . #'embark-act)
         ("M-'" . #'embark-dwim))

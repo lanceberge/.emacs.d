@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org-roam
-  :commands (org-roam-node-list)
+  :commands (org-roam-node-list org-roam-node-slug)
   :defer-incrementally (emacsql emacsqlite)
   :after org
   :custom
