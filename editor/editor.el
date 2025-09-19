@@ -21,7 +21,8 @@
 
 (use-package avy
   :custom
-  (avy-keys '(?j ?d ?k ?s ?l ?a))
+  (avy-keys '(?j ?d  ?s ?l ?a))
+  (avy-single-candidate-jump nil)
   :bind
   (:map meow-normal-state-keymap
         ("F" . #'avy-goto-char-2))
@@ -37,7 +38,35 @@
 
   (setq avy-dispatch-alist
         (list
-         (cons ?, 'avy-action-embark))))
+         (cons ?m 'avy-action-mark-until-pt)
+         (cons ?k 'avy-action-kill-lines-to-point)
+         (cons ?, 'avy-action-embark)
+         (cons ?t 'avy-action-move-region))))
+
+;;;###autoload
+(defun avy-action-kill-lines-to-point-stay (pt)
+  "Kill from current point to the match point PT, excluding the match."
+  (save-excursion
+    (kill-region (point) (progn (goto-char pt) (end-of-visual-line) (point)))))
+
+;;;###autoload
+(defun avy-action-mark-until-pt (pt)
+  (if (region-active-p)
+      (goto-char pt)
+    (progn
+      (set-mark (point))
+      (goto-char pt))))
+
+;;;###autoload
+(defun avy-action-move-region (pt)
+  (let* ((region-active (region-active-p))
+         (beg (if region-active (region-beginning) (line-beginning-position)))
+         (end (if region-active (region-end) (line-beginning-position 2))))
+    (kill-region beg end)
+    (goto-char pt)
+    (unless region-active
+      (beginning-of-visual-line))
+    (yank)))
 
 (use-package embark
   :custom
