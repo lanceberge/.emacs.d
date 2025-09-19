@@ -247,7 +247,7 @@
         ("e" . #'meow-next-word)
         ("E" . #'meow-next-symbol)
         ("f" . #'meow-find)
-        ("g" . #'meow-cancel-selection)
+        ("g" . #'+meow-cancel-selection)
         ("G" . #'meow-grab)
         ("h" . #'meow-left)
         ("H" . #'meow-left-expand)
@@ -284,6 +284,7 @@
   (setq meow--kbd-forward-line #'next-line
         meow--kbd-backward-line #'previous-line
         meow--kbd-forward-char #'forward-char)
+
   (dotimes (i 10)
     (define-key meow-normal-state-keymap
                 (number-to-string i)
@@ -294,12 +295,14 @@
                      (progn
                        (setq prefix-arg ,i)
                        (universal-argument--mode))))))
-  :config
+
   (defvar-local +meow-desired-state nil)
 
+;;;###autoload
   (defun +meow-set-desired-state (state)
     (setq-local +meow-desired-state state))
 
+;;;###autoload
   (defun +meow-mode-get-state-advice (orig-func &rest args)
     (if +meow-desired-state
         +meow-desired-state
@@ -307,77 +310,13 @@
 
   (advice-add 'meow--mode-get-state :around #'+meow-mode-get-state-advice)
 
+;;;###autoload
   (defun +meow-motion-mode ()
     (+meow-set-desired-state 'motion))
 
   (meow-setup-indicator)
 
-  (defun +meow-replace-char (char)
-    (interactive "cChar:")
-    (save-excursion
-      (when (and (region-active-p) (eq (point) (region-end)))
-        (backward-char))
-      (progn
-        (delete-char 1)
-        (insert-char char))))
-
-  (defun +meow-swap-grab-or-replace ()
-    (interactive)
-    (if (region-active-p)
-        (call-interactively #'meow-swap-grab)
-      (call-interactively #'+meow-replace-char)))
-
-  (defun +meow-change ()
-    (interactive)
-    (if (region-active-p)
-        (progn
-          (meow-change)
-          (indent-according-to-mode))
-      (progn
-        (kill-line)
-        (meow-insert-mode))))
-
   (setq meow-use-clipboard t))
-
-;;;###autoload
-(defun +meow-visit (arg)
-  "Read a string from minibuffer, then find and select it.
-
-The input will be pushed into `regexp-search-ring'.  So
-\\[meow-search] can be used for further searching with the same
-condition.
-
-A list of words and symbols in the current buffer will be
-provided for completion.  To search for regexp instead, set
-`meow-visit-sanitize-completion' to nil.  In that case,
-completions will be provided in regexp form, but also covering
-the words and symbols in the current buffer.
-
-To search backward, use \\[negative-argument]."
-  (interactive "P")
-  (let* ((reverse arg)
-         (pos (point))
-         (raw-text (meow--prompt-symbol-and-words
-                    (if arg "Visit backward: " "Visit: ")
-                    (point-min) (point-max) t))
-         (text (replace-regexp-in-string "\\\\\_<\\|\\\\\_>" "" raw-text))
-         (visit-point (meow--visit-point raw-text reverse)))
-    (if visit-point
-        (let* ((m (match-data))
-               (marker-beg (car m))
-               (marker-end (cadr m))
-               (beg (if (> pos visit-point) (marker-position marker-end) (marker-position marker-beg)))
-               (end (if (> pos visit-point) (marker-position marker-beg) (marker-position marker-end))))
-          (thread-first
-            (meow--make-selection '(select . visit) beg end)
-            (meow--select t))
-          (meow--push-search raw-text)
-          (meow--ensure-visible)
-          (meow--highlight-regexp-in-buffer raw-text)
-          (setq meow--dont-remove-overlay t)
-          (+isearch-update-last-search text)
-          (deactivate-mark))
-      (message "Visit: %s failed" raw-text))))
 
 (elpaca-wait)
 
@@ -410,13 +349,6 @@ To search backward, use \\[negative-argument]."
           #'(lambda ()
               (run-at-time
                1 nil (lambda () (setq gc-cons-threshold 17772160)))))
-
-;;;###autoload
-(defun +meow-pop-selection ()
-  (interactive)
-  (if (region-active-p)
-      (meow-pop-selection)
-    (set-mark-command 1)))
 
 (use-package gcmh ; Garbage collect in idle time
   :defer 2.0

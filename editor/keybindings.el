@@ -135,10 +135,12 @@
 ;;;###autoload
 (defun +insert-newlines-above (arg)
   (interactive "p")
-  (save-excursion
+  ;; save excursion didn't work if point is at line-beginning-position
+  (let ((col (- (point) (line-beginning-position))))
     (beginning-of-line)
     (dotimes (_ arg)
-      (newline))))
+      (newline))
+    (forward-char col)))
 
 ;;;###autoload
 (defun +insert-newlines-below (arg)

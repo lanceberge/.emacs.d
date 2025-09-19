@@ -67,9 +67,6 @@
 (setq +themes-dark-themes '(doom-badger gruvbox nordic-night doom-nord-aurora))
 (setq +themes-light-themes '(tango doom-nord-light doom-oksolar-light modus-operandi-tinted modus-operandi-tritanopia doom-earl-grey))
 
-;; (setq +themes-light-themes '(modus-operandi ef-maris-light ef-owl ef-maris-light ef-spring ef-light ef-frost ef-day))
-;; (setq +themes-dark-themes '(doom-monokai-machine modus-vivendi ef-elea-dark))
-
 (defvar +themes-dark-theme-index 0
   "Index of the current dark theme in `+themes-dark-themes'.")
 (defvar +themes-light-theme-index 0

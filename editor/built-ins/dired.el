@@ -20,7 +20,6 @@
   (interactive)
   (find-alternate-file ".."))
 
-
 (use-package wdired
   :ensure nil
   :bind
