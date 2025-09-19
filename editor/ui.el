@@ -26,6 +26,13 @@
 (use-package highlight-escape-sequences
   :hook (prog-mode . hes-mode))
 
+(use-package transient
+  :bind
+  (:map transient-base-map
+        ("M-p" . #'transient-reset))
+  :config
+  (transient-bind-q-to-quit))
+
 (use-package paren ; show matching parentheses
   :ensure nil
   :hook ((prog-mode text-mode) . show-paren-mode)

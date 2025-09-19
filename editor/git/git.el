@@ -1,11 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(use-package transient
-  :bind
-  (:map transient-base-map
-        ("M-p" . #'transient-reset))
-  :config
-  (transient-bind-q-to-quit))
-
 (use-package magit
   :defer 1.0
   :defer-incrementally
@@ -41,8 +34,8 @@
         ("gb" . #'magit-branch-checkout)
         ("gd" . #'magit-file-delete)
         ("gF" . #'magit-fetch)
-        ("gnb" . #'magit-branch-and-checkout)
-        ("gnf" . #'magit-commit-fixup)
+        ("SPC gb" . #'magit-branch-and-checkout)
+        ;; ("gnf" . #'magit-commit-fixup)
         ("gi" . #'magit-init)
         ("gl" . #'magit-log-head)
         ("g SPC l" . #'magit-log)
@@ -77,43 +70,6 @@ unless a nonzero and non-negative prefix is provided."
         ("gt" . #'git-timemachine))
   (:map git-timemachine-mode-map
         ([remap meow-quit] . #'git-timemachine-quit)))
-
-(use-package smerge-mode
-  :ensure nil
-  :hook
-  (prog-mode . smerge-mode)
-  :bind
-  (:map smerge-basic-map
-        ("n" . #'+smerge-vc-next-conflict))
-  (:map +leader-map
-        ("RET" . #'smerge-keep-current)
-        ("mu" . #'smerge-keep-upper)
-        ("mo" . #'smerge-keep-lower)
-        ("ma" . #'smerge-keep-all)
-        ("mm" . #'smerge-ediff)
-        ("mn" . #'+smerge-vc-next-conflict)
-        ("mp" . #'smerge-prev))
-  :config
-  (map-keymap
-   (lambda (_key cmd)
-     (when (symbolp cmd)
-       (put cmd 'repeat-map 'smerge-basic-map)))
-   smerge-basic-map))
-
-;;;###autoload
-(defun +smerge-vc-next-conflict ()
-  (interactive)
-  (condition-case nil
-      (smerge-next)
-    (error
-     (if (and (buffer-modified-p) buffer-file-name)
-         (save-buffer))
-     (vc-find-conflicted-file)
-     (unless (looking-at "^<<<<<<<")
-       (let ((prev-pos (point)))
-         (goto-char (point-min))
-         (unless (ignore-errors (not (smerge-next)))
-           (goto-char prev-pos)))))))
 
 (use-package diff-hl
   :hook
