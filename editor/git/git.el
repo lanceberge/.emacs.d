@@ -38,7 +38,7 @@
         ;; ("gnf" . #'magit-commit-fixup)
         ("gi" . #'magit-init)
         ("gl" . #'magit-log-head)
-        ("g SPC l" . #'magit-log)
+        ("SPC gl" . #'magit-log)
         ("gf" . #'magit-find-file)
         ("gw" . #'magit-worktree)
         ("gh" . #'+magit-diff-head-n)

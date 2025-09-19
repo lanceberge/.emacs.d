@@ -17,10 +17,16 @@
 (use-package window
   :ensure nil
   :bind
+  (:repeat-map window-repeat-map
+               ("o" . #'delete-other-windows)
+               ("d" . #'delete-window)
+               ("s" . #'split-window-below)
+               ("p" . #'tab-bar-history-back)
+               ("n" . #'tab-bar-history-forward)
+               ("v" . #'split-window-right))
   (:map +leader-map
         ("wo" . #'delete-other-windows)
         ("wd" . #'delete-window)
-        ("wj" . #'other-window)
         ("ws" . #'split-window-below)
         ("wv" . #'split-window-right)))
 
@@ -38,6 +44,8 @@
   (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
   (aw-scope 'frame)
   :bind
+  (:repeat-map window-repeat-map
+               ("SPC" . #'ace-swap-window))
   (:map global-map
         ("M-o" . #'ace-window))
   (:map +leader-map
