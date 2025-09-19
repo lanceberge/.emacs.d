@@ -51,6 +51,10 @@
 
 (use-package +themes
   :bind
+  (:repeat-map theme-rotate-repeat-map
+               ("n" . #'+themes-rotate)
+               ("l" . #'+themes-toggle-dark-light)
+               ("p" . #'+themes-prev))
   (:map +leader2-map
         ("tn" . #'+themes-rotate)
         ("tl" . #'+themes-toggle-dark-light)
@@ -61,7 +65,7 @@
 (use-package nordic-night-theme)
 
 (setq +themes-dark-themes '(doom-badger gruvbox nordic-night doom-nord-aurora))
-(setq +themes-light-themes '(tango doom-nord-light doom-earl-grey doom-oksolar-light))
+(setq +themes-light-themes '(tango doom-nord-light doom-oksolar-light modus-operandi-tinted modus-operandi-tritanopia doom-earl-grey))
 
 ;; (setq +themes-light-themes '(modus-operandi ef-maris-light ef-owl ef-maris-light ef-spring ef-light ef-frost ef-day))
 ;; (setq +themes-dark-themes '(doom-monokai-machine modus-vivendi ef-elea-dark))

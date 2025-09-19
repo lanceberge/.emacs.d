@@ -23,6 +23,9 @@
   :custom
   (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
+  :bind
+  (:map +leader2-map
+        ("er" . #'eglot-reconnect))
   :config
   (setq eglot-events-buffer-size 1000000) ; Log everything
   (setq eglot-sync-connect 3) ; Wait longer for connection
@@ -130,4 +133,11 @@
 (use-package flymake
   :custom
   (flymake-no-changes-timeout 5)
-  (flymake-show-diagnostics-at-end-of-line nil))
+  (flymake-show-diagnostics-at-end-of-line nil)
+  :bind
+  (:repeat-map flymake-repeat-map
+               ("n" . #'flymake-goto-next-error)
+               ("p" . #'flymake-goto-prev-error))
+  (:map +leader2-map
+        ("en" . #'flymake-goto-next-error)
+        ("ep" . #'flymake-goto-prev-error)))

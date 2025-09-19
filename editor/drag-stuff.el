@@ -68,6 +68,7 @@
 ;;;###autoload
 (defun +drag-stuff--word (&optional arg left)
   "Drag region one word right or left if `left' is set"
+  (require 'drag-stuff)
   (let ((orig-point-at-beginning (eq (point) (region-beginning)))
         (orig-region-active (region-active-p)))
     (unless orig-region-active (meow-mark-word 1))
