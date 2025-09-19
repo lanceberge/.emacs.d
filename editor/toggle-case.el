@@ -1,31 +1,70 @@
+(use-package evil-numbers
+  :bind
+  (:map meow-normal-state-keymap
+        ("M-`" . #'evil-numbers/inc-at-pt)
+        ("~" . #'evil-numbers/dec-at-pt)
+        ("M-~" . #'evil-numbers/dec-at-pt)))
+
 (use-package +toggle-case
   :ensure nil
   :bind
   (:map meow-normal-state-keymap
-        ("~" . #'+toggle-region-case-dwim)))
+        ("`" . #'+toggle-region-or-number-dwim)))
 
-(defvar +toggle-last nil)
 (put 'upcase-region 'disabled nil)
 
+;;;###autoload
+(defun +toggle-region-or-number-dwim (&optional arg)
+  (interactive "p")
+  (if (region-active-p)
+      (xah-toggle-letter-case)
+    (+toggle-number-or-char arg)))
+
+;;;###autoload
+(defun +toggle-number-or-char (&optional arg)
+  "Search to the first char or positive/negative number. If it's a char,
+toggle the case. Otherwise, increment the number."
+  (interactive "p")
+  (if (region-active-p)
+      (user-error "Region should not be active"))
+  (let ((line-end (line-end-position)))
+    (while (and (< (point) line-end)
+                (not (or (looking-at "[a-zA-Z0-9]")
+                         (looking-at "-[1-9]"))))
+      (forward-char 1)))
+  (let ((case-fold-search nil))
+    (if (or (looking-at "[0-9]")
+            (looking-at "-[1-9]"))
+        (progn
+          (require 'evil-numbers)
+          (call-interactively #'evil-numbers/inc-at-pt))
+      (+toggle--letter-case arg))))
+
+;;;###autoload
 (defun +toggle-region-case-dwim ()
   (interactive)
   (if (region-active-p)
       (xah-toggle-letter-case)
     (+toggle--letter-case)))
 
-(defun +toggle--letter-case ()
+;;;###autoload
+(defun +toggle--letter-case (arg)
   (if (region-active-p)
       (user-error "Region should not be active"))
-  (let ((char-at-point (char-after (point))))
+  (let ((line-end (line-end-position)))
+    (while (and (< (point) line-end)
+                (not (looking-at "[a-zA-Z]")))
+      (forward-char 1)))
+  (let ((case-fold-search nil))
     (set-mark (point))
-    (forward-char)
-    (activate-mark)
-    (cond ((and (>= char-at-point ?A) (<= char-at-point ?Z))
+    (cond ((looking-at "[A-Z]")
+           (forward-char arg)
            (call-interactively #'downcase-region))
-          ((and (>= char-at-point ?a) (<= char-at-point ?z))
-           (call-interactively #'upcase-region))))
-  (deactivate-mark))
+          ((looking-at "[a-z]")
+           (forward-char arg)
+           (call-interactively #'upcase-region)))))
 
+;;;###autoload
 (defun xah-toggle-letter-case ()
   "Toggle the letter case of current word or selection.
 Always cycle in this order: Init Caps, ALL CAPS, all lower.
