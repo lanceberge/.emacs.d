@@ -1,17 +1,10 @@
-(use-package evil-numbers
-  :bind
-  (:map meow-normal-state-keymap
-        ("M-`" . #'evil-numbers/inc-at-pt)
-        ("~" . #'evil-numbers/dec-at-pt)
-        ("M-~" . #'evil-numbers/dec-at-pt)))
-
 (use-package +toggle-case
   :ensure nil
   :bind
   (:map meow-normal-state-keymap
-        ("`" . #'+toggle-region-or-number-dwim)))
-
-(put 'upcase-region 'disabled nil)
+        ("`" . #'+toggle-region-or-number-dwim))
+  :config
+  (put 'upcase-region 'disabled nil))
 
 ;;;###autoload
 (defun +toggle-region-or-number-dwim (&optional arg)
@@ -36,8 +29,7 @@ toggle the case. Otherwise, increment the number."
     (if (or (looking-at "[0-9]")
             (looking-at "-[1-9]"))
         (progn
-          (require 'evil-numbers)
-          (call-interactively #'evil-numbers/inc-at-pt))
+          (call-interactively #'+number-increment))
       (+toggle--letter-case arg))))
 
 ;;;###autoload
