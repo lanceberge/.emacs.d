@@ -31,6 +31,7 @@
 ;;;###autoload
 (defun +smerge-vc-next-conflict ()
   (interactive)
+  (require 'vc)
   (condition-case nil
       (smerge-next)
     (error

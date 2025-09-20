@@ -29,7 +29,7 @@
     (when (file-directory-p dir)
       (project--remember-dir dir)))
   ;; dirs to remember recursively
-  (dolist (dir '("~/code/git" "~/code/phoenix" "~/code/laravel" "~/code/elixir/" "~/code/"))
+  (dolist (dir '("~/code/git" "~/code/phoenix" "~/code/laravel" "~/code/elixir/" "~/code/" "~/src/"))
     (when (file-directory-p dir)
       (project-remember-projects-under dir))))
 
