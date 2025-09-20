@@ -39,9 +39,16 @@
   (setq avy-dispatch-alist
         (list
          (cons ?m 'avy-action-mark-until-pt)
-         (cons ?k 'avy-action-kill-lines-to-point)
+         (cons ?k 'avy-action-kill-lines-to-point-stay)
          (cons ?, 'avy-action-embark)
+         (cons ?K 'avy-action-kill-line-stay)
          (cons ?t 'avy-action-move-region))))
+
+;;;###autoload
+(defun avy-action-kill-line-stay (pt)
+  (save-excursion
+    (goto-char pt)
+    (kill-whole-line)))
 
 ;;;###autoload
 (defun avy-action-kill-lines-to-point-stay (pt)
