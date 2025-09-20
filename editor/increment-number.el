@@ -1,4 +1,5 @@
 (use-package +increment-number
+  :ensure nil
   :bind
   (:map meow-normal-state-keymap
         ("M-`" . #'+increment-number-increment)

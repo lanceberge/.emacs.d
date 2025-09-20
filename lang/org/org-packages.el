@@ -55,6 +55,7 @@
       "** TODO %?\n %i\n" :prepend t)))
   :bind
   (:map org-capture-mode-map
+        ([remap delete-window] . #'org-capture-kill)
         ([remap save-buffer] . org-capture-finalize))
   (:map +leader-map
         ("oc" . #'org-capture)))

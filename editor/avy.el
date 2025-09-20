@@ -16,17 +16,20 @@
   (setq avy-dispatch-alist
         (list
          (cons ?m 'avy-action-mark-until-pt)
-         (cons ?k 'avy-action-kill-lines-to-point-stay)
-         (cons ?, 'avy-action-embark)
+         (cons ?k 'avy-action-kill-to-point-move)
          (cons ?K 'avy-action-kill-line-stay)
-         (cons ?t 'avy-action-move-region))))
+         (cons ?, 'avy-action-embark)
+         (cons ?t 'avy-action-move-region)
+         (cons ?T 'avy-action-move-other-line)
+         (cons ?x 'avy-action-kill-whole-lines-stay)
+         (cons ?X 'avy-action-kill-whole-lines-move))))
 
 ;; https://karthinks.com/software/avy-can-do-anything/
 ;;;###autoload
 (defun avy-action-embark (pt)
   "Perform an embark action on the avy target and move the point to it"
   (goto-char pt)
-  (embark-act))
+  (embark-dwim))
 
 ;;;###autoload
 (defun avy-action-kill-line-stay (pt)
@@ -35,10 +38,31 @@
     (kill-whole-line)))
 
 ;;;###autoload
-(defun avy-action-kill-lines-to-point-stay (pt)
-  "Kill from current point to the match point PT, excluding the match."
+(defun avy-action-kill-whole-lines-move (pt)
+  "Kill whole lines until pt."
+  (let ((backwards (< pt (point)))
+        xend)
+    (if backwards (end-of-visual-line) (beginning-of-visual-line))
+    (setq xend (save-excursion
+                 (goto-char pt)
+                 (if backwards
+                     (progn
+                       (end-of-visual-line))
+                   (progn
+                     (beginning-of-visual-line)))
+                 (point)))
+    (kill-region (point) xend)))
+
+;;;###autoload
+(defun avy-action-kill-whole-lines-stay (pt)
+  "Kill whole lines from point to `pt'."
   (save-excursion
-    (kill-region (point) (progn (goto-char pt) (end-of-visual-line) (point)))))
+    (avy-action-kill-whole-lines-move pt)))
+
+;;;###autoload
+(defun avy-action-kill-to-point-move (pt)
+  "Kill whole region from point to `pt'."
+  (kill-region (point) pt))
 
 ;;;###autoload
 (defun avy-action-mark-until-pt (pt)
@@ -50,6 +74,7 @@
 
 ;;;###autoload
 (defun avy-action-move-region (pt)
+  "Move the current line/region to pt."
   (let* ((region-active (region-active-p))
          (beg (if region-active (region-beginning) (line-beginning-position)))
          (end (if region-active (region-end) (line-beginning-position 2))))
@@ -60,22 +85,14 @@
     (yank)))
 
 ;;;###autoload
-(defun +avy-goto-char-2-below (char1 char2)
-  (interactive (list (read-char "char 1: " t)
-                     (read-char "char 2: " t)))
-  (forward-char 1)
-  (search-forward  (concat (char-to-string char1) (char-to-string char2)))
-  (backward-char 2)
-  (avy-goto-char-2
-   char1 char2 nil
-   (point) (window-end (selected-window) t)))
-
-;;;###autoload
-(defun +avy-goto-char-2-above (char1 char2)
-  (interactive (list (read-char "char 1: " t)
-                     (read-char "char 2: " t)))
-  (backward-char 1)
-  (search-backward (concat (char-to-string char1) (char-to-string char2)))
-  (forward-char 2)
-  (avy-goto-char-2-above
-   char1 char2))
+(defun avy-action-move-other-line (pt)
+  (let ((current-line (line-number-at-pos))
+        (target-line (progn (goto-char pt) (line-number-at-pos))))
+    (cond
+     ((> target-line current-line)
+      (goto-line (1+ target-line))
+      (transpose-lines (- current-line target-line)))
+     ((< target-line current-line)
+      (goto-line (1+ target-line))
+      (transpose-lines (- current-line target-line 1)))
+     (t nil))))
