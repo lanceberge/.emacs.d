@@ -16,31 +16,45 @@
         ("M-k" . #'drag-stuff-up)
         ("M-j" . #'drag-stuff-down)))
 
+;;;###autoload
 (defun full-line-region-p ()
-  (and (eq (region-beginning) (line-beginning-position))
-       (eq (region-end) (line-end-position))))
+  (and (save-excursion (goto-char (region-beginning)) (bolp))
+       (save-excursion (goto-char (region-end)) (eolp))))
 
+;;;###autoload
 (defun +drag-stuff-left-dwim (arg)
   (interactive "p")
   (let ((deactivate-mark nil))
     (if (full-line-region-p)
         (save-excursion
-          (beginning-of-visual-line)
-          (dotimes (_ arg)
-            (if (looking-at "\\s-")
-                (delete-char 1))))
+          (let ((start-line (line-number-at-pos (region-beginning)))
+                (end-line (line-number-at-pos (1- (region-end)))))
+            (goto-line start-line)
+            (while (<= (line-number-at-pos) end-line)
+              (beginning-of-visual-line)
+              (dotimes (_ arg)
+                (when (looking-at "\\s-")
+                  (delete-char 1)))
+              (forward-line 1))))
       (+drag-stuff--horizontal arg #'drag-stuff-left))))
 
+;;;###autoload
 (defun +drag-stuff-right-dwim (arg)
   (interactive "p")
   (let ((deactivate-mark nil))
     (if (full-line-region-p)
         (save-excursion
-          (beginning-of-visual-line)
-          (dotimes (_ arg)
-            (insert " ")))
+          (let ((start-line (line-number-at-pos (region-beginning)))
+                (end-line (line-number-at-pos (1- (region-end)))))
+            (goto-line start-line)
+            (while (<= (line-number-at-pos) end-line)
+              (beginning-of-visual-line)
+              (dotimes (_ arg)
+                (insert " "))
+              (forward-line 1))))
       (+drag-stuff--horizontal arg #'drag-stuff-right))))
 
+;;;###autoload
 (defun +drag-stuff--horizontal (&optional arg drag-stuff-function)
   (let ((region-active (region-active-p)))
     (unless region-active
@@ -59,6 +73,7 @@
           (exchange-point-and-mark))
     (user-error "region is not active")))
 
+;;;###autoload
 (defun goto-end-of-region ()
   (if (region-active-p)
       (if (< (point) (region-beginning))

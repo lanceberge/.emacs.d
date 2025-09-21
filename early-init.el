@@ -141,7 +141,6 @@
                 "  "
                 vc-mode)) ; show git branch
 
-
 (use-package no-littering
   :config
   (no-littering-theme-backups))

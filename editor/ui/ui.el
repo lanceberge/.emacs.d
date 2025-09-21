@@ -1,4 +1,5 @@
 ;;; -*- lexical-binding: t -*-
+;; don't restore frames with desktop
 (use-package frameset
   :ensure nil
   :demand t
@@ -44,7 +45,8 @@
   (prog-mode . rainbow-mode)
   (text-mode . rainbow-mode))
 
-(use-package hydra)
+(use-package hydra
+  :disabled t)
 
 (use-package fringe
   :ensure nil)
