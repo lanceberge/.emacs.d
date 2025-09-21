@@ -51,6 +51,7 @@
                   `(,key ,desc (lambda () (interactive) (+magit-diff-head-n ,n))))))
   (setq magit-auto-revert-mode nil))
 
+;;;###autoload
 (defun +magit-diff-head-n (n)
   "Show the diff of HEAD and the previous `n' commits. Prompts for `n'
 unless a nonzero and non-negative prefix is provided."

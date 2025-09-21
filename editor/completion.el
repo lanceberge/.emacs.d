@@ -52,15 +52,17 @@
   :custom
   (cape-file-directory-must-exist nil)
   :init
-  (defun +cape-text-mode ()
-    (setq-local corfu-auto-prefix 4))
-
-  (defun +cape-minibuffer-mode ()
-    (dolist (backend '(cape-history))
-      (add-to-list 'completion-at-point-functions backend))
-    (setq-local corfu-auto-prefix 3))
-
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
 
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
+
+;;;###autoload
+(defun +cape-minibuffer-mode ()
+  (dolist (backend '(cape-history))
+    (add-to-list 'completion-at-point-functions backend))
+  (setq-local corfu-auto-prefix 3))
+
+;;;###autoload
+(defun +cape-text-mode ()
+  (setq-local corfu-auto-prefix 4))

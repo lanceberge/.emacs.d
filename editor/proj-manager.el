@@ -79,15 +79,18 @@
         (+open-tab-if-exists tab-name)
         (find-file filename)))))
 
+;;;###autoload
 (defun +proj-tab-name (proj-root)
   (file-name-nondirectory (directory-file-name (expand-file-name proj-root))))
 
+;;;###autoload
 (defun +current-proj-tab-name ()
   (let* ((current-proj (project-current nil))
          (proj-root (when current-proj (project-root current-proj))))
     (when proj-root
       (+proj-tab-name proj-root))))
 
+;;;###autoload
 (defun +switch-to-other-project-buffer ()
   "Switch to the most recent open buffer in the same vc-root-dir as the current buffer.
 Recurse through the buffer-list but skipping the first value since that's the current buffer."

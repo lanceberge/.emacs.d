@@ -93,12 +93,6 @@
         ([remap +drag-stuff-right-dwim] . #'vertico-directory-enter))
   :config
   ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
-;;;###autoload
-  (defun +auto-create-missing-dirs ()
-    (let ((target-dir (file-name-directory buffer-file-name)))
-      (unless (file-exists-p target-dir)
-        (make-directory target-dir t))))
-
   (add-to-list 'find-file-not-found-functions #'+auto-create-missing-dirs)
 
   (cl-loop for idx from 0 to 9
@@ -110,6 +104,12 @@
 
   (vertico-mode)
   (vertico-indexed-mode))
+
+;;;###autoload
+(defun +auto-create-missing-dirs ()
+  (let ((target-dir (file-name-directory buffer-file-name)))
+    (unless (file-exists-p target-dir)
+      (make-directory target-dir t))))
 
 (use-package marginalia
   :defer 0.4

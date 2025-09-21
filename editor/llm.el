@@ -11,16 +11,20 @@
   (:map +leader2-map
         ("gt" . +gptel-project))
   :config
-  (defun gptel-api-key ()
-    (read-file-contents "~/secrets/claude_key"))
   (setq
    gptel-backend (gptel-make-anthropic "Claude"
                    :stream t
                    :key #'gptel-api-key)))
 
+;;;###autoload
+(defun gptel-api-key ()
+  (read-file-contents "~/secrets/claude_key"))
+
+;;;###autoload
 (defun +gptel-project-buffer-name ()
   (format "gptel-%s" (+current-proj-tab-name)))
 
+;;;###autoload
 (defun +gptel-project ()
   (interactive)
   (let* ((gptel-buffer-name (+gptel-project-buffer-name))

@@ -120,10 +120,12 @@
   (global-display-line-numbers-mode))
 
 ;; https://github.com/progfolio/elpaca/issues/216
+;;;###autoload
 (defun +elpaca-unload-seq (e)
   (and (featurep 'seq) (unload-feature 'seq t))
   (elpaca--continue-build e))
 
+;;;###autoload
 (defun +elpaca-seq-build-steps ()
   (append (butlast (if (file-exists-p (expand-file-name "seq" elpaca-builds-directory))
                        elpaca--pre-built-steps elpaca-build-steps))

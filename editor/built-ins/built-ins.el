@@ -32,8 +32,8 @@
 ;;;###autoload
 (defun +restart-emacs ()
   (interactive)
-  (setq confirm-kill-emacs nil)
-  (restart-emacs))
+  (let ((confirm-kill-emacs nil))
+    (restart-emacs)))
 
 (use-package saveplace ; save location in files
   :ensure nil
@@ -123,8 +123,6 @@
   :ensure nil
   :custom
   (ispell-complete-word-dict t))
-
-
 
 (use-package grep
   :ensure nil

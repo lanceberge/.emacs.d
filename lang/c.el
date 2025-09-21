@@ -8,17 +8,18 @@
   :custom
   (c-basic-offset 4)
   (c-default-style "linux")
-  (dap-lldb-debug-program "/opt/homebrew/opt/llvm/bin/lldb-dap")
-  :config
-  (defun +cpp-mode ()
-    (let ((file-name-base (file-name-base (file-name-nondirectory (buffer-file-name)))))
-      (setq-local dape-configs
-                  `((lldb-dap
-                     command "lldb-dap" :type "lldb-dap" modes
-                     (c-mode c-ts-mode c++-mode c++-ts-mode)
-                     ensure dape-ensure-command
-                     command-cwd ,(file-name-directory (buffer-file-name))
-                     :cwd "." :program ,file-name-base))))))
+  (dap-lldb-debug-program "/opt/homebrew/opt/llvm/bin/lldb-dap"))
+
+;;;###autoload
+(defun +cpp-mode ()
+  (let ((file-name-base (file-name-base (file-name-nondirectory (buffer-file-name)))))
+    (setq-local dape-configs
+                `((lldb-dap
+                   command "lldb-dap" :type "lldb-dap" modes
+                   (c-mode c-ts-mode c++-mode c++-ts-mode)
+                   ensure dape-ensure-command
+                   command-cwd ,(file-name-directory (buffer-file-name))
+                   :cwd "." :program ,file-name-base)))))
 
 ;;;###autoload
 (defun +dape-debug-cpp ()

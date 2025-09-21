@@ -34,6 +34,7 @@
 (use-package elixir-mode
   :defer t)
 
+;;;###autoload
 (defun elixir-module-name-from-file ()
   "Generate Elixir module name from current file path relative to project lib/ directory."
   (interactive)

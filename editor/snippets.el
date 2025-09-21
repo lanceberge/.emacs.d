@@ -24,7 +24,8 @@
   :demand t
   :after yasnippet
   :init
-  (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer"))
+  (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer")
+  (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "defun"))
 
 ;;;###autoload
 (defun +yas-load-snippet-noconfirm()

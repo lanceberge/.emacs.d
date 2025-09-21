@@ -4,6 +4,7 @@
   (:map meow-normal-state-keymap
         ("R" . +replace)))
 
+;;;###autoload
 (defun +replace ()
   (interactive)
   (if (region-active-p)

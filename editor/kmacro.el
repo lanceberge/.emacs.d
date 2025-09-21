@@ -10,6 +10,7 @@
 
 (defvar +kmacro--last-name nil)
 
+;;;###autoload
 (defun +kmacro-record-or-end-unnamed ()
   (interactive)
   ;; execute
@@ -17,6 +18,7 @@
       (call-interactively #'kmacro-end-macro)
     (call-interactively #'kmacro-start-macro)))
 
+;;;###autoload
 (defun +kmacro-execute (&optional arg)
   (interactive "p")
   (with-undo-amalgamate
@@ -26,6 +28,7 @@
           (deactivate-mark))
       (kmacro-call-macro arg))))
 
+;;;###autoload
 (defun +kmacro-record-or-end (&optional n char)
   "If a macro is being recorded, end it. If 'l' is input, call the last macro.
 Otherwise, create a named macro with the char input."
@@ -42,6 +45,7 @@ Otherwise, create a named macro with the char input."
           (call-interactively #'kmacro-start-macro)
           (setq +kmacro--last-name (+kmacro--get-name name)))))))
 
+;;;###autoload
 (defun +kmacro-call-named-macro (char-name &optional n)
   "Call the macro at name `char-name'. If 'l' is input, call the last macro."
   (interactive "cName: \np")
@@ -52,6 +56,7 @@ Otherwise, create a named macro with the char input."
           (error "Macro at %c is not defined" char-name))
       (+kmacro--apply-to-region-or-lines n macro-symbol))))
 
+;;;###autoload
 (defun +kmacro--apply-to-region-or-lines (&optional n macro-symbol)
   "Apply function `macro-symbol'. If `macro-symbol' is nil, use the last macro.
 If a region is active, it will be applied to the region. Otherwise, it will be applied
@@ -63,5 +68,6 @@ n times."
         (call-interactively #'apply-macro-to-region-lines)
       (call-interactively #'kmacro-call-macro))))
 
+;;;###autoload
 (defun +kmacro--get-name (char)
   (intern (format "+kmacro--macro-%s" (char-to-string char))))

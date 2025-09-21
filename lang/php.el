@@ -8,6 +8,7 @@
   (:map php-mode-map
         ([remap +format/buffer] . #'php-cs-fixer-fix-current)))
 
+;;;###autoload
 (defun +php-mode ()
   (add-hook 'after-save-hook #'php-cs-fixer-fix-current nil t)
   (format-all-mode -1))

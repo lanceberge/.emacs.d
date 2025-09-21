@@ -7,6 +7,7 @@
   (:map +leader-map
         ("gn" . #'+next-hunk-or-file)
         ("gp" . #'+previous-hunk-or-file)))
+
 ;;;###autoload
 (defun +modified-git-files ()
   (when (vc-git-root default-directory)

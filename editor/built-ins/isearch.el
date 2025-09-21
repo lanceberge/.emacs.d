@@ -38,6 +38,7 @@
 ;;;###autoload
 (defun +isearch-clear-highlighting ()
   (interactive)
-  (lazy-highlight-cleanup)
-  (isearch-exit)
+  (save-excursion
+    (lazy-highlight-cleanup)
+    (isearch-exit))
   (keyboard-quit))

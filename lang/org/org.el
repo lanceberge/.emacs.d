@@ -58,10 +58,6 @@
         ("C-S-l" . org-shiftcontrolright))
 
   :config
-  (defun org-mode-company-backends ()
-    (setq-local company-backends
-                '((company-files company-capf))))
-
   (add-hook 'org-mode-hook 'org-mode-company-backends)
 
   (setq org-tag-alist '(("personal" . ?p)
@@ -90,6 +86,12 @@
 
   (plist-put org-format-latex-options :scale 1.75))
 
+;;;###autoload
+(defun org-mode-company-backends ()
+  (setq-local company-backends
+              '((company-files company-capf))))
+
+;;;###autoload
 (defun +org-up (&optional arg)
   (interactive "p")
 
@@ -97,6 +99,7 @@
   (when (eolp)
     (org-end-of-line)))
 
+;;;###autoload
 (defun +org-down (&optional arg)
   (interactive "p")
   (next-line arg)

@@ -135,6 +135,7 @@
   "Append LISTS to SYM in place."
   `(setq ,sym (append ,sym ,@lists)))
 
+;;;###autoload
 (defun doom-load-packages-incrementally (packages &optional now)
   "Registers PACKAGES to be loaded incrementally.
     If NOW is non-nil, load PACKAGES incrementally, in `doom-incremental-idle-timer'
@@ -166,6 +167,7 @@
                                  packages t)
             (setq packages nil)))))))
 
+;;;###autoload
 (defun doom-load-packages-incrementally-h ()
   "Begin incrementally loading packages in `doom-incremental-packages'.
     If this is a daemon session, load them all immediately instead."
@@ -191,6 +193,7 @@
           (use-package-list-insert keyword use-package-keywords :after)))
 
   (defalias 'use-package-normalize/:defer-incrementally #'use-package-normalize-symlist)
+;;;###autoload
   (defun use-package-handler/:defer-incrementally (name _keyword targets rest state)
     (use-package-concat
      `((doom-load-packages-incrementally

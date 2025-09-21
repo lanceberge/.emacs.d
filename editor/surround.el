@@ -12,6 +12,7 @@
   (:map meow-normal-state-keymap
         ("S" . #'+surround)))
 
+;;;###autoload
 (defun +setup-org-pairs ()
   (add-to-list '+surround-pairs '(?e . ("#+BEGIN_SRC elixir\n" . "\n#+END_SRC\n"))))
 

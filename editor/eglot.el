@@ -50,36 +50,39 @@
   (custom-set-faces
    '(eglot-highlight-symbol-face ((t (:inherit nil)))))
   ;; https://github.com/joaotavora/eglot/discussions/1184
-  (defun vue-eglot-init-options ()
-    (let ((tsdk-path (expand-file-name
-                      "lib"
-                      (string-trim-right (shell-command-to-string "npm list --global --parseable typescript | head -n1")))))
-      `(:typescript (:tsdk ,tsdk-path)
-                    :vue (:hybridMode :json-false))))
-
   (add-to-list 'eglot-server-programs '(python-ts-mode . ("/opt/homebrew/bin/pyright-langserver" "--stdio")))
 
   (add-to-list 'eglot-server-programs
                `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
 
+;;;###autoload
+(defun vue-eglot-init-options ()
+  (let ((tsdk-path (expand-file-name
+                    "lib"
+                    (string-trim-right (shell-command-to-string "npm list --global --parseable typescript | head -n1")))))
+    `(:typescript (:tsdk ,tsdk-path)
+                  :vue (:hybridMode :json-false))))
+
 (use-package eldoc
   :ensure nil
   :hook (emacs-lisp-mode . eldoc-mode)
+  :custom
+  (eldoc-idle-delay 1)
   :preface
   (when (and (version<= emacs-version "29.1") (featurep 'eldoc))
     (unload-feature 'eldoc t))
-  (global-eldoc-mode -1)
-  :config
-  (setq eldoc-idle-delay 1)
-  (defun +eldoc-help ()
-    "Show eldoc info for current symbol and restore cursor position."
-    (interactive)
-    (let ((win (selected-window)))
-      (with-selected-window win
-        (call-interactively #'eldoc-print-current-symbol-info)
-        (run-with-timer 0.1 nil
-                        (lambda ()
-                          (select-window win)))))))
+  (global-eldoc-mode -1))
+
+;;;###autoload
+(defun +eldoc-help ()
+  "Show eldoc info for current symbol and restore cursor position."
+  (interactive)
+  (let ((win (selected-window)))
+    (with-selected-window win
+      (call-interactively #'eldoc-print-current-symbol-info)
+      (run-with-timer 0.1 nil
+                      (lambda ()
+                        (select-window win))))))
 
 (unless (version<= emacs-version "29.1")
   (use-package dape
@@ -88,7 +91,7 @@
     (remove-hook 'dape-start-hook 'dape-info)
     (remove-hook 'dape-start-hook 'dape-repl)
     (defhydra dape-hydra (:color pink :hint nil :foreign-keys run)
-      "
+              "
   ^Stepping^          ^Breakpoints^               ^Info
   ^^^^^^^^-----------------------------------------------------------
   _d_: init           _bb_: Toggle (add/remove)   _si_: Info
@@ -99,24 +102,24 @@
   _r_: Restart
   _Q_: Disconnect
   "
-      ("d" dape)
-      ("n" dape-next)
-      ("i" dape-step-in)
-      ("o" dape-step-out)
-      ("c" dape-continue)
-      ("r" dape-restart)
-      ("ba" dape-breakpoint-toggle)
-      ("bb" dape-breakpoint-toggle)
-      ("be" dape-breakpoint-expression)
-      ("bd" dape-breakpoint-remove-at-point)
-      ("bD" dape-breakpoint-remove-all)
-      ("bl" dape-breakpoint-log)
-      ("si" dape-info)
-      ("sm" dape-read-memory)
-      ("ss" dape-select-stack)
-      ("R"  dape-repl)
-      ("q" nil "quit" :color blue)
-      ("Q" dape-kill :color red))))
+              ("d" dape)
+              ("n" dape-next)
+              ("i" dape-step-in)
+              ("o" dape-step-out)
+              ("c" dape-continue)
+              ("r" dape-restart)
+              ("ba" dape-breakpoint-toggle)
+              ("bb" dape-breakpoint-toggle)
+              ("be" dape-breakpoint-expression)
+              ("bd" dape-breakpoint-remove-at-point)
+              ("bD" dape-breakpoint-remove-all)
+              ("bl" dape-breakpoint-log)
+              ("si" dape-info)
+              ("sm" dape-read-memory)
+              ("ss" dape-select-stack)
+              ("R"  dape-repl)
+              ("q" nil "quit" :color blue)
+              ("Q" dape-kill :color red))))
 
 (use-package xref
   :commands (xref-find-references xref-auto-jump-first-definition)

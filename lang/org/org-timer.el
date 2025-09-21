@@ -11,11 +11,13 @@
 (defvar +org-timer-log-file "~/org-roam/Time_Log.org")
 (defvar +org-timer--start-proj nil)
 
+;;;###autoload
 (defun +org-timer-open-file ()
   (interactive)
   (+open-tab-if-exists "org-roam")
   (find-file +org-timer-log-file))
 
+;;;###autoload
 (defun +format-current-time ()
   (format-time-string "%I:%M:%S %p"))
 
@@ -38,6 +40,7 @@
       (setq +org-timer-start-date (format-time-string "%m/%d/%y"))
       (setq +org-timer--start-proj (+current-proj-tab-name)))))
 
+;;;###autoload
 (defun +insert-elapsed-time-to-buffer (log-file elapsed-time start-time end-time)
   (save-window-excursion
     (find-file +org-timer-log-file)
@@ -67,10 +70,12 @@
         (insert (format "  - Total Elapsed: %s\n" elapsed-time))))
     (save-buffer)))
 
+;;;###autoload
 (defun +org-timer--insert-time-logs (elapsed-time start-time end-time &optional omit-newline)
   (let ((newline-character (if omit-newline "" "\n")))
     (insert (format "  - Start: %s, End: %s, Elapsed: %s, Proj: %s%s" start-time end-time elapsed-time +org-timer--start-proj newline-character))))
 
+;;;###autoload
 (defun +org-timer--sum-hms-times (first second)
   "Sum two time strings FIRST and SECOND in HH:MM:SS format, return result in same format."
   (org-timer-secs-to-hms

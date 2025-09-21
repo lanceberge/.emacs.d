@@ -1,4 +1,5 @@
 (use-package +themes
+  :ensure nil
   :bind
   (:repeat-map theme-rotate-repeat-map
                ("n" . #'+themes-rotate)
@@ -7,18 +8,20 @@
   (:map +leader2-map
         ("tn" . #'+themes-rotate)
         ("tl" . #'+themes-toggle-dark-light)
-        ("tp" . #'+themes-prev))
-  :ensure nil)
+        ("tp" . #'+themes-prev)))
+
 (setq +themes-dark-themes '(doom-badger gruvbox nordic-night doom-nord-aurora))
-(setq +themes-light-themes '(tango doom-nord-light doom-oksolar-light modus-operandi-tinted modus-operandi-tritanopia doom-earl-grey))
+(setq +themes-light-themes '(doom-nord-light tango doom-oksolar-light modus-operandi-tinted modus-operandi-tritanopia doom-earl-grey))
 
 (defvar +themes-dark-theme-index 0
   "Index of the current dark theme in `+themes-dark-themes'.")
+
 (defvar +themes-light-theme-index 0
   "Index of the current light theme in `+themes-light-themes'.")
 
 (defvar +themes-current-style 'dark)
 
+;;;###autoload
 (defun +themes-toggle-dark-light ()
   (interactive)
   (if (eq +themes-current-style 'dark)
@@ -40,6 +43,7 @@
       (set index-var next-index)
       (+themes-load-theme next-theme))))
 
+;;;###autoload
 (defun +themes-load-theme (theme)
   (mapc #'disable-theme custom-enabled-themes)
   (message "Loading theme: %s" theme)
@@ -52,14 +56,17 @@
       (+themes-rotate-dark reverse)
     (+themes-rotate-light reverse)))
 
+;;;###autoload
 (defun +themes-prev ()
   (interactive)
   (+themes-rotate t))
 
+;;;###autoload
 (defun +themes-rotate-dark (&optional reverse)
   (interactive)
   (+themes--rotate +themes-dark-themes '+themes-dark-theme-index reverse))
 
+;;;###autoload
 (defun +themes-rotate-light (&optional reverse)
   (interactive)
   (+themes--rotate +themes-light-themes '+themes-light-theme-index reverse))

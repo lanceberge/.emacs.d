@@ -70,10 +70,12 @@ To search backward, use \\[negative-argument]."
 ;;;###autoload
 (defun +meow-cancel-selection ()
   (interactive)
+  (when (featurep 'isearch)
+    (save-excursion
+      (lazy-highlight-cleanup)
+      (isearch-exit)))
   (meow--cancel-second-selection)
-  (meow-cancel-selection)
-  (if (featurep 'isearch)
-      (+isearch-clear-highlighting)))
+  (meow-cancel-selection))
 
 ;;;###autoload
 (defun +meow-pop-selection ()

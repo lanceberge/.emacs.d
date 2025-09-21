@@ -42,6 +42,7 @@
         ("M-'" . #'embark-dwim))
   (:map embark-general-map
         ("'" . #'embark-dwim)
+        ("f" . #'consult-ripgrep)
         ("d" . #'embark-find-definition)
         ("g" . #'google-this-word))
   (:map embark-identifier-map

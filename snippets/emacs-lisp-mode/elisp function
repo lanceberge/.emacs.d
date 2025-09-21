@@ -1,8 +1,9 @@
 # -*- mode: snippet -*-
 # name: elisp function
-# key: defun
+# key: def
 # --
 
+;;;###autoload
 (defun +$1 ()
   (interactive)
   $0)
