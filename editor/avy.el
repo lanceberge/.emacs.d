@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package avy
   :custom
-  (avy-keys '(?j ?d  ?s ?l ?a))
+  (avy-keys '(?j ?d  ?s ?l ?a ?g ?h ?e ?i ?c ?n))
   (avy-single-candidate-jump nil)
   (avy-style 'de-bruijn)
   (avy-case-fold-search nil)
