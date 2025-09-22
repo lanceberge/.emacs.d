@@ -1,26 +1,14 @@
 ;;; -*- lexical-binding: t -*-
 ;;;###autoload
 (defun +meow-visit (arg)
-  "Read a string from minibuffer, then find and select it.
-
-The input will be pushed into `regexp-search-ring'.  So
-\\[meow-search] can be used for further searching with the same
-condition.
-
-A list of words and symbols in the current buffer will be
-provided for completion.  To search for regexp instead, set
-`meow-visit-sanitize-completion' to nil.  In that case,
-completions will be provided in regexp form, but also covering
-the words and symbols in the current buffer.
-
-To search backward, use \\[negative-argument]."
+  "`meow-visit' but add the string to the isearch history."
   (interactive "P")
   (let* ((reverse arg)
          (pos (point))
          (raw-text (meow--prompt-symbol-and-words
                     (if arg "Visit backward: " "Visit: ")
                     (point-min) (point-max) t))
-         (text (replace-regexp-in-string "\\\\\_<\\|\\\\\_>" "" raw-text))
+         (text (replace-regexp-in-string "\\\\" "" (replace-regexp-in-string "\\\\\_<\\|\\\\\_>" "" raw-text)))
          (visit-point (meow--visit-point raw-text reverse)))
     (if visit-point
         (let* ((m (match-data))

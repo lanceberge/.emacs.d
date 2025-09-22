@@ -32,9 +32,8 @@
             (goto-line start-line)
             (while (<= (line-number-at-pos) end-line)
               (beginning-of-visual-line)
-              (dotimes (_ arg)
-                (when (looking-at "\\s-")
-                  (delete-char 1)))
+              (let ((whitespace-count (save-excursion (skip-chars-forward " \t"))))
+                (delete-char (min arg whitespace-count)))
               (forward-line 1))))
       (+drag-stuff--horizontal arg #'drag-stuff-left))))
 
@@ -45,12 +44,12 @@
     (if (full-line-region-p)
         (save-excursion
           (let ((start-line (line-number-at-pos (region-beginning)))
-                (end-line (line-number-at-pos (1- (region-end)))))
+                (end-line (line-number-at-pos (1- (region-end))))
+                (spaces (make-string arg ?\s)))
             (goto-line start-line)
             (while (<= (line-number-at-pos) end-line)
               (beginning-of-visual-line)
-              (dotimes (_ arg)
-                (insert " "))
+              (insert spaces)
               (forward-line 1))))
       (+drag-stuff--horizontal arg #'drag-stuff-right))))
 
