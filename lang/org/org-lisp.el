@@ -101,3 +101,19 @@
         (org-at-heading-p))
       (outline-toggle-children)
     (org-cycle)))
+
+;;;###autoload
+(defun +org-metaleft-dwim (arg)
+  (interactive "p")
+  (if (and (org-at-heading-p)
+           (not (region-active-p)))
+      (org-metaleft arg)
+    (+drag-stuff-left-dwim arg)))
+
+;;;###autoload
+(defun +org-metaright-dwim (arg)
+  (interactive "p")
+  (if (and (org-at-heading-p)
+           (not (region-active-p)))
+      (org-metaright arg)
+    (+drag-stuff-right-dwim arg)))

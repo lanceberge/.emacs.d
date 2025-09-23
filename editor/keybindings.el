@@ -12,7 +12,7 @@
   (:map meow-normal-state-keymap
         ("SPC [" . #'+insert-newlines-above)
         ("SPC ]" . #'+insert-newlines-below)
-        ([remap newline] . #'insert-newline-dwim)
+        ("RET" . #'insert-newline-dwim)
         ("S-<return>" . #'+split-line-above)))
 
 ;;;###autoload

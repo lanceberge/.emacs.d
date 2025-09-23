@@ -30,6 +30,8 @@
         ("M-a" . #'embark-act-all)
         ("M-r" . #'embark-become)
         ("C-c C-e" . #'embark-export))
+  (:map embark-symbol-map
+        ("h" . #'helpful-symbol))
   (:map meow-motion-mode-hook
         ("M-." . #'embark-act)
         ("M-'" . #'embark-dwim))

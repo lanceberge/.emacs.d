@@ -3,7 +3,6 @@
   :bind
   (:map meow-normal-state-keymap
         ("M-`" . #'+increment-number-increment)
-        ("~" . #'+increment-number-decrement)
         ("M-~" . #'+increment-number-decrement)))
 
 ;;;###autoload

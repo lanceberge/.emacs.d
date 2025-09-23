@@ -7,9 +7,10 @@
 ;;;###autoload
 (defun +replace ()
   (interactive)
-  (if (region-active-p)
-      (call-interactively #'vr/replace)
-    (+vr/replace)))
+  (save-excursion
+    (if (region-active-p)
+        (call-interactively #'vr/replace)
+      (+vr/replace))))
 
 (use-package visual-regexp-steroids
   :after visual-regexp

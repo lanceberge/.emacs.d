@@ -2,7 +2,7 @@
   :ensure nil
   :bind
   (:map meow-normal-state-keymap
-        ("`" . #'+toggle-region-or-number-dwim))
+        ("~" . #'+toggle-region-or-number-dwim))
   :config
   (put 'upcase-region 'disabled nil))
 
