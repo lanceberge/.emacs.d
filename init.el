@@ -202,9 +202,17 @@
             (append targets (list name)))))
      (use-package-process-keywords name rest state))))
 
+(defvar +leader-map (make-sparse-keymap))
+(defvar +leader2-map (make-sparse-keymap))
+(defvar +leader3-map (make-sparse-keymap))
+
 (use-package meow
   :demand t
   :hook (after-init . meow-global-mode)
+  :bind
+  (:repeat-map meow-mark-repeat-map
+               ("[" . #'+backward-global-mark)
+               ("]" . #'+forward-global-mark))
   :bind
   (:map meow-motion-state-keymap
         ("q" . #'meow-quit)
@@ -225,6 +233,9 @@
         ("." . #'meow-bounds-of-thing)
         ("," . #'meow-inner-of-thing)
         ("y" . #'meow-save))
+  (:map +leader3-map
+        ("[" . #'+backward-global-mark)
+        ("]" . #'+forward-global-mark))
   (:map meow-normal-state-keymap
         ("p" . (lambda () (interactive)
                  (if (region-active-p)
@@ -239,6 +250,8 @@
         ("C-d" . #'scroll-up)
         ("q" . #'save-buffer)
         ("[" . #'meow-beginning-of-thing)
+        ("M-[" . #'meow-pop-to-mark)
+        ("M-]" . #'meow-unpop-to-mark)
         ("d" . #'delete-char)
         ("]" . #'meow-end-of-thing)
         ("c" . #'+meow-change)
@@ -327,6 +340,8 @@
 (define-key meow-motion-state-keymap (kbd "SPC") +leader-map)
 (define-key meow-normal-state-keymap (kbd "'") +leader2-map)
 (define-key meow-motion-state-keymap (kbd "'") +leader2-map)
+(define-key meow-normal-state-keymap (kbd "`") +leader3-map)
+(define-key meow-motion-state-keymap (kbd "`") +leader3-map)
 
 (add-hook 'after-init-hook
           (lambda ()
