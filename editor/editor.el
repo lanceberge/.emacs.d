@@ -143,13 +143,17 @@
 (use-package wgrep
   :bind
   (:map grep-mode-map
-        ("R" .  (lambda () (interactive)
-                  (wgrep-change-to-wgrep-mode)
-                  (call-interactively #'+wgrep-replace)))
-        ("i" . wgrep-change-to-wgrep-mode))
+        ("R" . #'+grep-wgrep-replace)
+        ("i" . #'wgrep-change-to-wgrep-mode))
   (:map wgrep-mode-map
         ([remap save-buffer] . wgrep-finish-edit)
-        ("R" . +wgrep-replace)))
+        ("R" . #'+wgrep-replace)))
+
+;;;###autoload
+(defun +grep-wgrep-replace ()
+  (interactive)
+  (wgrep-change-to-wgrep-mode)
+  (call-interactively #'+wgrep-replace))
 
 ;;;###autoload
 (defun +wgrep-replace (regexp replace)

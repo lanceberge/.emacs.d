@@ -21,6 +21,8 @@
 ;;;###autoload
 (defun +kmacro-execute (&optional arg)
   (interactive "p")
+  (if defining-kbd-macro
+      (call-interactively #'kmacro-end-macro))
   (with-undo-amalgamate
     (if (region-active-p)
         (progn

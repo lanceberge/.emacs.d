@@ -37,13 +37,13 @@
         ("y" . #'consult-yank-from-kill-ring)
         ("f SPC y" . #'consult-yank-replace)
         ("fh" . #'consult-man)
-        ("ft" . #'find-todos)
+        ("ft" . #'+find-todos)
         ("fe" . #'consult-flymake)
         ("fo" . #'consult-outline)
         ("f." . #'consult-find)
         ("fl" . #'consult-goto-line)
         ("fa" . #'consult-org-agenda)
-        ("fs" . #'consult-ripgrep)
+        ("fs" . #'+consult-ripgrep-current)
         ("pj" . #'consult-imenu-multi)))
 
 ;;;###autoload
@@ -61,6 +61,11 @@
   (let ((consult-search (car consult--line-multi-history)))
     (unless (string-match-p " " consult-search)
       (+isearch-update-last-search consult-search))))
+
+;;;###autoload
+(defun +consult-ripgrep-current ()
+  (interactive)
+  (consult-ripgrep default-directory nil))
 
 ;;;###autoload
 (defun +project-buffer ()
