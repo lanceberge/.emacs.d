@@ -112,7 +112,22 @@
 (use-package keyfreq
   :hook (after-init . keyfreq-mode)
   :config
+  (setq keyfreq-excluded-commands
+        '(self-insert-command
+          mwheel-scroll
+          mouse-drag-region
+          meow-next
+          meow-prev
+          +escape
+          meow-right
+          meow-left
+          undefined
+          mouse-set-point
+          org-self-insert-command))
   (keyfreq-autosave-mode))
+
+(use-package keycast
+  :hook (after-init . keycast-mode-line-mode))
 
 (use-package rect
   :ensure nil

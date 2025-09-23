@@ -116,7 +116,7 @@
 
 (use-package repeat
   :ensure nil
-  :hook ((prog-mode text-mode) . repeat-mode))
+  :hook (after-init . repeat-mode))
 
 (use-package ispell
   :disabled t
