@@ -49,6 +49,7 @@
   :hook
   (text-mode . +cape-text-mode)
   (minibuffer-setup . +cape-minibuffer-mode)
+  (org-mode . +org-completion)
   :custom
   (cape-file-directory-must-exist nil)
   :init
@@ -56,6 +57,12 @@
   (add-hook 'completion-at-point-functions #'cape-file)
 
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
+
+;;;###autoload
+(defun +org-completion ()
+  (dolist (backend '(#'org-roam-complete-everywhere
+                     #'org-roam-complete-link-at-point))
+    (add-to-list 'completion-at-point-functions backend)))
 
 ;;;###autoload
 (defun +cape-minibuffer-mode ()

@@ -20,8 +20,8 @@
 (defun +surround (char)
   (interactive "c")
   (cond ((eq char ?\e) ; escape
-         (keyboard-quit)
-         ((eq char ?d)) ; delete
+         (keyboard-quit))
+        ((eq char ?d) ; delete
          (+surround-delete))
         ((eq char ?x) ; change
          (call-interactively #'+surround-change))

@@ -5,13 +5,16 @@
   :bind
   (:map meow-normal-state-keymap
         ("n" . #'isearch-repeat-forward)
-        ("N" . #'isearch-repeat-backward))
+        ("N" . #'isearch-repeat-backward)
+        ("/" . #'isearch-forward)
+        ("?" . #'isearch-backward))
   (:map isearch-mode-map
         ("C-j" . #'isearch-repeat-forward)
         ("C-k" . #'isearch-repeat-backward)
+        ("M-/" . #'+isearch-consult-line)
         ("M-j" . #'avy-isearch))
   :config
-  (setq search-nonincremental-instead nil))
+  (setq search-nonincremental-instead nil)) ; don't cancel isearches with searches
 
 ;;;###autoload
 (defun +isearch-exit-at-start ()
@@ -23,6 +26,16 @@
               (and (boundp 'avy-command)
                    (eq avy-command 'avy-isearch)))
     (goto-char isearch-other-end)))
+
+;;;###autoload
+(defun +isearch-consult-line ()
+  "Exit isearch and run consult-line with the current search string."
+  (interactive)
+  (let ((search-string (if isearch-regexp
+                           isearch-string
+                         isearch-string)))
+    (isearch-done)
+    (consult-line search-string)))
 
 ;;;###autoload
 (defun +isearch-update-last-search (search-string)

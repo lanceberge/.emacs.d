@@ -107,7 +107,7 @@
   (org-journal-dir "~/org/journal")
   (org-journal-file-format "%m%d%Y")
   :bind
-  (:map +leader-map
+  (:map +leader3-map
         ("ojn" . #'org-journal-new-entry)))
 
 (use-package ob ; org babel

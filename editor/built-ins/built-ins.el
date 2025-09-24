@@ -107,9 +107,13 @@
   :bind
   (:repeat-map outline-repeat-map
                ("a" . #'outline-toggle-children)
+               ("j" . #'outline-next-heading)
+               ("k" . #'outline-previous-heading)
                ("o" . #'outline-show-subtree))
   (:map +leader-map
         ("oa" . #'outline-toggle-children)
+        ("oj" . #'outline-next-heading)
+        ("ok" . #'outline-previous-heading)
         ("oo" . #'outline-show-subtree)
         ("or" . #'outline-show-all)
         ("om" . #'outline-hide-sublevels)))

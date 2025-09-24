@@ -101,7 +101,7 @@
   :bind
   (:map meow-normal-state-keymap
         ("u" . #'undo-tree-undo)
-        ("C-r" . #'undo-tree-redo))
+        ("U" . #'undo-tree-redo))
   (:map +leader-map
         ("fu" . #'undo-tree-visualize))
   :config

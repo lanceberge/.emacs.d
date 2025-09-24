@@ -40,6 +40,7 @@
         ([remap drag-stuff-down] . #'+org-drag-stuff-down)
         ([remap +drag-stuff-left-dwim] . #'+org-metaleft-dwim)
         ([remap +drag-stuff-right-dwim] . #'+org-metaright-dwim)
+        ([remap insert-newline-dwim] . #'org-return)
         ("M-H" . org-shiftleft)
         ("M-J" . org-shiftdown)
         ("M-K" . org-shiftup)

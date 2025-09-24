@@ -3,6 +3,7 @@
   :commands (org-roam-node-list org-roam-node-slug)
   :defer-incrementally (emacsql emacsqlite)
   :after org
+  :defer 2.1
   :custom
   (org-roam-completion-everywhere t)
   (org-roam-directory "~/org-roam")

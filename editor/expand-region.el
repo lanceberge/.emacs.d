@@ -2,7 +2,7 @@
 (use-package expand-region
   :bind
   (:map meow-normal-state-keymap
-        ("o" . #'er/expand-region)
+        ("o" . #'+expand-region)
         ("O" . #'+expand-region-2))
   (:map meow-motion-state-keymap
         ("o" . #'expand-region)

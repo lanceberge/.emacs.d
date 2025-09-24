@@ -25,10 +25,10 @@
 ;;;###autoload
 (defun +split-line-above ()
   (interactive)
-  (insert-newline-indent)
-  (save-excursion
-    (forward-line)
-    (drag-stuff-up 1)))
+  (require 'drag-stuff)
+  (newline)
+  (indent-for-tab-command)
+  (drag-stuff-up 1))
 
 ;;;###autoload
 (defun insert-newline-dwim ()
@@ -109,6 +109,11 @@
                   (insert-char char))))))
         (insert-char ?j)))))
 
+(define-derived-mode keyfreq-show-mode special-mode "KeyFreq"
+  "Major mode for displaying key frequency statistics."
+  :group 'keyfreq
+  (setq buffer-read-only t))
+
 (use-package keyfreq
   :hook (after-init . keyfreq-mode)
   :config
@@ -125,6 +130,15 @@
           mouse-set-point
           org-self-insert-command))
   (keyfreq-autosave-mode))
+
+;;;###autoload
+(defun +keyfreq-show (&optional arg)
+  (interactive "p")
+  (when (get-buffer "*frequencies*")
+    (kill-buffer "*frequencies*"))
+  (call-interactively #'keyfreq-show)
+  (with-current-buffer "*frequencies*"
+    (keyfreq-show-mode)))
 
 (use-package keycast
   :hook (after-init . keycast-mode-line-mode))

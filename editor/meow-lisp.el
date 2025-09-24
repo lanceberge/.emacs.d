@@ -48,6 +48,8 @@
 ;;;###autoload
 (defun +meow-replace-char (char)
   (interactive "cChar:")
+  (if (eq char ?\e) ;; escape to quit
+      (keyboard-quit))
   (save-excursion
     (when (and (region-active-p) (eq (point) (region-end)))
       (backward-char))
