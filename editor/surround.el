@@ -19,9 +19,11 @@
 ;;;###autoload
 (defun +surround (char)
   (interactive "c")
-  (cond ((eq char ?d)
+  (cond ((eq char ?\e) ; escape
+         (keyboard-quit)
+         ((eq char ?d)) ; delete
          (+surround-delete))
-        ((eq char ?x)
+        ((eq char ?x) ; change
          (call-interactively #'+surround-change))
         (t
          (+surround-surround char))))

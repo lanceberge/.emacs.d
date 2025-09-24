@@ -105,15 +105,13 @@
 ;;;###autoload
 (defun +org-metaleft-dwim (arg)
   (interactive "p")
-  (if (and (org-at-heading-p)
-           (not (region-active-p)))
-      (org-metaleft arg)
+  (if (not (region-active-p))
+      (call-interactively #'org-metaleft)
     (+drag-stuff-left-dwim arg)))
 
 ;;;###autoload
 (defun +org-metaright-dwim (arg)
   (interactive "p")
-  (if (and (org-at-heading-p)
-           (not (region-active-p)))
-      (org-metaright arg)
+  (if (not (region-active-p))
+      (call-interactively #'org-metaright)
     (+drag-stuff-right-dwim arg)))

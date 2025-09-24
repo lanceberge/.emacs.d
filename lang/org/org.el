@@ -92,7 +92,6 @@
 ;;;###autoload
 (defun +org-up (&optional arg)
   (interactive "p")
-
   (previous-line arg)
   (when (eolp)
     (org-end-of-line)))
