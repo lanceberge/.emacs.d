@@ -73,3 +73,19 @@
   (if (region-active-p)
       (meow-pop-selection)
     (set-mark-command 1)))
+
+;;;###autoload
+(defun +meow-open-below ()
+  "Open a newline below and switch to INSERT state. The previous function just executed the RET
+macro which made this send the query in gptel so I replaced it with newline."
+  (interactive)
+  (if meow--temp-normal
+      (progn
+        (message "Quit temporary normal mode")
+        (meow--switch-state 'motion))
+    (meow--switch-state 'insert)
+    (goto-char (line-end-position))
+    (newline)
+    (setq-local meow--insert-pos (point))
+    (when meow-select-on-open
+      (setq-local meow--insert-activate-mark t))))

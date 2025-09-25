@@ -9,7 +9,8 @@
         ("pp" . #'+project-switch)
         ("pk" . #'+project-kill-buffers)
         ("onf" . #'+org-roam-file-find)
-        ("l" . #'+switch-to-other-project-buffer)
+        ("l" . #'+switch-to-other-project-file-buffer)
+        ("bl" . #'+switch-to-other-project-buffer)
         ("fp" . #'+find-package)))
 
 ;;;###autoload
@@ -91,7 +92,7 @@
       (+proj-tab-name proj-root))))
 
 ;;;###autoload
-(defun +switch-to-other-project-buffer ()
+(defun +switch-to-other-project-file-buffer ()
   "Switch to the most recent open buffer in the same vc-root-dir as the current buffer.
 Recurse through the buffer-list but skipping the first value since that's the current buffer."
   (interactive)
@@ -109,6 +110,27 @@ Recurse through the buffer-list but skipping the first value since that's the cu
           (if (and (buffer-file-name buffer)
                    (or (not project-root-dir)
                        (string= project-root-dir buffer-project-root-dir)))
+              (switch-to-buffer buffer)
+            (+switch-to-recent-buffer-helper (cdr buffer-list))))))
+    (+switch-to-recent-buffer-helper (cdr (buffer-list)))))
+
+;;;###autoload
+(defun +switch-to-other-project-buffer ()
+  "Switch to the most recent buffer with the same vc-root-dir. Unlike `+switch-to-other-project-file-buffer',
+this function allows special buffers."
+  (interactive)
+  (require 'project)
+  (let ((current-buffer (current-buffer))
+        (project-root-dir (when (project-current t)
+                            (expand-file-name (project-root (project-current t))))))
+    (defun +switch-to-recent-buffer-helper (buffer-list)
+      (if (not buffer-list)
+          (message "No other recent files open in buffers")
+        (let* ((buffer (car buffer-list))
+               (buffer-project-root-dir (with-current-buffer buffer
+                                          (when (project-current nil)
+                                            (expand-file-name (project-root (project-current nil)))))))
+          (if (string= project-root-dir buffer-project-root-dir)
               (switch-to-buffer buffer)
             (+switch-to-recent-buffer-helper (cdr buffer-list))))))
     (+switch-to-recent-buffer-helper (cdr (buffer-list)))))

@@ -256,7 +256,7 @@
         ("]" . #'meow-end-of-thing)
         ("c" . #'+meow-change)
         ("a" . #'meow-append)
-        ("A" . #'meow-open-below)
+        ("A" . #'+meow-open-below)
         ("b" . #'meow-back-word)
         ("B" . #'meow-back-symbol)
         ("D" . #'meow-backward-delete)
