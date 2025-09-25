@@ -31,10 +31,11 @@
         ([remap meow-right-expand] . #'magit-log))
   (:map +leader-map
         ("gs" . #'magit-status)
-        ("gb" . #'magit-branch-checkout)
+        ("gb" . #'magit-branch-or-checkout)
         ("gd" . #'magit-file-delete)
         ("gF" . #'magit-fetch)
         ("SPC gb" . #'magit-branch-and-checkout)
+        ("g SPC" . #'magit-branch-spinoff)
         ;; ("gnf" . #'magit-commit-fixup)
         ("gi" . #'magit-init)
         ("gl" . #'magit-log-head)

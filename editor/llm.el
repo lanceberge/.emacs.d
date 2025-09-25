@@ -4,13 +4,14 @@
   (gptel-model 'claude-3-5-sonnet-20240620)
   (gptel-default-mode 'org-mode)
   :bind
+  ("C-c C-l". #'+gptel-project-clear-buffer)
   (:map gptel-mode-map
         ("RET" . #'gptel-send)
-        ("S-<return>" . #'newline)
-        ("C-c C-l" . #'+gptel-project-clear-buffer))
+        ("S-<return>" . #'newline))
   :bind
   (:map +leader2-map
         ("gt" . +gptel-project)
+        ("sc" . #'+gptel-project-add-context)
         ("s'" . #'+gptel-project-clear-buffer))
   :config
   (setq
@@ -46,12 +47,34 @@
       (erase-buffer)
       (insert (gptel-prompt-prefix-string)))))
 
+;;;###autoload
+(defun +gptel-project-add-context ()
+  "Add the selected region as context to the elysium chat buffer."
+  (interactive)
+  (let ((content (if (region-active-p)
+                     (buffer-substring-no-properties (region-beginning) (region-end))
+                   (buffer-substring-no-properties (point-min) (point-max))))
+        (code-buffer-language
+         (string-trim-right
+          (string-trim-right (symbol-name major-mode) "-ts-mode$") "-mode$")))
+    (+gptel-project)
+    (with-current-buffer (+gptel-project-buffer-name)
+      (goto-char (point-max))
+      (insert "\n")
+      (let ((src-pattern
+             (cond
+              ((derived-mode-p 'markdown-mode)
+               "```%s\n%s\n```")
+              ((derived-mode-p 'org-mode)
+               "#+begin_src %s\n%s\n#+end_src")
+              (t "%s%s"))))
+        (insert (format src-pattern code-buffer-language content))))))
+
 (use-package elysium
   :bind
   (:map +leader2-map
         ("sq" . #'elysium-query)
         ("so" . #'elysium)
-        ("sc" . #'elysium-add-context)
         ("sw" . #'elysium-toggle-window))
   (:map +leader-map
         ("m SPC" . #'elysium-keep-all-suggested-changes)
