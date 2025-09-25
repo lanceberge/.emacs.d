@@ -86,6 +86,7 @@ macro which made this send the query in gptel so I replaced it with newline."
     (meow--switch-state 'insert)
     (goto-char (line-end-position))
     (newline)
+    (indent-according-to-mode)
     (setq-local meow--insert-pos (point))
     (when meow-select-on-open
       (setq-local meow--insert-activate-mark t))))
