@@ -6,6 +6,7 @@
   :bind
   ("C-c C-l". #'+gptel-project-clear-buffer)
   (:map gptel-mode-map
+        ("C-c C-l". #'+gptel-project-clear-buffer)
         ("RET" . #'gptel-send)
         ("S-<return>" . #'newline))
   :bind
@@ -34,8 +35,7 @@
          (gptel-buffer (get-buffer gptel-buffer-name)))
     (if gptel-buffer
         (switch-to-buffer gptel-buffer)
-      (switch-to-buffer (gptel gptel-buffer-name))))
-  (meow-insert-mode))
+      (switch-to-buffer (gptel gptel-buffer-name)))))
 
 ;;;###autoload
 (defun +gptel-project-clear-buffer ()

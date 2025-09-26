@@ -49,7 +49,7 @@
   :hook
   (text-mode . +cape-text-mode)
   (minibuffer-setup . +cape-minibuffer-mode)
-  (org-mode . +org-completion)
+  ;; (org-mode . +org-completion)
   :custom
   (cape-file-directory-must-exist nil)
   :init

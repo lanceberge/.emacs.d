@@ -35,15 +35,14 @@
         ("gd" . #'magit-file-delete)
         ("gF" . #'magit-fetch)
         ("SPC gb" . #'magit-branch-and-checkout)
-        ("g SPC" . #'magit-branch-spinoff)
+        ("gc" . #'magit-branch-spinoff)
         ;; ("gnf" . #'magit-commit-fixup)
         ("gi" . #'magit-init)
         ("gl" . #'magit-log-head)
         ("SPC gl" . #'magit-log)
         ("gf" . #'magit-find-file)
         ("gw" . #'magit-worktree)
-        ("gh" . #'+magit-diff-head-n)
-        ("gc" . #'magit-show-commit))
+        ("gh" . #'+magit-diff-head-n))
   :config
   (cl-loop for n from 1 to 9
            do (let ((key (number-to-string n))
@@ -53,16 +52,11 @@
   (setq magit-auto-revert-mode nil))
 
 ;;;###autoload
-(defun +magit-diff-head-n (n)
+(defun +magit-diff-head-n (&optional arg)
   "Show the diff of HEAD and the previous `n' commits. Prompts for `n'
 unless a nonzero and non-negative prefix is provided."
-  (interactive
-   (list
-    (if (and current-prefix-arg
-             (> (prefix-numeric-value current-prefix-arg) 0))
-        (prefix-numeric-value current-prefix-arg)
-      (read-number "Enter number of commits: " 1))))
-  (magit-diff-range (format "HEAD~%d" n)))
+  (interactive "p")
+  (magit-diff-range (format "HEAD~%d" arg)))
 
 (use-package git-timemachine
   :commands (git-timemachine)
