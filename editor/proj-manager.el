@@ -10,7 +10,7 @@
         ("pk" . #'+project-kill-buffers)
         ("onf" . #'+org-roam-file-find)
         ("l" . #'+switch-to-other-project-file-buffer)
-        ("bl" . #'+switch-to-other-project-buffer)
+        ("bl" . #'+switch-to-other-project-special-buffer-dwim)
         ("fp" . #'+find-package)))
 
 ;;;###autoload
@@ -115,7 +115,14 @@ Recurse through the buffer-list but skipping the first value since that's the cu
     (+switch-to-recent-buffer-helper (cdr (buffer-list)))))
 
 ;;;###autoload
-(defun +switch-to-other-project-buffer ()
+(defun +switch-to-other-project-special-buffer-dwim ()
+  "If this is a special buffer, switch to the last real buffer. Otherwise, switch to the last special buffer."
+  (interactive)
+  (if (buffer-file-name (current-buffer))
+      (+switch-to-other-special-buffer)
+    (+switch-to-other-project-file-buffer)))
+;;;###autoload
+(defun +switch-to-other-project-special-buffer ()
   "Switch to the most recent buffer with the same vc-root-dir. Unlike `+switch-to-other-project-file-buffer',
 this function allows special buffers."
   (interactive)
@@ -130,7 +137,8 @@ this function allows special buffers."
                (buffer-project-root-dir (with-current-buffer buffer
                                           (when (project-current nil)
                                             (expand-file-name (project-root (project-current nil)))))))
-          (if (string= project-root-dir buffer-project-root-dir)
+          (if (and (not (buffer-file-name buffer))
+                   (string= project-root-dir buffer-project-root-dir))
               (switch-to-buffer buffer)
             (+switch-to-recent-buffer-helper (cdr buffer-list))))))
     (+switch-to-recent-buffer-helper (cdr (buffer-list)))))
