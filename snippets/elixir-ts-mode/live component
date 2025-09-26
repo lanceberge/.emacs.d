@@ -1,0 +1,27 @@
+# key: live
+# name: live component
+# --
+defmodule `(elixir-module-name-from-file)` do
+  use AppWeb, :live_view
+
+  @impl true
+  def update(socket, assigns)
+    socket =
+      socket
+      |> assign($1)
+
+    {:ok, socket}
+  end
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    $2
+    """
+  end
+
+  @impl true
+  def handle_event("$3", params, socket) do
+    $4
+  end
+end
