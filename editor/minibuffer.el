@@ -7,6 +7,8 @@
   :custom
   (enable-recursive-minibuffers t)
   :bind
+  (:map minibuffer-inactive-mode-map
+        ([remap save-buffer] . #'kill-current-buffer))
   (:map minibuffer-mode-map
         ([remap newline] . #'exit-minibuffer)
         ([remap insert-newline-dwim] . #'exit-minibuffer)

@@ -12,7 +12,7 @@
   (:map meow-normal-state-keymap
         ("SPC [" . #'+insert-newlines-above)
         ("SPC ]" . #'+insert-newlines-below)
-        ("RET" . #'insert-newline-dwim)
+        ("RET" . #'insert-newline-indent)
         ("S-<return>" . #'+split-line-above)))
 
 ;;;###autoload
@@ -156,10 +156,11 @@
         ([remap meow-back-word] . #'backward-word)))
 
 ;;;###autoload
-(defun +rectangle-mode ()
-  (interactive)
+(defun +rectangle-mode (&optional arg)
+  (interactive "p")
   (rectangle-mark-mode)
-  (forward-char))
+  (forward-char)
+  (next-line (- arg 1)))
 
 ;;;###autoload
 (defun +insert-newlines-above (arg)

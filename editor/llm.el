@@ -8,6 +8,7 @@
   (:map gptel-mode-map
         ("C-c C-l". #'+gptel-project-clear-buffer)
         ("RET" . #'gptel-send)
+        ([remap +org/insert-heading] . #'gptel-send)
         ("S-<return>" . #'newline))
   :bind
   (:map +leader2-map
@@ -49,7 +50,6 @@
 
 ;;;###autoload
 (defun +gptel-project-add-context ()
-  "Add the selected region as context to the elysium chat buffer."
   (interactive)
   (let ((content (if (region-active-p)
                      (buffer-substring-no-properties (region-beginning) (region-end))

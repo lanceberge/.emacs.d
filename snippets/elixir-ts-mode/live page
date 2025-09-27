@@ -1,14 +1,16 @@
-# key: component
-# name: live component
+# key: live
+# name: live page
 # --
 defmodule `(elixir-module-name-from-file)` do
-  use Phoenix.LiveComponent
+  use AppWeb, :live_view
 
   @impl true
-  def update(socket, assigns)
+  def mount(_params, _session, socket) do
+    $1
+
     socket =
       socket
-      |> assign($1)
+      |> assign(:trading_accounts, accounts)
 
     {:ok, socket}
   end
@@ -22,6 +24,6 @@ defmodule `(elixir-module-name-from-file)` do
 
   @impl true
   def handle_event("$3", params, socket) do
-    $4
+    {:noreply, socket}
   end
 end
