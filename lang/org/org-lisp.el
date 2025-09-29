@@ -60,7 +60,7 @@
   (end-of-visual-line)
   (if (org-insert-item)
       (meow-insert)
-    (meow-open-below)))
+    (+meow-open-below)))
 
 ;;;###autoload
 (defun +org-insert-above ()

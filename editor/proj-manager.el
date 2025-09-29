@@ -119,7 +119,7 @@ Recurse through the buffer-list but skipping the first value since that's the cu
   "If this is a special buffer, switch to the last real buffer. Otherwise, switch to the last special buffer."
   (interactive)
   (if (buffer-file-name (current-buffer))
-      (+switch-to-other-special-buffer)
+      (+switch-to-other-project-special-buffer)
     (+switch-to-other-project-file-buffer)))
 ;;;###autoload
 (defun +switch-to-other-project-special-buffer ()
