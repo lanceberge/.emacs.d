@@ -82,8 +82,9 @@
 
 ;;;###autoload
 (defun avy-action-move-line-or-region-stay (pt)
-  (save-excursion
-    (avy-action-move-line-or-region-move pt)))
+  (let ((point (point)))
+    (avy-action-move-line-or-region-move pt)
+    (goto-char point)))
 
 ;;;###autoload
 (defun avy-action-move-line-or-region-move (pt)
@@ -93,12 +94,15 @@
          (beg (if region-active (region-beginning) (line-beginning-position)))
          (end (if region-active
                   (1+ (region-end))
-                (line-beginning-position 2))))
+                (line-beginning-position 2)))
+         (column (current-column)))
     (kill-region beg end)
     (goto-char pt)
     (when (or full-line-region (not region-active))
       (beginning-of-line))
-    (yank)))
+    (yank)
+    (previous-line)
+    (forward-char column)))
 
 ;;;###autoload
 (defun avy-action-move-other-line (pt)
