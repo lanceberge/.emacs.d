@@ -69,7 +69,8 @@
                         ("A" . ?a)
                         ("B" . ?b)
                         ("C" . ?c)
-                        ("Music" . ?m)))
+                        ("Music" . ?m)
+                        ("drill" . ?d)))
 
   (add-to-list 'org-babel-default-header-args
                '(:eval . "never-export"))

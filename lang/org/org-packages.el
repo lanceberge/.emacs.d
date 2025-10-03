@@ -85,15 +85,23 @@
   (setq org-src-tab-acts-natively t))
 
 (use-package org-drill
-  :after org-roam
   :bind
   (:map +leader-map
+        ("od" . +org-drill-tag))
+  (:map +leader3-map
         ("od" . #'org-drill))
   :config
   (setq org-drill-scope
         (if (setq org-drill-scope-list (+org-roam-list-notes-by-tag "Drill"))
             org-drill-scope-list
           'file)))
+
+;;;###autoload
+(defun +org-drill-tag ()
+  (interactive)
+  (if (not (eq major-mode 'org-mode))
+      (user-error "must be in org mode"))
+  (org-set-tags "drill"))
 
 (use-package org-modern
   :custom
@@ -108,7 +116,7 @@
   (org-journal-file-format "%m%d%Y")
   :bind
   (:map +leader3-map
-        ("ojn" . #'org-journal-new-entry)))
+        ("oj" . #'org-journal-new-entry)))
 
 (use-package ob ; org babel
   :ensure nil
