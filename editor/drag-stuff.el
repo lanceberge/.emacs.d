@@ -85,7 +85,10 @@
   (require 'drag-stuff)
   (let ((orig-point-at-beginning (eq (point) (region-beginning)))
         (orig-region-active (region-active-p)))
-    (unless orig-region-active (meow-mark-word 1))
+    (unless orig-region-active
+      (set-mark (point))
+      (forward-char)
+      (activate-mark))
     (if left
         (goto-start-of-region)
       (goto-end-of-region))
