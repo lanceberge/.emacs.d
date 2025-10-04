@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package gptel
+  :demand t
   :custom
   (gptel-model 'claude-3-5-sonnet-20240620)
   (gptel-default-mode 'org-mode)
@@ -7,8 +8,11 @@
   ("C-c C-l". #'+gptel-project-clear-buffer)
   (:map gptel-mode-map
         ("C-c C-l". #'+gptel-project-clear-buffer)
-        ("RET" . #'gptel-send)
-        ([remap +org/insert-heading] . #'gptel-send)
+        ("C-RET" . #'+gptel-send)
+        ([remap +org/insert-heading] . #'+gptel-send)
+        ([remap gptel-send] . #'+gptel-send)
+        ;; ([remap +org/insert-heading] . #'gptel-send)
+        ;; ([remap org-return] . #'+gptel-send)
         ("S-<return>" . #'newline))
   :bind
   (:map +leader2-map
@@ -20,6 +24,12 @@
    gptel-backend (gptel-make-anthropic "Claude"
                    :stream t
                    :key #'gptel-api-key)))
+
+;;;###autoload
+(defun +gptel-send ()
+  (interactive)
+  (end-of-buffer)
+  (gptel-send))
 
 ;;;###autoload
 (defun gptel-api-key ()

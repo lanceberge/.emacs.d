@@ -68,7 +68,9 @@ unless a nonzero and non-negative prefix is provided."
                :exit
                ("q" . #'git-timemachine-quit))
   (:map +leader-map
-        ("gt" . #'+git-timemachine)))
+        ("gt" . #'+git-timemachine))
+  (:map git-timemachine-mode-map
+        ([remap meow-quit] . #'git-timemachine-quit)))
 
 ;;;###autoload
 (defun +git-timemachine ()

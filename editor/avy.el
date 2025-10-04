@@ -3,7 +3,6 @@
   :custom
   (avy-keys '(?j ?d  ?s ?l ?a ?g ?h ?e ?i ?c ?n))
   (avy-single-candidate-jump nil)
-  (avy-style 'de-bruijn)
   (avy-case-fold-search nil)
   :bind
   (:map meow-normal-state-keymap

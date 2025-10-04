@@ -4,21 +4,24 @@
   "insert a subheading in org mode and go to insert mode"
   (interactive)
   (org-insert-heading-respect-content)
-  (meow-insert-mode))
+  (unless meow-insert-mode
+    (meow-insert-mode 1)))
 
 ;;;###autoload
 (defun +org/insert-todo ()
   "insert a subheading in org mode and go to insert mode"
   (interactive)
   (org-insert-todo-heading-respect-content)
-  (meow-insert-mode))
+  (unless meow-insert-mode
+    (meow-insert-mode 1)))
 
 ;;;###autoload
 (defun +org/insert-heading-above ()
   "insert a subheading in org mode and go to insert mode"
   (interactive)
   (org-insert-heading-respect-content)
-  (meow-insert-mode))
+  (unless meow-insert-mode
+    (meow-insert-mode 1)))
 
 ;;;###autoload
 (defun +org/insert-heading-above ()
@@ -26,7 +29,7 @@
   (interactive)
   (meow-open-above)
   (move-beginning-of-line nil)
-  (org-insert-heading))
+  (org-insert-heading 1))
 
 ;;;###autoload
 (defun +org/insert-todo-above ()
@@ -74,24 +77,16 @@
 ;;;###autoload
 (defun +org-drag-stuff-up (n)
   (interactive "p")
-  (if (region-active-p)
-      (drag-stuff-up n)
-    (condition-case err
-        (dotimes (_ n)
-          (org-move-item-up))
-      (error
-       (org-move-subtree-up n)))))
+  (if (org-at-heading-p)
+      (org-move-subtree-up n)
+    (drag-stuff-up n)))
 
 ;;;###autoload
 (defun +org-drag-stuff-down (n)
   (interactive "p")
-  (if (region-active-p)
-      (drag-stuff-down n)
-    (condition-case err
-        (dotimes (_ n)
-          (org-move-item-down))
-      (error
-       (org-move-subtree-down n)))))
+  (if (org-at-heading-p)
+      (org-move-subtree-down n)
+    (drag-stuff-down n)))
 
 ;;;###autoload
 (defun +org-cycle ()
