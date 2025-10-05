@@ -96,6 +96,8 @@
 
 (use-package vundo ; interactive visual tree of undos
   :bind
+  (:repeat-map undo-repeat-map
+               ("f" . #'vundo))
   (:map +leader-map
         ("fu" . #'vundo))
   (:map vundo-mode-map

@@ -7,6 +7,9 @@
   (kill-do-not-save-duplicates t) ; no duplicates in kill ring
   (indent-tabs-mode nil)
   :bind
+  (:repeat-map undo-repeat-map
+               ("u" . #'undo)
+               ("U" . #'undo-redo))
   (:map meow-normal-state-keymap
         ("u" . #'undo)
         ("U" . #'undo-redo)
