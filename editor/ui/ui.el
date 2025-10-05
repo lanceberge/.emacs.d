@@ -52,5 +52,4 @@
   :ensure nil)
 
 (use-package ef-themes)
-(use-package nordic-night-theme)
 (use-package modus-themes)

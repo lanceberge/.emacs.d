@@ -19,34 +19,49 @@
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :custom
   (xref-show-xrefs-function #'consult-xref)
-  :bind
-  (:map meow-normal-state-keymap
-        ("M-q" . #'consult-kmacro))
-  (:map meow-insert-state-keymap
-        ("M-q" . #'consult-kmacro))
-  (:map +leader-map
-        ("," . #'+project-buffer)
-        ("." . #'find-file)
-        ("/" . #'+consult-line)
-        ("SPC /" . #'+consult-line-multi)
-        ("pg" . #'consult-git-grep)
-        ("fr" . #'consult-recent-file)
-        ("fj" . #'consult-imenu)
-        ("bb" . #'consult-buffer)
-        ("pm" . #'consult-global-mark)
-        ("fb" . #'consult-bookmark)
-        ("fm" . #'consult-mark)
-        ("y" . #'consult-yank-from-kill-ring)
-        ("f SPC y" . #'consult-yank-replace)
-        ("fh" . #'consult-man)
-        ("ft" . #'+find-todos)
-        ("fe" . #'consult-flymake)
-        ("fo" . #'consult-outline)
-        ("f." . #'consult-find)
-        ("fl" . #'consult-goto-line)
-        ("fa" . #'consult-org-agenda)
-        ("fs" . #'+consult-ripgrep-current)
-        ("pj" . #'consult-imenu-multi)))
+  :bind (
+         :map meow-normal-state-keymap
+         ("M-q" . #'consult-kmacro)
+         :map meow-insert-state-keymap
+         ("M-q" . #'consult-kmacro)
+         :map minibuffer-mode-map
+         ("C-r" . #'consult-history)
+         :map isearch-mode-map
+         ("C-r" . #'consult-isearch-history)
+         :map +leader2-map
+         ("f" . #'consult-focus-lines)
+         :map +leader-map
+         ("," . #'+project-buffer)
+         ("." . #'find-file)
+         ("/" . #'+consult-line)
+         ("SPC /" . #'+consult-line-multi)
+         ("pg" . #'consult-git-grep)
+         ("fr" . #'consult-recent-file)
+         ("fj" . #'consult-imenu)
+         ("bb" . #'consult-buffer)
+         ("pm" . #'consult-global-mark)
+         ("fb" . #'consult-bookmark)
+         ("fm" . #'consult-mark)
+         ("y" . #'consult-yank-from-kill-ring)
+         ("f SPC y" . #'consult-yank-replace)
+         ("SPC k" . #'+consult-keep-lines)
+         ("rf" . #'consult-recent-file)
+         ("rc" . #'consult-complex-command)
+         ("fh" . #'consult-man)
+         ("ft" . #'+find-todos)
+         ("fe" . #'consult-flymake)
+         ("fo" . #'consult-outline)
+         ("f." . #'consult-find)
+         ("fl" . #'consult-goto-line)
+         ("fa" . #'consult-org-agenda)
+         ("fs" . #'+consult-ripgrep-current)
+         ("pj" . #'consult-imenu-multi)))
+
+;;;###autoload
+(defun +consult-keep-lines ()
+  (interactive)
+  (meow-line 1)
+  (call-interactively #'consult-keep-lines))
 
 ;;;###autoload
 (defun +consult-line ()

@@ -10,8 +10,11 @@
         ("tl" . #'+themes-toggle-dark-light)
         ("tp" . #'+themes-prev)))
 
-(setq +themes-dark-themes '(doom-badger gruvbox nordic-night doom-nord-aurora))
-(setq +themes-light-themes '(doom-nord-light tango doom-oksolar-light modus-operandi-tinted modus-operandi-tritanopia doom-earl-grey))
+(setq +themes-dark-themes '(doom-badger gruvbox doom-one doom-sourcerer doom-city-lights doom-tomorrow-night))
+(setq +themes-light-themes '(doom-nord-light tango doom-oksolar-light modus-operandi-tinted tsdh-light modus-operandi-tritanopia doom-one-light adwaita))
+
+;; doom-opera-light, doom-tomorrow-day
+;; doom-tokyo-night, doom-pine, doom-1337, doom-old-hope, doom-oceanic-next
 
 (defvar +themes-dark-theme-index 0
   "Index of the current dark theme in `+themes-dark-themes'.")

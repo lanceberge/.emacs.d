@@ -146,7 +146,7 @@
         ("R" . #'+grep-wgrep-replace)
         ("i" . #'wgrep-change-to-wgrep-mode))
   (:map wgrep-mode-map
-        ([remap save-buffer] . wgrep-finish-edit)
+        ([remap save-buffer] . +wgrep-finish-edit)
         ("R" . #'+wgrep-replace)))
 
 ;;;###autoload
@@ -154,6 +154,12 @@
   (interactive)
   (wgrep-change-to-wgrep-mode)
   (call-interactively #'+wgrep-replace))
+
+;;;###autoload
+(defun +wgrep-finish-edit ()
+  (interactive)
+  (wgrep-finish-edit)
+  (save-some-buffers t))
 
 ;;;###autoload
 (defun +wgrep-replace (regexp replace)
