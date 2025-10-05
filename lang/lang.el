@@ -81,13 +81,6 @@
 
 (use-package nxml-mode
   :ensure nil
-  :bind
-  (:map nxml-mode-map
-        ([remap save-buffer] .
-         (lambda () (interactive)
-           (undo-tree-mode -1)
-           (save-buffer)
-           (undo-tree-mode))))
   :custom
   (nxml-auto-insert-xml-declaration-flag nil)
   (nxml-validate-on-save nil))

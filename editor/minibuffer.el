@@ -3,7 +3,6 @@
   :ensure nil
   :hook
   (minibuffer-setup . meow-insert-mode)
-  (minibuffer-setup . undo-tree-mode)
   :custom
   (enable-recursive-minibuffers t)
   :bind
@@ -127,6 +126,9 @@
 
   (vertico-mode)
   (vertico-indexed-mode))
+
+;; TODO
+(use-package vertico-posframe)
 
 ;;;###autoload
 (defun +auto-create-missing-dirs ()

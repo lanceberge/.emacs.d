@@ -8,6 +8,8 @@
   (indent-tabs-mode nil)
   :bind
   (:map meow-normal-state-keymap
+        ("u" . #'undo)
+        ("U" . #'undo-redo)
         ("RET" . #'newline))
   (:map prog-mode-map
         ("C-g" . #'+isearch-clear-highlighting))
