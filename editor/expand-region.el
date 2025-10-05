@@ -5,7 +5,7 @@
         ("o" . #'+expand-region)
         ("O" . #'+expand-region-2))
   (:map meow-motion-state-keymap
-        ("o" . #'expand-region)
+        ("o" . #'+expand-region)
         ("O" . +expand-region-2))
   :config
   (setq er/try-expand-list
