@@ -23,34 +23,18 @@
 
 ;;;###autoload
 (defun +drag-stuff-left-dwim (arg)
-  (interactive "p")
+  (interactive "P")
   (let ((deactivate-mark nil))
     (if (full-line-region-p)
-        (save-excursion
-          (let ((start-line (line-number-at-pos (region-beginning)))
-                (end-line (line-number-at-pos (1- (region-end)))))
-            (goto-line start-line)
-            (while (<= (line-number-at-pos) end-line)
-              (beginning-of-visual-line)
-              (let ((whitespace-count (save-excursion (skip-chars-forward " \t"))))
-                (delete-char (min arg whitespace-count)))
-              (forward-line 1))))
-      (+drag-stuff--horizontal arg #'drag-stuff-left))))
+        (+indent-left (or arg tab-width))
+      (+drag-stuff--horizontal (or arg 1) #'drag-stuff-left))))
 
 ;;;###autoload
 (defun +drag-stuff-right-dwim (arg)
-  (interactive "p")
+  (interactive "P")
   (let ((deactivate-mark nil))
     (if (full-line-region-p)
-        (save-excursion
-          (let ((start-line (line-number-at-pos (region-beginning)))
-                (end-line (line-number-at-pos (1- (region-end))))
-                (spaces (make-string arg ?\s)))
-            (goto-line start-line)
-            (while (<= (line-number-at-pos) end-line)
-              (beginning-of-visual-line)
-              (insert spaces)
-              (forward-line 1))))
+        (+indent-right (or arg tab-width))
       (+drag-stuff--horizontal arg #'drag-stuff-right))))
 
 ;;;###autoload

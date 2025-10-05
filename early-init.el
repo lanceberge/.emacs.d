@@ -35,7 +35,7 @@
 
 (set-face-attribute 'default nil
                     :family "DejaVu Sans Mono"
-                    :height 170
+                    :height 155
                     :weight 'normal
                     :width 'normal)
 

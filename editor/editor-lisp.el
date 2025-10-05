@@ -131,3 +131,21 @@
 (defun +expand-snippet (snippet-name)
   (interactive)
   (yas-expand-snippet (yas-lookup-snippet snippet-name)))
+
+;;;###autoload
+(defun +indent-left (arg)
+  (interactive "P")
+  (let ((arg (or arg tab-width)))
+    (unless (region-active-p)
+      (meow-line))
+    (dotimes (_ arg)
+      (call-interactively #'indent-rigidly-left))))
+
+;;;###autoload
+(defun +indent-right (arg)
+  (interactive "P")
+  (let ((arg (or arg tab-width)))
+    (unless (region-active-p)
+      (meow-line))
+    (dotimes (_ arg)
+      (call-interactively #'indent-rigidly-right))))
