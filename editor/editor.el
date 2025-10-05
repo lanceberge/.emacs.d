@@ -14,6 +14,7 @@
   (setq-default format-all-formatters format-all-default-formatters))
 
 (use-package goto-chg
+  :disabled
   :bind
   (:map meow-normal-state-keymap
         ("C-p" . goto-last-change)
@@ -31,6 +32,7 @@
         ("M-r" . #'embark-become)
         ("C-c C-e" . #'embark-export))
   (:map embark-symbol-map
+        ("s" . #'+project-replace-regex)
         ("h" . #'helpful-symbol))
   (:map meow-motion-mode-hook
         ("M-." . #'embark-act)
@@ -46,7 +48,7 @@
         ("'" . #'embark-dwim)
         ("f" . #'consult-ripgrep)
         ("d" . #'embark-find-definition)
-        ("g" . #'google-this-word))
+        ("g" . #'goolge-this-word))
   (:map embark-identifier-map
         ("SPC" . #'eglot-code-actions))
   :config

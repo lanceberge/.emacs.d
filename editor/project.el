@@ -35,6 +35,7 @@
 
 ;;;###autoload
 (defun +project-replace-regex (search-regex replace-string)
+  "Perform a replacement on all git files of SEARCH-REGEX to REPLACE-STRING."
   (interactive (list (read-string "Replace: ")
                      (read-string "Replace With: ")))
   (let* ((project-root (project-root (project-current t)))
