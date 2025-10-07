@@ -3,7 +3,6 @@
   :ensure nil
   :hook
   (minibuffer-setup . meow-insert-mode)
-  (minibuffer-setup . undo-tree-mode)
   :custom
   (enable-recursive-minibuffers t)
   :bind

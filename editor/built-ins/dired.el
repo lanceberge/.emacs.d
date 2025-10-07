@@ -8,7 +8,7 @@
   (:map +leader-map
         ("-" . #'dired-jump))
   (:map dired-mode-map
-        ("i" . +dired-toggle-read-only)
+        ("i" . dired-toggle-read-only)
         ([remap meow-line] . dired-do-flagged-delete)
         ([remap negative-argument] . #'+dired/up-dir))
   :config
@@ -31,9 +31,3 @@
   :hook (dired-mode . dired-omit-mode)
   :custom
   (dired-omit-files "^\\..$\\|^.$")) ; hide .. and ../ in dired
-
-;;;###autoload
-(defun +dired-toggle-read-only ()
-  (interactive)
-  (dired-toggle-read-only)
-  (undo-tree-mode 1))

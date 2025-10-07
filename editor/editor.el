@@ -94,20 +94,17 @@
         ([remap describe-function] . helpful-function)
         ([remap describe-symbol] . helpful-symbol)))
 
-(use-package undo-tree ; Persistent Undos
-  :defer 0.1
-  :hook ((prog-mode text-mode) . undo-tree-mode)
-  :custom
-  (undo-limit 10000)
-  (undo-tree-auto-save-history t)
+(use-package vundo ; interactive visual tree of undos
   :bind
-  (:map meow-normal-state-keymap
-        ("u" . #'undo-tree-undo)
-        ("U" . #'undo-tree-redo))
+  (:repeat-map undo-repeat-map
+               ("f" . #'vundo))
   (:map +leader-map
-        ("fu" . #'undo-tree-visualize))
-  :config
-  (global-undo-tree-mode))
+        ("fu" . #'vundo))
+  (:map vundo-mode-map
+        ([remap meow-quit] . #'vundo-quit)))
+
+(use-package undo-fu-session ; persistent undos
+  :hook (prog-mode . undo-fu-session-mode))
 
 (when IS-LINUX
   (add-hook 'after-init-hook
