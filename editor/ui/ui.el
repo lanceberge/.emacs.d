@@ -52,4 +52,3 @@
   :ensure nil)
 
 (use-package ef-themes)
-(use-package modus-themes)

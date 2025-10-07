@@ -41,7 +41,6 @@
          ("pm" . #'consult-global-mark)
          ("fb" . #'consult-bookmark)
          ("fm" . #'consult-mark)
-         ("y" . #'consult-yank-from-kill-ring)
          ("f SPC y" . #'consult-yank-replace)
          ("SPC k" . #'+consult-keep-lines)
          ("rf" . #'consult-recent-file)

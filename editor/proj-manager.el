@@ -13,6 +13,7 @@
         ("bl" . #'+switch-to-other-project-special-buffer-dwim)
         ("fp" . #'+find-package)))
 
+;; TODO add interactive params for the tab name and add to embark-tab-map
 ;;;###autoload
 (defun +project-kill-buffers ()
   (interactive)
@@ -121,6 +122,7 @@ Recurse through the buffer-list but skipping the first value since that's the cu
   (if (buffer-file-name (current-buffer))
       (+switch-to-other-project-special-buffer)
     (+switch-to-other-project-file-buffer)))
+
 ;;;###autoload
 (defun +switch-to-other-project-special-buffer ()
   "Switch to the most recent buffer with the same vc-root-dir. Unlike `+switch-to-other-project-file-buffer',

@@ -1,0 +1,10 @@
+# key: drill
+# name: drill
+# --
+* $1                          :drill:
+
+  $1
+
+** Answer
+
+   $2
