@@ -10,12 +10,12 @@
         ("tl" . #'+themes-toggle-dark-light)
         ("tp" . #'+themes-prev)))
 
-(setq +themes-dark-themes '(doom-badger gruvbox-dark-hard doom-one doom-city-lights doom-tomorrow-night))
+;; doom-opera-light, doom-tomorrow-day, tsdh-light, adwaita, doom-winter-is-coming-light, doom-solarized-light
+;; doom-tokyo-night, doom-rouge, doom-sourcerer, doom-Iosvkem, doom-moonlight, doom-spacegray
 
-(setq +themes-light-themes '(doom-nord-light tango doom-one-light doom-oksolar-light ef-cyprus doom-tomorrow-day gruvbox-light-hard))
+(setq +themes-dark-themes '(doom-badger gruvbox-dark-hard doom-one doom-city-lights doom-tokyo-night doom-tomorrow-night doom-sourcerer))
 
-;; doom-opera-light, doom-tomorrow-day, tsdh-light, adwaita
-;; doom-tokyo-night, doom-pine, doom-oceanic-next, doom-sourcerer, doom-pine
+(setq +themes-light-themes '(doom-nord-light tango doom-one-light doom-oksolar-light doom-tomorrow-day gruvbox-light-hard))
 
 (defvar +themes-dark-theme-index 0
   "Index of the current dark theme in `+themes-dark-themes'.")
@@ -24,6 +24,16 @@
   "Index of the current light theme in `+themes-light-themes'.")
 
 (defvar +themes-current-style 'dark)
+
+(add-hook 'desktop-after-read-hook '+themes-load-current-theme)
+
+;;;###autoload
+(defun +themes-load-current-theme ()
+  (interactive)
+  (mapc #'disable-theme custom-enabled-themes)
+  (if (eq +themes-current-style 'dark)
+      (load-theme (nth +themes-dark-theme-index +themes-dark-themes) t)
+    (load-theme (nth +themes-light-theme-index +themes-light-themes) t)))
 
 ;;;###autoload
 (defun +themes-toggle-dark-light ()

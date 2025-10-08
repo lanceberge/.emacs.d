@@ -21,6 +21,9 @@
 (use-package highlight-numbers
   :hook (find-file . highlight-numbers-mode))
 
+(use-package gruvbox-theme
+  :ensure (:host github :repo "lanceberge/emacs-theme-gruvbox"))
+
 (use-package hl-todo
   :hook (prog-mode . hl-todo-mode))
 
@@ -50,5 +53,3 @@
 
 (use-package fringe
   :ensure nil)
-
-(use-package ef-themes)

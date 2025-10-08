@@ -92,9 +92,6 @@
         byte-compile-warnings nil
         read-process-output-max (* 1024 1024))
 
-(defconst bg-color "#282828"
-  "gruvbox background color")
-
 (setq enable-local-variables nil)
 
 (use-package doom-themes
@@ -103,9 +100,6 @@
   (require 'doom-badger-theme)
   (mapc #'disable-theme custom-enabled-themes)
   (load-theme 'doom-badger t))
-
-(use-package gruvbox-theme
-  :ensure (:host github :repo "lanceberge/emacs-theme-gruvbox"))
 
 (use-package display-line-numbers
   :ensure nil
