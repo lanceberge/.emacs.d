@@ -87,7 +87,8 @@
 (use-package org-drill
   :bind
   (:map +leader-map
-        ("od" . +org-drill-tag))
+        ("od" . +org-drill-tag)
+        ("SPC od" . #'+org-drill-file))
   (:map +leader3-map
         ("od" . #'org-drill))
   :config
@@ -102,6 +103,11 @@
   (if (not (eq major-mode 'org-mode))
       (user-error "must be in org mode"))
   (org-set-tags "drill"))
+
+;;;###autoload
+(defun +org-drill-file ()
+  (interactive)
+  (org-drill 'file nil nil nil))
 
 (use-package org-modern
   :custom

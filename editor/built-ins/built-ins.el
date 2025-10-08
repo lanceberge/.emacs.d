@@ -78,6 +78,8 @@
   (desktop-load-locked-desktop t) ; ignore desktop-lock files
   (desktop-base-file-name "emacs.desktop")
   :config
+  (dolist (var '(+themes-dark-theme-index +themes-light-theme-index +themes-current-style))
+    (add-to-list 'desktop-globals-to-save var))
   (desktop-save-mode))
 
 (use-package electric-pair-mode
