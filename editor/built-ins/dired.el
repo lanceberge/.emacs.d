@@ -30,4 +30,5 @@
   :ensure nil
   :hook (dired-mode . dired-omit-mode)
   :custom
+  (dired-omit-verbose nil)
   (dired-omit-files "^\\..$\\|^.$")) ; hide .. and ../ in dired

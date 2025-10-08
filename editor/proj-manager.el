@@ -93,15 +93,16 @@
       (+proj-tab-name proj-root))))
 
 ;;;###autoload
-(defun +switch-to-other-project-file-buffer ()
-  "Switch to the most recent open buffer in the same vc-root-dir as the current buffer.
-Recurse through the buffer-list but skipping the first value since that's the current buffer."
-  (interactive)
+(defun +switch-to-other-project-file-buffer (n)
+  "Switch to the N'th most recent open buffer in the same vc-root-dir as the current buffer.
+Recurse through the buffer-list, skipping the first value since that's the current buffer."
+  (interactive "p")
   (require 'project)
   (let ((current-buffer (current-buffer))
         (project-root-dir (when (project-current t)
-                            (expand-file-name (project-root (project-current t))))))
-    (defun +switch-to-recent-buffer-helper (buffer-list)
+                            (expand-file-name (project-root (project-current t)))))
+        (target-index (1- (abs n)))) ; Convert to 0-based index
+    (defun +switch-to-recent-buffer-helper (buffer-list remaining)
       (if (not buffer-list)
           (message "No other recent files open in buffers")
         (let* ((buffer (car buffer-list))
@@ -111,9 +112,11 @@ Recurse through the buffer-list but skipping the first value since that's the cu
           (if (and (buffer-file-name buffer)
                    (or (not project-root-dir)
                        (string= project-root-dir buffer-project-root-dir)))
-              (switch-to-buffer buffer)
-            (+switch-to-recent-buffer-helper (cdr buffer-list))))))
-    (+switch-to-recent-buffer-helper (cdr (buffer-list)))))
+              (if (eq remaining 0)
+                  (switch-to-buffer buffer)
+                (+switch-to-recent-buffer-helper (cdr buffer-list) (1- remaining)))
+            (+switch-to-recent-buffer-helper (cdr buffer-list) remaining)))))
+    (+switch-to-recent-buffer-helper (cdr (buffer-list)) target-index)))
 
 ;;;###autoload
 (defun +switch-to-other-project-special-buffer-dwim ()
