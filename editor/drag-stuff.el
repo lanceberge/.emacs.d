@@ -13,6 +13,7 @@
 
 (use-package +drag-stuff
   :ensure nil
+  :bind
   (:repeat-map drag-stuff-horizontal-repeat-map
                ("h" . #'+drag-stuff-left-dwim)
                ("l" . #'+drag-stuff-right-dwim)

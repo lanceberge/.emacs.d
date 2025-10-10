@@ -89,6 +89,7 @@
 (setopt comp-deferred-compilation t
         use-package-verbose t ; show which packages are being loaded on startup and when
         use-package-always-ensure t
+        use-package-always-defer t
         byte-compile-warnings nil
         read-process-output-max (* 1024 1024))
 
@@ -136,10 +137,12 @@
                 vc-mode)) ; show git branch
 
 (use-package no-littering
+  :demand t
   :config
   (no-littering-theme-backups))
 
 (use-package minions ; hide all minor modes in modeline
+  :demand t
   :custom
   (minions-mode-line-lighter "")
   (minions-mode-line-delimiters '(" " . ""))
@@ -150,5 +153,3 @@
   (progn
     (setopt use-short-answers t)
     (add-to-list 'default-frame-alist '(undecorated-round . t))))
-
-(setopt use-package-always-defer t)
