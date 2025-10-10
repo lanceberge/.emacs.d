@@ -68,7 +68,9 @@
   "Drag region one word right or left if `left' is set"
   (require 'drag-stuff)
   (let ((orig-point-at-beginning (eq (point) (region-beginning)))
-        (orig-region-active (region-active-p)))
+        (orig-region-active (region-active-p))
+        (move-word-point-function (if left #'+backward-word-no-wrap-point #'+forward-word-no-wrap-point))
+        (drag-stuff-function (if left #'drag-stuff-region-left #'drag-stuff-region-right)))
     (unless orig-region-active
       (set-mark (point))
       (forward-char)
@@ -76,18 +78,24 @@
     (if left
         (goto-start-of-region)
       (goto-end-of-region))
-    (let ((move-word-function (if left #'backward-word #'forward-word))
-          (drag-stuff-function (if left #'drag-stuff-region-left #'drag-stuff-region-right)))
-      (dotimes (_ arg)
-        (let ((current-point (point))
-              (moved-word-point (save-excursion (funcall move-word-function) (point))))
-          (funcall drag-stuff-function (abs (- current-point moved-word-point))))))
+    (dotimes (_ arg)
+      (let* ((current-point (point))
+             (moved-word-point (funcall move-word-point-function))
+             (drag-stuff-arg (abs (- current-point moved-word-point))))
+        (unless (eq drag-stuff-arg 0)
+          (funcall drag-stuff-function drag-stuff-arg))))
     ;; restore point to beginning/end of the region
     (if orig-point-at-beginning
         (when (> (point (region-beginning))
                  (exchange-point-and-mark)))
       (when (< (point) (region-end))
         (exchange-point-and-mark)))))
+
+(defun +forward-word-no-wrap-point ()
+  (min (save-excursion (forward-word) (point)) (line-end-position)))
+
+(defun +backward-word-no-wrap-point ()
+  (max (save-excursion (beginning-of-visual-line) (point)) (save-excursion (backward-word) (point))))
 
 ;;;###autoload
 (defun +drag-stuff-word-left (&optional arg)

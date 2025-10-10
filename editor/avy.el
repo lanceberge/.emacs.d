@@ -92,7 +92,7 @@
          (full-line-region (full-line-region-p))
          (beg (if region-active (region-beginning) (line-beginning-position)))
          (end (if region-active
-                  (1+ (region-end))
+                  (region-end)
                 (line-beginning-position 2)))
          (column (current-column)))
     (kill-region beg end)

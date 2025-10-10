@@ -11,7 +11,8 @@
   (:map isearch-mode-map
         ("C-j" . #'isearch-repeat-forward)
         ("C-k" . #'isearch-repeat-backward)
-        ("M-/" . #'+isearch-consult-line)
+        ("M-/" . #'+consult-line)
+        ("C-M-/" . #'+consult-line-multi)
         ("M-j" . #'avy-isearch))
   :config
   (setq search-nonincremental-instead nil)) ; don't cancel isearches with searches
