@@ -149,3 +149,23 @@
       (meow-line))
     (dotimes (_ arg)
       (call-interactively #'indent-rigidly-right))))
+
+;;;###autoload
+(defun beginning-of-indentation-position ()
+  (save-excursion
+    (back-to-indentation)
+    (point)))
+
+;;;###autoload
+(defun goto-start-of-region ()
+  (if (region-active-p)
+      (if (> (point) (region-beginning))
+          (exchange-point-and-mark))
+    (user-error "region is not active")))
+
+;;;###autoload
+(defun goto-end-of-region ()
+  (if (region-active-p)
+      (if (< (point) (region-beginning))
+          (exchange-point-and-mark))
+    (user-error "region is not active")))

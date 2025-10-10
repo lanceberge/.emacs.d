@@ -1,20 +1,33 @@
 ;;; -*- lexical-binding: t -*-
 (use-package drag-stuff
   :bind
+  (:repeat-map drag-stuff-vertical-repeat-map
+               ("j" . #'drag-stuff-down)
+               ("k" . #'drag-stuff-up))
+  (:map meow-normal-state-keymap
+        ("M-k" . #'drag-stuff-up)
+        ("M-j" . #'drag-stuff-down))
+  (:map meow-insert-state-keymap
+        ("M-k" . #'drag-stuff-up)
+        ("M-j" . #'drag-stuff-down)))
+
+(use-package +drag-stuff
+  :ensure nil
+  (:repeat-map drag-stuff-horizontal-repeat-map
+               ("h" . #'+drag-stuff-left-dwim)
+               ("l" . #'+drag-stuff-right-dwim)
+               ("H" . #'+drag-stuff-word-left)
+               ("L" . #'+drag-stuff-word-right))
   (:map meow-normal-state-keymap
         ("M-H" . #'+drag-stuff-word-left)
         ("M-L" . #'+drag-stuff-word-right)
         ("M-h" . #'+drag-stuff-left-dwim)
-        ("M-l" . #'+drag-stuff-right-dwim)
-        ("M-k" . #'drag-stuff-up)
-        ("M-j" . #'drag-stuff-down))
+        ("M-l" . #'+drag-stuff-right-dwim))
   (:map meow-insert-state-keymap
         ("M-H" . #'+drag-stuff-word-left)
         ("M-L" . #'+drag-stuff-word-right)
         ("M-h" . #'+drag-stuff-left-dwim)
-        ("M-l" . #'+drag-stuff-right-dwim)
-        ("M-k" . #'drag-stuff-up)
-        ("M-j" . #'drag-stuff-down)))
+        ("M-l" . #'+drag-stuff-right-dwim)))
 
 ;;;###autoload
 (defun full-line-region-p ()
@@ -27,7 +40,9 @@
   (let ((deactivate-mark nil))
     (if (full-line-region-p)
         (+indent-left (or arg tab-width))
-      (+drag-stuff--horizontal (or arg 1) #'drag-stuff-left))))
+      (let ((arg (min (- (region-beginning) (beginning-of-indentation-position)) (or arg 1))))
+        (unless (eq arg 0)
+          (+drag-stuff--horizontal arg #'drag-stuff-left))))))
 
 ;;;###autoload
 (defun +drag-stuff-right-dwim (arg)
@@ -35,7 +50,9 @@
   (let ((deactivate-mark nil))
     (if (full-line-region-p)
         (+indent-right (or arg tab-width))
-      (+drag-stuff--horizontal arg #'drag-stuff-right))))
+      (let ((arg (min (- (line-end-position) (region-end)) (or arg 1))))
+        (unless (eq arg 0)
+          (+drag-stuff--horizontal arg #'drag-stuff-right))))))
 
 ;;;###autoload
 (defun +drag-stuff--horizontal (&optional arg drag-stuff-function)
@@ -48,20 +65,6 @@
     (unless region-active
       (deactivate-mark)
       (backward-char))))
-
-;;;###autoload
-(defun goto-start-of-region ()
-  (if (region-active-p)
-      (if (> (point) (region-beginning))
-          (exchange-point-and-mark))
-    (user-error "region is not active")))
-
-;;;###autoload
-(defun goto-end-of-region ()
-  (if (region-active-p)
-      (if (< (point) (region-beginning))
-          (exchange-point-and-mark))
-    (user-error "region is not active")))
 
 ;;;###autoload
 (defun +drag-stuff--word (&optional arg left)
@@ -91,11 +94,13 @@
       (when (< (point) (region-end))
         (exchange-point-and-mark)))))
 
+;;;###autoload
 (defun +forward-word-no-wrap-point ()
   (min (save-excursion (forward-word) (point)) (line-end-position)))
 
+;;;###autoload
 (defun +backward-word-no-wrap-point ()
-  (max (save-excursion (beginning-of-visual-line) (point)) (save-excursion (backward-word) (point))))
+  (max (beginning-of-indentation-position) (save-excursion (backward-word) (point))))
 
 ;;;###autoload
 (defun +drag-stuff-word-left (&optional arg)
