@@ -21,6 +21,7 @@
   :bind (
          :map meow-normal-state-keymap
          ("M-q" . #'consult-kmacro)
+         ("M-y" . #'+consult-yank-or-replace)
          :map meow-insert-state-keymap
          ("M-q" . #'consult-kmacro)
          :map minibuffer-mode-map
@@ -32,6 +33,7 @@
          :map +leader-map
          ("," . #'+project-buffer)
          ("." . #'find-file)
+         ("'f" . #'+consult-unfocus-lines)
          ("/" . #'+consult-line)
          ("SPC /" . #'+consult-line-multi)
          ("pg" . #'consult-git-grep)
@@ -53,13 +55,39 @@
          ("fl" . #'consult-goto-line)
          ("fa" . #'consult-org-agenda)
          ("fs" . #'+consult-ripgrep-current)
-         ("pj" . #'consult-imenu-multi)))
+         ("pj" . #'consult-imenu-multi)
+         :map org-mode-map
+         ([remap consult-imenu] . #'consult-org-heading)))
 
 ;;;###autoload
 (defun +consult-keep-lines ()
   (interactive)
   (meow-line 1)
   (call-interactively #'consult-keep-lines))
+
+;;;###autoload
+(defun +consult-yank-or-replace ()
+  "If region is active, replace it with selected text from kill ring using consult-yank-pop.
+Otherwise, just call consult-yank-pop."
+  (interactive)
+  (if (region-active-p)
+      (let ((region-start (region-beginning))
+            (region-end (region-end)))
+        (defun +consult-yank-replace-region (&rest _)
+          (when (region-active-p)
+            (delete-region region-start region-end)))
+        (unwind-protect
+            (progn
+              (add-function :after (symbol-function 'consult-yank-pop) #'+consult-yank-replace-region)
+              (call-interactively #'consult-yank-pop))
+          (remove-function (symbol-function 'consult-yank-pop) #'+consult-yank-replace-region)))
+    (call-interactively #'consult-yank-pop)))
+
+;;;###autoload
+(defun +consult-unfocus-lines ()
+  (interactive)
+  (let ((current-prefix-arg 1))
+    (call-interactively #'consult-focus-lines)))
 
 ;;;###autoload
 (defun +consult-line ()
@@ -134,13 +162,13 @@
 
 (use-package marginalia
   :defer 0.4
+  :bind
+  (:map minibuffer-local-map
+        ("M-A" . #'marginalia-cycle))
   :config
   (marginalia-mode)
-  (setq marginalia-annotators
-        (seq-remove (lambda (x) (memq (car x) '(tab file project-file)))
-                    marginalia-annotators))
   (setf (alist-get 'function marginalia-annotators)
-        '(marginalia-annotate-command . marginalia-annotate-binding)))
+        '(marginalia-annotate-command marginalia-annotate-binding)))
 
 (use-package embark-consult
   :after (consult embark))

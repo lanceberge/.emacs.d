@@ -11,6 +11,10 @@
   (:map isearch-mode-map
         ("C-j" . #'isearch-repeat-forward)
         ("C-k" . #'isearch-repeat-backward)
+        ("M-r" . nil)
+        ("M-r l" . #'+consult-line)
+        ("M-r L" . #'+consult-line-multi)
+        ("M-r s" . #'+isearch-consult-ripgrep)
         ("M-/" . #'+consult-line)
         ("C-M-/" . #'+consult-line-multi)
         ("M-j" . #'avy-isearch))
@@ -29,14 +33,10 @@
     (goto-char isearch-other-end)))
 
 ;;;###autoload
-(defun +isearch-consult-line ()
-  "Exit isearch and run consult-line with the current search string."
+(defun +isearch-consult-ripgrep ()
   (interactive)
-  (let ((search-string (if isearch-regexp
-                           isearch-string
-                         isearch-string)))
-    (isearch-done)
-    (consult-line search-string)))
+  (isearch-done)
+  (consult-ripgrep nil isearch-string))
 
 ;;;###autoload
 (defun +isearch-update-last-search (search-string)

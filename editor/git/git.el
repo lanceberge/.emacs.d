@@ -33,7 +33,7 @@
         ("gs" . #'magit-status)
         ("gb" . #'magit-branch-or-checkout)
         ("gd" . #'magit-file-delete)
-        ("gF" . #'magit-fetch)
+        ("SPC gf" . #'magit-fetch)
         ("SPC gb" . #'magit-branch-and-checkout)
         ("gc" . #'magit-branch-spinoff)
         ;; ("gnf" . #'magit-commit-fixup)
@@ -92,3 +92,27 @@ unless a nonzero and non-negative prefix is provided."
   :bind
   (:map +leader2-map
         ("gl" . #'git-link)))
+
+(use-package +git
+  :ensure nil
+  :bind
+  (:map +leader2-map
+        ("gf" . #'git-modified-files)))
+
+(defun git-modified-files ()
+  "Display modified git files in the minibuffer."
+  (interactive)
+  (let* ((default-directory (or (vc-git-root default-directory)
+                                (error "Not in a Git repository")))
+         (output (shell-command-to-string
+                  "git status --porcelain | grep -E '^[AM][ M]?|^[ M][ M]|^\\?\\?' | awk '{print $2}'"))
+         (files (split-string (string-trim output) "\n" t))
+         (completion-table (lambda (string pred action)
+                             (if (eq action 'metadata)
+                                 `(metadata (category . file))
+                               (complete-with-action action files string pred)))))
+    (if (null files)
+        (message "No modified, new, or staged files found.")
+      (let ((selected-file (completing-read "Select modified git file: " completion-table nil t)))
+        (when selected-file
+          (find-file selected-file))))))
