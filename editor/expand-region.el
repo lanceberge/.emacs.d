@@ -4,6 +4,8 @@
   (:map meow-normal-state-keymap
         ("o" . #'+expand-region)
         ("O" . #'+expand-region-2))
+  (:map meow-insert-state-keymap
+        ("C-=" . #'+expand-region))
   (:map meow-motion-state-keymap
         ("o" . #'+expand-region)
         ("O" . +expand-region-2))
