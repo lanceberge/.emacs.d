@@ -149,3 +149,11 @@
   :bind
   (:map +leader-map
         ("ed" . #'toggle-debug-on-error)))
+
+(use-package occur
+  :ensure nil
+  :bind
+  (:map occur-mode-map
+        ("i" . #'occur-edit-mode))
+  (:map occur-edit-mode-map
+        ([remap save-buffer] . #'occur-cease-edit)))
