@@ -18,6 +18,8 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
+(use-package white-sand)
+
 (use-package highlight-numbers
   :hook (find-file . highlight-numbers-mode))
 
@@ -43,7 +45,8 @@
   :custom
   (show-paren-when-point-inside-paren t))
 
-(use-package rainbow-mode
+(use-package rainbow-mode ; higlight hex codes, colors with the color
+  :custom (rainbow-x-colors nil) ; don't highlight white, blue, etc.
   :hook
   (prog-mode . rainbow-mode)
   (text-mode . rainbow-mode))
