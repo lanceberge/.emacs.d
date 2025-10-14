@@ -3,7 +3,7 @@
 (defun +org/insert-heading ()
   "insert a subheading in org mode and go to insert mode"
   (interactive)
-  (org-meta-return)
+  (org-insert-heading-respect-content)
   (unless meow-insert-mode
     (meow-insert-mode 1)))
 

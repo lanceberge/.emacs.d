@@ -31,8 +31,13 @@
   (auto-mode-case-fold nil)
   (auto-save-default nil)
   :bind
+  (:repeat-map save-buffer-repeat-map
+               ("q" . save-buffer)
+               ("d" . kill-current-buffer))
   (:map +leader-map
-        ("re" . #'+restart-emacs)))
+        ("re" . #'+restart-emacs))
+  (:map meow-normal-state-keymap
+        ("q" . save-buffer)))
 
 ;;;###autoload
 (defun +restart-emacs ()

@@ -90,3 +90,10 @@ macro which made this send the query in gptel so I replaced it with newline."
     (setq-local meow--insert-pos (point))
     (when meow-select-on-open
       (setq-local meow--insert-activate-mark t))))
+
+;;;###autoload
+(defun +meow-yank-or-replace ()
+  (interactive)
+  (if (region-active-p)
+      (meow-replace)
+    (meow-yank)))

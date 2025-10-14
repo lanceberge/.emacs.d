@@ -119,12 +119,12 @@ Recurse through the buffer-list, skipping the first value since that's the curre
     (+switch-to-recent-buffer-helper (cdr (buffer-list)) target-index)))
 
 ;;;###autoload
-(defun +switch-to-other-project-special-buffer-dwim ()
+(defun +switch-to-other-project-special-buffer-dwim (arg)
   "If this is a special buffer, switch to the last real buffer. Otherwise, switch to the last special buffer."
-  (interactive)
+  (interactive "p")
   (if (buffer-file-name (current-buffer))
       (+switch-to-other-project-special-buffer)
-    (+switch-to-other-project-file-buffer)))
+    (+switch-to-other-project-file-buffer arg)))
 
 ;;;###autoload
 (defun +switch-to-other-project-special-buffer ()

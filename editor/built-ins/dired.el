@@ -4,6 +4,7 @@
   :custom
   (dired-auto-revert-buffer)
   (dired-recursive-copies 'always)
+  :hook (dired-mode . dired-hide-details-mode)
   :bind
   (:map +leader-map
         ("-" . #'dired-jump))

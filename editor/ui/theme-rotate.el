@@ -13,8 +13,10 @@
 ;; tsdh-light, leuven, whiteboard
 ;; doom-tokyo-night, doom-rouge, doom-sourcerer, doom-Iosvkem, doom-moonlight, doom-spacegray, doom-monokai-spectrum
 
-(setq +themes-dark-themes '(doom-badger gruvbox-dark-hard doom-one doom-city-lights doom-tokyo-night doom-tomorrow-night doom-sourcerer doom-Iosvkem))
-(setq +themes-light-themes '(doom-nord-light tango doom-one-light white-sand doom-oksolar-light doom-tomorrow-day gruvbox-light-hard))
+(setq +themes-dark-themes '(doom-badger gruvbox-dark-hard doom-tomorrow-night doom-one doom-city-lights doom-tokyo-night doom-Iosvkem doom-horizon doom-material-dark doom-oceanic-next doom-palenight
+                                        doom-moonlight doom-spacegrey))
+
+(setq +themes-light-themes '(doom-nord-light tango doom-one-light white-sand doom-oksolar-light tsdh-light doom-tomorrow-day gruvbox-light-hard doom-feather-light doom-acario-light))
 
 (defvar +themes-dark-theme-index 0
   "Index of the current dark theme in `+themes-dark-themes'.")

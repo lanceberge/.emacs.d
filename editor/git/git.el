@@ -62,11 +62,6 @@ unless a nonzero and non-negative prefix is provided."
   :commands (git-timemachine)
   :hook (git-timemachine-mode . +meow-motion-mode)
   :bind
-  (:repeat-map git-timemachine-repeat-map
-               ("p" . #'git-timemachine-show-previous-revision)
-               ("n" . #'git-timemachine-show-next-revision)
-               :exit
-               ("q" . #'git-timemachine-quit))
   (:map +leader-map
         ("gt" . #'+git-timemachine))
   (:map git-timemachine-mode-map

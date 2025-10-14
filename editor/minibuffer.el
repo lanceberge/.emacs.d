@@ -131,6 +131,7 @@ Otherwise, just call consult-yank-pop."
   :bind
   (:map vertico-map
         ("C-j" . #'vertico-next)
+        ("C-f" . #'vertico-quick-insert)
         ("C-k" . #'vertico-previous)
         ("C-u" . #'vertico-scroll-down)
         ("C-d" . #'vertico-scroll-up)

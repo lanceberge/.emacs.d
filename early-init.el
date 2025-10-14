@@ -91,6 +91,7 @@
         use-package-always-ensure t
         use-package-always-defer t
         byte-compile-warnings nil
+        delete-by-moving-to-trash t
         read-process-output-max (* 1024 1024))
 
 (setq enable-local-variables nil)
