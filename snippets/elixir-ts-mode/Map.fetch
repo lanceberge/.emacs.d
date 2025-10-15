@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Map.fetch
+# key: mf
+# --
+Map.fetch($0)

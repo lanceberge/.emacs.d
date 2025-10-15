@@ -34,24 +34,8 @@
   :hook (org-capture-mode . meow-insert-mode)
   :custom
   (org-capture-templates
-   '(("a" "A"
-      entry (file+headline "~/org-roam/projects/todo.org" "A")
-      "** TODO %?\n %i\n" :prepend t)
-
-     ("b" "B"
-      entry (file+headline "~/org-roam/projects/todo.org" "B")
-      "** TODO %?\n %i\n" :prepend t)
-
-     ("c" "C"
-      entry (file+headline "~/org-roam/projects/todo.org" "C")
-      "** TODO %?\n %i\n" :prepend t)
-
-     ("w" "Work"
-      entry (file+headline "~/org-roam/projects/work.org" "Tasks")
-      "** TODO %?\n %i\n" :prepend t)
-
-     ("e" "Emacs"
-      entry (file+headline "~/org-roam/projects/emacs.org" "Tasks")
+   '(("t" "Todo"
+      entry (file+headline "~/org/todo.org" "Tasks")
       "** TODO %?\n %i\n" :prepend t)))
   :bind
   (:map org-capture-mode-map

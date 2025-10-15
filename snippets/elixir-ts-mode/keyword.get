@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: keyword.get
+# key: kg
+# --
+Keyword.get($0)

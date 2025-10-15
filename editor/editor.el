@@ -179,3 +179,11 @@
   :bind
   (:map meow-normal-state-keymap
         ("%" . #'evilmi-jump-items-native)))
+
+;; buffers restored from desktop.el initialize in fundamental-mode so this sets it correctly
+(defun +restore-major-mode ()
+  (when (and (eq major-mode 'fundamental-mode)
+             (buffer-file-name))
+    (set-auto-mode)))
+
+(add-hook 'window-configuration-change-hook '+restore-major-mode)
