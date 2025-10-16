@@ -73,9 +73,6 @@
   (recentf-auto-cleanup 'never)
   (recentf-max-saved-items 200))
 
-(use-package bookmark
-  :ensure nil)
-
 (use-package desktop ; save sessions to a file
   :ensure nil
   :demand t
@@ -162,3 +159,15 @@
         ("i" . #'occur-edit-mode))
   (:map occur-edit-mode-map
         ([remap save-buffer] . #'occur-cease-edit)))
+
+(use-package bookmark
+  :ensure nil
+  :bind
+  (:map +leader-map
+        ("b SPC" . #'+bookmark-file)))
+
+;;;###autoload
+(defun +bookmark-file ()
+  (interactive)
+  (when (buffer-file-name)
+    (bookmark-set (file-name-nondirectory (buffer-file-name)) nil)))

@@ -9,7 +9,7 @@
         ("nf" . #'+make-frame)
         ("bd" . #'kill-current-buffer)
         ("bq" . #'+save-and-kill-buffer)
-        ("b SPC d" . #'+kill-window-and-buffer)
+        ("SPC bd" . #'+kill-window-and-buffer)
         ("br" . #'+revert-buffer)
         ("bn" . #'next-buffer)
         ("bp" . #'previous-buffer)))
