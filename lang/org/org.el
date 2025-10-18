@@ -5,7 +5,7 @@
   :defer-incrementally
   (calendar find-func format-spec org-macs
             org-faces org-entities org-list org-src
-            ob org org-agenda org-capture flyspell
+            ob org org-agenda org-capture
             org-element)
   :custom
   (org-directory "~/org")
@@ -104,6 +104,3 @@
   (next-line arg)
   (when (eolp)
     (org-end-of-line)))
-
-(use-package embark-org
-  :after (embark org))

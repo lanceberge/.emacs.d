@@ -141,7 +141,13 @@
     (keyfreq-show-mode)))
 
 (use-package keycast
-  :hook (after-init . keycast-mode-line-mode))
+  :hook (after-init . keycast-mode-line-mode)
+  :config
+  (dolist (input '(self-insert-command org-self-insert-command))
+    (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
+
+  (dolist (event '("<mouse-event>" "<mouse-movement>" "<mouse-2>" "<drag-mouse-1>" "<wheel-up>" "<wheel-down>" "<double-wheel-up>" "<double-wheel-down>" "<triple-wheel-up>" "<triple-wheel-down>" "<wheel-left>" "<wheel-right>" handle-select-window mouse-set-point  mouse-drag-region))
+    (add-to-list 'keycast-substitute-alist `(,event nil nil))))
 
 (use-package rect
   :ensure nil

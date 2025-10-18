@@ -21,7 +21,6 @@
   (yas-global-mode 1))
 
 (use-package yasnippet-snippets
-  :demand t
   :after yasnippet
   :init
   (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer")

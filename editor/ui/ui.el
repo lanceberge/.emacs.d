@@ -2,6 +2,7 @@
 ;; don't restore frames with desktop
 (use-package frameset
   :ensure nil
+  :after desktop
   :demand t
   :config
   (setq frameset-filter-alist

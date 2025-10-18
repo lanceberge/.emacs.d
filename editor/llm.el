@@ -1,6 +1,5 @@
 ;;; -*- lexical-binding: t -*-
 (use-package gptel
-  :demand t
   :custom
   (gptel-model 'claude-3-5-sonnet-20240620)
   (gptel-default-mode 'org-mode)

@@ -14,6 +14,11 @@
         ("bn" . #'next-buffer)
         ("bp" . #'previous-buffer)))
 
+(use-package other-window
+  :ensure nil
+  :bind
+  ("M-o" . #'other-window))
+
 (use-package window
   :ensure nil
   :bind
@@ -34,16 +39,6 @@
         ("wk" . #'windmove-up)
         ("wl" . #'windmove-right)
         ("wh" . #'windmove-left)))
-
-(use-package ace-window
-  :custom
-  (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
-  (aw-scope 'frame)
-  :bind
-  (:map global-map
-        ("M-o" . #'ace-window))
-  (:map +leader-map
-        ("w SPC" . #'ace-swap-window)))
 
 (use-package winner ; Undo and redo window configs
   :disabled t
