@@ -7,6 +7,9 @@
   (kill-do-not-save-duplicates t) ; no duplicates in kill ring
   (indent-tabs-mode nil)
   :bind
+  ("M-z" . #'zap-up-to-char)
+  ("M-Z" . #'zap-to-char)
+  ("M-T" . #'transpose-paragraphs)
   (:repeat-map undo-repeat-map
                ("u" . #'undo)
                ("U" . #'undo-redo))
@@ -171,3 +174,10 @@
   (interactive)
   (when (buffer-file-name)
     (bookmark-set (file-name-nondirectory (buffer-file-name)) nil)))
+
+(use-package register
+  :ensure nil
+  :bind
+  (:map +leader-map
+        ("rj" . #'jump-to-register)
+        ("rw" . #'window-configuration-to-register)))

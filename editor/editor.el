@@ -99,18 +99,6 @@
         ([remap describe-function] . helpful-function)
         ([remap describe-symbol] . helpful-symbol)))
 
-(use-package vundo ; interactive visual tree of undos
-  :bind
-  (:repeat-map undo-repeat-map
-               ("f" . #'vundo))
-  (:map +leader-map
-        ("fu" . #'vundo))
-  (:map vundo-mode-map
-        ([remap meow-quit] . #'vundo-quit)))
-
-(use-package undo-fu-session ; persistent undos
-  :hook (prog-mode . undo-fu-session-mode))
-
 (when IS-LINUX
   (add-hook 'after-init-hook
             (lambda ()
@@ -143,42 +131,6 @@
         ("M-i" . #'ace-link))
   (:map helpful-mode-map
         ("M-i" . #'ace-link)))
-
-(use-package wgrep
-  :bind
-  (:map grep-mode-map
-        ("R" . #'+grep-wgrep-replace)
-        ("i" . #'wgrep-change-to-wgrep-mode))
-  (:map wgrep-mode-map
-        ([remap save-buffer] . +wgrep-finish-edit)
-        ("R" . #'+wgrep-replace)))
-
-;;;###autoload
-(defun +grep-wgrep-replace ()
-  (interactive)
-  (wgrep-change-to-wgrep-mode)
-  (call-interactively #'+wgrep-replace))
-
-;;;###autoload
-(defun +wgrep-finish-edit ()
-  (interactive)
-  (wgrep-finish-edit)
-  (save-some-buffers t))
-
-;;;###autoload
-(defun +wgrep-replace (regexp replace)
-  "Replace in wgrep without replacing the read-only 'file_name:line:' prefix."
-  (interactive (list (read-string "Replace: ")
-                     (read-string "Replace With: ")))
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward "^\\([^:]*:[0-9]+:\\)" nil t)
-      (let ((prefix-end (point))
-            (line-end (line-end-position)))
-        (while (re-search-forward regexp (line-end-position) t)
-          (replace-match replace t nil))
-        (forward-line)
-        (beginning-of-line)))))
 
 (use-package evil-matchit
   :bind

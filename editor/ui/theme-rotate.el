@@ -15,7 +15,7 @@
 
 (setq +themes-dark-themes '(gruvbox-dark-hard doom-badger gruvbox doom-tomorrow-night doom-oceanic-next
                                               doom-spacegrey doom-tokyo-night
-                                              doom-palenight doom-Iosvkem))
+                                              doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon))
 
 (setq +themes-light-themes '(tango doom-nord-light white-sand doom-oksolar-light doom-solarized-light))
 
