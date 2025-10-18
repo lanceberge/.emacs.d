@@ -24,6 +24,7 @@
   :custom
   (prefix-help-command 'embark-prefix-help-command)
   (embark-confirm-act-all nil)
+  (embark-quit-after-action nil)
   :bind
   (:map minibuffer-mode-map
         ("M-." . #'embark-act)
@@ -49,6 +50,10 @@
         ("f" . #'consult-ripgrep)
         ("d" . #'embark-find-definition)
         ("g" . #'goolge-this-word))
+  (:map embark-collect-mode-map
+        ("F" . #'consult-focus-lines)
+        ([remap meow-bounds-of-thing] . #'embark-act))
+
   (:map embark-identifier-map
         ("SPC" . #'eglot-code-actions))
   :config
@@ -179,6 +184,9 @@
   :bind
   (:map meow-normal-state-keymap
         ("%" . #'evilmi-jump-items-native)))
+
+(use-package beginend
+  :hook (after-init . beginend-global-mode))
 
 ;; buffers restored from desktop.el initialize in fundamental-mode so this sets it correctly
 (defun +restore-major-mode ()

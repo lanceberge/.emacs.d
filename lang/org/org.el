@@ -104,3 +104,6 @@
   (next-line arg)
   (when (eolp)
     (org-end-of-line)))
+
+(use-package embark-org
+  :after (embark org))

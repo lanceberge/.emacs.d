@@ -35,7 +35,7 @@
 
 (set-face-attribute 'default nil
                     :family "DejaVu Sans Mono"
-                    :height 155
+                    :height 150
                     :weight 'normal
                     :width 'normal)
 
@@ -141,14 +141,6 @@
   :demand t
   :config
   (no-littering-theme-backups))
-
-(use-package minions ; hide all minor modes in modeline
-  :demand t
-  :custom
-  (minions-mode-line-lighter "")
-  (minions-mode-line-delimiters '(" " . ""))
-  :config
-  (minions-mode 1))
 
 (when (>= emacs-major-version 29)
   (progn
