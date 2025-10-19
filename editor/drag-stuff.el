@@ -23,11 +23,6 @@
         ("M-H" . #'+drag-stuff-word-left)
         ("M-L" . #'+drag-stuff-word-right)
         ("M-h" . #'+drag-stuff-left-dwim)
-        ("M-l" . #'+drag-stuff-right-dwim))
-  (:map meow-insert-state-keymap
-        ("M-H" . #'+drag-stuff-word-left)
-        ("M-L" . #'+drag-stuff-word-right)
-        ("M-h" . #'+drag-stuff-left-dwim)
         ("M-l" . #'+drag-stuff-right-dwim)))
 
 ;;;###autoload

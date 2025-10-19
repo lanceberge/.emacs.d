@@ -68,6 +68,8 @@
   :hook (emacs-lisp-mode . eldoc-mode)
   :custom
   (eldoc-idle-delay 1)
+  ;; https://www.reddit.com/r/emacs/comments/1lbo5jy/comment/myig4p7/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+  (eglot-code-action-indications '(eldoc-hint))
   :preface
   (when (and (version<= emacs-version "29.1") (featurep 'eldoc))
     (unload-feature 'eldoc t))

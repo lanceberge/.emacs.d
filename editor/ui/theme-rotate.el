@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package +themes
   :ensure nil
   :bind
@@ -15,9 +16,9 @@
 
 (setq +themes-dark-themes '(gruvbox-dark-hard doom-badger gruvbox doom-tomorrow-night doom-oceanic-next
                                               doom-spacegrey doom-tokyo-night
-                                              doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon))
+                                              doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon doom-miramare))
 
-(setq +themes-light-themes '(tango doom-nord-light white-sand doom-oksolar-light doom-solarized-light))
+(setq +themes-light-themes '(tango doom-nord-light white-sand leuven doom-oksolar-light doom-solarized-light))
 
 (defvar +themes-dark-theme-index 0
   "Index of the current dark theme in `+themes-dark-themes'.")

@@ -12,9 +12,7 @@
         ("pe" . #'flymake-show-project-diagnostics)
         ("pr" . #'+project-replace-regex)
         ("pt" . #'+project-find-todos)
-        ("rp" . #'+project-load-projects))
-  :config
-  (+project-load-projects))
+        ("rp" . #'+project-load-projects)))
 
 ;;;###autoload
 (defun +project-find-todos ()

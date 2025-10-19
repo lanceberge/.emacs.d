@@ -6,7 +6,7 @@
     json-mode
     svelte-mode) . format-all-mode)
   :custom
-  (format-all-show-errors t)
+  (format-all-show-errors nil)
   :bind
   (:map +leader-map
         ("=" . #'+format/buffer))

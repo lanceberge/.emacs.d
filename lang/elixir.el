@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (defvar elixir-web-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd ">") #'+maybe-close-tag)
@@ -31,8 +32,26 @@
           (insert (format "</%s>" tag-name))
           (backward-char (+ 2 (length tag-name))))))))
 
+(defvar +elixir-mode-map (make-sparse-keymap))
+
 (use-package elixir-mode
+  ;; :hook
+  ;; ((elixir-mode elixir-ts-mode) . +setup-elixir-map)
+  :bind
+  (:map +elixir-mode-map
+        ("a" . #'forward-char))
+
   :defer t)
+
+;; (defun +setup-elixir-map ()
+;;   "Set up leader key bindings for elixir-mode."
+;;   (define-key +elixir-mode-map (kbd "C-c l") +leader-map)
+;;   (define-key +leader2-map (kbd "m") +elixir-mode-map))
+
+;;;###autoload
+(defun +elixir-create-schema ()
+  (interactive)
+  ())
 
 ;;;###autoload
 (defun elixir-module-name-from-file ()
@@ -56,4 +75,10 @@
 
 
 (use-package elixir-ts-mode
-  :hook (elixir-ts-mode . maybe-elixir-web-mode))
+  :hook ((elixir-ts-mode . maybe-elixir-web-mode)
+         (elixir-ts-mode . +elixir-mode)))
+
+;;;###autoload
+(defun +elixir-mode ()
+  (interactive)
+  (beginend-prog-mode -1))

@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package fretboard
   :ensure (:host github :repo "skyefreeman/fretboard.el")
   :commands (fretboard)

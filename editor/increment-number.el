@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (use-package +increment-number
   :ensure nil
   :bind

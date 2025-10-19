@@ -25,9 +25,9 @@
          :map meow-insert-state-keymap
          ("M-q" . #'consult-kmacro)
          :map minibuffer-mode-map
-         ("C-r" . #'consult-history)
+         ("M-r" . #'consult-history)
          :map isearch-mode-map
-         ("C-r" . #'consult-isearch-history)
+         ("M-r" . #'consult-isearch-history)
          :map +leader2-map
          ("f" . #'consult-focus-lines)
          :map +leader-map
@@ -139,8 +139,8 @@ Otherwise, just call consult-yank-pop."
         ([remap drag-stuff-up] . #'vertico-previous)
         ("M-u" . #'vertico-scroll-down)
         ("M-d" . #'vertico-scroll-up)
-        ([remap +drag-stuff-left-dwim] . #'vertico-directory-up)
-        ([remap +drag-stuff-right-dwim] . #'vertico-directory-enter))
+        ("M-h" . #'vertico-directory-up)
+        ("M-l" . #'vertico-directory-enter))
   :config
   ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
   (add-to-list 'find-file-not-found-functions #'+auto-create-missing-dirs)

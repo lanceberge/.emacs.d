@@ -17,7 +17,14 @@
 (use-package other-window
   :ensure nil
   :bind
-  ("M-o" . #'other-window))
+  ("M-o" . #'other-window)
+  ("M-O" . #'other-window-previous))
+
+;;;###autoload
+(defun other-window-previous ()
+  (interactive)
+  (setq repeat-map 'other-window-repeat-map)
+  (other-window -1))
 
 (use-package window
   :ensure nil
