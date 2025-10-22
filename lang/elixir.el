@@ -22,15 +22,16 @@
 (defun +maybe-close-tag ()
   "auto close html tags"
   (interactive)
-  (insert ">")
-  (save-excursion
-    (backward-char)
-    (when (looking-back "<\\([.:a-zA-Z_][a-zA-Z_.-]*\\)" (line-beginning-position))
-      (let ((tag-name (match-string 1)))
-        (unless (string-match-p "^/" tag-name)
-          (forward-char)
-          (insert (format "</%s>" tag-name))
-          (backward-char (+ 2 (length tag-name))))))))
+  (with-undo-amalgamate
+    (insert ">")
+    (save-excursion
+      (backward-char)
+      (when (looking-back "<\\([.:a-zA-Z_][a-zA-Z_.-]*\\)[^>]*" (line-beginning-position))
+        (let ((tag-name (match-string 1)))
+          (unless (string-match-p "^/" tag-name)
+            (forward-char)
+            (insert (format "</%s>" tag-name))
+            (backward-char (+ 2 (length tag-name)))))))))
 
 (defvar +elixir-mode-map (make-sparse-keymap))
 
