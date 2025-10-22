@@ -83,7 +83,17 @@
   :ensure nil
   :custom
   (nxml-auto-insert-xml-declaration-flag nil)
-  (nxml-validate-on-save nil))
+  (nxml-validate-on-save nil)
+  :bind
+  (:map nxml-mode-map
+        (">" . #'+nxml-close-tag)))
+
+;;;###autoload
+(defun +nxml-close-tag ()
+  (interactive)
+  (insert ">")
+  (nxml-finish-element)
+  (meow-open-above))
 
 (use-package rust-mode)
 
