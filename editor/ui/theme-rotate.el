@@ -11,14 +11,15 @@
         ("tl" . #'+themes-toggle-dark-light)
         ("tp" . #'+themes-prev)))
 
-;; tsdh-light, leuven, whiteboard, doom-one-light, doom-tomorrow-day
+;; tsdh-light, leuven, whiteboard, doom-one-light, doom-tomorrow-day, dichromacy
 ;; doom-tokyo-night, doom-rouge, doom-monokai-spectrum, doom-city-lights, doom-horizon, doom-one
 
 (setq +themes-dark-themes '(gruvbox-dark-hard doom-badger gruvbox doom-tomorrow-night doom-oceanic-next
+
                                               doom-spacegrey doom-tokyo-night
                                               doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon doom-miramare))
 
-(setq +themes-light-themes '(tango doom-nord-light white-sand leuven doom-oksolar-light doom-solarized-light))
+(setq +themes-light-themes '(tango doom-nord-light doom-oksolar-light doom-solarized-light tsdh-light))
 
 (defvar +themes-dark-theme-index 0
   "Index of the current dark theme in `+themes-dark-themes'.")

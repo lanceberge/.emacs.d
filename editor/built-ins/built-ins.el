@@ -16,7 +16,8 @@
   (:map meow-normal-state-keymap
         ("u" . #'undo)
         ("U" . #'undo-redo)
-        ("RET" . #'newline))
+        ("RET" . #'newline)
+        ("S-<return>" . #'insert-newline-above-dwim))
   (:map prog-mode-map
         ("C-g" . #'+isearch-clear-highlighting))
   (:map text-mode-map

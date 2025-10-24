@@ -19,8 +19,6 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(use-package white-sand-theme)
-
 (use-package highlight-numbers
   :hook (find-file . highlight-numbers-mode))
 

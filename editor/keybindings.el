@@ -12,8 +12,7 @@
   (:map meow-normal-state-keymap
         ("SPC [" . #'+insert-newlines-above)
         ("SPC ]" . #'+insert-newlines-below)
-        ("RET" . #'insert-newline-indent)
-        ("S-<return>" . #'+split-line-above)))
+        ("RET" . #'insert-newline-indent)))
 
 ;;;###autoload
 (defun insert-newline-indent ()
@@ -21,14 +20,6 @@
   (save-excursion
     (newline)
     (indent-for-tab-command)))
-
-;;;###autoload
-(defun +split-line-above ()
-  (interactive)
-  (require 'drag-stuff)
-  (newline)
-  (indent-for-tab-command)
-  (drag-stuff-up 1))
 
 ;;;###autoload
 (defun insert-newline-dwim ()
