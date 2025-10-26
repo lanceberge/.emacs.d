@@ -206,21 +206,19 @@
 (defvar +leader-map (make-sparse-keymap))
 (defvar +leader2-map (make-sparse-keymap))
 (defvar +leader3-map (make-sparse-keymap))
+(defvar mark-forward-keymap (make-sparse-keymap))
+(defvar mark-backward-keymap (make-sparse-keymap))
+(defvar meow-sexp-state-keymap (make-keymap))
 
 (use-package meow
   :demand t
   :hook (after-init . meow-global-mode)
   :init
-  (defvar meow-sexp-state-keymap (make-keymap))
-
   (meow-define-state sexp
     "State for interacting with sexps."
     :lighter " [P]"
     :keymap meow-sexp-state-keymap)
   :bind
-  (:repeat-map meow-mark-repeat-map
-               ("[" . #'+backward-global-mark)
-               ("]" . #'+forward-global-mark))
   (:map meow-motion-state-keymap
         ("q" . #'meow-quit)
         ("h" . #'meow-left)
@@ -240,9 +238,6 @@
         ("." . #'meow-bounds-of-thing)
         ("," . #'meow-inner-of-thing)
         ("y" . #'+meow-save))
-  (:map +leader3-map
-        ("[" . #'+backward-global-mark)
-        ("]" . #'+forward-global-mark))
   (:map meow-normal-state-keymap
         ("DEL" . #'+delete)
         ("p" . #'+meow-yank-or-replace)
@@ -258,7 +253,6 @@
         ("M-[" . #'meow-pop-to-mark)
         ("M-]" . #'meow-unpop-to-mark)
         ("d" . #'+smart-delete)
-        ("]" . #'meow-end-of-thing)
         ("c" . #'+meow-change)
         ("a" . #'meow-append)
         ("^" . #'repeat)
@@ -364,15 +358,21 @@
 
 (elpaca-wait)
 
-(define-key meow-normal-state-keymap (kbd "SPC") +leader-map)
-(define-key meow-normal-state-keymap (kbd "'") +leader2-map)
-(define-key meow-normal-state-keymap (kbd "`") +leader3-map)
-(define-key meow-motion-state-keymap (kbd "SPC") +leader-map)
-(define-key meow-motion-state-keymap (kbd "'") +leader2-map)
-(define-key meow-motion-state-keymap (kbd "`") +leader3-map)
-(define-key meow-sexp-state-keymap (kbd "SPC") +leader-map)
-(define-key meow-sexp-state-keymap (kbd "'") +leader2-map)
-(define-key meow-sexp-state-keymap (kbd "`") +leader3-map)
+(bind-key "SPC" +leader-map meow-normal-state-keymap)
+(bind-key "'" +leader2-map meow-normal-state-keymap)
+(bind-key "`" +leader3-map meow-normal-state-keymap)
+(bind-key "[" mark-backward-keymap meow-normal-state-keymap)
+(bind-key "]" mark-forward-keymap meow-normal-state-keymap)
+
+(bind-key "SPC" +leader-map meow-motion-state-keymap)
+(bind-key "'" +leader2-map meow-motion-state-keymap)
+(bind-key "`" +leader3-map meow-motion-state-keymap)
+
+(bind-key "SPC" +leader-map meow-sexp-state-keymap)
+(bind-key "'" +leader2-map meow-sexp-state-keymap)
+(bind-key "`" +leader3-map meow-sexp-state-keymap)
+(bind-key "[" mark-backward-keymap meow-sexp-state-keymap)
+(bind-key "]" mark-forward-keymap meow-sexp-state-keymap)
 
 (add-hook 'after-init-hook
           (lambda ()

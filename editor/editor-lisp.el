@@ -107,6 +107,16 @@
                 (marker-is-point-p (car (reverse global-mark-ring))))
       (push-mark))))
 
+(use-package mark-repeat-map
+  :ensure nil
+  :bind
+  (:repeat-map meow-mark-repeat-map
+               ("[" . #'+backward-global-mark)
+               ("]" . #'+forward-global-mark))
+  (:map +leader3-map
+        ("[" . #'+backward-global-mark)
+        ("]" . #'+forward-global-mark)))
+
 ;;;###autoload
 (defun +backward-global-mark ()
   "use `pop-global-mark', pushing current point if not on ring."

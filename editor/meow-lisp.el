@@ -118,6 +118,8 @@ macro which made this send the query in gptel so I replaced it with newline."
   (interactive)
   (cond ((eq last-command this-command)
          (+join-line))
+        ((eq (point) (save-excursion (back-to-indentation) (point)))
+         (+join-line))
         (t
          (back-to-indentation))))
 
