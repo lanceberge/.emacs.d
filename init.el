@@ -193,6 +193,7 @@
           (use-package-list-insert keyword use-package-keywords :after)))
 
   (defalias 'use-package-normalize/:defer-incrementally #'use-package-normalize-symlist)
+
 ;;;###autoload
   (defun use-package-handler/:defer-incrementally (name _keyword targets rest state)
     (use-package-concat
@@ -209,6 +210,13 @@
 (use-package meow
   :demand t
   :hook (after-init . meow-global-mode)
+  :init
+  (defvar meow-sexp-state-keymap (make-keymap))
+
+  (meow-define-state sexp
+    "State for interacting with sexps."
+    :lighter " [P]"
+    :keymap meow-sexp-state-keymap)
   :bind
   (:repeat-map meow-mark-repeat-map
                ("[" . #'+backward-global-mark)
@@ -231,15 +239,17 @@
         ("m" . #'meow-line)
         ("." . #'meow-bounds-of-thing)
         ("," . #'meow-inner-of-thing)
-        ("y" . #'meow-save))
+        ("y" . #'+meow-save))
   (:map +leader3-map
         ("[" . #'+backward-global-mark)
         ("]" . #'+forward-global-mark))
   (:map meow-normal-state-keymap
+        ("DEL" . #'+delete)
         ("p" . #'+meow-yank-or-replace)
         ("-" . #'negative-argument)
         ("SPC" . nil)
         (";" . #'meow-reverse)
+        ("\\" . #'meow-sexp-mode)
         ("." . #'meow-bounds-of-thing)
         ("," . #'meow-inner-of-thing)
         ("C-u" . #'scroll-down)
@@ -247,7 +257,7 @@
         ("[" . #'meow-beginning-of-thing)
         ("M-[" . #'meow-pop-to-mark)
         ("M-]" . #'meow-unpop-to-mark)
-        ("d" . #'delete-char)
+        ("d" . #'+smart-delete)
         ("]" . #'meow-end-of-thing)
         ("c" . #'+meow-change)
         ("a" . #'meow-append)
@@ -271,27 +281,49 @@
         ("K" . #'meow-prev-expand)
         ("l" . #'meow-right)
         ("L" . #'meow-right-expand)
-        ("x" . #'meow-join)
+        ("x" . #'+back-or-join)
         ("O" . #'meow-to-block)
         ("r" . #'+meow-replace-char)
         ("P" . #'meow-swap-grab)
-        ("s" . #'meow-kill)
+        ("s" . #'+kill-line-or-region)
         ("t" . #'meow-till)
         ("v" . #'+meow-visit)
         ("w" . #'meow-mark-word)
         ("W" . #'meow-mark-symbol)
         ("m" . #'meow-line)
         ("X" . #'meow-goto-line)
-        ("y" . #'meow-save)
+        ("y" . #'+meow-save)
         ("Y" . #'meow-sync-grab)
         ("z" . #'+meow-pop-selection)
         ("<escape>" . #'keyboard-quit))
+  (:map meow-insert-state-keymap
+        ("C-\\" . #'meow-sexp-mode))
+  (:map meow-sexp-state-keymap
+        ("h" . #'backward-paragraph)
+        ("l" . #'backward-paragraph)
+        ("n" . #'forward-sentence)
+        ("p" . #'backward-sentence)
+        ("q" . #'+save-and-exit)
+        ("f" . #'forward-sexp)
+        ("b" . #'backward-sexp)
+        ("i" . #'meow-insert-mode)
+        ("o" . #'+expand-region)
+        ("O" . #'+expand-region-2)
+        ("g" . #'meow-normal-mode)
+        (";" . #'meow-reverse)
+        ("x" . #'+join-line)
+        ("d" . #'kill-sexp)
+        ("DEL" . #'backward-kill-sexp)
+        ("a" . #'back-to-indentation)
+        ("e" . #'end-of-line)
+        ("s" . #'+kill-line-or-region)
+        ("j" . #'next-line)
+        ("k" . #'previous-line)
+        ("u" . #'undo)
+        ("r" . #'undo-redo)
+        ("t" . #'transpose-sexps))
   :config
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-  (setq meow-state-mode-alist '((normal . meow-normal-mode)
-                                (insert . meow-insert-mode)
-                                (motion . meow-motion-mode)
-                                (beacon . meow-beacon-mode)))
   (setq meow-use-cursor-position-hack t)
   (setq meow--kbd-forward-line #'next-line
         meow--kbd-backward-line #'previous-line
@@ -333,11 +365,14 @@
 (elpaca-wait)
 
 (define-key meow-normal-state-keymap (kbd "SPC") +leader-map)
-(define-key meow-motion-state-keymap (kbd "SPC") +leader-map)
 (define-key meow-normal-state-keymap (kbd "'") +leader2-map)
-(define-key meow-motion-state-keymap (kbd "'") +leader2-map)
 (define-key meow-normal-state-keymap (kbd "`") +leader3-map)
+(define-key meow-motion-state-keymap (kbd "SPC") +leader-map)
+(define-key meow-motion-state-keymap (kbd "'") +leader2-map)
 (define-key meow-motion-state-keymap (kbd "`") +leader3-map)
+(define-key meow-sexp-state-keymap (kbd "SPC") +leader-map)
+(define-key meow-sexp-state-keymap (kbd "'") +leader2-map)
+(define-key meow-sexp-state-keymap (kbd "`") +leader3-map)
 
 (add-hook 'after-init-hook
           (lambda ()

@@ -97,3 +97,59 @@ macro which made this send the query in gptel so I replaced it with newline."
   (if (region-active-p)
       (meow-replace)
     (meow-yank)))
+
+;;;###autoload
+(defun +meow-save ()
+  (interactive)
+  (unless (region-active-p)
+    (if (member (char-after (point)) +open-chars)
+        (+expand-region 1)
+      (+expand-region 2)))
+  (meow-save))
+
+;;;###autoload
+(defun +join-line ()
+  (interactive)
+  (join-line)
+  (indent-for-tab-command))
+
+;;;###autoload
+(defun +back-or-join ()
+  (interactive)
+  (cond ((eq last-command this-command)
+         (+join-line))
+        (t
+         (back-to-indentation))))
+
+;;;###autoload
+(defun +kill-line-or-region (arg)
+  (interactive "p")
+  (if (region-active-p)
+      (meow-kill)
+    (save-excursion
+      (beginning-of-line)
+      (kill-visual-line arg))))
+
+;;;###autoload
+(defun +smart-delete ()
+  (interactive)
+  (let ((char-at-point (char-after (point))))
+    (cond ((member char-at-point +open-chars)
+           (kill-sexp))
+          ((member char-at-point +close-chars)
+           (forward-char)
+           (backward-kill-sexp))
+          (t
+           (delete-char 1)))))
+
+;;;###autoload
+(defun +backward-kill-sexp ()
+  (interactive)
+  (forward-char 1)
+  (backward-kill-sexp))
+
+;;;###autoload
+(defun +save-and-exit ()
+  (interactive)
+  (save-buffer)
+  (meow-normal-mode))
