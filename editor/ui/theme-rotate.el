@@ -11,13 +11,12 @@
         ("tl" . #'+themes-toggle-dark-light)
         ("tp" . #'+themes-prev)))
 
-;; tsdh-light, leuven, whiteboard, doom-one-light, doom-tomorrow-day, dichromacy
-;; doom-tokyo-night, doom-rouge, doom-monokai-spectrum, doom-city-lights, doom-horizon, doom-one
+;; tsdh-light, leuven, whiteboard, doom-one-light, doom-tomorrow-day, dichromacy, doom-acario-light, doom-flatwhite
+;; doom-tokyo-night, doom-rouge, doom-monokai-spectrum, monokai-ristretto doom-city-lights, doom-horizon, doom-one, doom-ayu-mirage
 
-(setq +themes-dark-themes '(gruvbox-dark-hard doom-badger gruvbox doom-tomorrow-night doom-oceanic-next
-
+(setq +themes-dark-themes '(gruvbox-dark-hard doom-badger doom-miramare gruvbox doom-oceanic-next doom-tomorrow-night
                                               doom-spacegrey doom-tokyo-night
-                                              doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon doom-miramare))
+                                              doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon ))
 
 (setq +themes-light-themes '(tango doom-nord-light doom-oksolar-light doom-solarized-light tsdh-light))
 

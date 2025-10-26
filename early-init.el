@@ -99,12 +99,13 @@
 (use-package doom-themes
   :demand t
   :config
-  (require 'doom-badger-theme)
+  (require 'doom-miramare-theme)
   (mapc #'disable-theme custom-enabled-themes)
-  (load-theme 'doom-badger t))
+  (load-theme 'doom-miramare t))
 
 (use-package display-line-numbers
   :ensure nil
+  :demand t
   :config
   (unless IS-WINDOWS
     (setopt display-line-numbers-type 'visual

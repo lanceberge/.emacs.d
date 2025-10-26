@@ -29,4 +29,5 @@
 ;;;###autoload
 (defun +expand-region-2 ()
   (interactive)
-  (+expand-region 2))
+  (+expand-region 2)
+  (exchange-point-and-mark))

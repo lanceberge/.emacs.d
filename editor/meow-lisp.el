@@ -153,3 +153,12 @@ macro which made this send the query in gptel so I replaced it with newline."
   (interactive)
   (save-buffer)
   (meow-normal-mode))
+
+;;;###autoload
+(defun +delete ()
+  (interactive)
+  (if (region-active-p)
+      (progn
+        (call-interactively #'delete-region)
+        (indent-for-tab-command))
+    (call-interactively #'backward-delete-char-untabify)))

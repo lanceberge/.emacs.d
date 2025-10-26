@@ -47,6 +47,9 @@
 
 ;;;###autoload
 (defun +perl-shell-quote (str)
-  (let* ((str (replace-regexp-in-string "\"" "\\\\\"" str))
-         (str (replace-regexp-in-string "/" "\\\\/" str)))
-    str))
+  "Quote a string for safe use in Perl/shell by escaping special characters."
+  (replace-regexp-in-string
+   "[\"/+$&|;()<>'` \t\n\r\\\\]"
+   "\\\\\\&"
+   str
+   t))

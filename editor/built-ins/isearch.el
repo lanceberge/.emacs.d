@@ -50,9 +50,11 @@
     (setq isearch-success t)))
 
 ;;;###autoload
-(defun +isearch-clear-highlighting ()
+(defun +keyboard-quit ()
   (interactive)
   (save-excursion
     (lazy-highlight-cleanup)
     (isearch-exit))
+  (if (eq last-command this-command)
+      (call-interactively #'abort-recursive-edit))
   (keyboard-quit))

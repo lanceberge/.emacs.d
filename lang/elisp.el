@@ -27,7 +27,3 @@
         (progn
           (save-buffer))
       (message "Parens are not balanced, saving canceled"))))
-
-(use-package aggressive-indent
-  :hook
-  (emacs-lisp-mode . aggressive-indent-mode))

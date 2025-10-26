@@ -28,22 +28,22 @@
          ("M-r" . #'consult-history)
          :map isearch-mode-map
          ("M-r" . #'consult-isearch-history)
-         :map +leader2-map
-         ("f" . #'consult-focus-lines)
          :map +leader-map
          ("," . #'+project-buffer)
          ("." . #'find-file)
-         ("'f" . #'+consult-unfocus-lines)
+         ("SPC bf" . #'+consult-unfocus-lines)
+         ("SPC fm" . #'consult-minor-mode-menu)
          ("/" . #'+consult-line)
          ("SPC /" . #'+consult-line-multi)
          ("pg" . #'consult-git-grep)
          ("fr" . #'consult-recent-file)
          ("fj" . #'consult-imenu)
          ("bb" . #'consult-buffer)
+         ("bf" . #'+consult-focus-lines)
          ("pm" . #'consult-global-mark)
          ("fb" . #'consult-bookmark)
          ("fm" . #'consult-mark)
-         ("f SPC y" . #'consult-yank-replace)
+         ("SPC fy" . #'consult-yank-replace)
          ("SPC k" . #'+consult-keep-lines)
          ("rf" . #'consult-recent-file)
          ("rc" . #'consult-complex-command)
@@ -60,9 +60,15 @@
          ([remap consult-imenu] . #'consult-org-heading)))
 
 ;;;###autoload
+(defun +consult-focus-lines ()
+  (interactive)
+  (forward-char 1)
+  (call-interactively #'consult-focus-lines))
+
+;;;###autoload
 (defun +consult-keep-lines ()
   (interactive)
-  (meow-line 1)
+  (forward-char 1)
   (call-interactively #'consult-keep-lines))
 
 ;;;###autoload

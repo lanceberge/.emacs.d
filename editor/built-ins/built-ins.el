@@ -12,6 +12,7 @@
   ("M-T" . #'transpose-paragraphs)
   (:repeat-map undo-repeat-map
                ("u" . #'undo)
+               ("r" . #'undo-redo)
                ("U" . #'undo-redo))
   (:map meow-normal-state-keymap
         ("u" . #'undo)
@@ -19,9 +20,17 @@
         ("RET" . #'newline)
         ("S-<return>" . #'insert-newline-above-dwim))
   (:map prog-mode-map
-        ("C-g" . #'+isearch-clear-highlighting))
+        ("C-g" . #'+keyboard-quit))
   (:map text-mode-map
-        ("C-g" . #'+isearch-clear-highlighting)))
+        ("C-g" . #'+keyboard-quit))
+  (:map +leader-map
+        ("bs" . #'+scratch-buffer)))
+
+;;;###autoload
+(defun +scratch-buffer ()
+  (interactive)
+  (scratch-buffer)
+  (lisp-interaction-mode))
 
 (use-package advice
   :ensure nil
