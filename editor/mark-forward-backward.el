@@ -8,12 +8,14 @@
                ("s" . #'+mark-forward-sentence )
                ("p" . #'+mark-forward-paragraph)
                ("d" . #'+mark-forward-sexp)
+               ("t" . #'+mark-backward-ts-node)
                :exit
                ("g" . (lambda () (interactive))))
   (:map mark-forward-keymap
         ("p" . #'+mark-forward-paragraph)
         ("d" . #'+mark-forward-sexp)
         ("s" . #'+mark-forward-sentence)
+        ("t" . #'+mark-forward-ts-node)
         ("b" . #'+mark-forward-buffer)))
 
 (use-package +mark-backward
@@ -25,13 +27,15 @@
                ("s" . #'+mark-backward-sentence )
                ("p" . #'+mark-backward-paragraph)
                ("d" . #'+mark-backward-sexp)
+               ("t" . #'+mark-backward-ts-node)
                :exit
                ("g" . (lambda () (interactive))))
   (:map mark-backward-keymap
         ("p" . #'+mark-backward-paragraph)
         ("d" . #'+mark-backward-sexp)
         ("s" . #'+mark-backward-sentence)
-        ("b" . #'+mark-backward-buffer)))
+        ("b" . #'+mark-backward-buffer)
+        ("t" . #'+mark-backward-ts-node)))
 
 (defvar +mark-forward-backward-ring nil
   "ring of (mark . point)")
@@ -100,9 +104,11 @@
   (interactive)
   (+mark-forward-backward-ring-push)
   (if (region-active-p)
-      (with-point-at-region-end
-       (forward-paragraph))
-    (mark-paragraph))
+      (progn
+        (+move-point-to-region-end)
+        (forward-paragraph))
+    (mark-paragraph)
+    (exchange-point-and-mark))
   (+mark-forward-backward-ring-push))
 
 ;;;###autoload
@@ -110,8 +116,9 @@
   (interactive)
   (+mark-forward-backward-ring-push)
   (if (region-active-p)
-      (with-point-at-region-beginning
-       (backward-paragraph))
+      (progn
+        (+move-point-to-region-beginning)
+        (backward-paragraph))
     (mark-paragraph))
   (+mark-forward-backward-ring-push))
 
@@ -120,9 +127,11 @@
   (interactive)
   (+mark-forward-backward-ring-push)
   (if (region-active-p)
-      (with-point-at-region-end
-       (forward-sexp))
-    (mark-sexp))
+      (progn
+        (+move-point-to-region-end)
+        (forward-sexp))
+    (mark-sexp)
+    (exchange-point-and-mark))
   (+mark-forward-backward-ring-push))
 
 ;;;###autoload
@@ -130,8 +139,9 @@
   (interactive)
   (+mark-forward-backward-ring-push)
   (if (region-active-p)
-      (with-point-at-region-beginning
-       (backward-sexp))
+      (progn
+        (+move-point-to-region-beginning)
+        (backward-sexp))
     (mark-sexp))
   (+mark-forward-backward-ring-push))
 
@@ -140,10 +150,12 @@
   (interactive)
   (+mark-forward-backward-ring-push)
   (if (region-active-p)
-      (with-point-at-region-end
-       (forward-sentence))
+      (progn
+        (+move-point-to-region-end)
+        (forward-sentence))
     (require 'expand-region)
-    (er/mark-sentence))
+    (er/mark-sentence)
+    (exchange-point-and-mark))
   (+mark-forward-backward-ring-push))
 
 ;;;###autoload
@@ -151,21 +163,22 @@
   (interactive)
   (+mark-forward-backward-ring-push)
   (if (region-active-p)
-      (with-point-at-region-beginning
-       (backward-sentence))
+      (progn
+        (+move-point-to-region-beginning)
+        (backward-sentence))
     (require 'expand-region)
     (er/mark-sentence))
   (+mark-forward-backward-ring-push))
 
 ;;;###autoload
-(defun +mark-forward-buffer ()
+(defun +mark-backward-buffer ()
   (interactive)
   (+mark-forward-backward-ring-push)
   (unless (region-active-p)
     (beginning-of-line)
     (set-mark (point))
     (activate-mark))
-  (end-of-buffer)
+  (beginning-of-buffer)
   (+mark-forward-backward-ring-push))
 
 ;;;###autoload
@@ -177,4 +190,33 @@
     (set-mark (point))
     (activate-mark))
   (end-of-buffer)
+  (+mark-forward-backward-ring-push))
+
+;; TODO forward-ts-node
+;;;###autoload
+(defun +mark-forward-ts-node ()
+  (interactive)
+  (+mark-forward-backward-ring-push)
+  (if (region-active-p)
+      (progn
+        (+move-point-to-region-end)
+        (when-let ((node (treesit-node-at (point))))
+          (goto-char (treesit-node-end (treesit-node-parent node)))))
+    (when-let ((node (treesit-node-at (point))))
+      (set-mark (point))
+      (goto-char (treesit-node-end node))))
+  (+mark-forward-backward-ring-push))
+
+;;;###autoload
+(defun +mark-backward-ts-node ()
+  (interactive)
+  (+mark-forward-backward-ring-push)
+  (if (region-active-p)
+      (progn
+        (+move-point-to-region-beginning)
+        (when-let ((node (treesit-node-at (point))))
+          (goto-char (treesit-node-start (treesit-node-parent node)))))
+    (when-let ((node (treesit-node-at (point))))
+      (set-mark (treesit-node-end node))
+      (goto-char (treesit-node-start node))))
   (+mark-forward-backward-ring-push))

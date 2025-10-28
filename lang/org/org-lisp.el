@@ -77,16 +77,22 @@
 ;;;###autoload
 (defun +org-drag-stuff-up (n)
   (interactive "p")
-  (if (org-at-heading-p)
-      (org-move-subtree-up n)
-    (drag-stuff-up n)))
+  (cond ((full-line-region-p)
+         (drag-stuff-up n))
+        ((org-at-heading-p)
+         (org-move-subtree-up n))
+        (t
+         (drag-stuff-up n))))
 
 ;;;###autoload
 (defun +org-drag-stuff-down (n)
   (interactive "p")
-  (if (org-at-heading-p)
-      (org-move-subtree-down n)
-    (drag-stuff-down n)))
+  (cond ((full-line-region-p)
+         (drag-stuff-down n))
+        ((org-at-heading-p)
+         (org-move-subtree-down n))
+        (t
+         (drag-stuff-down n))))
 
 ;;;###autoload
 (defun +org-cycle ()

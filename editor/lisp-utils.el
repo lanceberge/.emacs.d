@@ -28,3 +28,16 @@
                   orig-point-at-end
                   (eq (point) (region-beginning)))
          (exchange-point-and-mark)))))
+
+;;;###autoload
+(defun +move-point-to-region-end ()
+  (if (and (region-active-p)
+           (eq (point) (region-beginning)))
+      (exchange-point-and-mark)))
+
+;;;###autoload
+(defun +move-point-to-region-beginning ()
+  (interactive)
+  (if (and (region-active-p)
+           (eq (point) (region-end)))
+      (exchange-point-and-mark)))

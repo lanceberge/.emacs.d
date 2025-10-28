@@ -125,7 +125,7 @@ macro which made this send the query in gptel so I replaced it with newline."
 
 ;;;###autoload
 (defun +kill-line-or-region (arg)
-  (interactive "p")
+  (interactive "P")
   (if (region-active-p)
       (meow-kill)
     (save-excursion

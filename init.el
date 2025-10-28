@@ -315,7 +315,8 @@
         ("k" . #'previous-line)
         ("u" . #'undo)
         ("r" . #'undo-redo)
-        ("t" . #'transpose-sexps))
+        ("t" . #'transpose-sexps)
+        ("T" . #'transpose-sentences))
   :config
   (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (setq meow-use-cursor-position-hack t)

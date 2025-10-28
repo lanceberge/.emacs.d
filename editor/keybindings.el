@@ -87,21 +87,29 @@
 ;;;###autoload
 (defun +escape (&optional count)
   (interactive)
-  (let ((cooldown 0.5))
-    (let ((char (read-char nil nil cooldown)))
-      (if char
-          (let* ((str (char-to-string char))
-                 (command (key-binding str)))
-            (if (= char ?k)
-                (meow-insert-exit)
-              (progn
-                (insert-char ?j)
-                (cond
-                 ((eq command #'self-insert-command)
-                  (insert-char char))
-                 ((eq command #'org-self-insert-command)
-                  (insert-char char))))))
-        (insert-char ?j)))))
+  (let* ((cooldown 0.5)
+         (char (read-char nil nil cooldown))
+         (command))
+    (if (null char)
+        (insert-char ?j)
+      (if (= char ?k)
+          (meow-insert-exit)
+        (setq command (key-binding (vector (char-to-string char))))
+        (insert-char ?j)
+        (cond
+         ((null char)
+          (insert-char ?j))
+         ((null command))
+         ((not (commandp command)))
+         ;; handle electric-pairs
+         ((and (eq char ?\") (eq (char-after (point)) ?\"))
+          (forward-char))
+         ((eq command #'self-insert-command)
+          (self-insert-command 1 char))
+         ((eq command #'org-self-insert-command)
+          (self-insert-command 1 char))
+         (t
+          (call-interactively command)))))))
 
 (define-derived-mode keyfreq-show-mode special-mode "KeyFreq"
   "Major mode for displaying key frequency statistics."

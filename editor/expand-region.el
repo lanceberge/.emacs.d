@@ -14,7 +14,8 @@
         '(er/mark-inside-quotes
           er/mark-outside-quotes
           er/mark-inside-pairs
-          er/mark-outside-pairs)))
+          er/mark-outside-pairs
+          er/mark-ts-node)))
 
 ;;;###autoload
 (defun +expand-region (&optional arg)
