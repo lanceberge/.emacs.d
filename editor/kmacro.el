@@ -5,7 +5,7 @@
   (:map meow-normal-state-keymap
         ("M-r" . #'+kmacro-record-or-end)
         ("M-n" . #'+kmacro-execute-dwim)
-        ("M-M" . #'+kmacro-call-named-macro)))
+        ("M-N" . #'+kmacro-call-named-macro)))
 
 (defvar +kmacro-last-register nil)
 

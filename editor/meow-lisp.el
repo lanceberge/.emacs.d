@@ -164,3 +164,26 @@ macro which made this send the query in gptel so I replaced it with newline."
         (call-interactively #'delete-region)
         (indent-for-tab-command))
     (call-interactively #'backward-delete-char-untabify)))
+
+;;;###autoload
+(defun +meow-sexp-mode-quit ()
+  (interactive)
+  (if (region-active-p)
+      (deactivate-mark)
+    (meow-normal-mode)))
+
+;;;###autoload
+(defun +meow-set-desired-state (state)
+  (setq-local +meow-desired-state state))
+
+;;;###autoload
+(defun +meow-mode-get-state-advice (orig-func &rest args)
+  (if +meow-desired-state
+      +meow-desired-state
+    (apply orig-func args)))
+
+(advice-add 'meow--mode-get-state :around #'+meow-mode-get-state-advice)
+
+;;;###autoload
+(defun +meow-motion-mode ()
+  (+meow-set-desired-state 'motion))

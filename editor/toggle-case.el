@@ -30,7 +30,7 @@ toggle the case. Otherwise, increment the number."
     (if (or (looking-at "[0-9]")
             (looking-at "-[1-9]"))
         (progn
-          (call-interactively #'+number-increment))
+          (call-interactively #'+increment-number-increment))
       (+toggle--letter-case arg))))
 
 ;;;###autoload

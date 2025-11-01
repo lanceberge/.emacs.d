@@ -2,6 +2,8 @@
 (use-package newcomment
   :ensure nil
   :bind
+  (:map text-mode-map
+        ("M-;" . #'+comment-dwim))
   (:map prog-mode-map
         ("M-;" . #'+comment-dwim)))
 

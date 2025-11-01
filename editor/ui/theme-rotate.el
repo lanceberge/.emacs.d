@@ -1,5 +1,5 @@
 ;;; -*- lexical-binding: t -*-
-(use-package +themes
+(use-package +theme-rotate
   :ensure nil
   :bind
   (:repeat-map theme-rotate-repeat-map

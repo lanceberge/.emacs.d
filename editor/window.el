@@ -25,6 +25,13 @@
   (setq repeat-map 'other-window-repeat-map)
   (other-window -1))
 
+(use-package ace-window
+  :custom
+  (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
+  (aw-scope 'frame)
+  :bind
+  (:map +leader-map
+        ("w SPC" . #'ace-swap-window)))
 (use-package window
   :ensure nil
   :bind

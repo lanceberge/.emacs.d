@@ -37,7 +37,6 @@
 
 ;;;###autoload
 (defun +move-point-to-region-beginning ()
-  (interactive)
   (if (and (region-active-p)
            (eq (point) (region-end)))
       (exchange-point-and-mark)))

@@ -38,7 +38,6 @@
   (text-mode-ispell-word-completion nil))
 
 (use-package yaml-mode
-  :ensure nil
   :mode ("\\.gotmpl\\'" . yaml-mode)
   :hook
   (yaml-mode
@@ -92,8 +91,11 @@
 (defun +nxml-close-tag ()
   (interactive)
   (insert ">")
-  (nxml-finish-element)
-  (meow-open-above))
+  (condition-case nil
+      (progn
+        (nxml-finish-element)
+        (meow-open-above))
+    (error nil)))
 
 (use-package rust-mode)
 

@@ -8,14 +8,12 @@
                ("s" . #'+mark-forward-sentence )
                ("p" . #'+mark-forward-paragraph)
                ("d" . #'+mark-forward-sexp)
-               ("t" . #'+mark-backward-ts-node)
                :exit
                ("g" . (lambda () (interactive))))
   (:map mark-forward-keymap
         ("p" . #'+mark-forward-paragraph)
         ("d" . #'+mark-forward-sexp)
         ("s" . #'+mark-forward-sentence)
-        ("t" . #'+mark-forward-ts-node)
         ("b" . #'+mark-forward-buffer)))
 
 (use-package +mark-backward
@@ -190,33 +188,4 @@
     (set-mark (point))
     (activate-mark))
   (end-of-buffer)
-  (+mark-forward-backward-ring-push))
-
-;; TODO forward-ts-node
-;;;###autoload
-(defun +mark-forward-ts-node ()
-  (interactive)
-  (+mark-forward-backward-ring-push)
-  (if (region-active-p)
-      (progn
-        (+move-point-to-region-end)
-        (when-let ((node (treesit-node-at (point))))
-          (goto-char (treesit-node-end (treesit-node-parent node)))))
-    (when-let ((node (treesit-node-at (point))))
-      (set-mark (point))
-      (goto-char (treesit-node-end node))))
-  (+mark-forward-backward-ring-push))
-
-;;;###autoload
-(defun +mark-backward-ts-node ()
-  (interactive)
-  (+mark-forward-backward-ring-push)
-  (if (region-active-p)
-      (progn
-        (+move-point-to-region-beginning)
-        (when-let ((node (treesit-node-at (point))))
-          (goto-char (treesit-node-start (treesit-node-parent node)))))
-    (when-let ((node (treesit-node-at (point))))
-      (set-mark (treesit-node-end node))
-      (goto-char (treesit-node-start node))))
   (+mark-forward-backward-ring-push))

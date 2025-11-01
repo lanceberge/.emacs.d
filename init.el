@@ -42,16 +42,15 @@
 
         ;; General
         apropos-do-all t ; more extensive apropos searches
-        completion-ignore-case t
         kill-whole-line t
 
         global-mark-ring-max 64
 
-        use-file-dialog nil
+        use-file-ddialog nil
         use-dialog-box nil
         pop-up-frames nil
 
-        debugger-stack-frame-as-list t
+        debugger-stack-frame-as-list nil
 
         history-delete-duplicates t
 
@@ -213,6 +212,13 @@
 (use-package meow
   :demand t
   :hook (after-init . meow-global-mode)
+  :custom
+  (meow-use-clipboard t)
+  (meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+  (meow-use-cursor-position-hack t)
+  (meow--kbd-forward-line #'next-line)
+  (meow--kbd-backward-line #'previous-line)
+  (meow--kbd-forward-char #'forward-char)
   :init
   (meow-define-state sexp
     "State for interacting with sexps."
@@ -303,7 +309,8 @@
         ("i" . #'meow-insert-mode)
         ("o" . #'+expand-region)
         ("O" . #'+expand-region-2)
-        ("g" . #'meow-normal-mode)
+        ("g" . #'+meow-sexp-mode-quit)
+        ("m" . #'meow-line)
         (";" . #'meow-reverse)
         ("x" . #'+join-line)
         ("d" . #'kill-sexp)
@@ -318,13 +325,16 @@
         ("t" . #'transpose-sexps)
         ("T" . #'transpose-sentences))
   :config
-  (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-  (setq meow-use-cursor-position-hack t)
-  (setq meow--kbd-forward-line #'next-line
-        meow--kbd-backward-line #'previous-line
-        meow--kbd-forward-char #'forward-char)
-
   (dotimes (i 10)
+    (define-key meow-sexp-state-keymap
+                (number-to-string i)
+                `(lambda ()
+                   (interactive)
+                   (if (region-active-p)
+                       (meow-expand ,i)
+                     (progn
+                       (setq prefix-arg ,i)
+                       (universal-argument--mode)))))
     (define-key meow-normal-state-keymap
                 (number-to-string i)
                 `(lambda ()
@@ -336,26 +346,7 @@
                        (universal-argument--mode))))))
 
   (defvar-local +meow-desired-state nil)
-
-;;;###autoload
-  (defun +meow-set-desired-state (state)
-    (setq-local +meow-desired-state state))
-
-;;;###autoload
-  (defun +meow-mode-get-state-advice (orig-func &rest args)
-    (if +meow-desired-state
-        +meow-desired-state
-      (apply orig-func args)))
-
-  (advice-add 'meow--mode-get-state :around #'+meow-mode-get-state-advice)
-
-;;;###autoload
-  (defun +meow-motion-mode ()
-    (+meow-set-desired-state 'motion))
-
-  (meow-setup-indicator)
-
-  (setq meow-use-clipboard t))
+  (meow-setup-indicator))
 
 (elpaca-wait)
 
