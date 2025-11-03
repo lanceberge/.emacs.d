@@ -6,7 +6,7 @@
   (avy-case-fold-search nil)
   :bind
   (:map meow-normal-state-keymap
-        ("F" . #'avy-goto-char-2))
+        ("nf" . #'avy-goto-char-2))
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)
@@ -18,6 +18,8 @@
          (cons ?s 'avy-action-kill-to-point)
          (cons ?, 'avy-action-embark)
          (cons ?' 'avy-action-embark-dwim)
+
+         (cons ?p 'avy-action-yank-move)
 
          (cons ?k 'avy-action-kill-line-stay)
          (cons ?K 'avy-action-kill-line-move)
@@ -39,6 +41,13 @@
 (defun avy-action-embark-dwim (pt)
   (goto-char pt)
   (embark-dwim))
+
+;;;###autoload
+(defun avy-action-yank-move (pt)
+  (interactive)
+  (save-excursion
+    (goto-char pt)
+    (meow-yank)))
 
 ;;;###autoload
 (defun avy-action-kill-line-move (pt)
