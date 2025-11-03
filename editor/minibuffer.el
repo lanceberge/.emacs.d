@@ -18,6 +18,7 @@
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :custom
   (xref-show-xrefs-function #'consult-xref)
+  (consult-narrow-key "C-SPC")
   :bind (
          :map meow-normal-state-keymap
          ("M-q" . #'consult-kmacro)

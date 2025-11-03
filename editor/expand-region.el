@@ -2,6 +2,8 @@
 (use-package expand-region
   :hook
   (yaml-mode . er/add-yaml-mode-expansions)
+  (org-mode . er/add-org-mode-expansions)
+  (nxml-mode . er/add-nxml-mode-expansions)
   :bind
   (:map meow-normal-state-keymap
         ("o" . #'+expand-region)
@@ -12,8 +14,16 @@
         ("o" . #'+expand-region)
         ("O" . +expand-region-2))
   :config
-  (eval-after-load 'yaml-ts-mode '(require 'yaml-mode-expansions))
-  (eval-after-load 'yaml-ts-mode '(require 'python)) ;; the yaml expansion for some reason use python functions
+  (with-eval-after-load 'yaml-ts-mode
+    (require 'yaml-mode-expansions)
+    (require 'python)) ;; the yaml expansion for some reason use python functions
+
+  (with-eval-after-load 'org-mode
+    (require 'the-org-mode-expansions))
+
+  (with-eval-after-load 'nxml-mode
+    (require 'nxml-mode-expansions))
+
   (setq er/try-expand-list
         '(er/mark-inside-quotes
           er/mark-outside-quotes
