@@ -15,7 +15,6 @@
 ;;;###autoload
 (defun +org-timer-open-file ()
   (interactive)
-  (+open-tab-if-exists "org-roam")
   (find-file +org-timer-log-file))
 
 ;;;###autoload
