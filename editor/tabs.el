@@ -1,31 +1,5 @@
 ;;; -*- lexical-binding: t -*-
-(use-package tab-bar
-  :ensure nil
-  :hook (after-init . tab-bar-history-mode)
-  :custom
-  (tab-bar-new-button-show nil)
-  (tab-bar-close-button-show nil)
-  (tab-bar-show nil)
-  :bind
-  (:repeat-map tab-bar-repeat-map
-               ("n" . #'tab-bar-switch-to-next-tab)
-               ("p" . #'tab-bar-switch-to-prev-tab))
-  (:map +leader-map
-        ("to" . #'+tab-bar/open-and-rename)
-        ("tl" . #'tab-bar-switch-to-recent-tab)
-        ("t SPC g" . #'tab-bar-select-tab)
-        ("tg" . #'tab-bar-switch-to-tab)
-        ("tn" . #'tab-bar-switch-to-next-tab)
-        ("tp" . #'tab-bar-switch-to-prev-tab)
-        ("t SPC d" . #'tab-bar-close-tab-by-name)
-        ("t,d" . #'tab-bar-close-other-tabs)
-        ("td" . #'tab-bar-close-tab)
-        ("tu" . #'tab-bar-undo-close-tab)
-        ("t SPC r" . #'tab-bar-rename-tab-by-name)
-        ("po" . #'+open-project)
-        ("tr" . #'tab-bar-rename-tab)
-        ("wp" . #'tab-bar-history-back)
-        ("wn" . #'tab-bar-history-forward)))
+(setq tab-bar-show nil)
 
 ;;;###autoload
 (defun +tab-bar/open-and-rename ()

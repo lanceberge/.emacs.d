@@ -1,55 +1,27 @@
 ;;; -*- lexical-binding: t -*-
 (use-package +proj-manager
   :ensure nil
-  :hook
-  (window-configuration-change . +move-buffer-to-tab)
   :bind
   (:map +leader-map
         ("SPC p" . #'+project-ripgrep)
         ("pp" . #'+project-switch)
         ("pk" . #'+project-kill-buffers)
-        ("onf" . #'+org-roam-file-find)
-        ("j" . #'+switch-to-other-project)
-        ("pg" . #'+switch-to-project)
-        ("l" . #'+switch-to-other-project-file-buffer)
-        ("bl" . #'+switch-to-other-project-special-buffer-dwim)
+        ("j" . #'+project-other-project)
+        ("k" . #'+switch-to-project)
+        ("l" . #'+project-other-buffer)
+        ("bl" . #'+project-other-special-buffer-dwim)
         ("fp" . #'+find-package)))
-
-;; TODO add interactive params for the tab name and add to embark-tab-map
-;;;###autoload
-(defun +project-kill-buffers ()
-  (interactive)
-  (let* ((dir (funcall project-prompter))
-         (tab-name (+proj-tab-name dir)))
-    (project-kill-buffers t (+vc-project-info dir))
-    (tab-bar-close-tab-by-name tab-name)))
-
-;;;###autoload
-(defun +vc-project-info (dir)
-  "Return VC project info for DIR in the format (vc BACKEND DIR)."
-  (let ((expanded-dir (expand-file-name dir)))
-    (when-let ((backend (vc-responsible-backend expanded-dir)))
-      (list 'vc backend expanded-dir))))
 
 ;;;###autoload
 (defun +project-switch (&optional dir callback)
   (interactive)
   (let* ((dir (or dir (funcall project-prompter)))
          (callback (or callback #'project-switch-project)))
-    (let ((tab-name (file-name-nondirectory (directory-file-name (expand-file-name dir)))))
-      (+open-tab-if-exists tab-name)
-      (funcall callback dir))))
-
-;;;###autoload
-(defun +org-roam-file-find ()
-  (interactive)
-  (+open-tab-if-exists "org-roam")
-  (call-interactively #'consult-org-roam-file-find))
+    (funcall callback dir)))
 
 ;;;###autoload
 (defun +find-package ()
   (interactive)
-  (+open-tab-if-exists ".emacs.d")
   (consult-ripgrep "~/.emacs.d/" "use-package "))
 
 ;;;###autoload
@@ -69,33 +41,7 @@
   (+project-switch nil #'consult-ripgrep))
 
 ;;;###autoload
-(defun +move-buffer-to-tab ()
-  "Move the current buffer to the tab corresponding to it's vc root."
-  (interactive)
-  (require 'project)
-  (unless (or (minibufferp) (window-minibuffer-p))
-    (let* ((tab-name (+current-proj-tab-name))
-           (filename (buffer-file-name)))
-      (when (and tab-name
-                 (not (string= (alist-get 'name (tab-bar--current-tab)) tab-name))
-                 filename)
-        (kill-buffer (get-file-buffer filename))
-        (+open-tab-if-exists tab-name)
-        (find-file filename)))))
-
-;;;###autoload
-(defun +proj-tab-name (proj-root)
-  (file-name-nondirectory (directory-file-name (expand-file-name proj-root))))
-
-;;;###autoload
-(defun +current-proj-tab-name ()
-  (let* ((current-proj (project-current nil))
-         (proj-root (when current-proj (project-root current-proj))))
-    (when proj-root
-      (+proj-tab-name proj-root))))
-
-;;;###autoload
-(defun +switch-to-other-project-file-buffer (n &optional project)
+(defun +project-other-buffer (n &optional project not-found-callback)
   "Switch to the N'th most recent open buffer in the same vc-root-dir as the current buffer.
 Recurse through the buffer-list, skipping the first value since that's the current buffer."
   (interactive "p")
@@ -129,10 +75,9 @@ Recurse through the buffer-list, skipping the first value since that's the curre
 (defun +switch-to-project (n)
   (interactive "p")
   (let ((dir (funcall project-prompter)))
-    (message dir)
-    (+switch-to-other-project-file-buffer n dir (lambda () (project-switch-project dir)))))
+    (+project-other-buffer n dir (lambda () (project-switch-project dir)))))
 
-(defun +switch-to-other-project (n)
+(defun +project-other-project (n)
   "Switch to the buffer in the last open project"
   (interactive "p")
   (require 'project)
@@ -149,7 +94,7 @@ Recurse through the buffer-list, skipping the first value since that's the curre
                                             (expand-file-name (project-root (project-current nil)))))))
           (if (and (buffer-file-name buffer)
                    (or (not project-root-dir)
-                       (string= project-root-dir buffer-project-root-dir)))
+                       (not (string= project-root-dir buffer-project-root-dir))))
               (if (eq remaining 0)
                   (switch-to-buffer buffer)
                 (+switch-to-recent-buffer-helper (cdr buffer-list) (1- remaining)))
@@ -157,16 +102,16 @@ Recurse through the buffer-list, skipping the first value since that's the curre
     (+switch-to-recent-buffer-helper (cdr (buffer-list)) target-index)))
 
 ;;;###autoload
-(defun +switch-to-other-project-special-buffer-dwim (arg)
+(defun +project-other-special-buffer-dwim (arg)
   "If this is a special buffer, switch to the last real buffer. Otherwise, switch to the last special buffer."
   (interactive "p")
   (if (buffer-file-name (current-buffer))
-      (+switch-to-other-project-special-buffer)
-    (+switch-to-other-project-file-buffer arg)))
+      (+project-other-special-buffer)
+    (+project-other-buffer arg)))
 
 ;;;###autoload
-(defun +switch-to-other-project-special-buffer ()
-  "Switch to the most recent buffer with the same vc-root-dir. Unlike `+switch-to-other-project-file-buffer',
+(defun +project-other-special-buffer ()
+  "Switch to the most recent buffer with the same vc-root-dir. Unlike `+project-other-buffer',
 this function allows special buffers."
   (interactive)
   (require 'project)
