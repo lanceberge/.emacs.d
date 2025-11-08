@@ -5,10 +5,11 @@
   (project-switch-project project-prompter project-root)
   :custom
   (project-switch-commands #'project-find-file)
+  (project-mode-line t)
   :bind
   (:map +leader-map
         ("pf" . #'project-find-file)
-        ("ps" . #'consult-ripgrep)
+        ("'" . #'project-find-file)
         ("pe" . #'flymake-show-project-diagnostics)
         ("pr" . #'+project-replace-regex)
         ("pt" . #'+project-find-todos)

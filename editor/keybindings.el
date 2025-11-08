@@ -8,8 +8,7 @@
         ("SPC ;" . #'+project-shell-command)
         ("er" . #'+source-init-file))
   (:map +leader2-map
-        ("fr" . #'rename-buffer)
-        ("fd" . #'delete-file))
+        ("fr" . #'rename-buffer))
   (:map meow-insert-state-keymap
         ("j" . #'+escape))
   (:map meow-normal-state-keymap

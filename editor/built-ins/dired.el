@@ -5,6 +5,7 @@
   (dired-auto-revert-buffer)
   (dired-recursive-copies 'always)
   (dired-dwim-target t)
+  (dired-use-ls-dired nil)
   :hook (dired-mode . dired-hide-details-mode)
   :bind
   (:map +leader-map

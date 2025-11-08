@@ -36,7 +36,6 @@
          ("SPC fm" . #'consult-minor-mode-menu)
          ("/" . #'+consult-line)
          ("SPC /" . #'+consult-line-multi)
-         ("pg" . #'consult-git-grep)
          ("fr" . #'consult-recent-file)
          ("fj" . #'consult-imenu)
          ("bb" . #'consult-buffer)
@@ -48,6 +47,7 @@
          ("SPC k" . #'+consult-keep-lines)
          ("rf" . #'consult-recent-file)
          ("rc" . #'consult-complex-command)
+         ("fk" . #'+find-key)
          ("fh" . #'consult-man)
          ("ft" . #'+find-todos)
          ("fe" . #'consult-flymake)
@@ -55,6 +55,8 @@
          ("f." . #'consult-find)
          ("fl" . #'consult-goto-line)
          ("fa" . #'consult-org-agenda)
+         ("SPC '" . #'consult-ripgrep)
+         ("ps" . #'consult-ripgrep)
          ("fs" . #'+consult-ripgrep-current)
          ("pj" . #'consult-imenu-multi)
          :map org-mode-map
@@ -180,3 +182,19 @@ Otherwise, just call consult-yank-pop."
 
 (use-package embark-consult
   :after (consult embark))
+
+(defun +find-key (key-sequence)
+  "Goto the definition of the command bound to `KEY-SEQUENCE'"
+  (interactive
+   (list (read-key-sequence "Press key: ")))
+  (let ((sym (key-binding key-sequence)))
+    (cond
+     ((null sym)
+      (user-error "No command is bound to %s"
+                  (key-description sym)))
+     ((commandp sym t)
+      (xref-find-definitions (symbol-name sym)))
+     (t
+      (user-error "%s is bound to %s which is not a command"
+                  (key-description key-sequence)
+                  sym)))))

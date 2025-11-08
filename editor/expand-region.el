@@ -4,6 +4,7 @@
   (yaml-mode . er/add-yaml-mode-expansions)
   (org-mode . er/add-org-mode-expansions)
   (nxml-mode . er/add-nxml-mode-expansions)
+  (text-mode . er/add-text-mode-expansions)
   :bind
   (:map meow-normal-state-keymap
         ("o" . #'+expand-region)
@@ -23,6 +24,9 @@
 
   (with-eval-after-load 'nxml-mode
     (require 'nxml-mode-expansions))
+
+  (with-eval-after-load 'text-mode
+    (require 'text-mode-expansions))
 
   (setq er/try-expand-list
         '(er/mark-inside-quotes

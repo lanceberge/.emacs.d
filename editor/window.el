@@ -25,6 +25,24 @@
   (setq repeat-map 'other-window-repeat-map)
   (other-window -1))
 
+(use-package frame
+  :ensure nil
+  :bind
+  (:repeat-map other-frame-repeat-map
+               ("n" . #'other-frame)
+               ("p" . #'other-frame-previous))
+  (:map +leader2-map
+        ("fn" . #'other-frame)
+        ("fp" . #'other-frame-previous)
+        ("fg" . #'select-frame-by-name)
+        ("fd" . #'delete-frame)
+        ("SPC fn" . #'make-frame)))
+
+;;;###autoload
+(defun other-frame-previous ()
+  (interactive)
+  (other-frame -1))
+
 (use-package ace-window
   :custom
   (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
