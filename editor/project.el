@@ -24,7 +24,7 @@
 (defun +project-load-projects ()
   (interactive)
   ;; dirs to remember
-  (dolist (dir '("~/.emacs.d" "~/.config/nixos" "~/dotfiles"))
+  (dolist (dir '("~/.emacs.d/" "~/.config/nixos" "~/dotfiles/"))
     (when (file-directory-p dir)
       (project--remember-dir dir)))
   ;; dirs to remember recursively

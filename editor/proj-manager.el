@@ -9,6 +9,8 @@
         ("pp" . #'+project-switch)
         ("pk" . #'+project-kill-buffers)
         ("onf" . #'+org-roam-file-find)
+        ("j" . #'+switch-to-other-project)
+        ("pg" . #'+switch-to-project)
         ("l" . #'+switch-to-other-project-file-buffer)
         ("bl" . #'+switch-to-other-project-special-buffer-dwim)
         ("fp" . #'+find-package)))
@@ -93,12 +95,49 @@
       (+proj-tab-name proj-root))))
 
 ;;;###autoload
-(defun +switch-to-other-project-file-buffer (n)
+(defun +switch-to-other-project-file-buffer (n &optional project)
   "Switch to the N'th most recent open buffer in the same vc-root-dir as the current buffer.
 Recurse through the buffer-list, skipping the first value since that's the current buffer."
   (interactive "p")
   (require 'project)
   (let ((current-buffer (current-buffer))
+        (project-root-dir
+         (expand-file-name
+          (or project
+              (when (project-current t)
+                (project-root (project-current t))))))
+        (target-index (1- (abs n)))) ; Convert to 0-based index
+    (defun +switch-to-recent-buffer-helper (buffer-list remaining)
+      (if (not buffer-list)
+          (if not-found-callback
+              (funcall not-found-callback)
+            (message "No other recent files open in buffers"))
+        (let* ((buffer (car buffer-list))
+               (buffer-project-root-dir (with-current-buffer buffer
+                                          (when (project-current nil)
+                                            (expand-file-name (project-root (project-current nil)))))))
+          (if (and (buffer-file-name buffer)
+                   (or (not project-root-dir)
+                       (string= project-root-dir buffer-project-root-dir)))
+              (if (eq remaining 0)
+                  (switch-to-buffer buffer)
+                (+switch-to-recent-buffer-helper (cdr buffer-list) (1- remaining)))
+            (+switch-to-recent-buffer-helper (cdr buffer-list) remaining)))))
+    (+switch-to-recent-buffer-helper (cdr (buffer-list)) target-index)))
+
+;;;###autoload
+(defun +switch-to-project (n)
+  (interactive "p")
+  (let ((dir (funcall project-prompter)))
+    (message dir)
+    (+switch-to-other-project-file-buffer n dir (lambda () (project-switch-project dir)))))
+
+(defun +switch-to-other-project (n)
+  "Switch to the buffer in the last open project"
+  (interactive "p")
+  (require 'project)
+  (let ((current-buffer (current-buffer))
+        >>>>>>> Stashed changes
         (project-root-dir (when (project-current t)
                             (expand-file-name (project-root (project-current t)))))
         (target-index (1- (abs n)))) ; Convert to 0-based index

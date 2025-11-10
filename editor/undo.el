@@ -1,4 +1,27 @@
 ;;; -*- lexical-binding: t -*-
+(use-package undo
+  :ensure nil
+  :bind
+  (:repeat-map undo-repeat-map
+               ("u" . #'+undo)
+               ("r" . #'+redo)
+               ("U" . #'+redo))
+  (:map meow-normal-state-keymap
+        ("u" . #'+undo)
+        ("U" . #'+redo)))
+
+;;;###autoload
+(defun +undo (&optional arg)
+  (interactive "*P")
+  (let ((deactivate-mark nil))
+    (call-interactively #'undo)))
+
+;;;###autoload
+(defun +redo (&optional arg)
+  (interactive "*p")
+  (let ((deactivate-mark nil))
+    (call-interactively #'undo-redo)))
+
 (use-package vundo ; interactive visual tree of undos
   :bind
   (:repeat-map undo-repeat-map

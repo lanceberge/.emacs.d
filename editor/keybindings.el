@@ -4,8 +4,6 @@
   :bind
   (:map +leader-map
         ("h" . #'help-command)
-        (";" . #'shell-command)
-        ("SPC ;" . #'+project-shell-command)
         ("er" . #'+source-init-file))
   (:map +leader2-map
         ("fr" . #'rename-buffer))
@@ -130,16 +128,21 @@
           undefined
           mouse-set-point
           org-self-insert-command))
-  (keyfreq-autosave-mode))
+  (keyfreq-autosave-mode)
+  :bind
+  (:map +leader-map
+        ("SPC hk" . #'+keyfreq-show)))
 
 ;;;###autoload
 (defun +keyfreq-show (&optional arg)
   (interactive "p")
-  (when (get-buffer "*frequencies*")
-    (kill-buffer "*frequencies*"))
-  (call-interactively #'keyfreq-show)
-  (with-current-buffer "*frequencies*"
-    (keyfreq-show-mode)))
+  (let ((frequencies-buffer "*frequencies*"))
+    (when (get-buffer frequencies-buffer)
+      (kill-buffer frequencies-buffer))
+    (call-interactively #'keyfreq-show)
+    (with-current-buffer frequencies-buffer
+      (keyfreq-show-mode))
+    (pop-to-buffer frequencies-buffer)))
 
 (use-package keycast
   :hook (after-init . keycast-mode-line-mode)

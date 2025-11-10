@@ -6,7 +6,6 @@
                ("n" . #'next-buffer)
                ("p" . #'previous-buffer))
   (:map +leader-map
-        ("nf" . #'+make-frame)
         ("bd" . #'kill-current-buffer)
         ("bq" . #'+save-and-kill-buffer)
         ("br" . #'+revert-buffer)
@@ -34,9 +33,9 @@
   (:map +leader2-map
         ("fn" . #'other-frame)
         ("fp" . #'other-frame-previous)
+        ("f SPC" . #'make-frame)
         ("fg" . #'select-frame-by-name)
-        ("fd" . #'delete-frame)
-        ("SPC fn" . #'make-frame)))
+        ("fd" . #'delete-frame)))
 
 ;;;###autoload
 (defun other-frame-previous ()

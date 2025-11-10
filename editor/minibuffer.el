@@ -55,9 +55,10 @@
          ("f." . #'consult-find)
          ("fl" . #'consult-goto-line)
          ("fa" . #'consult-org-agenda)
-         ("SPC '" . #'consult-ripgrep)
          ("ps" . #'consult-ripgrep)
+         (";" . #'consult-ripgrep)
          ("fs" . #'+consult-ripgrep-current)
+         ("SPC ;" . #'+consult-ripgrep-current)
          ("pj" . #'consult-imenu-multi)
          :map org-mode-map
          ([remap consult-imenu] . #'consult-org-heading)))

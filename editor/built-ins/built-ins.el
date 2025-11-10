@@ -10,13 +10,7 @@
   ("M-z" . #'zap-up-to-char)
   ("M-Z" . #'zap-to-char)
   ("M-T" . #'transpose-paragraphs)
-  (:repeat-map undo-repeat-map
-               ("u" . #'undo)
-               ("r" . #'undo-redo)
-               ("U" . #'undo-redo))
   (:map meow-normal-state-keymap
-        ("u" . #'undo)
-        ("U" . #'undo-redo)
         ("RET" . #'newline)
         ("S-<return>" . #'insert-newline-above-dwim))
   (:map prog-mode-map
