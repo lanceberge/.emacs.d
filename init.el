@@ -287,7 +287,7 @@
         ("P" . #'meow-swap-grab)
         ("s" . #'+kill-line-or-region)
         ("t" . #'meow-till)
-        ("v" . #'+meow-visit)
+        ("nf" . #'+meow-visit)
         ("w" . #'meow-mark-word)
         ("W" . #'meow-mark-symbol)
         ("m" . #'meow-line)

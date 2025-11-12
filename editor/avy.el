@@ -6,7 +6,7 @@
   (avy-case-fold-search nil)
   :bind
   (:map meow-normal-state-keymap
-        ("nf" . #'avy-goto-char-2))
+        ("v" . #'avy-goto-char-2))
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)

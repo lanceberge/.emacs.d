@@ -55,9 +55,7 @@
          ("f." . #'consult-find)
          ("fl" . #'consult-goto-line)
          ("fa" . #'consult-org-agenda)
-         ("ps" . #'consult-ripgrep)
          (";" . #'consult-ripgrep)
-         ("fs" . #'+consult-ripgrep-current)
          ("SPC ;" . #'+consult-ripgrep-current)
          ("pj" . #'consult-imenu-multi)
          :map org-mode-map
@@ -194,7 +192,7 @@ Otherwise, just call consult-yank-pop."
       (user-error "No command is bound to %s"
                   (key-description sym)))
      ((commandp sym t)
-      (xref-find-definitions (symbol-name sym)))
+      (consult-ripgrep "~/.emacs.d" (symbol-name sym)))
      (t
       (user-error "%s is bound to %s which is not a command"
                   (key-description key-sequence)

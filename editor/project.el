@@ -8,7 +8,6 @@
   (project-mode-line t)
   :bind
   (:map +leader-map
-        ("pf" . #'project-find-file)
         ("'" . #'project-find-file)
         ("pe" . #'flymake-show-project-diagnostics)
         ("pr" . #'+project-replace-regex)

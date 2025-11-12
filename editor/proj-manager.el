@@ -137,7 +137,6 @@ Recurse through the buffer-list, skipping the first value since that's the curre
   (interactive "p")
   (require 'project)
   (let ((current-buffer (current-buffer))
-        >>>>>>> Stashed changes
         (project-root-dir (when (project-current t)
                             (expand-file-name (project-root (project-current t)))))
         (target-index (1- (abs n)))) ; Convert to 0-based index

@@ -10,8 +10,8 @@
   (:map meow-insert-state-keymap
         ("j" . #'+escape))
   (:map meow-normal-state-keymap
-        ("SPC [" . #'+insert-newlines-above)
-        ("SPC ]" . #'+insert-newlines-below)
+        ("[ SPC" . #'+insert-newlines-above)
+        ("] SPC" . #'+insert-newlines-below)
         ("RET" . #'insert-newline-indent)))
 
 ;;;###autoload

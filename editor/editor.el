@@ -49,6 +49,7 @@
         ("'" . #'embark-dwim)
         ("f" . #'consult-ripgrep)
         ("d" . #'embark-find-definition)
+        ("/" . #'consult-line)
         ("g" . #'goolge-this-word))
   (:map embark-collect-mode-map
         ("F" . #'consult-focus-lines)
@@ -140,8 +141,8 @@
 (use-package beginend
   :bind
   (:map +leader-map
-        ("SPC [" . #'beginning-of-buffer)
-        ("SPC ]" . #'end-of-buffer))
+        ("[ SPC" . #'beginning-of-buffer)
+        ("] SPC" . #'end-of-buffer))
 
   :hook (after-init . beginend-global-mode))
 

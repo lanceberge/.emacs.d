@@ -105,7 +105,8 @@
       (progn
         (+move-point-to-region-end)
         (forward-paragraph))
-    (mark-paragraph)
+    (set-mark (point))
+    (forward-paragraph)
     (exchange-point-and-mark))
   (+mark-forward-backward-ring-push))
 
@@ -117,7 +118,8 @@
       (progn
         (+move-point-to-region-beginning)
         (backward-paragraph))
-    (mark-paragraph))
+    (set-mark (point))
+    (backward-paragraph))
   (+mark-forward-backward-ring-push))
 
 ;;;###autoload
@@ -128,8 +130,9 @@
       (progn
         (+move-point-to-region-end)
         (forward-sexp))
-    (mark-sexp)
-    (exchange-point-and-mark))
+    (set-mark (point))
+    (activate-mark)
+    (forward-sexp))
   (+mark-forward-backward-ring-push))
 
 ;;;###autoload
@@ -140,7 +143,9 @@
       (progn
         (+move-point-to-region-beginning)
         (backward-sexp))
-    (mark-sexp))
+    (set-mark (point))
+    (activate-mark)
+    (backward-sexp))
   (+mark-forward-backward-ring-push))
 
 ;;;###autoload
@@ -151,8 +156,9 @@
       (progn
         (+move-point-to-region-end)
         (forward-sentence))
-    (require 'expand-region)
-    (er/mark-sentence)
+    (set-mark (point))
+    (activate-mark)
+    (forward-sentence)
     (exchange-point-and-mark))
   (+mark-forward-backward-ring-push))
 
@@ -164,8 +170,9 @@
       (progn
         (+move-point-to-region-beginning)
         (backward-sentence))
-    (require 'expand-region)
-    (er/mark-sentence))
+    (set-mark (point))
+    (activate-mark)
+    (backward-sentence))
   (+mark-forward-backward-ring-push))
 
 ;;;###autoload
