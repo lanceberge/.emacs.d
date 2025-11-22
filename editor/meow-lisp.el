@@ -187,3 +187,49 @@ macro which made this send the query in gptel so I replaced it with newline."
 ;;;###autoload
 (defun +meow-motion-mode ()
   (+meow-set-desired-state 'motion))
+
+;;;###autoload
+(defun +meow-mark-word (arg)
+  (interactive "p")
+  (if (region-active-p)
+      (let ((er/try-expand-list
+             '(er/mark-word
+               er/mark-symbol
+               er/mark-symbol-with-prefix
+               er/mark-next-accessor
+               er/mark-method-call
+               er/mark-inside-quotes
+               er/mark-outside-quotes
+               er/mark-inside-pairs
+               er/mark-outside-pairs
+               er/mark-comment
+               er/mark-url
+               er/mark-email
+               er/mark-defun
+               er/mark-ts-node)))
+        (progn
+          (with-point-at-region-beginning
+           (er/expand-region 1))))
+    (meow-mark-word 1)))
+
+;;;###autoload
+(defun +meow-mark-symbol (arg)
+  (interactive "p")
+  (if (region-active-p)
+      (let ((er/try-expand-list
+             '(er/mark-word
+               er/mark-symbol
+               er/mark-symbol-with-prefix
+               er/mark-next-accessor
+               er/mark-method-call
+               er/mark-outside-quotes
+               er/mark-outside-pairs
+               er/mark-comment
+               er/mark-url
+               er/mark-email
+               er/mark-defun
+               er/mark-ts-node)))
+        (progn
+          (with-point-at-region-beginning
+           (er/expand-region 1))))
+    (meow-mark-symbol 1)))
