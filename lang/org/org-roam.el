@@ -36,7 +36,7 @@
         ("oni" . #'org-roam-node-insert)
         ("onn" . #'+org-roam-node-insert-immediate)
         ("ont" . #'+org-roam-add-todo)
-        ("ond" . #'+org-roam-add-drill-tag)
+        ("ond" . #'+org-roam-find-drill-files)
         ("onp" . #'+org-roam-add-project-tag)
         ("onq" . #'org-roam-tag-add))
   :config
@@ -79,6 +79,7 @@
   (:map +leader-map
         ("onb" . #'consult-org-roam-backlinks)
         ("onl" . #'consult-org-roam-forward-links)
+        ("of" . #'consult-org-roam-file-find)
         ("on SPC b" . #'consult-org-roam-backlinks-recursive))
   :config
   (consult-org-roam-mode))
@@ -94,7 +95,8 @@
 ;;;###autoload
 (defun +org-roam-filter-by-tag (tag-name)
   (lambda (node)
-    (member tag-name (org-roam-node-tags node))))
+    (and (equal (org-roam-node-level node) 0)
+         (member tag-name (org-roam-node-tags node)))))
 
 ;;;###autoload
 (defun +org-roam-list-notes-by-tag (tag-name)
@@ -137,10 +139,3 @@
   (interactive)
   (org-roam-tag-add '("Project"))
   (add-to-list 'org-agenda-files (buffer-file-name)))
-
-;;;###autoload
-(defun +org-roam-add-drill-tag ()
-  "Add a drill tag and add this to org-drill files"
-  (interactive)
-  (org-roam-tag-add '("Drill"))
-  (add-to-list 'org-drill-scope (buffer-file-name)))

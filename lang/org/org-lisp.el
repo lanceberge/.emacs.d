@@ -116,3 +116,15 @@
   (if (not (region-active-p))
       (call-interactively #'org-metaright)
     (+drag-stuff-right-dwim arg)))
+
+;;;###autoload
+(defun +org--has-filetag-p (tag)
+  (and (member tag (+org--get-filetags)) t))
+
+;;;###autoload
+(defun +org--get-filetags ()
+  "Return a list of filetags from the current buffer."
+  (and (eq major-mode 'org-mode)
+       (let ((filetags (car (org-collect-keywords '("FILETAGS")))))
+         (when filetags
+           (split-string (cadr filetags) ":" t "\\s-*")))))
