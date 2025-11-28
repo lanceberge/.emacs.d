@@ -9,7 +9,7 @@
   (:map +leader-map
         ("RET" . #'smerge-keep-current)
         ("mu" . #'smerge-keep-upper)
-        ("mo" . #'smerge-keep-lower)
+        ("ml" . #'smerge-keep-lower)
         ("ma" . #'smerge-keep-all)
         ("mm" . #'smerge-ediff)
         ("mn" . #'+smerge-vc-next-conflict)

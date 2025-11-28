@@ -135,11 +135,11 @@
 
 ;;;###autoload
 (defun +keyfreq-show (&optional arg)
-  (interactive "p")
+  (interactive "P")
   (let ((frequencies-buffer "*frequencies*"))
     (when (get-buffer frequencies-buffer)
       (kill-buffer frequencies-buffer))
-    (call-interactively #'keyfreq-show)
+    (keyfreq-show (if arg major-mode))
     (with-current-buffer frequencies-buffer
       (keyfreq-show-mode))
     (pop-to-buffer frequencies-buffer)))

@@ -74,10 +74,14 @@ unless a nonzero and non-negative prefix is provided."
   (set-transient-map git-timemachine-repeat-map t))
 
 (use-package diff-hl
+  :defer 0.5
   :hook
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
-  :defer 0.5
+  :bind
+  (:map +leader-map
+        ("gr" . #'diff-hl-revert-hunk))
+
   :config
   (global-diff-hl-mode))
 

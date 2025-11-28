@@ -141,8 +141,8 @@
 (use-package beginend
   :bind
   (:map +leader-map
-        ("[ SPC" . #'beginning-of-buffer)
-        ("] SPC" . #'end-of-buffer))
+        ("[" . #'beginning-of-buffer)
+        ("]" . #'end-of-buffer))
 
   :hook (after-init . beginend-global-mode))
 

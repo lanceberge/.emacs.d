@@ -124,15 +124,6 @@ macro which made this send the query in gptel so I replaced it with newline."
          (back-to-indentation))))
 
 ;;;###autoload
-(defun +kill-line-or-region (arg)
-  (interactive "P")
-  (if (region-active-p)
-      (meow-kill)
-    (save-excursion
-      (beginning-of-line)
-      (kill-visual-line arg))))
-
-;;;###autoload
 (defun +smart-delete ()
   (interactive)
   (let ((char-at-point (char-after (point))))

@@ -63,6 +63,7 @@
   (dolist (path '("/opt/homebrew/opt/llvm/bin/"
                   "~/go/bin"
                   "/Users/lance/.config/herd-lite/bin/"
+                  "/opt/homebrew/bin/"
                   "/opt/homebrew/opt/openjdk/bin/"
                   "~/.config/composer/vendor/bin/"))
     (add-to-list 'exec-path path))
@@ -288,7 +289,7 @@
         ("O" . #'meow-to-block)
         ("r" . #'+meow-replace-char)
         ("P" . #'meow-swap-grab)
-        ("s" . #'+kill-line-or-region)
+        ("s" . #'meow-kill)
         ("t" . #'meow-till)
         ("nf" . #'+meow-visit)
         ("w" . #'+meow-mark-word)
@@ -320,7 +321,7 @@
         ("DEL" . #'backward-kill-sexp)
         ("a" . #'back-to-indentation)
         ("e" . #'end-of-line)
-        ("s" . #'+kill-line-or-region)
+        ("s" . #'meow-kill)
         ("j" . #'next-line)
         ("k" . #'previous-line)
         ("u" . #'undo)
