@@ -98,11 +98,13 @@
   (interactive "p")
   (previous-line arg)
   (when (eolp)
-    (org-end-of-line)))
+    (org-end-of-line))
+  (deactivate-mark))
 
 ;;;###autoload
 (defun +org-down (&optional arg)
   (interactive "p")
   (next-line arg)
   (when (eolp)
-    (org-end-of-line)))
+    (org-end-of-line))
+  (deactivate-mark))

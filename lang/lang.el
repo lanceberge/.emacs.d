@@ -28,7 +28,6 @@
   (js-mode . (lambda () (setq-local tab-width 2))))
 
 (use-package markdown-mode
-  :ensure nil
   :custom
   (markdown-fontify-code-blocks-natively t))
 

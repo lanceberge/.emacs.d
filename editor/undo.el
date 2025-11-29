@@ -4,11 +4,10 @@
   :bind
   (:repeat-map undo-repeat-map
                ("u" . #'+undo)
-               ("r" . #'+redo)
-               ("U" . #'+redo))
+               ("r" . #'+redo))
   (:map meow-normal-state-keymap
         ("u" . #'+undo)
-        ("U" . #'+redo)))
+        ("z" . #'+redo)))
 
 ;;;###autoload
 (defun +undo (&optional arg)
@@ -25,6 +24,7 @@
 (use-package vundo ; interactive visual tree of undos
   :bind
   (:repeat-map undo-repeat-map
+               :exit
                ("f" . #'vundo))
   (:map +leader-map
         ("fu" . #'vundo))
