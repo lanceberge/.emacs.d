@@ -49,8 +49,11 @@
   :bind
   (:map +leader-map
         ("w SPC" . #'ace-swap-window)))
+
 (use-package window
   :ensure nil
+  :custom
+  (recenter-positions '(middle top))
   :bind
   (:repeat-map window-repeat-map
                ("p" . #'tab-bar-history-back)
