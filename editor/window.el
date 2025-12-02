@@ -1,4 +1,6 @@
 ;;; -*- lexical-binding: t -*-
+(setq tab-bar-show nil)
+
 (use-package +window
   :ensure nil
   :bind

@@ -14,6 +14,8 @@
 ;; tsdh-light, leuven, whiteboard, doom-one-light, doom-tomorrow-day, dichromacy, doom-acario-light, doom-flatwhite, doom-earl-gray, doom-feather-light
 ;; doom-tokyo-night, doom-rouge, doom-monokai-spectrum, monokai-ristretto doom-city-lights, doom-horizon, doom-one, doom-ayu-mirage
 
+(use-package doom-themes)
+
 (setq +themes-dark-themes '(gruvbox-dark-hard doom-badger doom-miramare gruvbox doom-oceanic-next doom-tomorrow-night
                                               doom-spacegrey doom-tokyo-night
                                               doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon ))

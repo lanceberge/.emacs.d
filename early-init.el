@@ -96,12 +96,12 @@
 
 (setq enable-local-variables nil)
 
-(use-package doom-themes
+(use-package gruvbox-theme
+  :ensure (:host github :repo "lanceberge/emacs-theme-gruvbox")
   :demand t
   :config
-  (require 'doom-miramare-theme)
   (mapc #'disable-theme custom-enabled-themes)
-  (load-theme 'doom-miramare t))
+  (load-theme 'gruvbox-dark-hard t))
 
 (use-package display-line-numbers
   :ensure nil
@@ -114,29 +114,17 @@
 
   (global-display-line-numbers-mode))
 
-;; https://github.com/progfolio/elpaca/issues/216
-;; ;;;###autoload
-;; (defun +elpaca-unload-seq (e)
-;;   (and (featurep 'seq) (unload-feature 'seq t))
-;;   (elpaca--continue-build e))
-
-;; ;;;###autoload
-;; (defun +elpaca-seq-build-steps ()
-;;   (append (butlast (if (file-exists-p (expand-file-name "seq" elpaca-builds-directory))
-;;                        elpaca--pre-built-steps elpaca-build-steps))
-;;           (list '+elpaca-unload-seq 'elpaca--activate-package)))
-
-;; (elpaca `(seq :build ,(+elpaca-seq-build-steps)))
-
 (setq-default mode-line-format
               '("%e"
                 mode-line-front-space
                 mode-line-mule-info
                 mode-line-modified
                 "  "
-                mode-line-buffer-identification ; buffer name
+                (:eval (project-mode-line-format))
                 "  "
-                vc-mode)) ; show git branch
+                mode-line-buffer-identification ; buffer name
+                " "
+                vc-mode))
 
 (use-package no-littering
   :demand t

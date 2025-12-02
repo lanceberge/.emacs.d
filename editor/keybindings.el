@@ -145,6 +145,7 @@
     (pop-to-buffer frequencies-buffer)))
 
 (use-package keycast
+  :disabled t
   :hook (after-init . keycast-mode-line-mode)
   :config
   (dolist (input '(self-insert-command org-self-insert-command))
