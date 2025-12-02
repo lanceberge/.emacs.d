@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: t -*-
+;; -*- lexical-binding: t -*-
 ;;;###autoload
 (defun +meow-visit (arg)
   "`meow-visit' but add the string to the isearch history."
@@ -40,7 +40,9 @@
   (if (region-active-p)
       (progn
         (meow-change)
-        (indent-according-to-mode))
+        (unless (or (derived-mode-p 'yaml-mode)
+                    (eq (point) (save-excursion (back-to-indentation) (point))))
+          (indent-according-to-mode)))
     (progn
       (kill-line)
       (meow-insert-mode))))
@@ -191,7 +193,9 @@ macro which made this send the query in gptel so I replaced it with newline."
 ;;;###autoload
 (defun +meow-mark-word (arg)
   (interactive "p")
-  (if (region-active-p)
+  (if (and (region-active-p)
+           (or (eq last-command this-command)
+               (eq last-command #'+meow-mark-symbol)))
       (let ((er/try-expand-list
              '(er/mark-word
                er/mark-symbol
@@ -215,7 +219,9 @@ macro which made this send the query in gptel so I replaced it with newline."
 ;;;###autoload
 (defun +meow-mark-symbol (arg)
   (interactive "p")
-  (if (region-active-p)
+  (if (and (region-active-p)
+           (or (eq last-command this-command)
+               (eq last-command #'+meow-mark-word)))
       (let ((er/try-expand-list
              '(er/mark-word
                er/mark-symbol

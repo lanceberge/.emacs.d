@@ -7,7 +7,6 @@
   (:map smerge-basic-map
         ("n" . #'+smerge-vc-next-conflict))
   (:map +leader-map
-        ("RET" . #'smerge-keep-current)
         ("mu" . #'smerge-keep-upper)
         ("ml" . #'smerge-keep-lower)
         ("ma" . #'smerge-keep-all)
