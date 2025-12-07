@@ -220,6 +220,7 @@
   (meow--kbd-forward-line #'next-line)
   (meow--kbd-backward-line #'previous-line)
   (meow--kbd-forward-char #'forward-char)
+  (meow--kbd-delete-char #'delete-char)
   :init
   (meow-define-state sexp
     "State for interacting with sexps."
@@ -234,7 +235,6 @@
         ("SPC" . nil)
         ("L" . #'meow-right-expand)
         ("j" . #'meow-next)
-        ("SPC" . nil)
         ("g" . #'meow-cancel-selection)
         ("[" . #'meow-beginning-of-thing)
         ("]" . #'meow-end-of-thing)
@@ -258,9 +258,9 @@
         ("[" . #'meow-beginning-of-thing)
         ("M-[" . #'meow-pop-to-mark)
         ("M-]" . #'meow-unpop-to-mark)
-        ("d" . #'+smart-delete)
+        ("d" . #'meow-delete)
         ("c" . #'+meow-change)
-        ("a" . #'meow-append)
+        ("a" . #'+meow-append)
         ("^" . #'repeat)
         ("DEL e" . #'kill-line)
         ("DEL DEL" . #'+delete)
@@ -284,7 +284,6 @@
         ("l" . #'meow-right)
         ("L" . #'meow-right-expand)
         ("x" . #'+back-or-join)
-        ("O" . #'meow-to-block)
         ("r" . #'+meow-replace-char)
         ("P" . #'meow-swap-grab)
         ("s" . #'+kill-line-or-region)

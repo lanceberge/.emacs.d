@@ -4,7 +4,7 @@
   :bind
   (:map +leader-map
         ("SPC p" . #'+project-ripgrep)
-        ("pp" . #'+project-switch)
+        ("SPC k" . #'+project-switch)
         ("pk" . #'+project-kill-buffers)
         ("j" . #'+project-other-project)
         ("k" . #'+switch-to-project)

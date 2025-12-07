@@ -145,7 +145,7 @@
     (pop-to-buffer frequencies-buffer)))
 
 (use-package keycast
-  :disabled t
+  ;; :disabled t
   :hook (after-init . keycast-mode-line-mode)
   :config
   (dolist (input '(self-insert-command org-self-insert-command))
@@ -161,6 +161,7 @@
         ([remap scroll-up-command] . #'+rectangle-mode)) ; C-v
   (:map rectangle-mark-mode-map
         ([remap +smart-delete] . #'kill-rectangle)
+        ([remap meow-delete] . #'kill-rectangle)
         ([remap meow-insert] . #'string-insert-rectangle)
         ([remap +meow-change] . #'replace-rectangle)
         ([remap meow-next-word] . #'forward-word)

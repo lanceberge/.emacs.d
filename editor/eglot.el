@@ -12,7 +12,7 @@
     typescript-mode typescript-ts-mode
     nix-mode
     tsx-ts-mode
-    ;; js2-mode
+    js2-mode
     python-base-mode
     php-mode
     rust-mode rust-ts-mode

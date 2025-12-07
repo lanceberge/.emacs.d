@@ -22,6 +22,7 @@
 ;;;###autoload
 (defun +project-load-projects ()
   (interactive)
+  (project-forget-zombie-projects)
   ;; dirs to remember
   (dolist (dir '("~/.emacs.d/" "~/.config/nixos" "~/dotfiles/"))
     (when (file-directory-p dir)

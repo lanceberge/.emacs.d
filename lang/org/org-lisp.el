@@ -3,7 +3,13 @@
 (defun +org/insert-heading ()
   "insert a subheading in org mode and go to insert mode"
   (interactive)
-  (org-insert-heading-respect-content)
+  (if (save-excursion
+        (beginning-of-line)
+        (looking-at-p "^[ \t]*-"))
+      (progn
+        (end-of-line)
+        (org-insert-item))
+    (org-insert-heading-respect-content))
   (unless meow-insert-mode
     (meow-insert-mode 1)))
 

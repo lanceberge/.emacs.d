@@ -44,7 +44,7 @@
          ("fb" . #'consult-bookmark)
          ("fm" . #'consult-mark)
          ("SPC fy" . #'consult-yank-replace)
-         ("SPC k" . #'+consult-keep-lines)
+         ;; ("SPC k" . #'+consult-keep-lines)
          ("rf" . #'consult-recent-file)
          ("rc" . #'consult-complex-command)
          ("fk" . #'+find-key)

@@ -35,17 +35,22 @@
     (call-interactively #'+meow-replace-char)))
 
 ;;;###autoload
-(defun +meow-change ()
-  (interactive)
-  (if (region-active-p)
-      (progn
-        (meow-change)
-        (unless (or (derived-mode-p 'yaml-mode)
-                    (eq (point) (save-excursion (back-to-indentation) (point))))
-          (indent-according-to-mode)))
-    (progn
-      (kill-line)
-      (meow-insert-mode))))
+(defun +meow-change (arg)
+  (interactive "P")
+  (cond (arg
+         (beginning-of-visual-line)
+         (kill-line arg)
+         (save-excursion (newline))
+         (meow-insert-mode)
+         (indent-according-to-mode))
+        ((region-active-p)
+         (meow-change)
+         (when (or (derived-mode-p 'yaml-mode)
+                   (eq (point) (save-excursion (back-to-indentation) (point))))
+           (indent-according-to-mode)))
+        (t
+         (kill-line)
+         (meow-insert-mode))))
 
 ;;;###autoload
 (defun +meow-replace-char (char)
@@ -77,17 +82,17 @@
     (set-mark-command 1)))
 
 ;;;###autoload
-(defun +meow-open-below ()
+(defun +meow-open-below (arg)
   "Open a newline below and switch to INSERT state. The previous function just executed the RET
 macro which made this send the query in gptel so I replaced it with newline."
-  (interactive)
+  (interactive "p")
   (if meow--temp-normal
       (progn
         (message "Quit temporary normal mode")
         (meow--switch-state 'motion))
     (meow--switch-state 'insert)
     (goto-char (line-end-position))
-    (newline)
+    (newline arg)
     (indent-according-to-mode)
     (setq-local meow--insert-pos (point))
     (when meow-select-on-open
@@ -104,9 +109,12 @@ macro which made this send the query in gptel so I replaced it with newline."
 (defun +meow-save ()
   (interactive)
   (unless (region-active-p)
-    (if (member (char-after (point)) +open-chars)
-        (+expand-region 1)
-      (+expand-region 2)))
+    (cond ((member (char-after (point)) +open-chars)
+           (+expand-region 1))
+          ((member (char-after (point)) +close-chars)
+           (+expand-region 2))
+          (t
+           (meow-line 1))))
   (meow-save))
 
 ;;;###autoload
@@ -133,18 +141,6 @@ macro which made this send the query in gptel so I replaced it with newline."
     (save-excursion
       (beginning-of-line)
       (kill-visual-line arg))))
-
-;;;###autoload
-(defun +smart-delete ()
-  (interactive)
-  (let ((char-at-point (char-after (point))))
-    (cond ((member char-at-point +open-chars)
-           (kill-sexp))
-          ((member char-at-point +close-chars)
-           (forward-char)
-           (backward-kill-sexp))
-          (t
-           (delete-char 1)))))
 
 ;;;###autoload
 (defun +backward-kill-sexp ()
@@ -235,7 +231,15 @@ macro which made this send the query in gptel so I replaced it with newline."
                er/mark-email
                er/mark-defun
                er/mark-ts-node)))
-        (progn
-          (with-point-at-region-beginning
-           (er/expand-region 1))))
+        (with-point-at-region-beginning
+         (er/expand-region 1)))
     (meow-mark-symbol 1)))
+
+;;;###autoload
+(defun +meow-append ()
+  (interactive)
+  (cond ((eolp)
+         (deactivate-mark)
+         (meow-insert))
+        (t
+         (meow-append))))
