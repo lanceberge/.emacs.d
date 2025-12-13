@@ -1,5 +1,10 @@
 ;;; -*- lexical-binding: t -*-
 ;;;###autoload
+(defun +org-find-file ()
+  (interactive)
+  (+consult--buffer-in-dir "~/org-roam/"))
+
+;;;###autoload
 (defun +org/insert-heading ()
   "insert a subheading in org mode and go to insert mode"
   (interactive)
@@ -63,13 +68,13 @@
   (org-agenda-filter-by-tag t ?\t))
 
 ;;;###autoload
-(defun +org-insert-below ()
-  (interactive)
+(defun +org-insert-below (arg)
+  (interactive "p")
   (deactivate-mark)
   (end-of-visual-line)
   (if (org-insert-item)
       (meow-insert)
-    (+meow-open-below)))
+    (+meow-open-below arg)))
 
 ;;;###autoload
 (defun +org-insert-above ()
@@ -111,17 +116,17 @@
 
 ;;;###autoload
 (defun +org-metaleft-dwim (arg)
-  (interactive "p")
+  (interactive "P")
   (if (not (region-active-p))
-      (call-interactively #'org-metaleft)
-    (+drag-stuff-left-dwim arg)))
+      (org-metaleft arg)
+    (+drag-stuff-left-dwim (* 2 (or arg 1)))))
 
 ;;;###autoload
 (defun +org-metaright-dwim (arg)
-  (interactive "p")
+  (interactive "P")
   (if (not (region-active-p))
-      (call-interactively #'org-metaright)
-    (+drag-stuff-right-dwim arg)))
+      (org-metaright arg)
+    (+drag-stuff-right-dwim (* 2 (or arg 1)))))
 
 ;;;###autoload
 (defun +org--has-filetag-p (tag)

@@ -62,6 +62,13 @@
          ([remap consult-imenu] . #'consult-org-heading)))
 
 ;;;###autoload
+(defun +consult--buffer-in-dir (dir)
+  (let ((project (project-current nil dir)))
+    (let ((default-directory (project-root project)))
+      (consult--with-project
+        (consult-buffer consult-project-buffer-sources)))))
+
+;;;###autoload
 (defun +consult-focus-lines ()
   (interactive)
   (forward-char 1)
@@ -190,7 +197,7 @@ Otherwise, just call consult-yank-pop."
     (cond
      ((null sym)
       (user-error "No command is bound to %s"
-                  (key-description sym)))
+                  key-sequence))
      ((commandp sym t)
       (consult-ripgrep "~/.emacs.d" (symbol-name sym)))
      (t

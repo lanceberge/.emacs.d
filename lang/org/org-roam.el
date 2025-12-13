@@ -79,7 +79,7 @@
   (:map +leader-map
         ("onb" . #'consult-org-roam-backlinks)
         ("onl" . #'consult-org-roam-forward-links)
-        ("of" . #'consult-org-roam-file-find)
+        ("of" . #'+org-find-file)
         ("on SPC b" . #'consult-org-roam-backlinks-recursive))
   :config
   (consult-org-roam-mode))

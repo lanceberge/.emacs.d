@@ -121,7 +121,8 @@ macro which made this send the query in gptel so I replaced it with newline."
 (defun +join-line ()
   (interactive)
   (join-line)
-  (indent-for-tab-command))
+  (unless (derived-mode-p 'yaml-mode)
+    (indent-for-tab-command)))
 
 ;;;###autoload
 (defun +back-or-join ()
