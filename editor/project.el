@@ -40,7 +40,7 @@
   (let* ((project-root (project-root (project-current t)))
          (default-directory project-root))
     (if project-root
-        (progn (shell-command (format "git ls-files -z | xargs -0 perl -pi -e \"s/%s/%s/g\""
+        (progn (shell-command (format "git ls-files -z --cached --others --exclude-standard | xargs -0 perl -pi -e \"s/%s/%s/g\""
                                       (+perl-shell-quote search-regex)
                                       (+perl-shell-quote replace-string))
                               (message (format "Replaced"))))

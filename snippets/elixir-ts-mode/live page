@@ -1,7 +1,7 @@
 # key: live
 # name: live page
 # --
-defmodule `(elixir-module-name-from-file)` do
+defmodule `(+elixir--module-name-from-file)` do
   use AppWeb, :live_view
 
   @impl true

@@ -36,7 +36,7 @@
 
 ;;;###autoload
 (defun +gptel-project-buffer-name ()
-  (format "gptel-%s" (+current-proj-tab-name)))
+  (format "gptel-%s" (+project--current-proj-name)))
 
 ;;;###autoload
 (defun +gptel-project ()

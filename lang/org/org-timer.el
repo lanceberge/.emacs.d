@@ -2,7 +2,7 @@
 (use-package org-timer
   :ensure nil
   :bind
-  (:map +leader2-map
+  (:map +leader-map
         ("ot" . #'+org-timer-toggle)
         ("SPC ot" . #'+org-timer-open-file)))
 
@@ -38,7 +38,7 @@
       (org-timer-start)
       (setq +org-timer-start-time (+format-current-time))
       (setq +org-timer-start-date (format-time-string "%m/%d/%y"))
-      (setq +org-timer--start-proj (+current-proj-tab-name)))))
+      (setq +org-timer--start-proj (+project--current-proj-name)))))
 
 ;;;###autoload
 (defun +insert-elapsed-time-to-buffer (log-file elapsed-time start-time end-time)

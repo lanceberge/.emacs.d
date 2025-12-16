@@ -40,3 +40,7 @@
   (if (and (region-active-p)
            (eq (point) (region-end)))
       (exchange-point-and-mark)))
+
+;;;###autoload
+(defun +project--current-proj-name ()
+  (project-root (project-current nil)))

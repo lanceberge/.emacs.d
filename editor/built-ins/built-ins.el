@@ -118,13 +118,6 @@
 (use-package outline-mode
   :ensure nil
   :bind
-  (:repeat-map outline-repeat-map
-               ("a" . #'outline-toggle-children)
-               ("j" . #'outline-next-heading)
-               ("k" . #'outline-previous-heading)
-               ("m" . #'outline-hide-sublevels)
-               ("r" . #'outline-show-all)
-               ("o" . #'outline-show-subtree))
   (:map +leader-map
         ("oa" . #'outline-toggle-children)
         ("oj" . #'outline-next-heading)

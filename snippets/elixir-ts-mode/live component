@@ -1,7 +1,7 @@
 # key: component
 # name: live component
 # --
-defmodule `(elixir-module-name-from-file)` do
+defmodule `(+elixir--module-name-from-file)` do
   use Phoenix.LiveComponent
 
   @impl true

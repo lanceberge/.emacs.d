@@ -20,7 +20,7 @@
         ("C-j" . #'corfu-next)
         ("M-j" . #'corfu-next)
         ("M-k" . #'corfu-previous)
-        ("C-y" . #'corfu-complete)
+        ("C-y" . #'corfu-insert)
         ("RET" . #'newline)
         ("<tab>" . #'yas-expand))
   :config

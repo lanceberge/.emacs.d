@@ -28,10 +28,10 @@
   :hook
   (web-mode . emmet-mode)
   (svelte-mode . emmet-mode)
-  (elixir-ts-mode . emmet-mode)
+  (elixir-web-mode . emmet-mode)
   :bind
   (:map emmet-mode-keymap
-        ("C-f" . #'emmet-expand-line)))
+        ("C-t" . #'emmet-expand-line)))
 
 (use-package svelte-mode
   :mode ("\\.svelte\\'" . svelte-mode)

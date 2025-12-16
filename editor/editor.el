@@ -6,7 +6,7 @@
     json-mode
     svelte-mode) . format-all-mode)
   :custom
-  (format-all-show-errors nil)
+  (format-all-show-errors t)
   :bind
   (:map +leader-map
         ("=" . #'+format/buffer))
@@ -26,6 +26,9 @@
   (embark-confirm-act-all nil)
   (embark-quit-after-action nil)
   :bind
+  (:map meow-normal-state-keymap
+        ("M-." . #'embark-act)
+        ("M-'" . #'embark-dwim))
   (:map minibuffer-mode-map
         ("M-." . #'embark-act)
         ("M-," . #'+embark-select)
@@ -42,9 +45,8 @@
         ("v" . #'helpful-variable)
         ("f" . #'helpful-function)
         ("k" . #'helpful-key))
-  (:map meow-normal-state-keymap
-        ("M-." . #'embark-act)
-        ("M-'" . #'embark-dwim))
+  (:map embark-region-map
+        ("s" . #'+project-replace-regex))
   (:map embark-general-map
         ("'" . #'embark-dwim)
         ("f" . #'consult-ripgrep)
@@ -54,7 +56,6 @@
   (:map embark-collect-mode-map
         ("F" . #'consult-focus-lines)
         ([remap meow-bounds-of-thing] . #'embark-act))
-
   (:map embark-identifier-map
         ("SPC" . #'eglot-code-actions))
   :config

@@ -193,22 +193,23 @@ macro which made this send the query in gptel so I replaced it with newline."
   (if (and (region-active-p)
            (or (eq last-command this-command)
                (eq last-command #'+meow-mark-symbol)))
-      (let ((er/try-expand-list
-             '(er/mark-word
-               er/mark-symbol
-               er/mark-symbol-with-prefix
-               er/mark-next-accessor
-               er/mark-method-call
-               er/mark-inside-quotes
-               er/mark-outside-quotes
-               er/mark-inside-pairs
-               er/mark-outside-pairs
-               er/mark-comment
-               er/mark-url
-               er/mark-email
-               er/mark-defun
-               er/mark-ts-node)))
-        (progn
+      (progn
+        (require 'expand-region)
+        (let ((er/try-expand-list
+               '(er/mark-word
+                 er/mark-symbol
+                 er/mark-symbol-with-prefix
+                 er/mark-next-accessor
+                 er/mark-method-call
+                 er/mark-inside-quotes
+                 er/mark-outside-quotes
+                 er/mark-inside-pairs
+                 er/mark-outside-pairs
+                 er/mark-comment
+                 er/mark-url
+                 er/mark-email
+                 er/mark-defun
+                 er/mark-ts-node)))
           (with-point-at-region-beginning
            (er/expand-region 1))))
     (meow-mark-word 1)))
@@ -219,21 +220,22 @@ macro which made this send the query in gptel so I replaced it with newline."
   (if (and (region-active-p)
            (or (eq last-command this-command)
                (eq last-command #'+meow-mark-word)))
-      (let ((er/try-expand-list
-             '(er/mark-word
-               er/mark-symbol
-               er/mark-symbol-with-prefix
-               er/mark-next-accessor
-               er/mark-method-call
-               er/mark-outside-quotes
-               er/mark-outside-pairs
-               er/mark-comment
-               er/mark-url
-               er/mark-email
-               er/mark-defun
-               er/mark-ts-node)))
-        (with-point-at-region-beginning
-         (er/expand-region 1)))
+      (require 'expand-region
+               (let ((er/try-expand-list
+                      '(er/mark-word
+                        er/mark-symbol
+                        er/mark-symbol-with-prefix
+                        er/mark-next-accessor
+                        er/mark-method-call
+                        er/mark-outside-quotes
+                        er/mark-outside-pairs
+                        er/mark-comment
+                        er/mark-url
+                        er/mark-email
+                        er/mark-defun
+                        er/mark-ts-node)))
+                 (with-point-at-region-beginning
+                  (er/expand-region 1))))
     (meow-mark-symbol 1)))
 
 ;;;###autoload

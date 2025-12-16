@@ -36,26 +36,43 @@
 (defvar +elixir-mode-map (make-sparse-keymap))
 
 (use-package elixir-mode
-  ;; :hook
-  ;; ((elixir-mode elixir-ts-mode) . +setup-elixir-map)
+  :hook
+  ((elixir-mode elixir-ts-mode) . +setup-elixir-map)
   :bind
   (:map +elixir-mode-map
-        ("a" . #'forward-char))
+        ("r" . #'+elixir-rename-module)))
 
-  :defer t)
-
-;; (defun +setup-elixir-map ()
-;;   "Set up leader key bindings for elixir-mode."
-;;   (define-key +elixir-mode-map (kbd "C-c l") +leader-map)
-;;   (define-key +leader2-map (kbd "m") +elixir-mode-map))
+(defun +setup-elixir-map ()
+  "Set up leader key bindings for elixir-mode."
+  (define-key +leader-map "i" +elixir-mode-map))
 
 ;;;###autoload
+;; TODO
 (defun +elixir-create-schema ()
   (interactive)
   ())
 
 ;;;###autoload
-(defun elixir-module-name-from-file ()
+;; TODO hook to renaming .ex files
+(defun +elixir-rename-module ()
+  (interactive)
+  (let ((current-module-name (+elixir--current-module-name))
+        (updated-module-name (+elixir--module-name-from-file)))
+    (if (buffer-modified-p)
+        (user-error "File has unsaved changes"))
+    (+project-replace-regex current-module-name updated-module-name)
+    (revert-buffer nil t t)))
+
+(defun +elixir--current-module-name ()
+  "Return the current module name."
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward "^[ \t]*defmodule[ \t]+\\([A-Za-z0-9.]+\\)" nil t)
+      (let ((module-name (match-string-no-properties 1)))
+        module-name))))
+
+;;;###autoload
+(defun +elixir--module-name-from-file ()
   "Generate Elixir module name from current file path relative to project lib/ directory."
   (interactive)
   (let* ((file-path (buffer-file-name))

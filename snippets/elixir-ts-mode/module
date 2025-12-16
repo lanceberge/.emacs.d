@@ -1,6 +1,6 @@
 # key: module
 # name: elixir module
 # --
-defmodule `(elixir-module-name-from-file)` do
+defmodule `(+elixir--module-name-from-file)` do
   $0
 end

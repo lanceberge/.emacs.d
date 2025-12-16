@@ -217,10 +217,6 @@
   (meow-use-clipboard t)
   (meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (meow-use-cursor-position-hack t)
-  (meow--kbd-forward-line #'next-line)
-  (meow--kbd-backward-line #'previous-line)
-  (meow--kbd-forward-char #'forward-char)
-  (meow--kbd-delete-char #'delete-char)
   :init
   (meow-define-state sexp
     "State for interacting with sexps."
@@ -328,6 +324,11 @@
         ("t" . #'transpose-sexps)
         ("T" . #'transpose-sentences))
   :config
+  (setq meow--kbd-forward-line #'next-line
+        meow--kbd-backward-line #'previous-line
+        meow--kbd-forward-char #'forward-char
+        meow--kbd-delete-char #'delete-char)
+
   (dotimes (i 10)
     (define-key meow-sexp-state-keymap
                 (number-to-string i)

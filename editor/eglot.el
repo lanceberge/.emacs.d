@@ -25,7 +25,8 @@
   (eglot-sync-connect nil)
   :bind
   (:map +leader2-map
-        ("er" . #'eglot-reconnect))
+        ("er" . #'eglot-reconnect)
+        ("a" . #'eglot-code-actions))
   :config
   (setq eglot-events-buffer-size 1000000) ; Log everything
   (setq eglot-sync-connect 3) ; Wait longer for connection
