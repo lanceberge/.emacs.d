@@ -106,8 +106,7 @@
         (+move-point-to-region-end)
         (forward-paragraph))
     (set-mark (point))
-    (forward-paragraph)
-    (exchange-point-and-mark))
+    (forward-paragraph))
   (+mark-forward-backward-ring-push))
 
 ;;;###autoload
