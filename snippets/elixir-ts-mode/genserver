@@ -13,6 +13,7 @@ defmodule `(+elixir--module-name-from-file)` do
     GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
 
+  @impl GenServer
   def init(state) do
     {:ok, state}
   end
@@ -21,6 +22,7 @@ defmodule `(+elixir--module-name-from-file)` do
     GenServer.call(__MODULE__, :get_$1)
   end
 
+  @impl GenServer
   def handle_call(:get_$1, _from, state) do
     {:reply, state[$2], state}
   end

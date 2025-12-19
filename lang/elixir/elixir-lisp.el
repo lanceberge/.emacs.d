@@ -1,14 +1,14 @@
 ;;; -*- lexical-binding: t -*-
-(defvar elixir-web-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd ">") #'+maybe-close-tag)
-    map)
-  "Keymap for `elixir-web-mode'.")
-
-(define-minor-mode elixir-web-mode
-  "Elixir mode for web files."
-  :lighter " Web"
-  :keymap elixir-web-mode-map)
+;;;###autoload
+(defun +elixir-newline ()
+  (interactive)
+  (if (and (eq (char-before (point)) ?>)
+           (eq (char-after (point)) ?<))
+      (progn
+        (newline 2 t)
+        (previous-line)
+        (indent-according-to-mode))
+    (newline)))
 
 ;;;###autoload
 (defun maybe-elixir-web-mode ()
@@ -33,19 +33,6 @@
             (insert (format "</%s>" tag-name))
             (backward-char (+ 2 (length tag-name)))))))))
 
-(defvar +elixir-mode-map (make-sparse-keymap))
-
-(use-package elixir-mode
-  :hook
-  ((elixir-mode elixir-ts-mode) . +setup-elixir-map)
-  :bind
-  (:map +elixir-mode-map
-        ("r" . #'+elixir-rename-module)))
-
-(defun +setup-elixir-map ()
-  "Set up leader key bindings for elixir-mode."
-  (define-key +leader-map "i" +elixir-mode-map))
-
 ;;;###autoload
 ;; TODO
 (defun +elixir-create-schema ()
@@ -63,6 +50,7 @@
     (+project-replace-regex current-module-name updated-module-name)
     (revert-buffer nil t t)))
 
+;;;###autoload
 (defun +elixir--current-module-name ()
   "Return the current module name."
   (save-excursion
@@ -90,11 +78,6 @@
                                parts))
          (module-name (mapconcat 'identity module-parts ".")))
     module-name))
-
-
-(use-package elixir-ts-mode
-  :hook ((elixir-ts-mode . maybe-elixir-web-mode)
-         (elixir-ts-mode . +elixir-mode)))
 
 ;;;###autoload
 (defun +elixir-mode ()

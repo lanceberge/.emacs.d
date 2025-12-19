@@ -1,4 +1,4 @@
-# key: component
+# key: lc
 # name: live component
 # --
 defmodule `(+elixir--module-name-from-file)` do
