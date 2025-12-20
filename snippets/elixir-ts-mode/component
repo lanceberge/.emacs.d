@@ -1,0 +1,13 @@
+# key: component
+# name: component
+# --
+defmodule `(+elixir--module-name-from-file)` do
+  use AppWeb, :html
+
+  def `(+elixir--component-name-from-file)` (assigns) do
+    $1
+    ~H"""
+      $0
+    """
+  end
+end

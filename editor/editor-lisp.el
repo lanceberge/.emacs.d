@@ -138,7 +138,7 @@
   (setq global-mark-ring (nreverse global-mark-ring)))
 
 ;;;###autoload
-(defun +expand-snippet (snippet-name)
+(defun +yas-expand-snippet (snippet-name)
   (interactive)
   (yas-expand-snippet (yas-lookup-snippet snippet-name)))
 

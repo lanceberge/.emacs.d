@@ -5,7 +5,7 @@ defmodule `(+elixir--module-name-from-file)` do
   use Phoenix.LiveComponent
 
   @impl true
-  def update(socket, assigns)
+  def update(socket, assigns) do
     socket =
       socket
       |> assign($1)

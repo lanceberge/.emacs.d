@@ -43,4 +43,13 @@
 
 ;;;###autoload
 (defun +project--current-proj-name ()
+  (require 'project)
   (project-root (project-current nil)))
+
+(defun +project--buffer-relative-path ()
+  "Return the buffer's path relative to the project-root"
+  (require 'project)
+  (when-let ((project (project-current t))
+             (root (project-root project))
+             (file (buffer-file-name)))
+    (file-relative-name file root)))

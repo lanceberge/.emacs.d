@@ -22,9 +22,13 @@
   (define-key +leader-map "i" +elixir-mode-map))
 
 (use-package elixir-ts-mode
-  :hook ((elixir-ts-mode . maybe-elixir-web-mode)
-         (elixir-ts-mode . +elixir-mode))
+  :hook
+  ((elixir-ts-mode elixir-mode) . maybe-elixir-web-mode)
+  ((elixir-ts-mode elixir-mode) . +elixir-mode)
+  ((elixir-ts-mode elixir-mode) . +elixir--maybe-setup-new-file)
   :bind
   (:map elixir-web-mode-map
         (">" . #'+maybe-close-tag)
         ([remap newline] . #'+elixir-newline)))
+
+(add-hook 'find-file-not-found-functions #'+elixir--maybe-setup-new-file t)
