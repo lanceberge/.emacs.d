@@ -7,6 +7,8 @@
             org-faces org-entities org-list org-src
             ob org org-agenda org-capture
             org-element)
+  :hook
+  (org-mode . (lambda () (setq-local tab-width 2)))
   :custom
   (org-directory "~/org")
   (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
@@ -17,7 +19,6 @@
   (org-return-follows-link t)
   (org-modules nil)
   (org-image-actual-width nil)
-
   (org-export-backends '(html latex md))
   (org-latex-listings 'minted) ; syntax-highlighted code blocks
   ;; (org-latex-packages-alist '(("margin=0.5in" "geometry" nil) (nil "minted" "color")))

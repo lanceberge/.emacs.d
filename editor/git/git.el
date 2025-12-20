@@ -67,15 +67,9 @@ unless a nonzero and non-negative prefix is provided."
   :hook (git-timemachine-mode . +meow-motion-mode)
   :bind
   (:map +leader-map
-        ("gt" . #'+git-timemachine))
+        ("gt" . #'git-timemachine))
   (:map git-timemachine-mode-map
         ([remap meow-quit] . #'git-timemachine-quit)))
-
-;;;###autoload
-(defun +git-timemachine ()
-  (interactive)
-  (git-timemachine)
-  (set-transient-map git-timemachine-repeat-map t))
 
 (use-package diff-hl
   :defer 0.5

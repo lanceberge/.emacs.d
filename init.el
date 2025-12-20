@@ -292,8 +292,9 @@
         ("m" . #'meow-line)
         ("X" . #'meow-goto-line)
         ("y" . #'+meow-save)
+        ("}" . #'forward-paragraph)
+        ("{" . #'backward-paragraph)
         ("Y" . #'meow-sync-grab)
-        ;; ("z" . #'+meow-pop-selection)
         ("<escape>" . #'keyboard-quit))
   (:map meow-insert-state-keymap
         ("C-\\" . #'meow-sexp-mode))

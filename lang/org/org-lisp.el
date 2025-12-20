@@ -119,14 +119,14 @@
   (interactive "P")
   (if (not (region-active-p))
       (org-metaleft arg)
-    (+drag-stuff-left-dwim (* 2 (or arg 1)))))
+    (+drag-stuff-left-dwim (if (full-line-region-p) 2 arg))))
 
 ;;;###autoload
 (defun +org-metaright-dwim (arg)
   (interactive "P")
   (if (not (region-active-p))
       (org-metaright arg)
-    (+drag-stuff-right-dwim (* 2 (or arg 1)))))
+    (+drag-stuff-right-dwim (if (full-line-region-p) 2 arg))))
 
 ;;;###autoload
 (defun +org--has-filetag-p (tag)

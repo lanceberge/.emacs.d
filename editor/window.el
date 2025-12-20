@@ -76,15 +76,16 @@
         ("wh" . #'windmove-left)))
 
 (use-package winner ; Undo and redo window configs
-  :disabled t
   :ensure nil
-  :defer 1
   :hook
   (after-init . winner-mode)
   :bind
+  (:repeat-map winner-repeat-map
+               ("p" . #'winner-undo)
+               ("n" . #'winner-redo))
   (:map +leader-map
-        ("wu" . #'winner-undo)
-        ("wr" . #'winner-redo)))
+        ("wp" . #'winner-undo)
+        ("wn" . #'winner-redo)))
 
 (use-package windresize
   :custom
