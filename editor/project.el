@@ -33,22 +33,38 @@
       (project-remember-projects-under dir))))
 
 ;;;###autoload
-(defun +project-replace-regex (search-regex replace-string)
-  "Perform a replacement on all git files of SEARCH-REGEX to REPLACE-STRING."
+(defun +project-replace-regex (search-regex replace-string &optional file-pattern)
+  "Perform a replacement on all git files of SEARCH-REGEX to REPLACE-STRING.
+If FILE-PATTERN is provided (e.g. \"*.ex\"), only match files with that pattern."
   (interactive (list (read-string "Replace: ")
-                     (read-string "Replace With: ")))
+                     (read-string "Replace With: ")
+                     (read-string "File pattern (optional, e.g. *.ex): " nil nil "")))
   (let* ((project-root (project-root (project-current t)))
-         (default-directory project-root))
+         (default-directory project-root)
+         (file-filter (if file-pattern
+                          (concat " " (shell-quote-argument file-pattern))
+                        ""))
+         (cmd (format "git ls-files -z --cached --others --exclude-standard%s | xargs -0 perl -pi -e \"s/%s/%s/g\""
+                      file-filter
+                      (+perl-regex-shell-quote search-regex)
+                      (+perl-replacement-shell-quote replace-string))))
     (if project-root
-        (progn (shell-command (format "git ls-files -z --cached --others --exclude-standard | xargs -0 perl -pi -e \"s/%s/%s/g\""
-                                      (+perl-shell-quote search-regex)
-                                      (+perl-shell-quote replace-string))
-                              (message (format "Replaced"))))
+        (progn
+          (shell-command cmd))
       (message "fatal: not in a git repository"))))
 
 ;;;###autoload
-(defun +perl-shell-quote (str)
-  "Quote a string for safe use in Perl/shell by escaping special characters."
+(defun +perl-regex-shell-quote (str)
+  "Quote a regex string for Perl, preserving regex backslashes but escaping shell chars."
+  (replace-regexp-in-string
+   "[\"/`$]"
+   "\\\\\\&"
+   str
+   t))
+
+;;;###autoload
+(defun +perl-replacement-shell-quote (str)
+  "Quote a replacement string for Perl/shell."
   (replace-regexp-in-string
    "[\"/+$&|;()<>'` \t\n\r\\\\]"
    "\\\\\\&"

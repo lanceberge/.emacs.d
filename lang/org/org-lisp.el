@@ -2,7 +2,8 @@
 ;;;###autoload
 (defun +org-find-file ()
   (interactive)
-  (+consult--buffer-in-dir "~/org-roam/"))
+  (consult-find "~/org-roam/"))
+;; (+consult--buffer-in-dir "~/org-roam/"))
 
 ;;;###autoload
 (defun +org/insert-heading ()

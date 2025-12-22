@@ -46,7 +46,9 @@
   (let ((elixir-lsp-path (if (eq system-type 'darwin)
                              "~/.local/bin/expert_darwin_arm64"
                            "~/.local/bin/expert_linux_amd64")))
-    (add-to-list 'eglot-server-programs (list '(elixir-mode elixir-ts-mode) elixir-lsp-path)))
+    (add-to-list 'eglot-server-programs
+                 (list '(elixir-mode elixir-ts-mode heex-ts-mode)
+                       elixir-lsp-path "--stdio")))
 
   (custom-set-faces
    '(eglot-highlight-symbol-face ((t (:inherit nil)))))
@@ -148,3 +150,33 @@
   (:map +leader2-map
         ("en" . #'flymake-goto-next-error)
         ("ep" . #'flymake-goto-prev-error)))
+
+(defun +xref-rename-symbol-at-point ()
+  (interactive)
+  (let* ((symbol (thing-at-point 'symbol t))
+         (identifier (or symbol (user-error "No symbol at point")))
+         (to (read-string (format "Replace '%s' with: " symbol))))
+    (when (string-equal symbol to)
+      (message "No change needed")
+      (cl-return-from my/elixir-rename-symbol-at-point))
+    (let ((xref-show-xrefs-function
+           (lambda (fetcher _display-action)
+             (funcall fetcher)))
+          xrefs)
+      (setq xrefs (xref-find-references identifier))
+      (if (not xrefs)
+          (message "No references found for '%s' — nothing to rename" identifier)
+        (let ((count 0))
+          (dolist (xref xrefs)
+            (let* ((loc (xref-item-location xref))
+                   (marker (xref-location-marker loc)))
+              (when (and marker (buffer-live-p (marker-buffer marker)))
+                (with-current-buffer (marker-buffer marker)
+                  (save-excursion
+                    (goto-char marker)
+                    (let ((bounds (bounds-of-thing-at-point 'symbol)))
+                      (when bounds
+                        (delete-region (car bounds) (cdr bounds))
+                        (insert to)
+                        (setq count (1+ count)))))))))
+          (message "Replaced '%s' → '%s' (%d occurrences)" symbol to count))))))

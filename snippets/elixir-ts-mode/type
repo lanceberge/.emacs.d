@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: type
+# key: type
+# --
+@type t() :: %__MODULE__{
+    $0
+}

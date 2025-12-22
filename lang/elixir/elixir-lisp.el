@@ -33,7 +33,8 @@
     (insert ">")
     (save-excursion
       (backward-char)
-      (when (looking-back "<\\([.:a-zA-Z_][a-zA-Z_.-]*\\)[^>]*" (line-beginning-position))
+      (when (and (not (eq (char-before (point)) ?/)) ; don't pair self-closing tags
+                 (looking-back "<\\([.:a-zA-Z_][a-zA-Z_.-]*\\)[^>]*" (line-beginning-position)))
         (let ((tag-name (match-string 1)))
           (unless (string-match-p "^/" tag-name)
             (forward-char)
@@ -51,13 +52,30 @@
 ;; TODO rename functional component function names as well
 (defun +elixir-rename-module ()
   (interactive)
-  (let ((current-module-name (+elixir--current-module-name))
-        (updated-module-name (+elixir--module-name-from-file)))
-    (if (buffer-modified-p)
-        (user-error "File has unsaved changes"))
-    (+project-replace-regex
-     (concat "\\b" (regexp-quote current-module-name) "\\b")
-     updated-module-name)
+  (let* ((current-module-name (+elixir--current-module-name))
+         (updated-module-name (+elixir--module-name-from-file))
+         (current-module-base (car (last (split-string current-module-name "\\." t))))
+         (updated-module-base (car (last (split-string updated-module-name "\\." t)))))
+    (when (buffer-modified-p)
+      (save-buffer))
+    (unless (string-equal current-module-name updated-module-name)
+      (+project-replace-regex
+       (concat "\\b" (regexp-quote current-module-name) "\\b")
+       updated-module-name)
+      "*.ex")
+    ;; Replace struct names
+    (when (and (not (string-equal current-module-name updated-module-name))
+               (save-excursion
+                 (goto-char (point-min))
+                 (re-search-forward "^[[:space:]]*defstruct" nil t)))
+      (+project-replace-regex
+       (concat "\\b" current-module-base ".")
+       (concat updated-module-base ".")
+       "*.ex")
+      (+project-replace-regex
+       (concat "%" current-module-base "{")
+       (concat "%" updated-module-base "{")
+       "*.ex"))
     (revert-buffer nil t t)))
 
 ;;;###autoload
