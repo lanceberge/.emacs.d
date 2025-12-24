@@ -26,9 +26,9 @@
   :bind
   (:map +leader2-map
         ("er" . #'eglot-reconnect)
+        ("r" . #'eglot-rename)
         ("a" . #'eglot-code-actions))
   :config
-  (setq eglot-events-buffer-size 1000000) ; Log everything
   (setq eglot-sync-connect 3) ; Wait longer for connection
 
   ;; save buffers after eglot-renaming
@@ -66,20 +66,18 @@
     `(:typescript (:tsdk ,tsdk-path)
                   :vue (:hybridMode :json-false))))
 
+(unload-feature 'eldoc t)
+(defvar global-eldoc-mode nil)
+
 (use-package eldoc
-  :ensure nil
   :hook (emacs-lisp-mode . eldoc-mode)
   :custom
   (eldoc-idle-delay 1)
   ;; https://www.reddit.com/r/emacs/comments/1lbo5jy/comment/myig4p7/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-  (eglot-code-action-indications '(eldoc-hint))
-  :preface
-  (when (and (version<= emacs-version "29.1") (featurep 'eldoc))
-    (unload-feature 'eldoc t))
-  (global-eldoc-mode -1))
+  (eglot-code-action-indications '(eldoc-hint)))
 
 ;;;###autoload
-(defun +eldoc-help ()
+(defun +eldoc-elp ()
   "Show eldoc info for current symbol and restore cursor position."
   (interactive)
   (let ((win (selected-window)))

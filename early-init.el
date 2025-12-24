@@ -10,7 +10,9 @@
 
 (setq package-enable-at-startup nil) ; disable package.el at startup
 
+;; don't use custom
 (setq custom-file (make-temp-file "emacs-custom-"))
+(setq custom-delayed-init-variables '())
 
 (if (fboundp 'native-comp-available-p)
     (if (native-comp-available-p)
