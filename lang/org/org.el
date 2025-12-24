@@ -58,10 +58,11 @@
         ([remap meow-next] . #'+org-down)
         ([remap meow-prev] . #'+org-up)
         ("C-S-l" . org-shiftcontrolright))
-
+  (:map +leader-map
+        ("of" . #'+org-find-file)
+        ("ont" . #'+org-add-todo-to-project))
   :config
   (add-hook 'org-mode-hook 'org-mode-company-backends)
-
   (setq org-tag-alist '(("personal" . ?p)
                         ("easy tasks" . ?t)
                         ("hard tasks" . ?T)
@@ -77,16 +78,7 @@
 
   (add-to-list 'org-babel-default-header-args
                '(:eval . "never-export"))
-
-
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
-
-  ;; (setq org-todo-keyword-faces '(("WAIT" . (:foreground "#7C6f64" :weight bold))
-  ;;                                ("OPT." . (:foreground "#fe8019" :weight bold)))
-
-  ;;       org-todo-keywords '((sequence "TODO(t)" "WAIT(w)"
-  ;;                                     "OPT.(o)" "WIP.(p)" "|" "DONE")))
-
   (plist-put org-format-latex-options :scale 1.75))
 
 ;;;###autoload

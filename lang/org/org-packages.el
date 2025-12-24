@@ -27,7 +27,9 @@
   (:map +leader2-map
         ("oa" . #'org-agenda))
   :config
-  (+org-roam-refresh-agenda-list))
+  ;; TODO add to agenda files everything in ~/org/projects
+  ;; (+org-roam-refresh-agenda-list)
+  )
 
 (use-package org-capture
   :ensure nil

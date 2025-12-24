@@ -81,6 +81,7 @@
   :ensure nil
   :demand t
   :custom
+  (desktop-restore-eager 10)
   (desktop-load-locked-desktop t) ; ignore desktop-lock files
   (desktop-base-file-name "emacs.desktop")
   :config

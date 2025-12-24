@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org-roam
+  :disabled t
   :commands (org-roam-node-list org-roam-node-slug)
   :defer-incrementally (emacsql emacsqlite)
   :after org
@@ -35,7 +36,6 @@
   (:map +leader-map
         ("oni" . #'org-roam-node-insert)
         ("onn" . #'+org-roam-node-insert-immediate)
-        ("ont" . #'+org-roam-add-todo)
         ("ond" . #'+org-roam-find-drill-files)
         ("onp" . #'+org-roam-add-project-tag)
         ("onq" . #'org-roam-tag-add))
@@ -61,6 +61,7 @@
 
 (use-package org-roam-ui
   :after org-roam
+  :disabled t
   :custom
   (org-roam-ui-sync-theme t)
   (org-roam-ui-follow t)
@@ -71,6 +72,7 @@
         ("ong" . #'org-roam-ui-mode)))
 
 (use-package consult-org-roam
+  :disabled t
   :custom
   (consult-org-roam-grep-func #'consult-ripgrep)
   :commands
@@ -79,7 +81,6 @@
   (:map +leader-map
         ("onb" . #'consult-org-roam-backlinks)
         ("onl" . #'consult-org-roam-forward-links)
-        ("of" . #'+org-find-file)
         ("on SPC b" . #'consult-org-roam-backlinks-recursive))
   :config
   (consult-org-roam-mode))
@@ -132,6 +133,8 @@
       (file+head+olp "projects/${slug}.org"
                      "#+title: ${title}\n#+filetags: Project ${slug}"
                      ("Tasks"))))))
+
+
 
 ;;;###autoload
 (defun +org-roam-add-project-tag ()
