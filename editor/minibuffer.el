@@ -51,7 +51,7 @@
          ("ft" . #'+find-todos)
          ("fe" . #'consult-flymake)
          ("fo" . #'consult-outline)
-         ("f." . #'consult-find)
+         ("f." . #'consult-fd)
          ("fl" . #'consult-goto-line)
          ("fa" . #'consult-org-agenda)
          (";" . #'consult-ripgrep)

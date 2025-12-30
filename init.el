@@ -65,6 +65,7 @@
                   "/Users/lance/.config/herd-lite/bin/"
                   "/opt/homebrew/bin/"
                   "/opt/homebrew/opt/openjdk/bin/"
+                  "~/.asdf/shims/"
                   "~/.config/composer/vendor/bin/"))
     (add-to-list 'exec-path path))
   (setenv "PATH" (mapconcat 'identity exec-path path-separator)))
@@ -217,6 +218,7 @@
   (meow-use-clipboard t)
   (meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (meow-use-cursor-position-hack t)
+  (meow-expand-hint-remove-delay 0.0)
   :init
   (meow-define-state sexp
     "State for interacting with sexps."
@@ -254,20 +256,20 @@
         ("[" . #'meow-beginning-of-thing)
         ("M-[" . #'meow-pop-to-mark)
         ("M-]" . #'meow-unpop-to-mark)
-        ("d" . #'meow-delete)
+        ("d" . #'+meow-delete-char)
         ("c" . #'+meow-change)
         ("a" . #'+meow-append)
         ("^" . #'repeat)
         ("DEL e" . #'kill-line)
         ("DEL DEL" . #'+delete)
         ("DEL s" . #'kill-sexp)
+        ("DEL t" . #'zap-up-to-char)
+        ("DEL f" . #'zap-to-char)
         ("DEL p" . #'kill-sentence)
         ("b" . #'meow-back-word)
-        ("B" . #'meow-back-symbol)
         ("D" . #'meow-backward-delete)
         ("e" . #'meow-next-word)
-        ("E" . #'meow-next-symbol)
-        ("f" . #'meow-find)
+        ("f" . #'meow-find-expand)
         ("g" . #'+meow-cancel-selection)
         ("G" . #'meow-grab)
         ("h" . #'meow-left)
@@ -283,7 +285,7 @@
         ("r" . #'+meow-replace-char)
         ("P" . #'meow-swap-grab)
         ("s" . #'+kill-line-or-region)
-        ("t" . #'meow-till)
+        ("t" . #'meow-till-expand)
         ("nf" . #'+meow-visit)
         ("/" . #'+meow-open-below)
         (";" . #'meow-open-above)

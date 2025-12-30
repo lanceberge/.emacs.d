@@ -1,24 +1,12 @@
 ;;; -*- lexical-binding: t -*-
 (use-package drag-stuff
   :bind
-  (:repeat-map drag-stuff-vertical-repeat-map
-               ("j" . #'drag-stuff-down)
-               ("k" . #'drag-stuff-up))
   (:map meow-normal-state-keymap
         ("M-k" . #'drag-stuff-up)
         ("M-j" . #'drag-stuff-down))
   (:map meow-insert-state-keymap
         ("M-k" . #'drag-stuff-up)
-        ("M-j" . #'drag-stuff-down)))
-
-(use-package +drag-stuff
-  :ensure nil
-  :bind
-  (:repeat-map drag-stuff-horizontal-repeat-map
-               ("h" . #'+drag-stuff-left-dwim)
-               ("l" . #'+drag-stuff-right-dwim)
-               ("H" . #'+drag-stuff-word-left)
-               ("L" . #'+drag-stuff-word-right))
+        ("M-j" . #'drag-stuff-down))
   (:map meow-normal-state-keymap
         ("M-H" . #'+drag-stuff-word-left)
         ("M-L" . #'+drag-stuff-word-right)

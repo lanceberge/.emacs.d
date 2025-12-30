@@ -5,7 +5,7 @@
   :defer-incrementally (easymenu help-mode yasnippet-snippets)
   :custom
   (yas-snippet-dirs '("~/.emacs.d/snippets"))
-  (yas-indent-line 'fixed)
+  (yas-indent-line 'auto)
   :bind
   (:map +leader-map
         ("si" . #'yas-insert-snippet)
@@ -24,6 +24,7 @@
   :after yasnippet
   :init
   (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer")
+  (yas--remove-template-by-uuid (yas--table-get-create 'elixir-mode) "do")
   (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "defun"))
 
 ;;;###autoload

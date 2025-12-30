@@ -161,7 +161,7 @@
         ([remap scroll-up-command] . #'+rectangle-mode)) ; C-v
   (:map rectangle-mark-mode-map
         ([remap +smart-delete] . #'kill-rectangle)
-        ([remap meow-delete] . #'kill-rectangle)
+        ([remap +meow-delete-char] . #'kill-rectangle)
         ([remap meow-insert] . #'string-insert-rectangle)
         ([remap +meow-change] . #'replace-rectangle)
         ([remap meow-next-word] . #'forward-word)

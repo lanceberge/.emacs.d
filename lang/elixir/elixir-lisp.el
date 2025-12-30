@@ -34,6 +34,7 @@
     (save-excursion
       (backward-char)
       (when (and (not (eq (char-before (point)) ?/)) ; don't pair self-closing tags
+                 (not (eq (char-before (point)) ?|))
                  (looking-back "<\\([.:a-zA-Z_][a-zA-Z_.-]*\\)[^>]*" (line-beginning-position)))
         (let ((tag-name (match-string 1)))
           (unless (string-match-p "^/" tag-name)

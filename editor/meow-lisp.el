@@ -132,7 +132,8 @@ macro which made this send the query in gptel so I replaced it with newline."
         ((eq (point) (save-excursion (back-to-indentation) (point)))
          (+join-line))
         (t
-         (back-to-indentation))))
+         (back-to-indentation)))
+  (deactivate-mark))
 
 ;;;###autoload
 (defun +kill-line-or-region (arg)
@@ -200,15 +201,9 @@ macro which made this send the query in gptel so I replaced it with newline."
                  er/mark-symbol
                  er/mark-symbol-with-prefix
                  er/mark-next-accessor
-                 er/mark-method-call
-                 er/mark-inside-quotes
-                 er/mark-outside-quotes
-                 er/mark-inside-pairs
-                 er/mark-outside-pairs
                  er/mark-comment
                  er/mark-url
                  er/mark-email
-                 er/mark-defun
                  er/mark-ts-node)))
           (with-point-at-region-beginning
            (er/expand-region 1))))
@@ -246,3 +241,25 @@ macro which made this send the query in gptel so I replaced it with newline."
          (meow-insert))
         (t
          (meow-append))))
+
+;;;###autoload
+(defun +forward-word (N)
+  (interactive "p")
+  (meow-next-word N))
+
+;;;###autoload
+(defun +backward-word (N)
+  (interactive "p")
+  (meow-back-word N)
+  (deactivate-mark))
+
+;;;###autoload
+(defun +meow-delete-char (N)
+  (interactive "p")
+  (cond ((not (region-active-p))
+         (delete-char N))
+        ((< (point) (mark))
+         (delete-char N))
+        (t
+         (backward-char 1)
+         (delete-char N))))

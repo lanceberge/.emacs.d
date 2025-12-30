@@ -7,11 +7,16 @@
                ("." . #'repeat)
                ("s" . #'+mark-forward-sentence )
                ("p" . #'+mark-forward-paragraph)
+               ("w" . #'+mark-forward-word)
                ("d" . #'+mark-forward-sexp)
                :exit
                ("g" . (lambda () (interactive))))
+  (:map meow-normal-state-keymap
+        ("E" . #'+mark-forward-word)
+        ("B" . #'+mark-backward-word))
   (:map mark-forward-keymap
         ("p" . #'+mark-forward-paragraph)
+        ("w" . #'+mark-forward-word)
         ("d" . #'+mark-forward-sexp)
         ("s" . #'+mark-forward-sentence)
         ("b" . #'+mark-forward-buffer)))
@@ -24,16 +29,16 @@
                ("." . #'repeat)
                ("s" . #'+mark-backward-sentence )
                ("p" . #'+mark-backward-paragraph)
+               ("w" . #'+mark-backward-word)
                ("d" . #'+mark-backward-sexp)
-               ("t" . #'+mark-backward-ts-node)
                :exit
                ("g" . (lambda () (interactive))))
   (:map mark-backward-keymap
         ("p" . #'+mark-backward-paragraph)
         ("d" . #'+mark-backward-sexp)
         ("s" . #'+mark-backward-sentence)
-        ("b" . #'+mark-backward-buffer)
-        ("t" . #'+mark-backward-ts-node)))
+        ("w" . #'+mark-backward-word)
+        ("b" . #'+mark-backward-buffer)))
 
 (defvar +mark-forward-backward-ring nil
   "ring of (mark . point)")
@@ -119,6 +124,42 @@
         (backward-paragraph))
     (set-mark (point))
     (backward-paragraph))
+  (+mark-forward-backward-ring-push))
+
+;;;###autoload
+(defun +mark-forward-word ()
+  (interactive)
+  (+mark-forward-backward-ring-push)
+  (unless (region-active-p)
+    (set-mark (point)))
+  (forward-word)
+  (+mark-forward-backward-ring-push))
+
+;;;###autoload
+(defun +mark-backward-word ()
+  (interactive)
+  (+mark-forward-backward-ring-push)
+  (unless (region-active-p)
+    (set-mark (point)))
+  (backward-word)
+  (+mark-forward-backward-ring-push))
+
+;;;###autoload
+(defun +mark-forward-symbol ()
+  (interactive)
+  (+mark-forward-backward-ring-push)
+  (unless (region-active-p)
+    (set-mark (point)))
+  (forward-symbol)
+  (+mark-forward-backward-ring-push))
+
+;;;###autoload
+(defun +mark-backward-symbol ()
+  (interactive)
+  (+mark-forward-backward-ring-push)
+  (unless (region-active-p)
+    (set-mark (point)))
+  (backward-symbol)
   (+mark-forward-backward-ring-push))
 
 ;;;###autoload
