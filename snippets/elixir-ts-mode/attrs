@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: attrs
+# key: attrs
+# --
+attr :class, :any, default: nil
+attr :rest, :global
+attr $1, $0
