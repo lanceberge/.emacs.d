@@ -357,21 +357,26 @@
 
 (elpaca-wait)
 
+(bind-key "C-c" +leader-map)
 (bind-key "SPC" +leader-map meow-normal-state-keymap)
+(bind-key "SPC" +leader-map meow-motion-state-keymap)
+(bind-key "SPC" +leader-map meow-sexp-state-keymap)
+
+(bind-key "C-'" +leader2-map)
 (bind-key "'" +leader2-map meow-normal-state-keymap)
-(bind-key "`" +leader3-map meow-normal-state-keymap)
+(bind-key "'" +leader2-map meow-motion-state-keymap)
+(bind-key "'" +leader2-map meow-sexp-state-keymap)
+
 (bind-key "[" mark-backward-keymap meow-normal-state-keymap)
 (bind-key "]" mark-forward-keymap meow-normal-state-keymap)
 
-(bind-key "SPC" +leader-map meow-motion-state-keymap)
-(bind-key "'" +leader2-map meow-motion-state-keymap)
-(bind-key "`" +leader3-map meow-motion-state-keymap)
-
-(bind-key "SPC" +leader-map meow-sexp-state-keymap)
-(bind-key "'" +leader2-map meow-sexp-state-keymap)
-(bind-key "`" +leader3-map meow-sexp-state-keymap)
 (bind-key "[" mark-backward-keymap meow-sexp-state-keymap)
 (bind-key "]" mark-forward-keymap meow-sexp-state-keymap)
+
+(bind-key "`" +leader3-map meow-motion-state-keymap)
+(bind-key "`" +leader3-map meow-normal-state-keymap)
+(bind-key "`" +leader3-map meow-sexp-state-keymap)
+
 
 (add-hook 'after-init-hook
           (lambda ()
@@ -413,7 +418,7 @@
 
 ;; Start the emacsclient on init
 (use-package server
-  :defer 4.0
+  :defer 2.0
   :ensure nil
   :config
   (unless (server-running-p)

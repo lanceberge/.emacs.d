@@ -1,4 +1,6 @@
 ;;; -*- lexical-binding: t -*-
+(use-package acme-theme)
+
 (use-package +theme-rotate
   :ensure nil
   :bind
@@ -20,7 +22,7 @@
                                               doom-spacegrey doom-tokyo-night
                                               doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon ))
 
-(setq +themes-light-themes '(tango doom-nord-light doom-oksolar-light doom-solarized-light tsdh-light doom-opera-light))
+(setq +themes-light-themes '(tango acme doom-nord-light doom-oksolar-light doom-solarized-light tsdh-light doom-opera-light))
 
 (defvar +themes-dark-theme-index 0
   "Index of the current dark theme in `+themes-dark-themes'.")

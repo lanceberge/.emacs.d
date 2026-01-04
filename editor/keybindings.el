@@ -4,6 +4,8 @@
   :bind
   (:map +leader-map
         ("h" . #'help-command)
+        ("d" . #'duplicate-line)
+        ("q" . #'+server-edit)
         ("er" . #'+source-init-file))
   (:map +leader2-map
         ("fr" . #'rename-buffer))
@@ -20,6 +22,12 @@
   (save-excursion
     (newline)
     (indent-for-tab-command)))
+
+;;;###autoload
+(defun +server-edit ()
+  (interactive)
+  (save-buffer)
+  (server-edit))
 
 ;;;###autoload
 (defun insert-newline-dwim ()

@@ -2,14 +2,14 @@
 ;;;###autoload
 (defun +org-find-file ()
   (interactive)
-  (let* ((org-dir (expand-file-name "~/org-roam/"))
+  (let* ((org-dir (expand-file-name "~/org/"))
          (pr (cons 'transient org-dir)))
     (project-find-file-in nil (list org-dir) pr)))
 
 ;;;###autoload
 (defun +org-add-todo-to-project ()
   (interactive)
-  (let* ((projects-dir "~/org-roam/projects/")
+  (let* ((projects-dir "~/org/projects/")
          (project-file (completing-read "Select project file: "
                                         (directory-files projects-dir t "\\.org$")
                                         nil t))

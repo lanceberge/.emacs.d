@@ -5,6 +5,7 @@
   (avy-single-candidate-jump nil)
   (avy-case-fold-search nil)
   :bind
+  ("C-," . #'avy-goto-char-2)
   (:map meow-normal-state-keymap
         ("v" . #'avy-goto-char-2))
   :config
