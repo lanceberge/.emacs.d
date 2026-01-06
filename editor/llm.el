@@ -88,3 +88,7 @@
   (:map +leader-map
         ("m SPC" . #'elysium-keep-all-suggested-changes)
         ("m-" . #'elysium-discard-all-suggested-changes)))
+
+(use-package supermaven
+  :ensure (:host github :repo "luciusmagn/emacs-supermaven"))
+;; :hook (prog-mode . supermaven-mode))

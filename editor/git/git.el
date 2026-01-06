@@ -65,6 +65,7 @@ unless a nonzero and non-negative prefix is provided."
 (use-package git-timemachine
   :commands (git-timemachine)
   :hook (git-timemachine-mode . meow-motion-mode)
+  :hook (git-timemachine-mode . +meow-motion-mode)
   :bind
   (:map +leader-map
         ("gt" . #'git-timemachine))

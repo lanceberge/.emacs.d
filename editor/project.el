@@ -38,7 +38,7 @@
 If FILE-PATTERN is provided (e.g. \"*.ex\"), only match files with that pattern."
   (interactive (list (read-string "Replace: ")
                      (read-string "Replace With: ")
-                     (read-string "File pattern (optional, e.g. *.ex): " nil nil "")))
+                     (read-string "File pattern (optional, e.g. *.ex): " nil nil ".")))
   (let* ((project-root (project-root (project-current t)))
          (default-directory project-root)
          (file-filter (if file-pattern
