@@ -24,13 +24,20 @@
   (interactive)
   (project-forget-zombie-projects)
   ;; dirs to remember
-  (dolist (dir '("~/.emacs.d/" "~/.config/nixos" "~/dotfiles/"))
+  (dolist (dir '("~/.emacs.d/" "~/.config/nixos" "~/dotfiles/" ))
     (when (file-directory-p dir)
       (project--remember-dir dir)))
+
   ;; dirs to remember recursively
-  (dolist (dir '("~/code/git" "~/code/phoenix" "~/code/vaultvantage/" "~/code/laravel" "~/code/elixir/" "~/code/" "~/src/"))
+  (dolist (dir '("~/code/git" "~/code/phoenix" "~/code/vaultvantage/" "~/code/laravel" "~/code/elixir/" "~/code/" "~/src/" "~/claude/"))
     (when (file-directory-p dir)
-      (project-remember-projects-under dir))))
+      (project-remember-projects-under dir)))
+
+  (let ((worktree-dir (expand-file-name "~/worktrees/")))
+    (when (file-directory-p worktree-dir)
+      (dolist (subdir (directory-files worktree-dir t "^[^.]"))
+        (when (file-directory-p subdir)
+          (project-remember-projects-under subdir))))))
 
 ;;;###autoload
 (defun +project-replace-regex (search-regex replace-string &optional file-pattern)
