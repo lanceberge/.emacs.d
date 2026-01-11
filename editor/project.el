@@ -12,6 +12,7 @@
         ("pe" . #'flymake-show-project-diagnostics)
         ("pr" . #'+project-replace-regex)
         ("pt" . #'+project-find-todos)
+        ("rk" . #'+project-reload-and-switch)
         ("rp" . #'+project-load-projects)))
 
 ;;;###autoload
@@ -20,9 +21,27 @@
   (consult-ripgrep (project-root (project-current t)) "TODO"))
 
 ;;;###autoload
+(defun +project-reload-and-switch ()
+  (interactive)
+  (+project-load-projects)
+  (+switch-to-project 1))
+
+;;;###autoload
+(defun +kill-zombie-buffers ()
+  (interactive)
+  (let ((buffers-killed 0))
+    (dolist (buffer (buffer-list))
+      (let ((file-name (buffer-file-name buffer)))
+        (when (and file-name (not (file-exists-p file-name)))
+          (kill-buffer buffer)
+          (setq buffers-killed (+ 1 buffers-killed)))))
+    (message "Killed %d non-existent file buffer(s)." buffers-killed)))
+
+;;;###autoload
 (defun +project-load-projects ()
   (interactive)
   (project-forget-zombie-projects)
+  (+kill-zombie-buffers)
   ;; dirs to remember
   (dolist (dir '("~/.emacs.d/" "~/.config/nixos" "~/dotfiles/" ))
     (when (file-directory-p dir)
