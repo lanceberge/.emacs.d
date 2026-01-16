@@ -213,13 +213,13 @@
 
 (use-package meow
   :demand t
-  :hook (after-init . meow-global-mode)
   :custom
   (meow-use-clipboard t)
   (meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
   (meow-use-cursor-position-hack t)
   (meow-expand-hint-remove-delay 0.0)
   :init
+  (meow-global-mode)
   (meow-define-state sexp
     "State for interacting with sexps."
     :lighter " [P]"
@@ -418,11 +418,9 @@
 
 ;; Start the emacsclient on init
 (use-package server
-  :defer 2.0
   :ensure nil
   :config
-  (unless (server-running-p)
-    (add-hook 'after-init-hook #'server-start)))
+  (server-start))
 
 ;; Load config files recursively
 (let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
