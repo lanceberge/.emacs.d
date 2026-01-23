@@ -11,6 +11,7 @@
         ("bd" . #'kill-current-buffer)
         ("bq" . #'+save-and-kill-buffer)
         ("br" . #'+revert-buffer)
+        ("SPC l" . #'+other-buffer)
         ("bn" . #'next-buffer)
         ("bp" . #'previous-buffer)))
 
@@ -111,3 +112,8 @@
 (defun +revert-buffer ()
   (interactive)
   (revert-buffer t t))
+
+;;;###autoload
+(defun +other-buffer ()
+  (interactive)
+  (switch-to-buffer (other-buffer)))

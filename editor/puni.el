@@ -13,6 +13,9 @@
 ;;;###autoload
 (defun +slurp-or-barf-left (&optional N)
   (interactive "p")
+  (when (region-active-p)
+    (deactivate-mark)
+    (backward-char 1))
   (let ((char-at-point (char-after (point))))
     (cond ((member char-at-point +open-chars)
            (progn
@@ -36,6 +39,9 @@
 ;;;###autoload
 (defun +slurp-or-barf-right (&optional N)
   (interactive "p")
+  (when (region-active-p)
+    (deactivate-mark)
+    (backward-char 1))
   (let ((char-at-point (char-after (point))))
     (cond ((member char-at-point +open-chars)
            (progn

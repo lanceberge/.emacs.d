@@ -6,7 +6,9 @@
         ("h" . #'help-command)
         ("d" . #'duplicate-line)
         ("q" . #'+server-edit)
-        ("er" . #'+source-init-file))
+        ("er" . #'+source-init-file)
+        ("[" . #'beginning-of-buffer)
+        ("]" . #'end-of-buffer))
   (:map +leader2-map
         ("fr" . #'rename-buffer))
   (:map meow-insert-state-keymap

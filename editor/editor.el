@@ -140,11 +140,11 @@
         ("%" . #'evilmi-jump-items-native)))
 
 (use-package beginend
+  :disabled t
   :bind
   (:map +leader-map
         ("[" . #'beginning-of-buffer)
         ("]" . #'end-of-buffer))
-
   :hook (after-init . beginend-global-mode))
 
 ;; buffers restored from desktop.el initialize in fundamental-mode so this sets it correctly

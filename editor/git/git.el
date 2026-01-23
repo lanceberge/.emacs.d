@@ -13,6 +13,10 @@
   (:map with-editor-mode-map
         ([remap delete-window] . #'with-editor-cancel)
         ([remap save-buffer] . #'with-editor-finish))
+  (:map magit-blob-mode-map
+        ("q" . #'meow-quit)
+        ([remap save-buffer] . #'meow-quit)
+        ([remap +elisp-format-and-check] . #'meow-quit))
   (:map magit-diff-section-map
         ("C-j" . #'magit-section-forward))
   (:map magit-status-mode-map
