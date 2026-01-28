@@ -52,3 +52,12 @@
 
 (use-package fringe
   :ensure nil)
+
+(use-package highlight-indent-guides
+  :hook
+  ((elixir-web-mode
+    nxml-mode
+    web-mode)
+   . highlight-indent-guides-mode)
+  :custom
+  (highlight-indent-guides-method 'column))

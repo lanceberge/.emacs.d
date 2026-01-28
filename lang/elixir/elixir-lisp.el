@@ -117,7 +117,8 @@
 ;;;###autoload
 (defun +elixir-mode ()
   (interactive)
-  (beginend-prog-mode -1))
+  ;; (beginend-prog-mode -1)
+  )
 
 ;;;###autoload
 (defun +elixir--maybe-setup-new-file ()
