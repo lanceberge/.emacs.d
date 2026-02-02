@@ -143,3 +143,31 @@ relative to the project root."
               (components-in-subdirectories
                (+yas-expand-snippet "component"))))
     (+yas-expand-snippet "elixir module")))
+
+(defun +elixir--inside-heex-sigil-p ()
+  (save-excursion
+    (let ((pos (point)))
+      (if (re-search-backward "\"\"\"" nil t)
+          (let ((back-pos (match-beginning 0)))
+            (if (and (>= back-pos 2)
+                     (string= (buffer-substring-no-properties (- back-pos 2) back-pos) "~H"))
+                (progn
+                  (goto-char pos)
+                  (if (re-search-forward "\"\"\"\\|~H\"\"\"" nil t)
+                      (let ((fwd-match (match-string 0)))
+                        (string= fwd-match "\"\"\""))
+                    (progn
+                      nil)))
+              (progn
+                nil)))
+        (progn
+          nil)))))
+
+(defun +elixir-web-mode-comment ()
+  (interactive)
+  (let ((in-heex (+elixir--inside-heex-sigil-p)))
+    (let ((comment-start (if in-heex "<!-- " comment-start))
+          (comment-end   (if in-heex " -->"  comment-end)))
+      (if (region-active-p)
+          (call-interactively #'comment-dwim)
+        (call-interactively #'comment-line)))))

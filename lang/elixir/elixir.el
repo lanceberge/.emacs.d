@@ -29,6 +29,7 @@
   :bind
   (:map elixir-web-mode-map
         (">" . #'+maybe-close-tag)
-        ([remap newline] . #'+elixir-newline)))
+        ([remap newline] . #'+elixir-newline)
+        ([remap +comment-dwim] . #'+elixir-web-mode-comment)))
 
 (add-hook 'find-file-not-found-functions #'+elixir--maybe-setup-new-file t)
