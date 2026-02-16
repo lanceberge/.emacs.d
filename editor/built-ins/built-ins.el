@@ -175,3 +175,8 @@
   (:map +leader-map
         ("rj" . #'jump-to-register)
         ("rw" . #'window-configuration-to-register)))
+
+(use-package delsel
+  :ensure nil
+  :hook
+  (after-init . delete-selection-mode))

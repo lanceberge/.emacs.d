@@ -27,10 +27,10 @@
   (embark-quit-after-action nil)
   :bind
   (:map meow-normal-state-keymap
-        ("M-." . #'embark-act)
+        ("C-." . #'embark-act)
         ("M-'" . #'embark-dwim))
   (:map minibuffer-mode-map
-        ("M-." . #'embark-act)
+        ("C-." . #'embark-act)
         ("M-," . #'+embark-select)
         ("M-a" . #'embark-act-all)
         ("M-r" . #'embark-become)
@@ -39,7 +39,7 @@
         ("s" . #'+project-replace-regex)
         ("h" . #'helpful-symbol))
   (:map meow-motion-mode-hook
-        ("M-." . #'embark-act)
+        ("C-." . #'embark-act)
         ("M-'" . #'embark-dwim))
   (:map embark-become-help-map
         ("v" . #'helpful-variable)
@@ -77,9 +77,10 @@
   :hook ((prog-mode text-mode) . dot-mode-on)
   :custom
   (dot-mode-ignore-undo t)
-  :bind
-  (:map dot-mode-map
-        ("C-." . #'+meow-dot-mode-execute)))
+  ;; :bind
+  ;; (:map dot-mode-map
+  ;;       ("C-." . #'+meow-dot-mode-execute))
+  )
 
 ;;;###autoload
 (defun +meow-dot-mode-execute ()

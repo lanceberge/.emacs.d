@@ -167,8 +167,8 @@
 (use-package rect
   :ensure nil
   :bind
-  (:map meow-normal-state-keymap
-        ([remap scroll-up-command] . #'+rectangle-mode)) ; C-v
+  ;; (:map meow-normal-state-keymap
+  ;; ([remap scroll-up-command] . #'+rectangle-mode)) ; C-v
   (:map rectangle-mark-mode-map
         ([remap +smart-delete] . #'kill-rectangle)
         ([remap +meow-delete-char] . #'kill-rectangle)

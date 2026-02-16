@@ -45,6 +45,7 @@
         ("gl" . #'magit-log-head)
         ("SPC gl" . #'magit-log)
         ("gf" . #'magit-find-file)
+        ("gm" . #'+magit-find-current-file-on-default-branch)
         ("gw" . #'magit-worktree)
         ("gh" . #'+magit-diff-head-n))
   :config
@@ -118,3 +119,18 @@ unless a nonzero and non-negative prefix is provided."
       (let ((selected-file (completing-read "Select modified git file: " completion-table nil t)))
         (when selected-file
           (find-file selected-file))))))
+
+(defun +magit-find-current-file-on-default-branch ()
+  "View current file on the repository's default branch."
+  (interactive)
+  (let* ((file (file-relative-name
+                (buffer-file-name)
+                (magit-toplevel)))
+         (default-ref
+          (magit-git-string "symbolic-ref" "refs/remotes/origin/HEAD"))
+         (branch
+          (if (and default-ref
+                   (string-match ".*/\\(.*\\)" default-ref))
+              (match-string 1 default-ref)
+            "main")))
+    (magit-find-file branch file)))
