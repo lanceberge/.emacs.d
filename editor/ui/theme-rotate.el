@@ -1,5 +1,7 @@
 ;;; -*- lexical-binding: t -*-
-(use-package acme-theme)
+(use-package timu-rouge-theme)
+
+(use-package kanagawa-themes)
 
 (use-package +theme-rotate
   :ensure nil
@@ -18,11 +20,11 @@
 
 (use-package doom-themes)
 
-(setq +themes-dark-themes '(gruvbox-dark-hard doom-badger doom-miramare gruvbox doom-oceanic-next doom-tomorrow-night
+(setq +themes-dark-themes '(gruvbox-dark-hard kanagawa-wave doom-badger timu-rouge doom-oceanic-next doom-tomorrow-night
                                               doom-spacegrey doom-tokyo-night
                                               doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon ))
 
-(setq +themes-light-themes '(tango acme doom-nord-light doom-oksolar-light doom-solarized-light tsdh-light doom-opera-light))
+(setq +themes-light-themes '(tango kanagawa-lotus doom-nord-light doom-oksolar-light doom-solarized-light tsdh-light doom-opera-light))
 
 (defvar +themes-dark-theme-index 0
   "Index of the current dark theme in `+themes-dark-themes'.")

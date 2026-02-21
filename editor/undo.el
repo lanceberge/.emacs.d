@@ -2,6 +2,7 @@
 (use-package undo
   :ensure nil
   :bind
+  ("C-M--" . #'undo-redo)
   (:repeat-map undo-repeat-map
                ("u" . #'+undo)
                ("r" . #'+redo))

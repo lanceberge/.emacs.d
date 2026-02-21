@@ -60,4 +60,4 @@
     web-mode)
    . highlight-indent-guides-mode)
   :custom
-  (highlight-indent-guides-method 'column))
+  (highlight-indent-guides-method 'character))
