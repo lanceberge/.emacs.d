@@ -8,6 +8,7 @@
         ("q" . #'+server-edit)
         ("er" . #'+source-init-file)
         ("[" . #'beginning-of-buffer)
+        ("u" . #'text-to-clipboard)
         ("]" . #'end-of-buffer))
   (:map +leader2-map
         ("fr" . #'rename-buffer))

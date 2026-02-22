@@ -49,3 +49,34 @@
                         "wtype" nil
                         (thanos/wtype-text (buffer-string)))
                        (delete-frame))))))
+
+(defun text-to-clipboard--done ()
+  "Copy buffer contents to clipboard and quit window."
+  (interactive)
+  (kill-region (point-min) (point-max))
+  (quit-window :kill))
+
+(defvar-keymap text-to-clipboard-minor-mode-map
+  "C-c C-c" #'text-to-clipboard--done)
+
+(define-minor-mode text-to-clipboard-minor-mode
+  "Minor mode binding a key to quit window and copy buffer to clipboard.")
+
+;; https://github.com/oantolin/emacs-config/blob/master/my-lisp/text-extras.el
+(defun text-to-clipboard ()
+  "Pop up a temporary buffer to collect text to send to the clipboard.
+The pop up buffer is in `markdown-mode' and uses the TeX input
+method.  Use \\<text-to-clipboard-minor-mode-map>\\[text-to-clipboard--done] to send the buffer contents to the clipboard
+and quit the window, killing the buffer.
+
+If the region is active, use the region as the initial contents
+for the pop up buffer."
+  (interactive)
+  (let ((region (when (use-region-p)
+                  (buffer-substring-no-properties
+                   (region-beginning) (region-end)))))
+    (pop-to-buffer (generate-new-buffer "*clipboard*"))
+    (when region (insert region)))
+  (if (fboundp 'markdown-mode) (markdown-mode) (text-mode))
+  (text-to-clipboard-minor-mode)
+  (meow-insert-mode))

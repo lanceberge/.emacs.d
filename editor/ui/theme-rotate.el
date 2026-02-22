@@ -1,6 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(use-package timu-rouge-theme)
-
 (use-package kanagawa-themes)
 
 (use-package +theme-rotate
@@ -20,7 +18,7 @@
 
 (use-package doom-themes)
 
-(setq +themes-dark-themes '(gruvbox-dark-hard kanagawa-wave doom-badger timu-rouge doom-oceanic-next doom-tomorrow-night
+(setq +themes-dark-themes '(gruvbox-dark-hard kanagawa-wave doom-badger doom-oceanic-next doom-tomorrow-night
                                               doom-spacegrey doom-tokyo-night
                                               doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon ))
 
