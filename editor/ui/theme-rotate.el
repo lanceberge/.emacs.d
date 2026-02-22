@@ -1,6 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(use-package timu-rouge-theme)
-
 (use-package kanagawa-themes)
 
 (use-package +theme-rotate
@@ -12,7 +10,7 @@
                ("p" . #'+themes-prev))
   (:map +leader2-map
         ("tn" . #'+themes-rotate)
-        ("tl" . #'+themes-toggle-dark-light)
+        ("tj" . #'+themes-toggle-dark-light)
         ("tp" . #'+themes-prev)))
 
 ;; tsdh-light, leuven, whiteboard, doom-one-light, doom-tomorrow-day, dichromacy, doom-acario-light, doom-flatwhite, doom-earl-gray, doom-feather-light
@@ -20,7 +18,7 @@
 
 (use-package doom-themes)
 
-(setq +themes-dark-themes '(gruvbox-dark-hard kanagawa-wave doom-badger timu-rouge doom-oceanic-next doom-tomorrow-night
+(setq +themes-dark-themes '(gruvbox-dark-hard kanagawa-wave doom-badger doom-oceanic-next doom-tomorrow-night
                                               doom-spacegrey doom-tokyo-night
                                               doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon ))
 

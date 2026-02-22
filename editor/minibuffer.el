@@ -144,15 +144,7 @@ Otherwise, just call consult-yank-pop."
   (vertico-preselect 'first)
   :bind
   (:map vertico-map
-        ;; ("C-j" . #'vertico-next)
         ("C-;" . #'vertico-quick-insert)
-        ;; ("C-k" . #'vertico-previous)
-        ;; ("C-u" . #'vertico-scroll-down)
-        ;; ("C-d" . #'vertico-scroll-up)
-        ;; ([remap drag-stuff-down] . #'vertico-next)
-        ;; ([remap drag-stuff-up] . #'vertico-previous)
-        ;; ("M-u" . #'vertico-scroll-down)
-        ;; ("M-d" . #'vertico-scroll-up)
         ("M-h" . #'vertico-directory-up)
         ("M-l" . #'vertico-directory-enter))
   :config
