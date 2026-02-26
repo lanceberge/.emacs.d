@@ -10,13 +10,12 @@
         ("[" . #'beginning-of-buffer)
         ("]" . #'end-of-buffer))
   (:map +leader2-map
-        ("fr" . #'rename-buffer))
+        ("br" . #'rename-buffer))
   (:map meow-insert-state-keymap
         ("j" . #'+escape))
   (:map meow-normal-state-keymap
         ("[ SPC" . #'+insert-newlines-above)
-        ("] SPC" . #'+insert-newlines-below)
-        ("RET" . #'insert-newline-indent)))
+        ("] SPC" . #'+insert-newlines-below)))
 
 ;;;###autoload
 (defun insert-newline-indent ()

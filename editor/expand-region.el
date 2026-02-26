@@ -2,12 +2,12 @@
 (use-package expand-region
   :bind
   ("C-=" . #'+expand-region)
-  (:map meow-normal-state-keymap
-        ("o" . #'+expand-region)
-        ("O" . #'+expand-region-2))
-  (:map meow-motion-state-keymap
-        ("o" . #'+expand-region)
-        ("O" . +expand-region-2))
+  ;; (:map meow-normal-state-keymap
+  ;; ("o" . #'+expand-region)
+  ;; ("O" . #'+expand-region-2))
+  ;; (:map meow-motion-state-keymap
+  ;; ("o" . #'+expand-region)
+  ;; ("O" . +expand-region-2))
   :config
   (setq er/try-expand-list
         '(er/mark-inside-quotes

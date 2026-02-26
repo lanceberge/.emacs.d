@@ -6,9 +6,9 @@
   (:repeat-map isearch-repeat-map
                ("n" . #'isearch-repeat-forward)
                ("p" . #'isearch-repeat-backward))
-  (:map meow-normal-state-keymap
-        ("nn" . #'isearch-repeat-forward)
-        ("np" . #'isearch-repeat-backward))
+  ;; (:map meow-normal-state-keymap
+  ;; ("nn" . #'isearch-repeat-forward)
+  ;; ("np" . #'isearch-repeat-backward))
   (:map isearch-mode-map
         ("C-j" . #'isearch-repeat-forward)
         ("C-k" . #'isearch-repeat-backward)

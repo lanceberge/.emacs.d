@@ -3,12 +3,13 @@
   :ensure nil
   :bind
   ("C-M--" . #'undo-redo)
-  (:repeat-map undo-repeat-map
-               ("u" . #'+undo)
-               ("r" . #'+redo))
-  (:map meow-normal-state-keymap
-        ("u" . #'+undo)
-        ("z" . #'+redo)))
+  ;; (:repeat-map undo-repeat-map
+  ;; ("u" . #'+undo)
+  ;; ("r" . #'+redo))
+  ;; (:map meow-normal-state-keymap
+  ;;       ("u" . #'+undo)
+  ;;       ("z" . #'+redo))
+  )
 
 ;;;###autoload
 (defun +undo (&optional arg)
