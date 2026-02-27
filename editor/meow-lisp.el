@@ -3,7 +3,10 @@
   :ensure nil
   :bind
   (:map meow-insert-state-keymap
-        ("C-\\" . meow-sexp-mode))
+        ("C-\\" . meow-sexp-mode)
+        ("C-g" . #'+keyboard-quit-normal)
+        ("M-F" . #'+mark-forward-word)
+        ("M-B" . #'+mark-backward-word))
   (:map meow-motion-state-keymap
         ("q" . #'meow-quit)
         ("h" . #'meow-left)
@@ -32,7 +35,8 @@
         ("v" . #'scroll-up-command)
         ("d" . #'kill-word)
         ("^" . #'repeat)
-        ("z" . #'zap-to-char)
+        ("z" . #'zap-up-to-char)
+        ("M-d" . #'+delete-word-insert)
         ("b" . #'backward-word)
         ("l" . #'meow-right)
         ("D" . #'meow-backward-delete)
@@ -44,17 +48,22 @@
         ("g" . #'+meow-cancel-selection)
         ("/" . #'undo)
         ("G" . #'meow-grab)
-        ("M-f" . #'+mark-forward-insert)
-        ("M-b" . #'+mark-backward-insert)
+        ("M-F" . #'+mark-forward-insert)
+        ("M-B" . #'+mark-backward-insert)
+        ("M-f" . #'+forward-word-insert)
+        ("M-b" . #'+backward-word-insert)
         ("C-k" . #'+meow-change)
         ("h" . #'meow-left)
         ("H" . #'meow-left-expand)
+        ("L" . #'meow-right-expand)
         ("SPC" . #'set-mark-command)
         ("i" . #'meow-insert)
         ("n" . #'next-line)
         ("N" . #'meow-next-expand)
         ("p" . #'previous-line)
         ("P" . #'meow-prev-expand)
+        ("C-f" . #'+forward-char-insert)
+        ("C-b" . #'+backward-char-insert)
         ("x" . #'+back-or-join)
         ("r" . #'+meow-replace-char)
         ("k" . #'kill-visual-line)
@@ -369,18 +378,19 @@ macro which made this send the query in gptel so I replaced it with newline."
 (defun +open-line (arg)
   (interactive "P")
   (cond (arg
-         (open-line arg))
-        ((eq (point) (save-excursion (beginning-of-line) (point)))
-         (open-line 1)
-         (indent-according-to-mode)
-         (meow-insert-mode))
+         (if (eq (point) (save-excursion (end-of-line) (point)))
+             (open-line arg)
+           (save-excursion (beginning-of-line) (open-line arg))))
         ((eq (point) (save-excursion (end-of-line) (point)))
-         (open-line 1)
+         (open-line (or arg 1))
          (next-line)
          (indent-according-to-mode)
          (meow-insert-mode))
         (t
-         (open-line 1))))
+         (beginning-of-visual-line)
+         (open-line (or arg 1))
+         (indent-according-to-mode)
+         (meow-insert-mode))))
 
 ;;;###autoload
 (defun +mark-forward-insert ()
@@ -392,4 +402,40 @@ macro which made this send the query in gptel so I replaced it with newline."
 (defun +mark-backward-insert ()
   (interactive)
   (+mark-backward-word)
+  (meow-insert-mode))
+
+;;;###autoload
+(defun +delete-word-insert (arg)
+  (interactive "p")
+  (kill-word arg)
+  (meow-insert-mode))
+
+;;;###autoload
+(defun +forward-char-insert (arg)
+  (interactive "p")
+  (forward-char arg)
+  (meow-insert-mode))
+
+;;;###autoload
+(defun +backward-char-insert (arg)
+  (interactive "p")
+  (backward-char arg)
+  (meow-insert-mode))
+
+;;;###autoload
+(defun +keyboard-quit-normal ()
+  (interactive)
+  (meow-normal-mode)
+  (+keyboard-quit))
+
+;;;###autoload
+(defun +forward-word-insert (arg)
+  (interactive "p")
+  (forward-word arg)
+  (meow-insert-mode))
+
+;;;###autoload
+(defun +backward-word-insert (arg)
+  (interactive "p")
+  (backward-word arg)
   (meow-insert-mode))

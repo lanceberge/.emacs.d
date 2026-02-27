@@ -228,6 +228,7 @@
   (setq meow--kbd-forward-line #'next-line
         meow--kbd-backward-line #'previous-line
         meow--kbd-forward-char #'forward-char
+        meow--kbd-backward-char #'backward-char
         meow--kbd-delete-char #'delete-char)
   (dotimes (i 10)
     (define-key meow-sexp-state-keymap

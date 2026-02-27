@@ -128,10 +128,7 @@
   :commands (xref-find-references xref-auto-jump-first-definition)
   :custom
   (xref-prompt-for-identifier nil)
-  (xref-show-xrefs-function #'consult-xref)
-  :bind
-  (:map meow-normal-state-keymap
-        ("C-t" . #'pop-tag-mark)))
+  (xref-show-xrefs-function #'consult-xref))
 
 (use-package jsonrpc
   :config
