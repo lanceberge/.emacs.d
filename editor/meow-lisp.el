@@ -24,6 +24,9 @@
         ("," . #'meow-inner-of-thing)
         ("y" . #'+meow-save))
   (:map meow-normal-state-keymap
+        ("C-a" . #'+beginning-of-line-insert)
+        ("C-e" . #'+end-of-line-insert)
+        ("M-m" . #'+back-to-indentation-insert)
         ("a" . #'beginning-of-visual-line)
         ("e" . #'end-of-visual-line)
         ("y" . #'+meow-yank-or-replace)
@@ -438,4 +441,22 @@ macro which made this send the query in gptel so I replaced it with newline."
 (defun +backward-word-insert (arg)
   (interactive "p")
   (backward-word arg)
+  (meow-insert-mode))
+
+;;;###autoload
+(defun +end-of-line-insert ()
+  (interactive)
+  (end-of-line)
+  (meow-insert-mode))
+
+;;;###autoload
+(defun +beginning-of-line-insert ()
+  (interactive)
+  (beginning-of-visual-line)
+  (meow-insert-mode))
+
+;;;###autoload
+(defun +back-to-indentation-insert ()
+  (interactive)
+  (back-to-indentation)
   (meow-insert-mode))
