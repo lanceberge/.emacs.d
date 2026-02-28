@@ -48,7 +48,7 @@
   (interactive)
   (save-excursion
     (goto-char pt)
-    (meow-yank)))
+    (yank)))
 
 ;;;###autoload
 (defun avy-action-kill-line-move (pt)

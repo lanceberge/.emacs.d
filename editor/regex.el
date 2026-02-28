@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package visual-regexp
   :bind
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("R" . +replace)))
 
 ;;;###autoload

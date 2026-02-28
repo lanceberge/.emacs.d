@@ -12,7 +12,7 @@
         ("-" . #'dired-jump))
   (:map dired-mode-map
         ("i" . dired-toggle-read-only)
-        ([remap meow-line] . dired-do-flagged-delete)
+        ("m" . dired-do-flagged-delete)
         ([remap negative-argument] . #'+dired/up-dir))
   :config
   (put 'dired-find-alternate-file 'disabled nil))

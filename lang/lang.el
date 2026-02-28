@@ -93,7 +93,7 @@
   (condition-case nil
       (progn
         (nxml-finish-element)
-        (meow-open-above))
+        (+open-above))
     (error nil)))
 
 (use-package rust-mode)

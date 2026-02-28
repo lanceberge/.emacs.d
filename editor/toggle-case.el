@@ -2,7 +2,7 @@
 (use-package +toggle-case
   :ensure nil
   :bind
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("~" . #'+toggle-region-or-number-dwim))
   :config
   (put 'upcase-region 'disabled nil))

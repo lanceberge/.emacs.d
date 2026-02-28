@@ -11,7 +11,7 @@
   (org-mode . +setup-org-pairs)
   :bind
   ("M-s M-s" . #'+surround)
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("S" . #'+surround)))
 
 ;;;###autoload

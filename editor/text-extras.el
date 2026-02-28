@@ -22,7 +22,7 @@ pipe whole buffer."
 (use-package text-extras
   :ensure nil
   :bind
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("|" . #'pipe-region))
   (:map +leader-map
         ("u" . #'text-to-clipboard)))

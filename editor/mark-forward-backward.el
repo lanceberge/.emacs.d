@@ -11,7 +11,7 @@
                ("d" . #'+mark-forward-sexp)
                :exit
                ("g" . (lambda () (interactive))))
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("E" . #'+mark-forward-word)
         ("B" . #'+mark-backward-word))
   (:map mark-forward-keymap

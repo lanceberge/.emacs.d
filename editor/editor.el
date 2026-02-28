@@ -16,7 +16,7 @@
 (use-package goto-chg
   :disabled
   :bind
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("C-p" . goto-last-change)
         ("C-n" . goto-last-change-reverse)))
 
@@ -26,7 +26,7 @@
   (embark-confirm-act-all nil)
   (embark-quit-after-action nil)
   :bind
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("C-." . #'embark-act)
         ("M-'" . #'embark-dwim))
   (:map minibuffer-mode-map
@@ -38,7 +38,7 @@
   (:map embark-symbol-map
         ("s" . #'+project-replace-regex)
         ("h" . #'helpful-symbol))
-  (:map meow-motion-mode-hook
+  (:map +motion-mode-map
         ("C-." . #'embark-act)
         ("M-'" . #'embark-dwim))
   (:map embark-become-help-map
@@ -54,8 +54,7 @@
         ("/" . #'consult-line)
         ("g" . #'goolge-this-word))
   (:map embark-collect-mode-map
-        ("F" . #'consult-focus-lines)
-        ([remap meow-bounds-of-thing] . #'embark-act))
+        ("F" . #'consult-focus-lines))
   (:map embark-identifier-map
         ("SPC" . #'eglot-code-actions))
   :config
@@ -86,16 +85,16 @@
 (defun +meow-dot-mode-execute ()
   (interactive)
   (with-undo-amalgamate
-    (meow-insert)
+    (+insert-mode 1)
     (call-interactively #'dot-mode-execute)
-    (meow-insert-exit)))
+    (+normal-mode 1)))
 
 (use-package helpful ; better help menu
   :defer 0.7
   :bind
   (:map +leader-map
         ("hk" . #'helpful-key))
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ([remap describe-command] . helpful-command)
         ([remap describe-key] . helpful-key)
         ([remap describe-variable] . helpful-variable)
@@ -137,7 +136,7 @@
 
 (use-package evil-matchit
   :bind
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("%" . #'evilmi-jump-items-native)))
 
 (use-package beginend

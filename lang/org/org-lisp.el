@@ -33,30 +33,30 @@
         (end-of-line)
         (org-insert-item))
     (org-insert-heading-respect-content))
-  (unless meow-insert-mode
-    (meow-insert-mode 1)))
+  (unless +insert-mode
+    (+insert-mode 1)))
 
 ;;;###autoload
 (defun +org/insert-todo ()
   "insert a subheading in org mode and go to insert mode"
   (interactive)
   (org-insert-todo-heading-respect-content)
-  (unless meow-insert-mode
-    (meow-insert-mode 1)))
+  (unless +insert-mode
+    (+insert-mode 1)))
 
 ;;;###autoload
 (defun +org/insert-heading-above ()
   "insert a subheading in org mode and go to insert mode"
   (interactive)
   (org-insert-heading-respect-content)
-  (unless meow-insert-mode
-    (meow-insert-mode 1)))
+  (unless +insert-mode
+    (+insert-mode 1)))
 
 ;;;###autoload
 (defun +org/insert-heading-above ()
   "insert an org heading above and jump into insert mode"
   (interactive)
-  (meow-open-above)
+  (+open-above)
   (move-beginning-of-line nil)
   (org-insert-heading 1))
 
@@ -64,7 +64,7 @@
 (defun +org/insert-todo-above ()
   "insert an org todo above and jump into insert mode"
   (interactive)
-  (meow-open-above)
+  (+open-above)
   (move-beginning-of-line nil)
   (org-insert-todo-heading 1))
 
@@ -91,8 +91,8 @@
   (deactivate-mark)
   (end-of-visual-line)
   (if (org-insert-item)
-      (meow-insert)
-    (+meow-open-below arg)))
+      (+insert-mode 1)
+    (+open-below arg)))
 
 ;;;###autoload
 (defun +org-insert-above ()
@@ -100,8 +100,8 @@
   (deactivate-mark)
   (beginning-of-visual-line)
   (if (org-insert-item)
-      (meow-insert)
-    (meow-open-above)))
+      (+insert-mode 1)
+    (+open-above)))
 
 ;;;###autoload
 (defun +org-drag-stuff-up (n)

@@ -33,7 +33,7 @@
 
 (use-package org-capture
   :ensure nil
-  :hook (org-capture-mode . meow-insert-mode)
+  :hook (org-capture-mode . (lambda () (+insert-mode 1)))
   :custom
   (org-capture-templates
    '(("t" "Todo"

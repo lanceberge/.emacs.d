@@ -110,7 +110,7 @@
 (use-package mark-repeat-map
   :ensure nil
   :bind
-  (:repeat-map meow-mark-repeat-map
+  (:repeat-map +mark-repeat-map
                ("[" . #'+backward-global-mark)
                ("]" . #'+forward-global-mark))
   (:map +leader3-map
@@ -147,7 +147,7 @@
   (interactive "P")
   (let ((arg (or arg tab-width)))
     (unless (region-active-p)
-      (meow-line))
+      (+mark-whole-line))
     (dotimes (_ arg)
       (call-interactively #'indent-rigidly-left))))
 
@@ -156,7 +156,7 @@
   (interactive "P")
   (let ((arg (or arg tab-width)))
     (unless (region-active-p)
-      (meow-line))
+      (+mark-whole-line))
     (dotimes (_ arg)
       (call-interactively #'indent-rigidly-right))))
 

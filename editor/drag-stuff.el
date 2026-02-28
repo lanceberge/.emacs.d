@@ -1,13 +1,14 @@
 ;;; -*- lexical-binding: t -*-
+;; TODO figure out what to do about this
 (use-package drag-stuff
   :bind
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("M-k" . #'drag-stuff-up)
         ("M-j" . #'drag-stuff-down))
-  (:map meow-insert-state-keymap
+  (:map +insert-mode-map
         ("M-k" . #'drag-stuff-up)
         ("M-j" . #'drag-stuff-down))
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("M-H" . #'+drag-stuff-word-left)
         ("M-L" . #'+drag-stuff-word-right)
         ("M-h" . #'+drag-stuff-left-dwim)

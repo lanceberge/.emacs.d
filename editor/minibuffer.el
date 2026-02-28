@@ -2,7 +2,7 @@
 (use-package minibuffer
   :ensure nil
   :hook
-  (minibuffer-setup . meow-insert-mode)
+  (minibuffer-setup . (lambda () (+insert-mode 1)))
   :custom
   (enable-recursive-minibuffers t)
   :bind
@@ -20,10 +20,10 @@
   (xref-show-xrefs-function #'consult-xref)
   (consult-narrow-key "C-SPC")
   :bind (
-         :map meow-normal-state-keymap
+         :map +normal-mode-map
          ("M-q" . #'consult-kmacro)
          ("M-y" . #'+consult-yank-or-replace)
-         :map meow-insert-state-keymap
+         :map +insert-mode-map
          ("M-q" . #'consult-kmacro)
          :map minibuffer-mode-map
          ("M-r" . #'consult-history)

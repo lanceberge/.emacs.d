@@ -1,4 +1,105 @@
 ;;; -*- lexical-binding: t -*-
+
+;; Modal keybindings (consolidated from meow-lisp.el)
+(use-package +modal
+  :ensure nil
+  :bind
+  (:map +insert-mode-map
+        ("C-\\" . #'+sexp-mode)
+        ("C-g" . #'+keyboard-quit-normal)
+        ("M-F" . #'+mark-forward-word)
+        ("M-B" . #'+mark-backward-word)
+        ("<escape>" . #'+normal-mode))
+  (:map +motion-mode-map
+        ("q" . #'quit-window)
+        ("h" . #'backward-char)
+        ("H" . #'+left-expand)
+        ("l" . #'forward-char)
+        ("SPC" . nil)
+        ("L" . #'+right-expand)
+        ("j" . #'next-line)
+        ("g" . #'+keyboard-quit)
+        ("y" . #'kill-ring-save))
+  (:map +normal-mode-map
+        ("C-a" . #'+beginning-of-line-insert)
+        ("C-e" . #'+end-of-line-insert)
+        ("<" . #'beginning-of-buffer)
+        (">" . #'end-of-buffer)
+        ("M-m" . #'+back-to-indentation-insert)
+        ("C-w" . #'+change)
+        ("a" . #'beginning-of-visual-line)
+        ("e" . #'end-of-visual-line)
+        ("y" . #'yank)
+        ("-" . #'negative-argument)
+        ("\\" . #'+sexp-mode)
+        ("v" . #'scroll-up-command)
+        ("d" . #'kill-word)
+        ("^" . #'repeat)
+        ("z" . #'zap-up-to-char)
+        ("M-d" . #'+delete-word-insert)
+        ("b" . #'backward-word)
+        ("l" . #'forward-char)
+        ("D" . #'backward-delete-char)
+        ("f" . #'forward-word)
+        ("F" . #'+mark-forward-word)
+        ("s" . #'isearch-forward)
+        ("@" . #'mark-sexp)
+        ("r" . #'isearch-backward)
+        ("g" . #'+keyboard-quit)
+        ("/" . #'undo)
+        ("M-F" . #'+mark-forward-insert)
+        ("M-B" . #'+mark-backward-insert)
+        ("M-f" . #'+forward-word-insert)
+        ("M-b" . #'+backward-word-insert)
+        ("C-k" . #'+kill-line-insert)
+        ("h" . #'backward-char)
+        ("H" . #'+left-expand)
+        ("L" . #'+right-expand)
+        ("SPC" . #'set-mark-command)
+        ("i" . #'+insert-mode)
+        ("n" . #'next-line)
+        ("p" . #'previous-line)
+        ("C-f" . #'+forward-char-insert)
+        ("C-b" . #'+backward-char-insert)
+        ("x" . #'+back-or-join)
+        ("k" . #'kill-visual-line)
+        ("o" . #'+open-line)
+        ("=" . #'+expand-region)
+        ("m" . #'back-to-indentation)
+        (";" . #'avy-goto-char-2)
+        ("t" . #'transpose-chars)
+        ("T" . #'transpose-words)
+        ("?" . #'undo-redo)
+        ("w" . #'kill-region)
+        ("W" . #'kill-ring-save)
+        ("}" . #'forward-paragraph)
+        ("{" . #'backward-paragraph)
+        ("<escape>" . #'keyboard-quit))
+  (:map +sexp-mode-map
+        ("h" . #'backward-paragraph)
+        ("l" . #'backward-paragraph)
+        ("n" . #'forward-sentence)
+        ("p" . #'backward-sentence)
+        ("q" . #'+save-and-exit)
+        ("f" . #'forward-sexp)
+        ("b" . #'backward-sexp)
+        ("i" . #'+insert-mode)
+        ("o" . #'+expand-region)
+        ("O" . #'+expand-region-2)
+        ("g" . #'+sexp-mode-quit)
+        ("x" . #'+join-line)
+        ("d" . #'kill-sexp)
+        ("DEL" . #'backward-kill-sexp)
+        ("a" . #'back-to-indentation)
+        ("e" . #'end-of-line)
+        ("s" . #'+kill-line-or-region)
+        ("j" . #'next-line)
+        ("k" . #'previous-line)
+        ("u" . #'undo)
+        ("r" . #'undo-redo)
+        ("t" . #'transpose-sexps)
+        ("T" . #'transpose-sentences)))
+
 (use-package +keybindings
   :ensure nil
   :bind
@@ -11,9 +112,9 @@
         ("]" . #'end-of-buffer))
   (:map +leader2-map
         ("br" . #'rename-buffer))
-  (:map meow-insert-state-keymap
+  (:map +insert-mode-map
         ("j" . #'+escape))
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("[ SPC" . #'+insert-newlines-above)
         ("] SPC" . #'+insert-newlines-below)))
 
@@ -99,7 +200,7 @@
     (if (null char)
         (insert-char ?j)
       (if (= char ?k)
-          (meow-insert-exit)
+          (+normal-mode 1)
         (setq command (key-binding (vector (char-to-string char))))
         (insert-char ?j)
         (cond
@@ -129,11 +230,11 @@
         '(self-insert-command
           mwheel-scroll
           mouse-drag-region
-          meow-next
-          meow-prev
+          next-line
+          previous-line
           +escape
-          meow-right
-          meow-left
+          forward-char
+          backward-char
           undefined
           mouse-set-point
           org-self-insert-command))
@@ -166,15 +267,10 @@
 (use-package rect
   :ensure nil
   :bind
-  ;; (:map meow-normal-state-keymap
-  ;; ([remap scroll-up-command] . #'+rectangle-mode)) ; C-v
   (:map rectangle-mark-mode-map
         ([remap +smart-delete] . #'kill-rectangle)
-        ([remap +meow-delete-char] . #'kill-rectangle)
-        ([remap meow-insert] . #'string-insert-rectangle)
-        ([remap +meow-change] . #'replace-rectangle)
-        ([remap meow-next-word] . #'forward-word)
-        ([remap meow-back-word] . #'backward-word)))
+        ("i" . #'string-insert-rectangle)
+        ([remap +change] . #'replace-rectangle)))
 
 ;;;###autoload
 (defun +rectangle-mode (&optional arg)

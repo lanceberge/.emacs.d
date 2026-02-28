@@ -2,7 +2,7 @@
 (use-package kmacro
   :ensure nil
   :bind
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("M-r" . #'+kmacro-record-or-end)
         ("M-n" . #'+kmacro-execute-dwim)
         ("M-N" . #'+kmacro-call-named-macro)))

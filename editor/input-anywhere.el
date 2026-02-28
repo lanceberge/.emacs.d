@@ -34,7 +34,7 @@
       (switch-to-buffer buf)
       (erase-buffer)
       (org-mode)
-      (meow-insert)
+      (+insert-mode 1)
       (setq-local header-line-format
                   (format " %s to insert text or %s to cancel."
                           (propertize "C-c C-c" 'face 'help-key-binding)

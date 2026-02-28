@@ -8,15 +8,15 @@
   (magit-no-confirm '(stage-all-changes amend-published))
   (magit-diff-visit-prefer-worktree t)
   :hook
-  (git-commit-mode . meow-insert-mode)
+  (git-commit-mode . (lambda () (+insert-mode 1)))
   :bind
   (:map with-editor-mode-map
         ([remap delete-window] . #'with-editor-cancel)
         ([remap save-buffer] . #'with-editor-finish))
   (:map magit-blob-mode-map
-        ("q" . #'meow-quit)
-        ([remap save-buffer] . #'meow-quit)
-        ([remap +elisp-format-and-check] . #'meow-quit))
+        ("q" . #'quit-window)
+        ([remap save-buffer] . #'quit-window)
+        ([remap +elisp-format-and-check] . #'quit-window))
   (:map magit-diff-section-map
         ("C-j" . #'magit-section-forward))
   (:map magit-status-mode-map
@@ -25,14 +25,9 @@
         ("M-j" . #'magit-jump-to-staged)
         ("M-k" . #'magit-jump-to-unstaged)
         ("q" . #'magit-commit)
-        ("p" . #'magit-push)
+        ;; ("p" . #'magit-push)
         ("x" . #'magit-discard)
-        ("V" . #'set-mark-command)
-        ([remap meow-next] . #'magit-next-line)
-        ([remap meow-prev] . #'magit-previous-line)
-        ([remap meow-line] . #'magit-discard)
-        ([remap meow-right] . #'magit-log-head)
-        ([remap meow-right-expand] . #'magit-log))
+        ("V" . #'set-mark-command))
   (:map +leader-map
         ("gs" . #'magit-status)
         ("gb" . #'magit-branch-or-checkout)
@@ -49,6 +44,20 @@
         ("gw" . #'magit-worktree)
         ("gh" . #'+magit-diff-head-n))
   :config
+  (defun +magit-status-setup-motion-keys ()
+    "Override motion-mode keys for magit-status."
+    (let ((map (make-sparse-keymap)))
+      (set-keymap-parent map +motion-mode-map)
+      (define-key map "j" #'magit-next-line)
+      (define-key map "k" #'magit-previous-line)
+      (define-key map "m" #'magit-discard)
+      (define-key map "l" #'magit-log-head)
+      (define-key map "L" #'magit-log)
+      (setq-local minor-mode-overriding-map-alist
+                  (cons (cons '+motion-mode map)
+                        minor-mode-overriding-map-alist))))
+  (add-hook 'magit-status-mode-hook #'+magit-status-setup-motion-keys)
+
   (cl-loop for n from 1 to 9
            do (let ((key (number-to-string n))
                     (desc (format "Diff HEAD~%d" n)))
@@ -69,13 +78,20 @@ unless a nonzero and non-negative prefix is provided."
 
 (use-package git-timemachine
   :commands (git-timemachine)
-  :hook (git-timemachine-mode . meow-motion-mode)
-  :hook (git-timemachine-mode . +meow-motion-mode)
+  :hook (git-timemachine-mode . +git-timemachine-setup)
   :bind
   (:map +leader-map
-        ("gt" . #'git-timemachine))
-  (:map git-timemachine-mode-map
-        ([remap meow-quit] . #'git-timemachine-quit)))
+        ("gt" . #'git-timemachine)))
+
+(defun +git-timemachine-setup ()
+  "Set up motion mode with git-timemachine-quit override for q."
+  (+motion-mode 1)
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map +motion-mode-map)
+    (define-key map "q" #'git-timemachine-quit)
+    (setq-local minor-mode-overriding-map-alist
+                (cons (cons '+motion-mode map)
+                      minor-mode-overriding-map-alist))))
 
 (use-package diff-hl
   :defer 0.5

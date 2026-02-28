@@ -31,7 +31,7 @@
   (:map +leader-map
         ("fu" . #'vundo))
   (:map vundo-mode-map
-        ([remap meow-quit] . #'vundo-quit)))
+        ("q" . #'vundo-quit)))
 
 (use-package undo-fu-session ; persistent undos
   :hook (prog-mode . undo-fu-session-mode))

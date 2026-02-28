@@ -121,6 +121,8 @@
                 mode-line-front-space
                 mode-line-mule-info
                 mode-line-modified
+                " "
+                (:eval (if (fboundp '+modal--mode-line-indicator) (+modal--mode-line-indicator) ""))
                 "  "
                 (:eval (project-mode-line-format))
                 "  "

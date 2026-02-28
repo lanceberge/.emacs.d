@@ -10,7 +10,7 @@
   ("M-z" . #'zap-up-to-char)
   ("M-Z" . #'zap-to-char)
   ("M-T" . #'transpose-paragraphs)
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("RET" . #'newline)
         ("S-<return>" . #'insert-newline-above-dwim))
   (:map prog-mode-map
@@ -40,7 +40,7 @@
   :bind
   (:map +leader-map
         ("re" . #'+restart-emacs))
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("q" . save-buffer)))
 
 ;;;###autoload

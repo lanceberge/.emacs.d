@@ -2,7 +2,7 @@
 (use-package +increment-number
   :ensure nil
   :bind
-  (:map meow-normal-state-keymap
+  (:map +normal-mode-map
         ("M-`" . #'+increment-number-increment)
         ("M-~" . #'+increment-number-decrement)))
 

@@ -6,9 +6,11 @@
   :init
   (setq +all-chars (concat (apply #'string +open-chars)
                            (apply #'string +close-chars)))
-  :bind (:map meow-normal-state-keymap
-              ("<" . +slurp-or-barf-left)
-              (">" . +slurp-or-barf-right)))
+  ;; TODO
+  ;; :bind (:map +normal-mode-map
+  ;;             ("<" . +slurp-or-barf-left)
+  ;;             (">" . +slurp-or-barf-right))
+  )
 
 ;;;###autoload
 (defun +slurp-or-barf-left (&optional N)
