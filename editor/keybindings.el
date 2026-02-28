@@ -1,6 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-
-;; Modal keybindings (consolidated from meow-lisp.el)
 (use-package +modal
   :ensure nil
   :bind
@@ -61,7 +59,7 @@
         ("p" . #'previous-line)
         ("C-f" . #'+forward-char-insert)
         ("C-b" . #'+backward-char-insert)
-        ("x" . #'+back-or-join)
+        ("^" . #'delete-indentation)
         ("k" . #'kill-visual-line)
         ("o" . #'+open-line)
         ("=" . #'+expand-region)
@@ -74,7 +72,9 @@
         ("W" . #'kill-ring-save)
         ("}" . #'forward-paragraph)
         ("{" . #'backward-paragraph)
-        ("<escape>" . #'keyboard-quit))
+        ("<escape>" . #'keyboard-quit)
+        ("x TAB" . #'indent-rigidly)
+        ("x SPC" . #'rectangle-mark-mode))
   (:map +sexp-mode-map
         ("h" . #'backward-paragraph)
         ("l" . #'backward-paragraph)
@@ -108,8 +108,9 @@
         ("d" . #'duplicate-line)
         ("q" . #'+server-edit)
         ("er" . #'+source-init-file)
-        ("[" . #'beginning-of-buffer)
-        ("]" . #'end-of-buffer))
+        ;; ("[" . #'beginning-of-buffer)
+        ;; ("]" . #'end-of-buffer)
+        )
   (:map +leader2-map
         ("br" . #'rename-buffer))
   (:map +insert-mode-map

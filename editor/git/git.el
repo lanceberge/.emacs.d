@@ -28,8 +28,10 @@
         ;; ("p" . #'magit-push)
         ("x" . #'magit-discard)
         ("V" . #'set-mark-command))
+  (:map +normal-mode-map
+        ("xg" . #'magit-status))
   (:map +leader-map
-        ("gs" . #'magit-status)
+        ;; ("gs" . #'magit-status)
         ("gb" . #'magit-branch-or-checkout)
         ("gd" . #'magit-file-delete)
         ("SPC gf" . #'magit-fetch)

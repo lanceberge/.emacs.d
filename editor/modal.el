@@ -10,7 +10,9 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
 (defvar +modal--switching nil
   "Flag to prevent recursion when switching between modal states.")
 
-;; Suppress self-insert in sexp-mode-map
+;; Suppress self-insert in non-insert modes
+(suppress-keymap +normal-mode-map t)
+(suppress-keymap +motion-mode-map t)
 (suppress-keymap +sexp-mode-map t)
 
 ;;; Minor Modes
@@ -273,15 +275,15 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
     (indent-for-tab-command)))
 
 ;;;###autoload
-(defun +back-or-join ()
-  (interactive)
-  (cond ((eq last-command this-command)
-         (+join-line))
-        ((eq (point) (save-excursion (back-to-indentation) (point)))
-         (+join-line))
-        (t
-         (back-to-indentation)))
-  (deactivate-mark))
+;; (defun +back-or-join ()
+;;   (interactive)
+;;   (cond ((eq last-command this-command)
+;;          (+join-line))
+;;         ((eq (point) (save-excursion (back-to-indentation) (point)))
+;;          (+join-line))
+;;         (t
+;;          (back-to-indentation)))
+;;   (deactivate-mark))
 
 ;;;###autoload
 (defun +delete ()

@@ -2,7 +2,7 @@
 (use-package visual-regexp
   :bind
   (:map +normal-mode-map
-        ("R" . +replace)))
+        ("%" . +replace)))
 
 ;;;###autoload
 (defun +replace ()

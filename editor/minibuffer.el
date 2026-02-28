@@ -11,6 +11,7 @@
   (:map minibuffer-mode-map
         ([remap newline] . #'exit-minibuffer)
         ([remap insert-newline-indent] . #'exit-minibuffer)
+        ([remap +keyboard-quit-normal] . #'abort-minibuffers)
         ("C-g" . #'abort-minibuffers)))
 
 (use-package consult
@@ -55,6 +56,7 @@
          ("fl" . #'consult-goto-line)
          ("fa" . #'consult-org-agenda)
          (";" . #'consult-ripgrep)
+         ("C-;" . #'consult-ripgrep)
          ("SPC ;" . #'+consult-ripgrep-current)
          ("pj" . #'consult-imenu-multi)
          :map org-mode-map

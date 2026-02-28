@@ -8,8 +8,10 @@
   (dired-use-ls-dired nil)
   :hook (dired-mode . dired-hide-details-mode)
   :bind
-  (:map +leader-map
-        ("-" . #'dired-jump))
+  ;; (:map +leader-map
+  ;;       ("-" . #'dired-jump))
+  (:map +normal-mode-map
+        ("xj" . #'dired-jump))
   (:map dired-mode-map
         ("i" . dired-toggle-read-only)
         ("m" . dired-do-flagged-delete)

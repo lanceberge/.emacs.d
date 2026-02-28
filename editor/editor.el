@@ -14,11 +14,12 @@
   (setq-default format-all-formatters format-all-default-formatters))
 
 (use-package goto-chg
-  :disabled
+  :disabled t
   :bind
-  (:map +normal-mode-map
-        ("C-p" . goto-last-change)
-        ("C-n" . goto-last-change-reverse)))
+  ;; (:map +normal-mode-map
+  ;;       ("C-p" . goto-last-change)
+  ;;       ("C-n" . goto-last-change-reverse))
+  )
 
 (use-package embark
   :custom
@@ -49,7 +50,7 @@
         ("s" . #'+project-replace-regex))
   (:map embark-general-map
         ("'" . #'embark-dwim)
-        ("f" . #'consult-ripgrep)
+        (";" . #'consult-ripgrep)
         ("d" . #'embark-find-definition)
         ("/" . #'consult-line)
         ("g" . #'goolge-this-word))
@@ -70,24 +71,6 @@
   (let ((vertico-cycle nil))
     (embark-select)
     (vertico-next)))
-
-(use-package dot-mode
-  :ensure (:host github :repo "wyrickre/dot-mode")
-  :hook ((prog-mode text-mode) . dot-mode-on)
-  :custom
-  (dot-mode-ignore-undo t)
-  ;; :bind
-  ;; (:map dot-mode-map
-  ;;       ("C-." . #'+meow-dot-mode-execute))
-  )
-
-;;;###autoload
-(defun +meow-dot-mode-execute ()
-  (interactive)
-  (with-undo-amalgamate
-    (+insert-mode 1)
-    (call-interactively #'dot-mode-execute)
-    (+normal-mode 1)))
 
 (use-package helpful ; better help menu
   :defer 0.7
