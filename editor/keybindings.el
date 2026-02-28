@@ -115,8 +115,7 @@
         )
   (:map +leader2-map
         ("br" . #'rename-buffer))
-  (:map +insert-mode-map
-        ("j" . #'+escape))
+  ;; escape sequences bound via +create-escape below
   (:map +normal-mode-map
         ("[ SPC" . #'+insert-newlines-above)
         ("] SPC" . #'+insert-newlines-below)))
@@ -195,34 +194,44 @@
       (insert ";"))))
 
 ;;;###autoload
-(defun +escape (&optional count)
-  (interactive)
+(defun +create-escape (keys)
+  "Create and bind a two-key escape sequence KEYS in insert mode.
+KEYS is a 2-char string like \"jk\". Pressing the first char waits
+briefly for the second; if it arrives, exit to normal mode.
+Otherwise insert the first char and handle the second normally."
+  (let ((first (aref keys 0))
+        (second (aref keys 1)))
+    (define-key +insert-mode-map (string first)
+                (let ((f first) (s second))
+                  (lambda ()
+                    (interactive)
+                    (+escape--handle f s)))))
+  keys)
+
+(defun +escape--handle (first second)
   (let* ((cooldown 0.5)
-         (char (read-char nil nil cooldown))
-         (command))
+         (char (read-char nil nil cooldown)))
     (if (null char)
-        (insert-char ?j)
-      (if (= char ?k)
+        (insert-char first)
+      (if (= char second)
           (progn
             (when (bound-and-true-p corfu--frame)
               (corfu-quit))
             (+normal-mode 1))
-        (setq command (key-binding (vector (char-to-string char))))
-        (insert-char ?j)
-        (cond
-         ((null char)
-          (insert-char ?j))
-         ((null command))
-         ((not (commandp command)))
-         ;; handle electric-pairs
-         ((and (eq char ?\") (eq (char-after (point)) ?\"))
-          (forward-char))
-         ((eq command #'self-insert-command)
-          (self-insert-command 1 char))
-         ((eq command #'org-self-insert-command)
-          (self-insert-command 1 char))
-         (t
-          (call-interactively command)))))))
+        (insert-char first)
+        (let ((command (key-binding (vector char))))
+          (cond
+           ((null command))
+           ((not (commandp command)))
+           ((and (eq char ?\") (eq (char-after (point)) ?\"))
+            (forward-char))
+           ((memq command '(self-insert-command org-self-insert-command))
+            (self-insert-command 1 char))
+           (t
+            (call-interactively command))))))))
+
+(+create-escape "jk")
+(+create-escape "kj")
 
 (define-derived-mode keyfreq-show-mode special-mode "KeyFreq"
   "Major mode for displaying key frequency statistics."
