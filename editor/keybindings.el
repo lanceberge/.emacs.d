@@ -74,7 +74,9 @@
         ("{" . #'backward-paragraph)
         ("<escape>" . #'keyboard-quit)
         ("x TAB" . #'indent-rigidly)
-        ("x SPC" . #'rectangle-mark-mode))
+        ("x SPC" . #'rectangle-mark-mode)
+        ("xk" . #'kill-current-buffer)
+        ("xh" . #'mark-whole-buffer))
   (:map +sexp-mode-map
         ("h" . #'backward-paragraph)
         ("l" . #'backward-paragraph)
@@ -201,7 +203,10 @@
     (if (null char)
         (insert-char ?j)
       (if (= char ?k)
-          (+normal-mode 1)
+          (progn
+            (when (bound-and-true-p corfu--frame)
+              (corfu-quit))
+            (+normal-mode 1))
         (setq command (key-binding (vector (char-to-string char))))
         (insert-char ?j)
         (cond
