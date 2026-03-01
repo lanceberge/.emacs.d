@@ -76,7 +76,11 @@
         ("x TAB" . #'indent-rigidly)
         ("x SPC" . #'rectangle-mark-mode)
         ("xk" . #'kill-current-buffer)
-        ("xh" . #'mark-whole-buffer))
+        ("xh" . #'mark-whole-buffer)
+        ("x0" . #'delete-window)
+        ("x1" . #'delete-other-windows)
+        ("x2" . #'split-window-below)
+        ("x3" . #'split-window-right))
   (:map +sexp-mode-map
         ("h" . #'backward-paragraph)
         ("l" . #'backward-paragraph)

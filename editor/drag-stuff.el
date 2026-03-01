@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 ;; TODO figure out what to do about this
 (use-package drag-stuff
+  :disabled t
   :bind
   (:map +normal-mode-map
         ("M-k" . #'drag-stuff-up)

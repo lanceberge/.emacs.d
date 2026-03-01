@@ -62,10 +62,11 @@
                ("p" . #'tab-bar-history-back)
                ("n" . #'tab-bar-history-forward))
   (:map +leader-map
-        ("wo" . #'delete-other-windows)
-        ("wd" . #'delete-window)
-        ("ws" . #'split-window-below)
-        ("wv" . #'split-window-right)))
+        ;; ("wo" . #'delete-other-windows)
+        ;; ("wd" . #'delete-window)
+        ;; ("ws" . #'split-window-below)
+        ;; ("wv" . #'split-window-right)
+        ))
 
 (use-package windmove
   :ensure nil

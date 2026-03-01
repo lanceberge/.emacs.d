@@ -18,7 +18,7 @@
         ("M-r s" . #'+isearch-consult-ripgrep)
         ("M-/" . #'+consult-line)
         ("C-M-/" . #'+consult-line-multi)
-        ("M-j" . #'avy-isearch))
+        ("C-;" . #'avy-isearch))
   :config
   (setq search-nonincremental-instead nil)) ; don't cancel isearches with searches
 
