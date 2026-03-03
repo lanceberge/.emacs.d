@@ -240,3 +240,17 @@
     (activate-mark))
   (end-of-buffer)
   (+mark-forward-backward-ring-push))
+
+;;;###autoload
+(defun +mark-forward-line (arg)
+  (interactive "p")
+  (unless (region-active-p)
+    (set-mark (point)))
+  (next-line arg))
+
+;;;###autoload
+(defun +mark-backward-line (arg)
+  (interactive "p")
+  (unless (region-active-p)
+    (set-mark (point)))
+  (previous-line arg))

@@ -207,6 +207,8 @@
 (defvar +leader-map (make-sparse-keymap))
 (defvar +leader2-map (make-sparse-keymap))
 (defvar +leader3-map (make-sparse-keymap))
+(defvar +x-map (make-sparse-keymap))
+
 (defvar mark-forward-keymap (make-sparse-keymap))
 (defvar mark-backward-keymap (make-sparse-keymap))
 
@@ -214,26 +216,6 @@
 (defvar +insert-mode-map (make-sparse-keymap))
 (defvar +motion-mode-map (make-sparse-keymap))
 (defvar +sexp-mode-map (make-keymap))
-
-(bind-key "C-c" +leader-map)
-(bind-key "c" +leader-map +normal-mode-map)
-(bind-key "SPC" +leader-map +motion-mode-map)
-(bind-key "SPC" +leader-map +sexp-mode-map)
-
-(bind-key "C-'" +leader2-map)
-(bind-key "'" +leader2-map +normal-mode-map)
-(bind-key "'" +leader2-map +motion-mode-map)
-(bind-key "'" +leader2-map +sexp-mode-map)
-
-(bind-key "[" mark-backward-keymap +normal-mode-map)
-(bind-key "]" mark-forward-keymap +normal-mode-map)
-
-(bind-key "[" mark-backward-keymap +sexp-mode-map)
-(bind-key "]" mark-forward-keymap +sexp-mode-map)
-
-(bind-key "`" +leader3-map +motion-mode-map)
-(bind-key "`" +leader3-map +normal-mode-map)
-(bind-key "`" +leader3-map +sexp-mode-map)
 
 (add-hook 'after-init-hook
           (lambda ()

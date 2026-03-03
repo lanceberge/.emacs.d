@@ -10,10 +10,20 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
 (defvar +modal--switching nil
   "Flag to prevent recursion when switching between modal states.")
 
-;; Suppress self-insert in non-insert modes
 (suppress-keymap +normal-mode-map t)
 (suppress-keymap +motion-mode-map t)
 (suppress-keymap +sexp-mode-map t)
+
+;;; Mode-line indicator
+
+(defun +modal--mode-line-indicator ()
+  "Return a string indicating the current modal state."
+  (cond
+   (+sexp-mode "SEXP")
+   (+insert-mode "INSERT")
+   (+motion-mode "MOTION")
+   (+normal-mode "NORMAL")
+   (t "")))
 
 ;;; Minor Modes
 
@@ -108,24 +118,48 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
                  (setq prefix-arg ,i)
                  (universal-argument--mode))))
 
-;;; Custom Replacement Functions
-
+;;; Escape with jk or kj
 ;;;###autoload
-(defun +left-expand (arg)
-  "Set mark if no region, then move backward one char."
-  (interactive "p")
-  (unless (region-active-p)
-    (set-mark (point)))
-  (backward-char arg))
+(defun +create-escape (keys)
+  "Create and bind a two-key escape sequence KEYS in insert mode.
+KEYS is a 2-char string like \"jk\". Pressing the first char waits
+briefly for the second; if it arrives, exit to normal mode.
+Otherwise insert the first char and handle the second normally."
+  (let ((first (aref keys 0))
+        (second (aref keys 1)))
+    (define-key +insert-mode-map (string first)
+                (let ((f first) (s second))
+                  (lambda ()
+                    (interactive)
+                    (+escape--handle f s)))))
+  keys)
 
-;;;###autoload
-(defun +right-expand (arg)
-  "Set mark if no region, then move forward one char."
-  (interactive "p")
-  (unless (region-active-p)
-    (set-mark (point)))
-  (forward-char arg))
+(defun +escape--handle (first second)
+  (let* ((cooldown 0.5)
+         (char (read-char nil nil cooldown)))
+    (if (null char)
+        (insert-char first)
+      (if (= char second)
+          (progn
+            (when (bound-and-true-p corfu--frame)
+              (corfu-quit))
+            (+normal-mode 1))
+        (insert-char first)
+        (let ((command (key-binding (vector char))))
+          (cond
+           ((null command))
+           ((not (commandp command)))
+           ((and (eq char ?\") (eq (char-after (point)) ?\"))
+            (forward-char))
+           ((memq command '(self-insert-command org-self-insert-command))
+            (self-insert-command 1 char))
+           (t
+            (call-interactively command))))))))
 
+(+create-escape "jk")
+(+create-escape "kj")
+
+;;; Insert entries
 ;;;###autoload
 (defun +kill-line-insert ()
   "Kill region (or kill-visual-line if no region) then enter insert mode."
@@ -136,76 +170,10 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
   (+insert-mode 1))
 
 ;;;###autoload
-(defun +mark-whole-line ()
-  "Select the current line."
-  (interactive)
-  (beginning-of-line)
-  (set-mark (point))
-  (end-of-line)
-  (activate-mark))
-
-;;;###autoload
-(defun +open-below (arg)
-  "Open a newline below and switch to insert mode."
+(defun +delete-char-insert (arg)
   (interactive "p")
-  (goto-char (line-end-position))
-  (newline arg)
-  (indent-according-to-mode)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +open-above ()
-  "Open a newline above and switch to insert mode."
-  (interactive)
-  (beginning-of-line)
-  (open-line 1)
-  (indent-according-to-mode)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +cancel-selection ()
-  "Deactivate the mark."
-  (interactive)
-  (deactivate-mark))
-
-;;; Migrated functions from meow-lisp.el
-
-;;;###autoload
-(defun +keyboard-quit-normal ()
-  (interactive)
-  (+normal-mode 1)
-  (+keyboard-quit))
-
-;;;###autoload
-(defun +save-and-exit ()
-  (interactive)
-  (save-buffer)
-  (+normal-mode 1))
-
-;;;###autoload
-(defun +sexp-mode-quit ()
-  (interactive)
-  (if (region-active-p)
-      (deactivate-mark)
-    (+normal-mode 1)))
-
-;;;###autoload
-(defun +open-line (arg)
-  (interactive "P")
-  (cond (arg
-         (if (eq (point) (save-excursion (end-of-line) (point)))
-             (open-line arg)
-           (save-excursion (beginning-of-line) (open-line arg))))
-        ((eq (point) (save-excursion (end-of-line) (point)))
-         (open-line (or arg 1))
-         (next-line)
-         (indent-according-to-mode)
-         (+insert-mode 1))
-        (t
-         (beginning-of-visual-line)
-         (open-line (or arg 1))
-         (indent-according-to-mode)
-         (+insert-mode 1))))
+  (delete-char arg)
+  (+insert-mode))
 
 ;;;###autoload
 (defun +forward-char-insert (arg)
@@ -268,31 +236,98 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
   (+insert-mode 1))
 
 ;;;###autoload
-(defun +join-line ()
+(defun +kill-region-insert ()
   (interactive)
-  (join-line)
-  (unless (derived-mode-p 'yaml-mode)
-    (indent-for-tab-command)))
+  (call-interactively #'kill-region)
+  (+insert-mode 1))
+
+;;; Custom Replacement Functions
 
 ;;;###autoload
-;; (defun +back-or-join ()
-;;   (interactive)
-;;   (cond ((eq last-command this-command)
-;;          (+join-line))
-;;         ((eq (point) (save-excursion (back-to-indentation) (point)))
-;;          (+join-line))
-;;         (t
-;;          (back-to-indentation)))
-;;   (deactivate-mark))
+(defun +left-expand (arg)
+  "Set mark if no region, then move backward one char."
+  (interactive "p")
+  (unless (region-active-p)
+    (set-mark (point)))
+  (backward-char arg))
 
 ;;;###autoload
-(defun +delete ()
+(defun +right-expand (arg)
+  "Set mark if no region, then move forward one char."
+  (interactive "p")
+  (unless (region-active-p)
+    (set-mark (point)))
+  (forward-char arg))
+
+;;;###autoload
+(defun +mark-whole-line ()
+  "Select the current line."
+  (interactive)
+  (beginning-of-line)
+  (set-mark (point))
+  (end-of-line)
+  (activate-mark))
+
+;;;###autoload
+(defun +open-below (arg)
+  "Open a newline below and switch to insert mode."
+  (interactive "p")
+  (goto-char (line-end-position))
+  (newline arg)
+  (indent-according-to-mode)
+  (+insert-mode 1))
+
+;;;###autoload
+(defun +open-above ()
+  "Open a newline above and switch to insert mode."
+  (interactive)
+  (beginning-of-line)
+  (open-line 1)
+  (indent-according-to-mode)
+  (+insert-mode 1))
+
+;;;###autoload
+(defun +cancel-selection ()
+  "Deactivate the mark."
+  (interactive)
+  (deactivate-mark))
+
+;;;###autoload
+(defun +keyboard-quit-normal ()
+  (interactive)
+  (+normal-mode 1)
+  (+keyboard-quit))
+
+;;;###autoload
+(defun +save-and-exit ()
+  (interactive)
+  (save-buffer)
+  (+normal-mode 1))
+
+;;;###autoload
+(defun +sexp-mode-quit ()
   (interactive)
   (if (region-active-p)
-      (progn
-        (call-interactively #'delete-region)
-        (indent-for-tab-command))
-    (call-interactively #'backward-delete-char-untabify)))
+      (deactivate-mark)
+    (+normal-mode 1)))
+
+;;;###autoload
+(defun +open-line (arg)
+  (interactive "P")
+  (cond (arg
+         (if (eq (point) (save-excursion (end-of-line) (point)))
+             (open-line arg)
+           (save-excursion (beginning-of-line) (open-line arg))))
+        ((eq (point) (save-excursion (end-of-line) (point)))
+         (open-line (or arg 1))
+         (next-line)
+         (indent-according-to-mode)
+         (+insert-mode 1))
+        (t
+         (beginning-of-visual-line)
+         (open-line (or arg 1))
+         (indent-according-to-mode)
+         (+insert-mode 1))))
 
 ;;;###autoload
 (defun +backward-kill-sexp ()
@@ -309,13 +344,9 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
       (beginning-of-line)
       (kill-visual-line arg))))
 
-;;; Mode-line indicator
-
-(defun +modal--mode-line-indicator ()
-  "Return a string indicating the current modal state."
-  (cond
-   (+sexp-mode "SEXP")
-   (+insert-mode "INSERT")
-   (+motion-mode "MOTION")
-   (+normal-mode "NORMAL")
-   (t "")))
+;;;###autoload
+(defun +replace-char (char)
+  (interactive "cChar:")
+  (delete-char 1)
+  (insert-char char)
+  (backward-char 1))

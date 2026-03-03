@@ -197,3 +197,102 @@
       (goto-char (or start (point)))
       (while (re-search-forward matcher (or end (point-max)) t)
         (replace-match (cdr (assoc-string (match-string 0) alist)))))))
+
+
+;;;###autoload
+(defun +rectangle-mode (&optional arg)
+  (interactive "p")
+  (rectangle-mark-mode)
+  (forward-char)
+  (next-line (- arg 1)))
+
+;;;###autoload
+(defun +insert-newlines-above (arg)
+  (interactive "p")
+  ;; save excursion didn't work if point is at line-beginning-position
+  (let ((col (- (point) (line-beginning-position))))
+    (beginning-of-line)
+    (dotimes (_ arg)
+      (newline))
+    (forward-char col)))
+
+;;;###autoload
+(defun +insert-newlines-below (arg)
+  (interactive "p")
+  (save-excursion
+    (end-of-line)
+    (dotimes (_ arg)
+      (newline))))
+
+;;;###autoload
+(defun insert-newline-indent ()
+  (interactive)
+  (save-excursion
+    (newline)
+    (indent-for-tab-command)))
+
+;;;###autoload
+(defun +server-edit ()
+  (interactive)
+  (save-buffer)
+  (server-edit))
+
+;;;###autoload
+(defun insert-newline-dwim ()
+  (interactive)
+  (if (region-active-p)
+      (insert-newline-preserving-region)
+    (progn
+      (newline)
+      (indent-for-tab-command))))
+
+;;;###autoload
+(defun insert-newline-above-dwim ()
+  "split the line above at point"
+  (interactive)
+  (let ((deactivate-mark nil))
+    (if (region-active-p)
+        (progn
+          (insert-newline-preserving-region)
+          (save-excursion
+            (next-line)
+            (indent-for-tab-command)))
+      (progn
+        (insert-newline-dwim)
+        (drag-stuff-up 1)
+        (indent-for-tab-command)))))
+
+;;;###autoload
+(defun insert-newline-preserving-region ()
+  "Insert a newline at point while preserving the region."
+  (let* ((was-active (region-active-p))
+         (old-point (point))
+         (old-mark (and (region-active-p) (mark t)))
+         (deactivate-mark nil)
+         (point-at-end (eq old-point (region-end)))
+         (region-len (abs (- old-point old-mark))))
+    (insert "\n")
+    (indent-according-to-mode)
+    (when point-at-end
+      (goto-char old-point)
+      (set-mark (- (point) region-len))
+      (activate-mark))))
+
+;;;###autoload
+(defun +project-shell-command ()
+  (interactive)
+  (let ((default-directory (project-root (project-current t))))
+    (call-interactively #'shell-command)))
+
+;;;###autoload
+(defun +source-init-file ()
+  (interactive)
+  (load-file "~/.emacs.d/init.el"))
+
+;;;###autoload
+(defun +append-semicolon ()
+  (interactive)
+  (save-excursion
+    (end-of-line)
+    (unless (looking-back ";" nil)
+      (insert ";"))))
