@@ -1,8 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 (bind-key "C-c" +leader-map)
-(bind-key "SPC" +leader-map +normal-mode-map)
-(bind-key "SPC" +leader-map +motion-mode-map)
-(bind-key "SPC" +leader-map +sexp-mode-map)
+(bind-key "c" +leader-map +normal-mode-map)
+(bind-key "c" +leader-map +motion-mode-map)
+(bind-key "c" +leader-map +sexp-mode-map)
 
 (bind-key "x" +x-map +normal-mode-map)
 (bind-key "x" +x-map +motion-mode-map)
@@ -43,14 +43,7 @@
         ("<escape>" . #'+normal-mode))
   (:map +motion-mode-map
         ("q" . #'quit-window)
-        ("h" . #'backward-char)
-        ("H" . #'+left-expand)
-        ("l" . #'forward-char)
-        ("SPC" . nil)
-        ("L" . #'+right-expand)
-        ("j" . #'next-line)
-        ("g" . #'+keyboard-quit)
-        ("y" . #'kill-ring-save))
+        ("g" . #'+keyboard-quit))
   (:map +normal-mode-map
         ("i" . #'+insert-mode)
 
@@ -100,7 +93,7 @@
         ("h" . #'backward-char)
         ("H" . #'+left-expand)
         ("L" . #'+right-expand)
-        ("c" . #'set-mark-command)
+        ("SPC" . #'set-mark-command)
         ("n" . #'next-line)
         ("p" . #'previous-line)
         ("^" . #'delete-indentation)

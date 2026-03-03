@@ -25,13 +25,11 @@
         ("M-j" . #'magit-jump-to-staged)
         ("M-k" . #'magit-jump-to-unstaged)
         ("q" . #'magit-commit)
-        ;; ("p" . #'magit-push)
         ("x" . #'magit-discard)
         ("V" . #'set-mark-command))
   (:map +normal-mode-map
         ("xg" . #'magit-status))
   (:map +leader-map
-        ;; ("gs" . #'magit-status)
         ("gb" . #'magit-branch-or-checkout)
         ("gd" . #'magit-file-delete)
         ("SPC gf" . #'magit-fetch)
@@ -50,11 +48,7 @@
     "Override motion-mode keys for magit-status."
     (let ((map (make-sparse-keymap)))
       (set-keymap-parent map +motion-mode-map)
-      (define-key map "j" #'magit-next-line)
-      (define-key map "k" #'magit-previous-line)
-      (define-key map "m" #'magit-discard)
-      (define-key map "l" #'magit-log-head)
-      (define-key map "L" #'magit-log)
+      (define-key map "c" #'magit-commit)
       (setq-local minor-mode-overriding-map-alist
                   (cons (cons '+motion-mode map)
                         minor-mode-overriding-map-alist))))
