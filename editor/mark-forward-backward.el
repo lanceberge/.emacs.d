@@ -254,3 +254,17 @@
   (unless (region-active-p)
     (set-mark (point)))
   (previous-line arg))
+
+;;;###autoload
+(defun +mark-forward-char (arg)
+  (interactive "p")
+  (unless (region-active-p)
+    (set-mark (point)))
+  (forward-char arg))
+
+;;;###autoload
+(defun +mark-backward-char (arg)
+  (interactive "p")
+  (unless (region-active-p)
+    (set-mark (point)))
+  (backward-char arg))

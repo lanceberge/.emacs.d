@@ -1,8 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 (bind-key "C-c" +leader-map)
-(bind-key "c" +leader-map +normal-mode-map)
-(bind-key "c" +leader-map +motion-mode-map)
-(bind-key "c" +leader-map +sexp-mode-map)
+(bind-key "SPC" +leader-map +normal-mode-map)
+(bind-key "SPC" +leader-map +motion-mode-map)
+(bind-key "SPC" +leader-map +sexp-mode-map)
 
 (bind-key "x" +x-map +normal-mode-map)
 (bind-key "x" +x-map +motion-mode-map)
@@ -27,14 +27,14 @@
   :ensure nil
   :bind
   (:map +x-map
-        ("x TAB" . #'indent-rigidly)
-        ("x SPC" . #'rectangle-mark-mode)
-        ("xk" . #'kill-current-buffer)
-        ("xh" . #'mark-whole-buffer)
-        ("x0" . #'delete-window)
-        ("x1" . #'delete-other-windows)
-        ("x2" . #'split-window-below)
-        ("x3" . #'split-window-right))
+        ("TAB" . #'+indent-rigidly-dwim)
+        ("SPC" . #'rectangle-mark-mode)
+        ("k" . #'kill-current-buffer)
+        ("h" . #'mark-whole-buffer)
+        ("0" . #'delete-window)
+        ("1" . #'delete-other-windows)
+        ("2" . #'split-window-below)
+        ("3" . #'split-window-right))
   (:map +insert-mode-map
         ("C-\\" . #'+sexp-mode)
         ("C-g" . #'+keyboard-quit-normal)
@@ -53,6 +53,7 @@
         ("y" . #'kill-ring-save))
   (:map +normal-mode-map
         ("i" . #'+insert-mode)
+
         ;; Enter insert mode with default emacs keys
         ("C-a" . #'+beginning-of-line-insert)
         ("C-e" . #'+end-of-line-insert)
@@ -67,7 +68,10 @@
         ("C-d" . #'+delete-char-insert)
         ("C-w" . #'+kill-region-insert)
         ("M-d" . #'+delete-word-insert)
+        ("C-F" . #'+mark-forward-char-insert)
+        ("C-B" . #'+mark-backward-char-insert)
 
+        ("s-u" . #'+revert-buffer)
         ("R" . #'+replace-char)
         ("<" . #'beginning-of-buffer)
         (">" . #'end-of-buffer)
@@ -82,7 +86,8 @@
         ("z" . #'zap-up-to-char)
         ("b" . #'backward-word)
         ("l" . #'forward-char)
-        ("D" . #'backward-delete-char)
+        ("d" . #'delete-char)
+        ("D" . #'kill-word)
         ("f" . #'forward-word)
         ("F" . #'+mark-forward-word)
         ("N" . #'+mark-forward-line)
@@ -95,7 +100,7 @@
         ("h" . #'backward-char)
         ("H" . #'+left-expand)
         ("L" . #'+right-expand)
-        ("SPC" . #'set-mark-command)
+        ("c" . #'set-mark-command)
         ("n" . #'next-line)
         ("p" . #'previous-line)
         ("^" . #'delete-indentation)

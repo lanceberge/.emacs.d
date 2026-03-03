@@ -180,3 +180,21 @@
   :ensure nil
   :hook
   (after-init . delete-selection-mode))
+
+(use-package indent
+  :ensure nil
+  :init
+  (setq indent-rigidly-map (make-sparse-keymap))
+  :bind
+  (:map indent-rigidly-map
+        ("h" . #'indent-rigidly-left)
+        ("H" . #'indent-rigidly-left-to-tab-stop)
+        ("l" . #'indent-rigidly-right)
+        ("L" . #'indent-rigidly-right-to-tab-stop)))
+
+;;;###autoload
+(defun +indent-rigidly-dwim ()
+  (interactive)
+  (unless (region-active-p)
+    (+mark-whole-line))
+  (call-interactively #'indent-rigidly))

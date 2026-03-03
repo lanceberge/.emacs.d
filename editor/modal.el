@@ -241,6 +241,18 @@ Otherwise insert the first char and handle the second normally."
   (call-interactively #'kill-region)
   (+insert-mode 1))
 
+;;;###autoload
+(defun +mark-forward-char-insert (arg)
+  (interactive "p")
+  (+mark-forward-char arg)
+  (+insert-mode 1))
+
+;;;###autoload
+(defun +mark-backward-char-insert (arg)
+  (interactive "p")
+  (+mark-backward-char arg)
+  (+insert-mode 1))
+
 ;;; Custom Replacement Functions
 
 ;;;###autoload
