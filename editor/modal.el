@@ -253,6 +253,18 @@ Otherwise insert the first char and handle the second normally."
   (+mark-backward-char arg)
   (+insert-mode 1))
 
+;;;###autoload
+(defun +next-line-insert (arg)
+  (interactive "p")
+  (next-line arg)
+  (+insert-mode 1))
+
+;;;###autoload
+(defun +previous-line-insert (arg)
+  (interactive "p")
+  (previous-line arg)
+  (+insert-mode 1))
+
 ;;; Custom Replacement Functions
 
 ;;;###autoload

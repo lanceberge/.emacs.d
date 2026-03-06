@@ -112,7 +112,6 @@
   :ensure nil
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain)
-  (ediff-use-faces nil)
   :config
   (setq ediff-diff-options ""))
 

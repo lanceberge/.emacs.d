@@ -34,7 +34,10 @@
         ("0" . #'delete-window)
         ("1" . #'delete-other-windows)
         ("2" . #'split-window-below)
-        ("3" . #'split-window-right))
+        ("3" . #'split-window-right)
+        ("f" . #'project-find-file)
+        ("j" . #'dired-jump)
+        ("g" . #'magit-status))
   (:map +insert-mode-map
         ("C-\\" . #'+sexp-mode)
         ("C-g" . #'+keyboard-quit-normal)
@@ -63,6 +66,8 @@
         ("M-d" . #'+delete-word-insert)
         ("C-F" . #'+mark-forward-char-insert)
         ("C-B" . #'+mark-backward-char-insert)
+        ("C-n" . #'+next-line-insert)
+        ("C-p" . #'+previous-line-insert)
 
         ("s-u" . #'+revert-buffer)
         ("R" . #'+replace-char)

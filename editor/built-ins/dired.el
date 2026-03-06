@@ -10,8 +10,6 @@
   :bind
   ;; (:map +leader-map
   ;;       ("-" . #'dired-jump))
-  (:map +normal-mode-map
-        ("xj" . #'dired-jump))
   (:map dired-mode-map
         ("i" . dired-toggle-read-only)
         ("m" . dired-do-flagged-delete)

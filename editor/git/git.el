@@ -27,8 +27,6 @@
         ("q" . #'magit-commit)
         ("x" . #'magit-discard)
         ("V" . #'set-mark-command))
-  (:map +normal-mode-map
-        ("xg" . #'magit-status))
   (:map +leader-map
         ("gb" . #'magit-branch-or-checkout)
         ("gd" . #'magit-file-delete)
