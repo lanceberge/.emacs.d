@@ -7,10 +7,10 @@
   (setq +all-chars (concat (apply #'string +open-chars)
                            (apply #'string +close-chars)))
   ;; TODO
-  ;; :bind (:map +normal-mode-map
-  ;;             ("<" . +slurp-or-barf-left)
-  ;;             (">" . +slurp-or-barf-right))
-  )
+  :bind
+  (:map +normal-mode-map
+        ("(" . +slurp-or-barf-left)
+        (")" . +slurp-or-barf-right)))
 
 ;;;###autoload
 (defun +slurp-or-barf-left (&optional N)

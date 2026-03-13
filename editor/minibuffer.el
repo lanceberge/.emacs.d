@@ -36,6 +36,7 @@
          ("SPC bf" . #'+consult-unfocus-lines)
          ("SPC fm" . #'consult-minor-mode-menu)
          ("/" . #'+consult-line)
+         ("cy" . #'+consult-yank-or-replace)
          ("SPC /" . #'+consult-line-multi)
          ("fr" . #'consult-recent-file)
          ("fj" . #'consult-imenu)

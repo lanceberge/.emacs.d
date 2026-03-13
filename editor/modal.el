@@ -265,7 +265,7 @@ Otherwise insert the first char and handle the second normally."
   (previous-line arg)
   (+insert-mode 1))
 
-;;; Custom Replacement Functions
+;;; Modal Utils
 
 ;;;###autoload
 (defun +left-expand (arg)
@@ -374,3 +374,16 @@ Otherwise insert the first char and handle the second normally."
   (delete-char 1)
   (insert-char char)
   (backward-char 1))
+
+;;;###autoload
+(defun +kill-line-dwim (arg col)
+  "Kill `ARG' whole lines or run `kill-line' if no arg is provided"
+  (interactive (list
+                current-prefix-arg
+                (current-column)))
+  (if arg
+      (progn
+        (beginning-of-line)
+        (kill-line arg)
+        (move-to-column col))
+    (kill-line)))

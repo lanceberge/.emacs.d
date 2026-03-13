@@ -58,4 +58,4 @@
     (isearch-exit))
   (if (eq last-command this-command)
       (call-interactively #'abort-recursive-edit))
-  (keyboard-quit))
+  (call-interactively #'keyboard-quit))
