@@ -36,7 +36,7 @@ to either record or end."
   "Execute a macro either ARG times or apply it to the region if one is active."
   (interactive "p")
   (if defining-kbd-macro
-      (call-interactively #'kmacro-end-macro))
+      (kmacro-end-macro 1))
   (with-undo-amalgamate
     (if (region-active-p)
         (progn

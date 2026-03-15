@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package gptel
   :custom
-  (gptel-model 'claude-3-5-sonnet-20240620)
+  (gptel-model 'claude-sonnet-4-20250514)
   (gptel-default-mode 'org-mode)
   :bind
   ("C-c C-l". #'+gptel-project-clear-buffer)
@@ -32,7 +32,8 @@
 
 ;;;###autoload
 (defun gptel-api-key ()
-  (read-file-contents "~/secrets/claude_key"))
+  (base64-decode-string
+   (read-file-contents "~/secrets/claude_key")))
 
 ;;;###autoload
 (defun +gptel-project-buffer-name ()

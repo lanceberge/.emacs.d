@@ -138,13 +138,13 @@ Otherwise insert the first char and handle the second normally."
   (let* ((cooldown 0.5)
          (char (read-char nil nil cooldown)))
     (if (null char)
-        (insert-char first)
+        (+insert-char-overwrite-region first)
       (if (= char second)
           (progn
             (when (bound-and-true-p corfu--frame)
               (corfu-quit))
             (+normal-mode 1))
-        (insert-char first)
+        (+insert-char-overwrite-region first)
         (let ((command (key-binding (vector char))))
           (cond
            ((null command))
@@ -152,9 +152,16 @@ Otherwise insert the first char and handle the second normally."
            ((and (eq char ?\") (eq (char-after (point)) ?\"))
             (forward-char))
            ((memq command '(self-insert-command org-self-insert-command))
-            (self-insert-command 1 char))
+            (+insert-char-overwrite-region char))
            (t
             (call-interactively command))))))))
+
+;;;###autoload
+(defun +insert-char-overwrite-region (c)
+  (interactive)
+  (when (region-active-p)
+    (call-interactively #'kill-region))
+  (insert-char c))
 
 (+create-escape "jk")
 (+create-escape "kj")
@@ -284,13 +291,16 @@ Otherwise insert the first char and handle the second normally."
   (forward-char arg))
 
 ;;;###autoload
-(defun +mark-whole-line ()
+(defun +mark-whole-line (&optional arg)
   "Select the current line."
-  (interactive)
-  (beginning-of-line)
-  (set-mark (point))
-  (end-of-line)
-  (activate-mark))
+  (interactive "P")
+  (let ((arg (or arg 1)))
+    (if (region-active-p)
+        (next-line arg)
+      (beginning-of-line)
+      (set-mark (point))
+      (next-line arg)
+      (activate-mark))))
 
 ;;;###autoload
 (defun +open-below (arg)
@@ -387,3 +397,21 @@ Otherwise insert the first char and handle the second normally."
         (kill-line arg)
         (move-to-column col))
     (kill-line)))
+
+;; Nice mark utils taken from meow
+;;;###autoload
+(defun +unpop-to-mark ()
+  "Unpop off mark ring. Does nothing if mark ring is empty."
+  (interactive)
+  (when mark-ring
+    (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+    (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
+    (setq mark-ring (nbutlast mark-ring))
+    (goto-char (marker-position (car (last mark-ring))))))
+
+;;;###autoload
+(defun +pop-to-mark ()
+  (interactive)
+  (unless (member last-command '(+unpop-to-mark))
+    (setq mark-ring (append mark-ring (list (point-marker)))))
+  (pop-to-mark-command))

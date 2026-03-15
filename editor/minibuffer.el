@@ -22,10 +22,10 @@
   (consult-narrow-key "C-SPC")
   :bind (
          :map +normal-mode-map
-         ("M-q" . #'consult-kmacro)
+         ("M-q" . #'+consult-kmacro)
          ("M-y" . #'+consult-yank-or-replace)
          :map +insert-mode-map
-         ("M-q" . #'consult-kmacro)
+         ("M-q" . #'+consult-kmacro)
          :map minibuffer-mode-map
          ("M-r" . #'consult-history)
          :map isearch-mode-map
@@ -198,3 +198,9 @@ Otherwise, just call consult-yank-pop."
       (user-error "%s is bound to %s which is not a command"
                   (key-description key-sequence)
                   sym)))))
+
+;;;###autoload
+(defun +consult-kmacro ()
+  (interactive)
+  (with-undo-amalgamate
+    (call-interactively #'consult-kmacro)))

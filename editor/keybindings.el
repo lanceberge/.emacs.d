@@ -26,6 +26,8 @@
 (use-package +modal
   :ensure nil
   :bind
+  ("M-[" . #'+pop-to-mark)
+  ("M-]" . #'+unpop-to-mark)
   (:map +x-map
         ("TAB" . #'+indent-rigidly-dwim)
         ("SPC" . #'rectangle-mark-mode)
@@ -37,6 +39,7 @@
         ("3" . #'split-window-right)
         ("f" . #'project-find-file)
         ("j" . #'dired-jump)
+        ("," . #'consult-recent-file)
         ("g" . #'magit-status))
   (:map +insert-mode-map
         ("C-\\" . #'+sexp-mode)
@@ -80,7 +83,6 @@
         ("\\" . #'+sexp-mode)
         ("v" . #'scroll-up-command)
         ("d" . #'kill-word)
-        ("^" . #'repeat)
         ("z" . #'zap-up-to-char)
         ("b" . #'backward-word)
         ("l" . #'forward-char)
@@ -100,6 +102,7 @@
         ("L" . #'+right-expand)
         ("SPC" . #'set-mark-command)
         ("n" . #'next-line)
+        ("M" . #'+mark-whole-line)
         ("p" . #'previous-line)
         ("^" . #'delete-indentation)
         ("k" . #'+kill-line-dwim)
