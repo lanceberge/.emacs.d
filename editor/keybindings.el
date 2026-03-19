@@ -67,8 +67,8 @@
         ("C-d" . #'+delete-char-insert)
         ("C-w" . #'+kill-region-insert)
         ("M-d" . #'+delete-word-insert)
-        ("C-F" . #'+mark-forward-char-insert)
-        ("C-B" . #'+mark-backward-char-insert)
+        ("C-S-f" . #'+mark-forward-char-insert)
+        ("C-S-b" . #'+mark-backward-char-insert)
         ("C-n" . #'+next-line-insert)
         ("C-p" . #'+previous-line-insert)
 

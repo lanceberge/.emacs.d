@@ -4,7 +4,7 @@
   :bind
   (:map +normal-mode-map
         ("M-r" . #'+kmacro-record-or-end)
-        ("M-n" . #'+kmacro-execute-dwim)
+        ("M-R" . #'+kmacro-execute-dwim)
         ("M-N" . #'+kmacro-call-named-macro)))
 
 (defvar +kmacro-last-register nil)

@@ -1,24 +1,43 @@
 ;;; -*- lexical-binding: t -*-
-;; TODO figure out what to do about this
 (use-package drag-stuff
-  :disabled t
   :bind
   (:map +normal-mode-map
-        ("M-k" . #'drag-stuff-up)
-        ("M-j" . #'drag-stuff-down))
+        ("M-n" . #'+drag-stuff-down)
+        ("M-p" . #'+drag-stuff-up))
   (:map +insert-mode-map
-        ("M-k" . #'drag-stuff-up)
-        ("M-j" . #'drag-stuff-down))
-  (:map +normal-mode-map
-        ("M-H" . #'+drag-stuff-word-left)
-        ("M-L" . #'+drag-stuff-word-right)
-        ("M-h" . #'+drag-stuff-left-dwim)
-        ("M-l" . #'+drag-stuff-right-dwim)))
+        ("M-n" . #'+drag-stuff-down)
+        ("M-p" . #'+drag-stuff-up))
+  ;; (:map +normal-mode-map
+  ;;       ("M-H" . #'+drag-stuff-word-left)
+  ;;       ("M-L" . #'+drag-stuff-word-right)
+  ;;       ("M-h" . #'+drag-stuff-left-dwim)
+  ;;       ("M-l" . #'+drag-stuff-right-dwim))
+  )
 
 ;;;###autoload
 (defun full-line-region-p ()
   (and (save-excursion (goto-char (region-beginning)) (bolp))
        (save-excursion (goto-char (region-end)) (eolp))))
+
+;;;###autoload
+(defun +drag-stuff-up ()
+  (interactive)
+  (if (bolp)
+      (progn
+        (backward-char)
+        (call-interactively #'drag-stuff-up)
+        (forward-char))
+    (call-interactively #'drag-stuff-up)))
+
+;;;###autoload
+(defun +drag-stuff-down ()
+  (interactive)
+  (if (bolp)
+      (progn
+        (backward-char)
+        (call-interactively #'drag-stuff-down)
+        (forward-char))
+    (call-interactively #'drag-stuff-down)))
 
 ;;;###autoload
 (defun +drag-stuff-left-dwim (arg)

@@ -47,8 +47,8 @@
     (when (file-directory-p dir)
       (project--remember-dir dir)))
 
-  ;; dirs to remember recursively
-  (dolist (dir '("~/code/git" "~/code/phoenix" "~/code/vaultvantage/" "~/code/laravel" "~/code/elixir/" "~/code/" "~/src/" "~/claude/"))
+  ;; remember all projects under dirs (non-recursive)
+  (dolist (dir '("~/code/git" "~/code/phoenix" "~/code/vaultvantage/" "~/worktrees/" "~/code/laravel" "~/code/elixir/" "~/code/" "~/src/" "~/worktrees/vault-landing-page/orchestrator/"))
     (when (file-directory-p dir)
       (project-remember-projects-under dir)))
 
@@ -56,7 +56,8 @@
     (when (file-directory-p worktree-dir)
       (dolist (subdir (directory-files worktree-dir t "^[^.]"))
         (when (file-directory-p subdir)
-          (project-remember-projects-under subdir))))))
+          (project-remember-projects-under subdir)))))
+  )
 
 ;;;###autoload
 (defun +project-replace-regex (search-regex replace-string &optional file-pattern)

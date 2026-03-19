@@ -3,8 +3,8 @@
   :ensure nil
   :bind
   (:map +leader-map
-        ("SPC p" . #'+project-ripgrep)
-        ("SPC k" . #'+project-switch)
+        ("cp" . #'+project-ripgrep)
+        ("ck" . #'+project-switch)
         ("pk" . #'+project-kill-buffers)
         ("j" . #'+project-other-project)
         ("k" . #'+switch-to-project)
