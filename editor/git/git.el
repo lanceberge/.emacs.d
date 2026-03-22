@@ -40,7 +40,8 @@
         ("gf" . #'magit-find-file)
         ("gm" . #'+magit-find-current-file-on-default-branch)
         ("gw" . #'magit-worktree)
-        ("gh" . #'+magit-diff-head-n))
+        ("gh" . #'+magit-diff-head-n)
+        ("gs" . #'+magit-diff-source))
   :config
   (defun +magit-status-setup-motion-keys ()
     "Override motion-mode keys for magit-status."
@@ -62,6 +63,27 @@
 (use-package vc
   :defer 0.2
   :ensure nil)
+
+;;;###autoload
+(defun +magit-diff-source ()
+  "Diff HEAD against the remote branch the current branch was forked from.
+Finds the nearest remote branch by walking the commit history."
+  (interactive)
+  (let* ((current (magit-get-current-branch))
+         (decorations (magit-git-lines
+                       "log" "--simplify-by-decoration" "--format=%D" "HEAD"))
+         (source
+          (cl-loop for line in (cdr decorations) ;; skip first (HEAD)
+                   thereis
+                   (cl-loop for ref in (split-string line ", " t)
+                            when (and (string-prefix-p "origin/" ref)
+                                      (not (equal ref (concat "origin/" current))))
+                            return ref))))
+    (unless source
+      (error "Could not determine source branch"))
+    (message "Diffing against %s" source)
+    (magit-diff-range (format "%s" source))
+    (delete-other-windows)))
 
 ;;;###autoload
 (defun +magit-diff-head-n (&optional arg)

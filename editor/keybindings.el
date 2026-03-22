@@ -185,7 +185,7 @@
   (keyfreq-autosave-mode)
   :bind
   (:map +leader-map
-        ("SPC hk" . #'+keyfreq-show)))
+        ("chk" . #'+keyfreq-show)))
 
 ;;;###autoload
 (defun +keyfreq-show (&optional arg)
