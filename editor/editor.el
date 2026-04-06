@@ -117,10 +117,10 @@
   (:map helpful-mode-map
         ("M-i" . #'ace-link)))
 
-(use-package evil-matchit
-  :bind
-  (:map +normal-mode-map
-        ("%" . #'evilmi-jump-items-native)))
+;; (use-package evil-matchit
+;;   :bind
+;;   (:map +normal-mode-map
+;;         ("%" . #'evilmi-jump-items-native)))
 
 (use-package beginend
   :disabled t

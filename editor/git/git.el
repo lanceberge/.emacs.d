@@ -41,7 +41,8 @@
         ("gm" . #'+magit-find-current-file-on-default-branch)
         ("gw" . #'magit-worktree)
         ("gh" . #'+magit-diff-head-n)
-        ("gs" . #'+magit-diff-source))
+        ("gs" . #'+magit-diff-source)
+        ("ge" . #'+magit-ediff-source))
   :config
   (defun +magit-status-setup-motion-keys ()
     "Override motion-mode keys for magit-status."
@@ -64,11 +65,9 @@
   :defer 0.2
   :ensure nil)
 
-;;;###autoload
-(defun +magit-diff-source ()
-  "Diff HEAD against the remote branch the current branch was forked from.
+(defun +magit-source-branch ()
+  "Return the remote branch the current branch was branched off of.
 Finds the nearest remote branch by walking the commit history."
-  (interactive)
   (let* ((current (magit-get-current-branch))
          (decorations (magit-git-lines
                        "log" "--simplify-by-decoration" "--format=%D" "HEAD"))
@@ -81,9 +80,29 @@ Finds the nearest remote branch by walking the commit history."
                             return ref))))
     (unless source
       (error "Could not determine source branch"))
+    source))
+
+;;;###autoload
+(defun +magit-diff-source ()
+  "Diff HEAD against the remote branch the current branch was forked from."
+  (interactive)
+  (let ((source (+magit-source-branch)))
     (message "Diffing against %s" source)
-    (magit-diff-range (format "%s" source))
+    (magit-diff-range source)
     (delete-other-windows)))
+
+;;;###autoload
+(defun +magit-ediff-source ()
+  "Ediff a modified file against the source branch.
+Prompts for which file to compare from the list of files changed
+relative to the source branch."
+  (interactive)
+  (let* ((source (+magit-source-branch))
+         (files (magit-git-lines "diff" "--name-only" source))
+         (file (completing-read
+                (format "Ediff against %s: " source)
+                files nil t)))
+    (magit-ediff-compare source nil file file)))
 
 ;;;###autoload
 (defun +magit-diff-head-n (&optional arg)
