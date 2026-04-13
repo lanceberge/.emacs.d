@@ -1,10 +1,10 @@
 ;;; -*- lexical-binding: t -*-
 (use-package drag-stuff
   :bind
-  (:map +normal-mode-map
+  (:map text-mode-map
         ("M-n" . #'+drag-stuff-down)
         ("M-p" . #'+drag-stuff-up))
-  (:map +insert-mode-map
+  (:map prog-mode-map
         ("M-n" . #'+drag-stuff-down)
         ("M-p" . #'+drag-stuff-up))
   ;; (:map +normal-mode-map
