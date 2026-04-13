@@ -1,10 +1,10 @@
 ;;; -*- lexical-binding: t -*-
 (use-package format-all ; format code functions
-  :hook
-  ((prog-mode
-    web-mode
-    json-mode
-    svelte-mode) . format-all-mode)
+  ;; :hook
+  ;; ((prog-mode
+  ;; web-mode
+  ;; json-mode
+  ;; svelte-mode) . format-all-mode)
   :custom
   (format-all-show-errors t)
   :bind

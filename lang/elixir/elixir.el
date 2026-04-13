@@ -25,11 +25,11 @@
   :hook
   ((elixir-ts-mode elixir-mode) . maybe-elixir-web-mode)
   ((elixir-ts-mode elixir-mode) . +elixir-mode)
-  ((elixir-ts-mode elixir-mode) . +elixir--maybe-setup-new-file)
-  :bind
-  (:map elixir-web-mode-map
-        (">" . #'+maybe-close-tag)
-        ([remap newline] . #'+elixir-newline)
-        ([remap +comment-dwim] . #'+elixir-web-mode-comment)))
+  ((elixir-ts-mode elixir-mode) . +elixir--maybe-setup-new-file))
+
+(+modal-bind +insert-mode elixir-web-mode-hook
+  ">" #'+maybe-close-tag
+  [remap newline] #'+elixir-newline
+  [remap +comment-dwim] #'+elixir-web-mode-comment)
 
 (add-hook 'find-file-not-found-functions #'+elixir--maybe-setup-new-file t)

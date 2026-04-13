@@ -261,6 +261,9 @@
   :config
   (server-start))
 
+;; Load modal.el early so +modal-bind macro is available to other files
+(load-file "~/.emacs.d/editor/modal.el")
+
 ;; Load config files recursively
 (let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
   (mapc (lambda (dir)

@@ -44,15 +44,8 @@
         ("gs" . #'+magit-diff-source)
         ("ge" . #'+magit-ediff-source))
   :config
-  (defun +magit-status-setup-motion-keys ()
-    "Override motion-mode keys for magit-status."
-    (let ((map (make-sparse-keymap)))
-      (set-keymap-parent map +motion-mode-map)
-      (define-key map "c" #'magit-commit)
-      (setq-local minor-mode-overriding-map-alist
-                  (cons (cons '+motion-mode map)
-                        minor-mode-overriding-map-alist))))
-  (add-hook 'magit-status-mode-hook #'+magit-status-setup-motion-keys)
+  (+modal-bind +motion-mode magit-status-mode-hook
+    "c" #'magit-commit)
 
   (cl-loop for n from 1 to 9
            do (let ((key (number-to-string n))
@@ -118,15 +111,12 @@ unless a nonzero and non-negative prefix is provided."
   (:map +leader-map
         ("gt" . #'git-timemachine)))
 
+(+modal-bind +motion-mode git-timemachine-mode-hook
+  "q" #'git-timemachine-quit)
+
 (defun +git-timemachine-setup ()
-  "Set up motion mode with git-timemachine-quit override for q."
-  (+motion-mode 1)
-  (let ((map (make-sparse-keymap)))
-    (set-keymap-parent map +motion-mode-map)
-    (define-key map "q" #'git-timemachine-quit)
-    (setq-local minor-mode-overriding-map-alist
-                (cons (cons '+motion-mode map)
-                      minor-mode-overriding-map-alist))))
+  "Set up motion mode for git-timemachine."
+  (+motion-mode 1))
 
 (use-package diff-hl
   :defer 0.5

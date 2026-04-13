@@ -14,6 +14,30 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
 (suppress-keymap +motion-mode-map t)
 (suppress-keymap +sexp-mode-map t)
 
+;;; Mode-specific overrides
+
+(defmacro +modal-bind (modal-mode hook &rest bindings)
+  "Override MODAL-MODE keys in buffers where HOOK runs.
+BINDINGS are alternating KEY DEF pairs.  Creates a buffer-local
+keymap that inherits from MODAL-MODE's base map with the given
+overrides applied via `minor-mode-overriding-map-alist'."
+  (let ((fn (intern (format "+modal--override-%s-for-%s"
+                            (symbol-name modal-mode)
+                            (symbol-name hook))))
+        (map-var (intern (format "%s-map" (symbol-name modal-mode))))
+        (binding-forms '()))
+    (while bindings
+      (push `(define-key map ,(pop bindings) ,(pop bindings)) binding-forms))
+    (setq binding-forms (nreverse binding-forms))
+    `(progn
+       (defun ,fn ()
+         (let ((map (make-sparse-keymap)))
+           (set-keymap-parent map ,map-var)
+           ,@binding-forms
+           (setq-local minor-mode-overriding-map-alist
+                       (cons (cons ',modal-mode map)
+                             minor-mode-overriding-map-alist))))
+       (add-hook ',hook #',fn))))
 ;;; Mode-line indicator
 
 (defun +modal--mode-line-indicator ()

@@ -27,7 +27,13 @@
   :ensure nil
   :bind
   (:map wdired-mode-map
-        ([remap save-buffer] . wdired-finish-edit)))
+        ([remap save-buffer] . +wdired-finish-edit)))
+
+;;;###autoload
+(defun +wdired-finish-edit ()
+  (interactive)
+  (wdired-finish-edit)
+  (+motion-mode))
 
 (use-package dired-x
   :ensure nil
