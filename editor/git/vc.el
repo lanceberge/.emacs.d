@@ -58,6 +58,8 @@
   :defer 0.2
   :ensure nil)
 
+(use-package vc-jj)
+
 (defun +magit-source-branch ()
   "Return the remote branch the current branch was branched off of.
 Finds the nearest remote branch by walking the commit history."
