@@ -22,22 +22,12 @@
 ;;;###autoload
 (defun +drag-stuff-up ()
   (interactive)
-  (if (bolp)
-      (progn
-        (backward-char)
-        (call-interactively #'drag-stuff-up)
-        (forward-char))
-    (call-interactively #'drag-stuff-up)))
+  (call-interactively #'drag-stuff-up))
 
 ;;;###autoload
 (defun +drag-stuff-down ()
   (interactive)
-  (if (bolp)
-      (progn
-        (backward-char)
-        (call-interactively #'drag-stuff-down)
-        (forward-char))
-    (call-interactively #'drag-stuff-down)))
+  (call-interactively #'drag-stuff-down))
 
 ;;;###autoload
 (defun +drag-stuff-left-dwim (arg)
