@@ -12,7 +12,9 @@
   :bind
   (:map with-editor-mode-map
         ([remap delete-window] . #'with-editor-cancel)
-        ([remap save-buffer] . #'with-editor-finish))
+        ([remap save-buffer] . #'with-editor-finish)
+        ("C-x C-c" . #'with-editor-finish)
+        ("C-c C-k" . #'with-editor-cancel))
   (:map magit-blob-mode-map
         ("q" . #'quit-window)
         ([remap save-buffer] . #'quit-window)
@@ -45,7 +47,7 @@
         ("ge" . #'+magit-ediff-source))
   :config
   (+modal-bind +motion-mode magit-status-mode-hook
-    "c" #'magit-commit)
+               "c" #'magit-commit)
 
   (cl-loop for n from 1 to 9
            do (let ((key (number-to-string n))
@@ -114,7 +116,7 @@ unless a nonzero and non-negative prefix is provided."
         ("gt" . #'git-timemachine)))
 
 (+modal-bind +motion-mode git-timemachine-mode-hook
-  "q" #'git-timemachine-quit)
+             "q" #'git-timemachine-quit)
 
 (defun +git-timemachine-setup ()
   "Set up motion mode for git-timemachine."
