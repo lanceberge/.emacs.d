@@ -37,9 +37,15 @@
     (error
      (if (and (buffer-modified-p) buffer-file-name)
          (save-buffer))
-     (vc-find-conflicted-file)
+     (let* ((root (vc-call-backend 'Git 'root default-directory))
+            (files (vc-call-backend 'Git 'conflicted-files
+                                    (or root default-directory))))
+       (when (equal (car files) buffer-file-name) (pop files))
+       (if (null files)
+           (message "No more conflicted files")
+         (find-file (pop files))
+         (message "%s more conflicted files after this one"
+                  (if files (length files) "No"))))
      (unless (looking-at "^<<<<<<<")
        (let ((prev-pos (point)))
-         (goto-char (point-min))
-         (unless (ignore-errors (not (smerge-next)))
-           (goto-char prev-pos)))))))
+         (goto-char (point-min)))))))

@@ -13,9 +13,12 @@
         ("ju" . #'majutsu-undo)
         ("jp" . #'majutsu-git-push)
         ("js" . #'+jj-squash)
-        ("jf" . #'majutsu-git-fetch))
+        ("jf" . #'majutsu-git-fetch)
+        ("jbt" . #'majutsu-bookmark-track)
+        ("jbn" . #'majutsu-bookmark-create))
   (:map majutsu-log-mode-map
-        ("P" . #'majutsu-git-push)))
+        ("P" . #'majutsu-git-push)
+        ("m" . #'majutsu-describe)))
 
 ;; (use-package jujutsushi
 ;;   :ensure (jujutsushi
