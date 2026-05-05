@@ -4,7 +4,8 @@
   :bind
   (:map +normal-mode
         ("j" . nil)
-        ("jn" . #'majutsu-new-dwim)
+        ("jN" . #'majutsu-new-dwim)
+        ("jn" . #'majutsu-new)
         ("jr" . #'majutsu-rebase)
         ("jt" . #'majutsu-bookmark-advance)
         ("jm" . #'+jj-describe)
@@ -14,6 +15,7 @@
         ("jp" . #'majutsu-git-push)
         ("js" . #'+jj-squash)
         ("jf" . #'majutsu-git-fetch)
+        ("jbs" . #'majutsu-bookmark-set)
         ("jbt" . #'majutsu-bookmark-track)
         ("jbn" . #'majutsu-bookmark-create))
   (:map majutsu-log-mode-map
