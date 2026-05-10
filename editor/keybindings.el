@@ -46,7 +46,8 @@
         ("C-g" . #'+keyboard-quit-normal)
         ("M-F" . #'+mark-forward-word)
         ("M-B" . #'+mark-backward-word)
-        ("<escape>" . #'+normal-mode))
+        ("<escape>" . #'+normal-mode)
+        ("C-x C-s" . #'+save-buffer-normal))
   (:map +motion-mode-map
         ("q" . #'quit-window)
         ("g" . #'+keyboard-quit))

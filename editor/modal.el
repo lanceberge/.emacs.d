@@ -296,6 +296,13 @@ Otherwise insert the first char and handle the second normally."
   (previous-line arg)
   (+insert-mode 1))
 
+;;; Insert Exits
+;;;###autoload
+(defun +save-buffer-normal (arg)
+  (interactive "p")
+  (save-buffer arg)
+  (+normal-mode))
+
 ;;; Modal Utils
 
 ;;;###autoload

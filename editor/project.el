@@ -52,7 +52,7 @@
     (when (file-directory-p dir)
       (project-remember-projects-under dir)))
 
-  (let ((worktree-dir (expand-file-name "~/worktrees/")))
+  (let ((worktree-dir (expand-file-name "~/jj-workspaces/")))
     (when (file-directory-p worktree-dir)
       (dolist (subdir (directory-files worktree-dir t "^[^.]"))
         (when (file-directory-p subdir)
