@@ -327,10 +327,13 @@ Otherwise insert the first char and handle the second normally."
   (interactive "P")
   (let ((arg (or arg 1)))
     (if (region-active-p)
-        (next-line arg)
+        (progn
+          (next-line arg)
+          (beginning-of-line))
       (beginning-of-line)
       (set-mark (point))
       (next-line arg)
+      (beginning-of-line)
       (activate-mark))))
 
 ;;;###autoload

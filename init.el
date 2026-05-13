@@ -242,6 +242,9 @@
               (run-at-time
                1 nil (lambda () (setq gc-cons-threshold 17772160)))))
 
+(use-package compat
+  :ensure t)
+
 (use-package gcmh ; Garbage collect in idle time
   :defer 2.0
   :commands gcmh-idle-garbage-collect
