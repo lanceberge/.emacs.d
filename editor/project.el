@@ -1,4 +1,6 @@
 ;;; -*- lexical-binding: t -*-
+(require 'subr-x)
+
 (use-package project
   :demand t
   :commands
@@ -8,6 +10,7 @@
   (project-mode-line t)
   :bind
   (:map +leader-map
+        ("t" . #'+tmux-sessionizer-current-directory)
         ("'" . #'project-find-file)
         ("pe" . #'flymake-show-project-diagnostics)
         ("pr" . #'+project-replace-regex)
@@ -19,6 +22,40 @@
 (defun +project-find-todos ()
   (interactive)
   (consult-ripgrep (project-root (project-current t)) "TODO"))
+
+;;;###autoload
+(defun +tmux-sessionizer-current-directory ()
+  "Open the current git root or directory in the workspace-1 Alacritty tmux client."
+  (interactive)
+  (let* ((dir (file-name-as-directory
+               (expand-file-name
+                (or (and buffer-file-name (file-name-directory buffer-file-name))
+                    default-directory))))
+         (target-dir (file-name-as-directory
+                      (or (locate-dominating-file dir ".git")
+                          dir)))
+         (script (expand-file-name "~/dotfiles/bin/hypr_tmux_sessionizer"))
+         (buffer (get-buffer-create "*hypr_tmux_sessionizer*")))
+    (unless (file-executable-p script)
+      (user-error "Cannot execute %s" script))
+    (with-current-buffer buffer
+      (erase-buffer))
+    (let ((proc (make-process
+                 :name "hypr_tmux_sessionizer"
+                 :buffer buffer
+                 :command (list script target-dir)
+                 :noquery t)))
+      (set-process-sentinel
+       proc
+       (lambda (process _event)
+         (when (memq (process-status process) '(exit signal))
+           (let ((output (string-trim
+                          (with-current-buffer (process-buffer process)
+                            (buffer-string)))))
+             (if (= 0 (process-exit-status process))
+                 (message "Opened tmux session for %s" target-dir)
+               (message "hypr_tmux_sessionizer failed: %s" output))))))
+      (message "Opening tmux session for %s" target-dir))))
 
 ;;;###autoload
 (defun +project-reload-and-switch ()

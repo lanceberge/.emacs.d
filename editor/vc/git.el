@@ -120,11 +120,16 @@ unless a nonzero and non-negative prefix is provided."
   "Set up motion mode for git-timemachine."
   (+motion-mode 1))
 
+(defvar +majutsu-post-new-hook nil
+  "Hook run after `majutsu-new' finishes.")
+
 (use-package diff-hl
   :defer 0.5
   :hook
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
+  (+majutsu-post-new-hook . diff-hl-magit-post-refresh)
+  (+jj-post-squash . diff-hl-magit-post-refresh)
   :bind
   (:map +leader-map
         ("gr" . #'diff-hl-revert-hunk))
