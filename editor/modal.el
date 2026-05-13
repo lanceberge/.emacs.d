@@ -160,23 +160,25 @@ Otherwise insert the first char and handle the second normally."
 
 (defun +escape--handle (first second)
   (let* ((cooldown 0.5)
-         (char (read-char nil nil cooldown)))
-    (if (null char)
+         (event (read-event nil nil cooldown)))
+    (if (null event)
         (+insert-char-overwrite-region first)
-      (if (= char second)
+      (if (and (characterp event) (= event second))
           (progn
             (when (bound-and-true-p corfu--frame)
               (corfu-quit))
             (+normal-mode 1))
         (+insert-char-overwrite-region first)
-        (let ((command (key-binding (vector char))))
+        (let* ((key (if (eq event ?\e) [escape] (vector event)))
+               (command (key-binding key)))
           (cond
            ((null command))
            ((not (commandp command)))
-           ((and (eq char ?\") (eq (char-after (point)) ?\"))
+           ((and (eq event ?\") (eq (char-after (point)) ?\"))
             (forward-char))
-           ((memq command '(self-insert-command org-self-insert-command))
-            (+insert-char-overwrite-region char))
+           ((and (characterp event)
+                 (memq command '(self-insert-command org-self-insert-command)))
+            (+insert-char-overwrite-region event))
            (t
             (call-interactively command))))))))
 
