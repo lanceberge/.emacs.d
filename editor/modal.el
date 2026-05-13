@@ -1,7 +1,5 @@
 ;;; -*- lexical-binding: t -*-
-;; Custom modal editing system with 4 mutually exclusive minor modes.
-;; Keymaps (+normal-mode-map, +insert-mode-map, +motion-mode-map, +sexp-mode-map)
-;; are declared in init.el so bind-key calls work before this file loads.
+;; Custom modal editing system with keybindings based on the default emacs keys
 
 (defvar-local +modal-desired-state nil
   "Buffer-local override for the desired modal state.
@@ -277,14 +275,26 @@ Otherwise insert the first char and handle the second normally."
 ;;;###autoload
 (defun +mark-forward-char-insert (arg)
   (interactive "p")
-  (+mark-forward-char arg)
-  (+insert-mode 1))
+  (+insert-mode 1)
+  (+mark-forward-char arg))
 
 ;;;###autoload
 (defun +mark-backward-char-insert (arg)
   (interactive "p")
   (+mark-backward-char arg)
   (+insert-mode 1))
+
+;;;###autoload
+(defun +mark-forward-line-insert ()
+  (interactive)
+  (call-interactively #'+mark-forward-line)
+  (+insert-mode))
+
+;;;###autoload
+(defun +mark-backward-line-insert ()
+  (interactive)
+  (call-interactively #'+mark-backward-line)
+  (+insert-mode))
 
 ;;;###autoload
 (defun +next-line-insert (arg)
@@ -296,6 +306,18 @@ Otherwise insert the first char and handle the second normally."
 (defun +previous-line-insert (arg)
   (interactive "p")
   (previous-line arg)
+  (+insert-mode 1))
+
+;;;###autoload
+(defun +backward-kill-word-insert ()
+  (interactive)
+  (call-interactively #'backward-kill-word)
+  (+insert-mode 1))
+
+;;;###autoload
+(defun +zap-up-to-char-insert ()
+  (interactive)
+  (call-interactively #'zap-up-to-char)
   (+insert-mode 1))
 
 ;;; Insert Exits
