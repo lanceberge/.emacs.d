@@ -123,6 +123,7 @@
         ("t" . #'transpose-chars)
         ("T" . #'transpose-words)
         ("?" . #'undo-redo)
+        ("D" . #'kill-word)
         ("w" . #'kill-region)
         ("W" . #'kill-ring-save)
         ("}" . #'forward-paragraph)

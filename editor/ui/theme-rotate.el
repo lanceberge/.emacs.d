@@ -2,7 +2,8 @@
 (require 'seq)
 (require 'subr-x)
 
-(use-package kanagawa-themes)
+(use-package kanagawa-themes
+  :ensure (:host github :repo "lanceberge/kanagawa-emacs"))
 
 (use-package +theme-rotate
   :ensure nil
@@ -25,7 +26,7 @@
                                               doom-spacegrey doom-tokyo-night
                                               doom-palenight doom-Iosvkem doom-one doom-dark+ doom-monokai-octagon ))
 
-(setq +themes-light-themes '(tango kanagawa-lotus doom-nord-light doom-oksolar-light doom-solarized-light tsdh-light doom-opera-light))
+(setq +themes-light-themes '(tango kanagawa-paper doom-nord-light doom-oksolar-light doom-solarized-light tsdh-light doom-opera-light))
 
 (defvar +themes-dark-theme-index 0
   "Index of the current dark theme in `+themes-dark-themes'.")
@@ -58,7 +59,9 @@
         ("rose-pine" . (doom-nord-light . light))
         ("tokyo-night" . (doom-tokyo-night . dark))
         ("vantablack" . (doom-plain-dark . dark))
-        ("white" . (doom-one-light . light))))
+        ("white" . (doom-one-light . light))
+        ("ochre-light" . (kanagawa-paper . light))
+        ("kanagawa-lotus" . (kanagawa-lotus . light))))
 
 (defun +themes--set-current-theme-state (theme style)
   (setq +themes-current-style style)
@@ -66,26 +69,6 @@
     (setq +themes-dark-theme-index dark-index))
   (when-let* ((light-index (seq-position +themes-light-themes theme)))
     (setq +themes-light-theme-index light-index)))
-
-(defun +themes--omarchy-current-style ()
-  (let ((colors-file (expand-file-name "~/.config/omarchy/current/theme/colors.toml")))
-    (if (and (file-readable-p colors-file)
-             (with-temp-buffer
-               (insert-file-contents colors-file)
-               (goto-char (point-min))
-               (when (re-search-forward "^background = \"#\\([[:xdigit:]]\\{6\\}\\)\"" nil t)
-                 (let* ((hex (match-string 1))
-                        (red (string-to-number (substring hex 0 2) 16))
-                        (green (string-to-number (substring hex 2 4) 16))
-                        (blue (string-to-number (substring hex 4 6) 16)))
-                   (> (+ (* 0.2126 red) (* 0.7152 green) (* 0.0722 blue)) 128)))))
-        'light
-      'dark)))
-
-(defun +themes--omarchy-fallback-theme ()
-  (if (eq (+themes--omarchy-current-style) 'light)
-      '(doom-one-light . light)
-    '(gruvbox-dark-hard . dark)))
 
 (add-hook 'desktop-after-read-hook '+themes-load-current-theme)
 
@@ -129,12 +112,12 @@
 (defun +themes-load-omarchy-theme (theme-name)
   (interactive "sOmarchy theme: ")
   (let* ((theme-key (string-trim theme-name))
-         (theme-style (or (cdr (assoc-string theme-key +themes-omarchy-theme-map t))
-                          (+themes--omarchy-fallback-theme)))
+         (theme-style (cdr (assoc-string theme-key +themes-omarchy-theme-map t)))
          (theme (car theme-style))
          (style (cdr theme-style)))
-    (+themes--set-current-theme-state theme style)
-    (+themes-load-theme theme)))
+    (when theme-style
+      (+themes--set-current-theme-state theme style)
+      (+themes-load-theme theme))))
 
 ;;;###autoload
 (defun +themes-rotate (&optional reverse)

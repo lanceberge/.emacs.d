@@ -12,6 +12,7 @@
   ;;       ("-" . #'dired-jump))
   (:map dired-mode-map
         ("i" . dired-toggle-read-only)
+        ("SPC" . #'dired-mark)
         ("m" . dired-do-flagged-delete)
         ([remap negative-argument] . #'+dired/up-dir))
   :config

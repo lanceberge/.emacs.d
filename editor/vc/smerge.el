@@ -2,7 +2,7 @@
 (use-package smerge-mode
   :ensure nil
   :hook
-  (prog-mode . smerge-mode)
+  ((prog-mode text-mode) . smerge-mode)
   :bind
   (:map smerge-basic-map
         ("n" . #'+smerge-vc-next-conflict))

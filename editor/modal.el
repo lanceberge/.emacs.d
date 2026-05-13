@@ -140,7 +140,6 @@ overrides applied via `minor-mode-overriding-map-alist'."
                  (setq prefix-arg ,i)
                  (universal-argument--mode))))
 
-;;; Escape with jk or kj
 ;;;###autoload
 (defun +create-escape (keys)
   "Create and bind a two-key escape sequence KEYS in insert mode.
@@ -165,6 +164,7 @@ Otherwise insert the first char and handle the second normally."
           (progn
             (when (bound-and-true-p corfu--frame)
               (corfu-quit))
+            (deactivate-mark t)
             (+normal-mode 1))
         (+insert-char-overwrite-region first)
         (let* ((key (if (eq event ?\e) [escape] (vector event)))
@@ -188,7 +188,6 @@ Otherwise insert the first char and handle the second normally."
   (insert-char c))
 
 (+create-escape "jk")
-(+create-escape "kj")
 
 ;;; Insert entries
 ;;;###autoload
@@ -354,10 +353,10 @@ Otherwise insert the first char and handle the second normally."
         (progn
           (next-line arg)
           (beginning-of-line))
-      (beginning-of-line)
+      (beginning-of-visual-line)
       (set-mark (point))
       (next-line arg)
-      (beginning-of-line)
+      (beginning-of-visual-line)
       (activate-mark))))
 
 ;;;###autoload

@@ -9,7 +9,7 @@
         ("jn" . #'+majutsu-new-hook)
         ("jr" . #'majutsu-rebase)
         ("jm" . #'+jj-describe)
-        ("jd" . #'majutsu-diff)
+        ("jd" . #'majutsu-diff-dwim)
         ("jl" . #'majutsu-log)
         ("ju" . #'majutsu-undo)
         ("jp" . #'majutsu-git-push)

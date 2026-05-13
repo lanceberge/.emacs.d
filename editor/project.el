@@ -34,7 +34,7 @@
          (target-dir (file-name-as-directory
                       (or (locate-dominating-file dir ".git")
                           dir)))
-         (script (expand-file-name "~/dotfiles/bin/hypr_tmux_sessionizer"))
+         (script (expand-file-name "~/dotfiles/bin/hypr/hypr_tmux_sessionizer"))
          (buffer (get-buffer-create "*hypr_tmux_sessionizer*")))
     (unless (file-executable-p script)
       (user-error "Cannot execute %s" script))

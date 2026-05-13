@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package corfu
   :defer 1.4
+  :hook ((prog-mode text-mode) . corfu-mode)
   :custom
   (corfu-cycle t)
   (corfu-auto t)
@@ -35,7 +36,7 @@
                        `(lambda () (interactive)
                           (let ((corfu--index ,idx))
                             (call-interactively #'corfu-complete)))))
-  (global-corfu-mode)
+  ;; (global-corfu-mode)
   (corfu-indexed-mode))
 
 (use-package orderless
