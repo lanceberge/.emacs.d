@@ -1,32 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(use-package majutsu
-  :ensure (:host github :repo "0WD0/majutsu")
-  :bind
-  (:map +normal-mode
-        ("j" . nil)
-        ("jN" . #'majutsu-new-dwim)
-        ("jn" . #'majutsu-new)
-        ("jr" . #'majutsu-rebase)
-        ("jt" . #'majutsu-bookmark-advance)
-        ("jm" . #'+jj-describe)
-        ("jd" . #'majutsu-diff)
-        ("jl" . #'majutsu-log)
-        ("ju" . #'majutsu-undo)
-        ("jp" . #'majutsu-git-push)
-        ("js" . #'+jj-squash)
-        ("jf" . #'majutsu-git-fetch)
-        ("jbs" . #'majutsu-bookmark-set)
-        ("jbt" . #'majutsu-bookmark-track)
-        ("jbn" . #'majutsu-bookmark-create))
-  (:map majutsu-log-mode-map
-        ("P" . #'majutsu-git-push)
-        ("m" . #'majutsu-describe)))
-
-;; (use-package jujutsushi
-;;   :ensure (jujutsushi
-;;            :host sourcehut
-;;            :repo "puercopop/jujutsushi"))
-
 (use-package magit
   :defer 1.0
   :defer-incrementally
@@ -87,23 +59,6 @@
 (use-package vc
   :defer 0.2
   :ensure nil)
-
-(use-package vc-jj)
-
-;;;###autoload
-(defun +jj-describe (message)
-  "Run `jj describe -m MESSAGE'."
-  (interactive "sDescribe: ")
-  (let ((output (shell-command-to-string
-                 (format "jj describe -m %s" (shell-quote-argument message)))))
-    (message "%s" (string-trim output))))
-
-;;;###autoload
-(defun +jj-squash ()
-  (interactive)
-  (let ((output (shell-command-to-string
-                 "jj squash --ignore-immutable")))
-    (message "%s" (string-trim output))))
 
 (defun +magit-source-branch ()
   "Return the remote branch the current branch was branched off of.
