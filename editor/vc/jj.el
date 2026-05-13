@@ -1,14 +1,14 @@
 ;;; -*- lexical-binding: t -*-
 (use-package majutsu
   :ensure (:host github :repo "0WD0/majutsu")
+  :hook
   :bind
   (:map +normal-mode
         ("j" . nil)
         ("ji" . #'+jj-init)
         ("jN" . #'majutsu-new-dwim)
-        ("jn" . #'majutsu-new)
+        ("jn" . #'+majutsu-new-hook)
         ("jr" . #'majutsu-rebase)
-        ("jt" . #'majutsu-bookmark-advance)
         ("jm" . #'+jj-describe)
         ("jd" . #'majutsu-diff)
         ("jl" . #'majutsu-log)
@@ -18,6 +18,7 @@
         ("jf" . #'majutsu-git-fetch)
         ("jbs" . #'majutsu-bookmark-set)
         ("jbt" . #'majutsu-bookmark-track)
+        ("jba" . #'majutsu-bookmark-advance)
         ("jbn" . #'majutsu-bookmark-create))
   (:map majutsu-log-mode-map
         ("P" . #'majutsu-git-push)
@@ -29,6 +30,9 @@
 ;;            :repo "puercopop/jujutsushi"))
 
 (use-package vc-jj)
+
+(defvar +jj-post-squash-hook nil
+  "Hook run after `+jj-squash' finishes.")
 
 ;;;###autoload
 (defun +jj-describe (message)
@@ -43,7 +47,8 @@
   (interactive)
   (let ((output (shell-command-to-string
                  "jj squash --ignore-immutable")))
-    (message "%s" (string-trim output))))
+    (message "%s" (string-trim output))
+    (run-hooks '+jj-post-squash-hook)))
 
 ;;;###autoload
 (defun +jj-init ()
@@ -58,3 +63,9 @@
       (message "%s"
                (shell-command-to-string
                 "jj git init --colocate")))))
+
+;;;###autoload
+(defun +majutsu-new ()
+  (interactive)
+  (call-interactively #'majutsu-new)
+  (run-hooks #'+majutsu-post-new-hook))
