@@ -1,5 +1,6 @@
 etc
 custom.el
+early-init.local.el
 var
 eln-cache/
 auto-save-list
