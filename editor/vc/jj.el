@@ -1,7 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package majutsu
   :ensure (:host github :repo "0WD0/majutsu")
-  :hook
   :bind
   (:map +normal-mode
         ("j" . nil)
