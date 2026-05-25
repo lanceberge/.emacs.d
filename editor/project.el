@@ -134,3 +134,16 @@ If FILE-PATTERN is provided (e.g. \"*.ex\"), only match files with that pattern.
    "\\\\\\&"
    str
    t))
+
+;; update zoxide history -- cli tool that memoizes visited dirs
+;;;###autoload
+(defun +zoxide-add-current-directory ()
+  (when-let ((dir (or (and buffer-file-name
+                           (file-name-directory buffer-file-name))
+                      (and (derived-mode-p 'dired-mode)
+                           default-directory))))
+    (call-process "zoxide" nil nil nil "add" dir)))
+
+(when (executable-find "zoxide")
+  (add-hook 'find-file-hook #'+zoxide-add-current-directory)
+  (add-hook 'dired-mode-hook #'+zoxide-add-current-directory))

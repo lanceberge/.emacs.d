@@ -72,9 +72,9 @@ Recurse through the buffer-list, skipping the first value since that's the curre
     (+switch-to-recent-buffer-helper (cdr (buffer-list)) target-index)))
 
 ;;;###autoload
-(defun +switch-to-project (n)
+(defun +switch-to-project (n &optional dir)
   (interactive "p")
-  (let ((dir (funcall project-prompter)))
+  (let ((dir (or dir (funcall project-prompter))))
     (+project-other-buffer n dir (lambda () (project-switch-project dir)))))
 
 (defun +project-other-project (n)
