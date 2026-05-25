@@ -3,11 +3,11 @@
   :ensure nil
   :bind
   (:map +leader-map
-        ("cp" . #'+project-ripgrep)
-        ("ck" . #'+project-switch)
+        ("SPC ;" . #'+project-switch-ripgrep)
+        ("SPC '" . #'+project-switch)
         ("pk" . #'+project-kill-buffers)
         ("j" . #'+project-other-project)
-        ("k" . #'+switch-to-project)
+        ("k" . #'+project-visit-last-buffer)
         ("l" . #'+project-other-buffer)
         ("bl" . #'+project-other-special-buffer-dwim)
         ("fp" . #'+find-package)))
@@ -36,7 +36,7 @@
   (+source-init-file))
 
 ;;;###autoload
-(defun +project-ripgrep ()
+(defun +project-switch-ripgrep ()
   (interactive)
   (+project-switch nil #'consult-ripgrep))
 
@@ -72,7 +72,8 @@ Recurse through the buffer-list, skipping the first value since that's the curre
     (+switch-to-recent-buffer-helper (cdr (buffer-list)) target-index)))
 
 ;;;###autoload
-(defun +switch-to-project (n &optional dir)
+(defun +project-visit-last-buffer (n &optional dir)
+  "Switch to the last open buffer in a project at `DIR'."
   (interactive "p")
   (let ((dir (or dir (funcall project-prompter))))
     (+project-other-buffer n dir (lambda () (project-switch-project dir)))))

@@ -85,9 +85,9 @@
   (:repeat-map winner-repeat-map
                ("p" . #'winner-undo)
                ("n" . #'winner-redo))
-  (:map +leader-map
-        ("wp" . #'winner-undo)
-        ("wn" . #'winner-redo)))
+  (:map +x-map
+        ("u" . #'winner-undo)
+        ("r" . #'winner-redo)))
 
 (use-package windresize
   :custom

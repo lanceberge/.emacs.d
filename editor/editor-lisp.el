@@ -237,3 +237,39 @@
     (end-of-line)
     (unless (looking-back ";" nil)
       (insert ";"))))
+
+(defvar consult-source-project-file-here
+  `( :name     "Project File Here"
+     :narrow   ?f
+     :category file
+     :face     consult-file
+     :history  file-name-history
+     :state    ,#'consult--file-state
+     :new
+     ,(lambda (file)
+        (consult--file-action file))
+     :enabled
+     ,(lambda ()
+        (project-current nil))
+     :items
+     ,(lambda ()
+        (when-let* ((project (project-current nil))
+                    (root (project-root project)))
+          (let* ((dir (file-name-as-directory
+                       (expand-file-name default-directory)))
+                 items)
+            (dolist (file (project-files project) (nreverse items))
+              (let ((abs (expand-file-name file root)))
+                (when (file-in-directory-p abs dir)
+                  (push
+                   (cons (file-relative-name abs dir) abs)
+                   items))))))))
+  "Project file source restricted to `default-directory'.")
+
+;;;###autoload
+(defun +consult-project-file-here ()
+  "Find a project file under `default-directory'."
+  (interactive)
+  (consult--with-project
+    (consult-buffer
+     (list consult-source-project-file-here))))

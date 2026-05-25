@@ -6,6 +6,7 @@
         ("i" . #'wgrep-change-to-wgrep-mode))
   (:map wgrep-mode-map
         ([remap save-buffer] . +wgrep-finish-edit)
+        ([remap quit-window] . #'+wgrep-finish-edit)
         ("R" . #'+wgrep-replace)))
 
 ;;;###autoload

@@ -14,6 +14,8 @@
   :hook
   ((elixir-mode elixir-ts-mode) . +setup-elixir-map)
   :bind
+  (:map elixir-mode-map
+        ([remap apheleia-format-buffer] . #'+elixir-format-buffer))
   (:map +elixir-mode-map
         ("r" . #'+elixir-rename-module)))
 
@@ -25,7 +27,10 @@
   :hook
   ((elixir-ts-mode elixir-mode) . maybe-elixir-web-mode)
   ((elixir-ts-mode elixir-mode) . +elixir-mode)
-  ((elixir-ts-mode elixir-mode) . +elixir--maybe-setup-new-file))
+  ((elixir-ts-mode elixir-mode) . +elixir--maybe-setup-new-file)
+  :bind
+  (:map elixir-ts-mode-map
+        ([remap apheleia-format-buffer] . #'+elixir-format-buffer)))
 
 (+modal-bind +insert-mode elixir-web-mode-hook
   ">" #'+maybe-close-tag

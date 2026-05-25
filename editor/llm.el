@@ -93,3 +93,7 @@
 (use-package supermaven
   :ensure (:host github :repo "luciusmagn/emacs-supermaven"))
 ;; :hook (prog-mode . supermaven-mode))
+
+(use-package agent-shell
+  :init
+  (setq exec-path (append exec-path '("~/.local/share/mise/installs/node/25.9.0/lib/node_modules/@agentclientprotocol/"))))

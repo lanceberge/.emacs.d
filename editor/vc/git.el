@@ -1,8 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package magit
   :defer 1.0
-  :defer-incrementally
-  (magit-section dash f s with-editor git-commit package eieio lv transient)
   :custom
   (magit-save-repository-buffers nil)
   (magit-no-confirm '(stage-all-changes amend-published))

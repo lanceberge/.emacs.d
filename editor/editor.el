@@ -1,11 +1,10 @@
 ;;; -*- lexical-binding: t -*-
 (use-package apheleia
   :hook
-  ((prog-mode text-mode) . apheleia-mode)
+  (emacs-lisp-mode . apheleia-mode)
   :bind
   (:map +leader-map
-        ("=" . #'apheleia-format-buffer))
-  )
+        ("=" . #'apheleia-format-buffer)))
 
 (use-package goto-chg
   :disabled t
