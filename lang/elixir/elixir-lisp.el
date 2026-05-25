@@ -1,5 +1,36 @@
 ;;; -*- lexical-binding: t -*-
 ;;;###autoload
+(defun +elixir-format-buffer ()
+  (interactive)
+  (unless buffer-file-name
+    (user-error "Buffer is not visiting a file"))
+  (let* ((buffer (current-buffer))
+         (file buffer-file-name)
+         (tick (buffer-chars-modified-tick))
+         (output (generate-new-buffer " *mix format*"))
+         (default-directory (or (locate-dominating-file file ".formatter.exs")
+                                default-directory))
+         (process-environment (cons "MIX_QUIET=1" process-environment)))
+    (make-process
+     :name "mix format"
+     :buffer output
+     :command (list "mix" "format" file)
+     :sentinel
+     (lambda (process _event)
+       (when (memq (process-status process) '(exit signal))
+         (unwind-protect
+             (if (zerop (process-exit-status process))
+                 (when (buffer-live-p buffer)
+                   (with-current-buffer buffer
+                     (if (= tick (buffer-chars-modified-tick))
+                         (revert-buffer :ignore-auto :noconfirm)
+                       (message "mix format finished; buffer changed, not reverting"))))
+               (display-buffer output))
+           (when (and (zerop (process-exit-status process))
+                      (buffer-live-p output))
+             (kill-buffer output))))))))
+
+;;;###autoload
 (defun +elixir-newline (arg)
   "Insert two newlines and put point between them if the point is between two xml/html tags."
   (interactive "p")
@@ -117,6 +148,7 @@
 ;;;###autoload
 (defun +elixir-mode ()
   (interactive)
+  (add-hook 'before-save-hook #'+elixir-format-buffer nil t)
   ;; (beginend-prog-mode -1)
   )
 

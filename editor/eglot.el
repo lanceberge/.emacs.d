@@ -1,7 +1,5 @@
 ;;; -*- lexical-binding: t -*-
 (use-package eglot
-  :defer-incrementally
-  (project eldoc flymake)
   :defer 1.4
   :commands (eglot-shutdown)
   :hook
@@ -52,9 +50,10 @@
 
   (custom-set-faces
    '(eglot-highlight-symbol-face ((t (:inherit nil)))))
-  ;; https://github.com/joaotavora/eglot/discussions/1184
+
   (add-to-list 'eglot-server-programs '(python-ts-mode . ("/opt/homebrew/bin/pyright-langserver" "--stdio")))
 
+  ;; https://github.com/joaotavora/eglot/discussions/1184
   (add-to-list 'eglot-server-programs
                `(vue-mode . ("vue-language-server" "--stdio" :initializationOptions ,(vue-eglot-init-options)))))
 
@@ -132,12 +131,31 @@
 
 (use-package jsonrpc
   :config
-  (fset #'jsonrpc--log-event #'ignore))
+  (defvar +eglot--jsonrpc-log-event-default nil
+    "Default function used for `jsonrpc--log-event'.")
+  (when (or (null +eglot--jsonrpc-log-event-default)
+            (symbolp +eglot--jsonrpc-log-event-default))
+    (setq +eglot--jsonrpc-log-event-default
+          (symbol-function 'jsonrpc--log-event)))
+
+
+  (fset 'jsonrpc--log-event #'ignore))
+
+;;;###autoload
+(defun +eglot-toggle-debug ()
+  "Toggle Eglot JSONRPC event logging."
+  (interactive)
+  (if (eq (symbol-function 'jsonrpc--log-event) #'ignore)
+      (progn
+        (fset 'jsonrpc--log-event +eglot--jsonrpc-log-event-default)
+        (message "Eglot JSONRPC debug logging enabled"))
+    (fset 'jsonrpc--log-event #'ignore)
+    (message "Eglot JSONRPC debug logging disabled")))
 
 (use-package flymake
   :custom
   (flymake-no-changes-timeout 5)
-  (flymake-show-diagnostics-at-end-of-line nil)
+  (flymake-show-diagnostics-at-end-of-line t)
   :bind
   (:repeat-map flymake-repeat-map
                ("n" . #'flymake-goto-next-error)
@@ -145,6 +163,58 @@
   (:map +leader2-map
         ("en" . #'flymake-goto-next-error)
         ("ep" . #'flymake-goto-prev-error)))
+
+(use-package flyover
+  :ensure t
+  :hook ((flycheck-mode . flyover-mode)
+         (flymake-mode . flyover-mode))
+  :custom
+  ;; Checker settings
+  (flyover-checkers '(flymake))
+  (flyover-levels '(error warning info))
+
+  ;; Appearance
+  (flyover-use-theme-colors t)
+  (flyover-background-lightness 45)
+
+  ;; Text tinting
+  (flyover-text-tint 'lighter)
+  (flyover-text-tint-percent 50)
+
+  ;; Icon tinting (foreground and background)
+  (flyover-icon-tint 'lighter)
+  (flyover-icon-tint-percent 50)
+  (flyover-icon-background-tint 'darker)
+  (flyover-icon-background-tint-percent 50)
+
+  ;; Icons
+  (flyover-info-icon " ")
+  (flyover-warning-icon " ")
+  (flyover-error-icon " ")
+
+  ;; Border styles: none, pill, arrow, slant, slant-inv, flames, pixels
+  (flyover-border-style 'pill)
+  (flyover-border-match-icon t)
+
+  ;; Display settings
+  (flyover-hide-checker-name t)
+  (flyover-show-virtual-line t)
+  (flyover-virtual-line-type 'curved-dotted-arrow)
+  (flyover-line-position-offset 1)
+
+  ;; Message wrapping
+  (flyover-wrap-messages t)
+  (flyover-max-line-length 80)
+
+  ;; Performance
+  (flyover-debounce-interval 0.2)
+  (flyover-cursor-debounce-interval 0.3)
+
+  ;; Display mode (controls cursor-based visibility)
+  (flyover-display-mode 'always)
+
+  ;; Completion integration
+  (flyover-hide-during-completion t))
 
 (defun +xref-rename-symbol-at-point ()
   (interactive)

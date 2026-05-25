@@ -58,10 +58,20 @@
          ("fa" . #'consult-org-agenda)
          (";" . #'consult-ripgrep)
          ("C-;" . #'consult-ripgrep)
-         ("c;" . #'+consult-ripgrep-current)
+         ("c;" . #'+consult-ripgrep-here)
+         ("c'" . #'+consult-project-file-here)
          ("pj" . #'consult-imenu-multi)
          :map org-mode-map
          ([remap consult-imenu] . #'consult-org-heading)))
+
+(use-package consult-eglot
+  :hook (eglot-mode . consult-eglot-mode))
+
+;; (use-package consult-dir
+;;   :bind (("C-x C-d" . consult-dir)
+;;          :map vertico-map
+;;          ("C-x C-d" . consult-dir)
+;;          ("C-x C-j" . consult-dir-jump-file)))
 
 ;;;###autoload
 (defun +consult--buffer-in-dir (dir)
@@ -123,7 +133,7 @@ Otherwise, just call consult-yank-pop."
       (+isearch-update-last-search consult-search))))
 
 ;;;###autoload
-(defun +consult-ripgrep-current ()
+(defun +consult-ripgrep-here ()
   (interactive)
   (consult-ripgrep default-directory nil))
 
@@ -182,6 +192,9 @@ Otherwise, just call consult-yank-pop."
 
 (use-package embark-consult
   :after (consult embark))
+
+;; embark actions on smerge conflicts is what i use this for
+;; (use-package embark-vc)
 
 (defun +find-key (key-sequence)
   "Goto the definition of the command bound to `KEY-SEQUENCE'"

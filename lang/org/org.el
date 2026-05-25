@@ -2,11 +2,6 @@
 (use-package org
   :ensure (:wait t)
   :defer 2.0
-  :defer-incrementally
-  (calendar find-func format-spec org-macs
-            org-faces org-entities org-list org-src
-            ob org org-agenda org-capture
-            org-element)
   :hook
   (org-mode . (lambda () (setq-local tab-width 2)))
   :custom

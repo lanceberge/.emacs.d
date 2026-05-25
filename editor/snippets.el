@@ -2,7 +2,6 @@
 (use-package yasnippet ; snippets
   ;; https://joaotavora.github.io/yasnippet/snippet-development.html
   :defer 0.7
-  :defer-incrementally (easymenu help-mode yasnippet-snippets)
   :custom
   (yas-snippet-dirs '("~/.emacs.d/snippets"))
   (yas-indent-line 'auto)

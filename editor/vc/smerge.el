@@ -7,16 +7,13 @@
   (:map smerge-basic-map
         ("n" . #'+smerge-vc-next-conflict))
   (:map +leader-map
-        ("mu" . #'smerge-keep-upper)
-        ("ml" . #'smerge-keep-lower)
-        ("ma" . #'smerge-keep-all)
-        ("mm" . #'smerge-ediff)
         ("mn" . #'+smerge-vc-next-conflict)
         ("mp" . #'smerge-prev))
   :config
   (dolist (func '(smerge-keep-current smerge-keep-upper smerge-keep-lower smerge-keep-all))
     (advice-add func :after #'+save-buffer-advice))
 
+  ;; add everything from the smerge keymap to repeat-map
   (map-keymap
    (lambda (_key cmd)
      (when (symbolp cmd)

@@ -29,6 +29,7 @@
   ("M-[" . #'+pop-to-mark)
   ("M-]" . #'+unpop-to-mark)
   (:map +x-map
+        ("x" . #'exchange-point-and-mark)
         ("TAB" . #'+indent-rigidly-dwim)
         ("SPC" . #'rectangle-mark-mode)
         ("k" . #'kill-current-buffer)

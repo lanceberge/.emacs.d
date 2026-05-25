@@ -1,4 +1,4 @@
-;;; -*- lexical-binding: t -*-
+;;; Helper lisp functions, not commands, used throughout my config -*- lexical-binding: t -*-
 (defmacro with-point-at-region-end (&rest body)
   `(let ((orig-point (point))
          (orig-mark (mark))

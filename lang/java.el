@@ -2,7 +2,6 @@
 ;; TODO
 (use-package lsp-java
   :disabled t
-  :defer-incrementally (request)
   :custom
   (lsp-prefer-flymake nil)
   :config

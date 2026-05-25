@@ -71,7 +71,6 @@
 
 (use-package recentf
   :ensure nil
-  :defer-incrementally (easymenu tree-widget timer)
   :hook (after-init . recentf-mode)
   :custom
   (recentf-auto-cleanup 'never)
