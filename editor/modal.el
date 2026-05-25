@@ -352,7 +352,7 @@ Otherwise insert the first char and handle the second normally."
     (if (region-active-p)
         (progn
           (next-line arg)
-          (beginning-of-line))
+          (beginning-of-visual-line))
       (beginning-of-visual-line)
       (set-mark (point))
       (next-line arg)

@@ -18,7 +18,7 @@
   (:map magit-blob-mode-map
         ("q" . #'quit-window)
         ([remap save-buffer] . #'quit-window)
-        ([remap +elisp-format-and-check] . #'quit-window))
+        ([remap +elisp-validate-balanced-parens] . #'quit-window))
   (:map magit-diff-section-map
         ("C-j" . #'magit-section-forward))
   (:map magit-status-mode-map
