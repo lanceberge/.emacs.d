@@ -3,7 +3,7 @@
   :ensure nil
   :bind
   (:map emacs-lisp-mode-map
-        ([remap save-buffer] . +elisp-format-and-check))
+        ([remap save-buffer] . +elisp-validate-balanced-parens))
   (:map +leader-map
         ("es" . #'eval-last-sexp)
         ("ee" . #'eval-expression)
@@ -19,7 +19,7 @@
   :ensure nil)
 
 ;;;###autoload
-(defun +elisp-format-and-check ()
+(defun +elisp-validate-balanced-parens ()
   "Format buffer, check parens, and save if balanced."
   (interactive)
   (when (eq major-mode 'emacs-lisp-mode)

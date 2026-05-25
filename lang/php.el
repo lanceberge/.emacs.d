@@ -11,8 +11,7 @@
 
 ;;;###autoload
 (defun +php-mode ()
-  (add-hook 'after-save-hook #'php-cs-fixer-fix-current nil t)
-  (format-all-mode -1))
+  (add-hook 'after-save-hook #'php-cs-fixer-fix-current nil t))
 
 ;;;###autoload
 (defun php-cs-fixer-fix-current ()

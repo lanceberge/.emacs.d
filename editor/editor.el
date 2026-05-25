@@ -1,17 +1,11 @@
 ;;; -*- lexical-binding: t -*-
-(use-package format-all ; format code functions
-  ;; :hook
-  ;; ((prog-mode
-  ;; web-mode
-  ;; json-mode
-  ;; svelte-mode) . format-all-mode)
-  :custom
-  (format-all-show-errors t)
+(use-package apheleia
+  :hook
+  ((prog-mode text-mode) . apheleia-mode)
   :bind
   (:map +leader-map
-        ("=" . #'+format/buffer))
-  :config
-  (setq-default format-all-formatters format-all-default-formatters))
+        ("=" . #'apheleia-format-buffer))
+  )
 
 (use-package goto-chg
   :disabled t
