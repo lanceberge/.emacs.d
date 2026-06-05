@@ -28,21 +28,30 @@
 ;;;###autoload
 (defun +smerge-vc-next-conflict ()
   (interactive)
-  (require 'vc)
+  (require 'project)
   (condition-case nil
       (smerge-next)
     (error
-     (if (and (buffer-modified-p) buffer-file-name)
-         (save-buffer))
-     (let* ((root (vc-call-backend 'Git 'root default-directory))
-            (files (vc-call-backend 'Git 'conflicted-files
-                                    (or root default-directory))))
-       (when (equal (car files) buffer-file-name) (pop files))
+     (when (and (buffer-modified-p) buffer-file-name)
+       (save-buffer))
+     (let* ((root (expand-file-name (project-root (project-current t))))
+            (default-directory root)
+            (current (and buffer-file-name (expand-file-name buffer-file-name)))
+            ;; ripgrep only jj-tracked files for the conflict start marker
+            (files (split-string
+                    (shell-command-to-string
+                     (format "jj file list | xargs -d '\\n' rg --files-with-matches --no-messages -- %s"
+                             (shell-quote-argument "^<<<<<<<")))
+                    "\n" t))
+            ;; absolute paths, excluding the current file so we move forward
+            (files (seq-remove
+                    (lambda (f) (equal f current))
+                    (mapcar (lambda (f) (expand-file-name f root)) files))))
        (if (null files)
            (message "No more conflicted files")
-         (find-file (pop files))
+         (find-file (car files))
+         (goto-char (point-min))
+         (re-search-forward "^<<<<<<<" nil t)
+         (beginning-of-line)
          (message "%s more conflicted files after this one"
-                  (if files (length files) "No"))))
-     (unless (looking-at "^<<<<<<<")
-       (let ((prev-pos (point)))
-         (goto-char (point-min)))))))
+                  (if (cdr files) (length (cdr files)) "No")))))))

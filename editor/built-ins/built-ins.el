@@ -7,8 +7,6 @@
   (kill-do-not-save-duplicates t) ; no duplicates in kill ring
   (indent-tabs-mode nil)
   :bind
-  ("M-z" . #'zap-up-to-char)
-  ("M-Z" . #'zap-to-char)
   ("M-T" . #'transpose-paragraphs)
   (:map +normal-mode-map
         ("RET" . #'newline)
