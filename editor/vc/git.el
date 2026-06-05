@@ -126,6 +126,7 @@ unless a nonzero and non-negative prefix is provided."
   :hook
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
+  (majutsu-split . diff-hl-magit-post-refresh)
   (+majutsu-post-new-hook . diff-hl-magit-post-refresh)
   (+jj-post-squash . diff-hl-magit-post-refresh)
   :bind

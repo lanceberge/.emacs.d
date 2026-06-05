@@ -1,10 +1,11 @@
 ;;; -*- lexical-binding: t -*-
 (use-package majutsu
-  :ensure (:host github :repo "0WD0/majutsu")
+  :ensure (:host github :repo "lanceberge/majutsu")
   :bind
   (:map +normal-mode
         ("j" . nil)
         ("ji" . #'+jj-init)
+        ("jc" . #'+jj-git-clone)
         ("jN" . #'majutsu-new-dwim)
         ("jn" . #'+majutsu-new-hook)
         ("jr" . #'majutsu-rebase)
@@ -71,3 +72,36 @@
   (interactive)
   (call-interactively #'majutsu-new)
   (run-hooks #'+majutsu-post-new-hook))
+
+(defcustom +jj-git-clone-path "~/code"
+  "Default parent directory for `+jj-git-clone'."
+  :type 'directory
+  :group '+jj)
+
+;;;###autoload
+(defun +jj-git-clone (url dir)
+  "Run `jj git clone URL' into DIR, then `project-find-file' in the new repo.
+URL defaults to the system clipboard contents."
+  (interactive
+   (list (string-trim
+          (or (gui-get-selection 'CLIPBOARD)
+              (current-kill 0 t)
+              (user-error "Clipboard is empty")))
+         (let ((vertico-preselect 'prompt))
+           (read-directory-name "Clone into directory: "
+                                (file-name-as-directory
+                                 (expand-file-name +jj-git-clone-path))))))
+  (let* ((repo-name (file-name-base
+                     (replace-regexp-in-string "\\.git/?\\'" "" url)))
+         (parent (expand-file-name dir))
+         (target (expand-file-name repo-name parent)))
+    (unless (file-directory-p parent)
+      (make-directory parent t))
+    (let ((default-directory parent))
+      (message "%s"
+               (shell-command-to-string
+                (format "jj git clone %s %s"
+                        (shell-quote-argument url)
+                        (shell-quote-argument target)))))
+    (let ((default-directory (file-name-as-directory target)))
+      (call-interactively #'project-find-file))))
