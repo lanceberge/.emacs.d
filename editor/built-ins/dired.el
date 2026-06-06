@@ -11,9 +11,9 @@
   ;; (:map +leader-map
   ;;       ("-" . #'dired-jump))
   (:map dired-mode-map
-        ("i" . dired-toggle-read-only)
-        ("SPC" . #'dired-mark)
-        ("m" . dired-do-flagged-delete)
+        ("i" . +dired-maybe-insert-subdir)
+        ;; ("SPC" . #'dired-mark)
+        ;; ("m" . dired-do-flagged-delete)
         ([remap negative-argument] . #'+dired/up-dir))
   :config
   (put 'dired-find-alternate-file 'disabled nil))
@@ -23,6 +23,12 @@
   "navigate up a directory in dired in the same buffer"
   (interactive)
   (find-alternate-file ".."))
+
+;;;###autoload
+(defun +dired-maybe-insert-subdir ()
+  (interactive)
+  (save-excursion
+    (call-interactively #'dired-maybe-insert-subdir)))
 
 (use-package wdired
   :ensure nil
@@ -34,7 +40,7 @@
 (defun +wdired-finish-edit ()
   (interactive)
   (wdired-finish-edit)
-  (+motion-mode))
+  (+normal-mode -1))
 
 (use-package dired-x
   :ensure nil

@@ -20,17 +20,44 @@
         ("jbs" . #'majutsu-bookmark-set)
         ("jbt" . #'majutsu-bookmark-track)
         ("jba" . #'majutsu-bookmark-advance)
-        ("jbn" . #'majutsu-bookmark-create))
+        ("jbn" . #'majutsu-bookmark-create)
+        ("jw" . #'majutsu-workspace)
+        ("jh" . #'majutsu-list-commits-for-file-dwim)
+        ("jH" . #'majutsu-list-commits-for-file))
   (:map majutsu-log-mode-map
         ("P" . #'majutsu-git-push)
         ("m" . #'majutsu-describe))
+  (:map majutsu-diff-mode-map
+        ("P" . #'majutsu-git-push))
+  :custom
+  (majutsu-workspace-add-command #'project-find-file)
+  (majutsu-workspace-add-dir #'+majutsu-workspace-add-dir)
   :init
-  (require 'majutsu-git))
+  (require 'majutsu-git)
+  :config
+  ;; ignore immutable by default
+  (with-eval-after-load 'majutsu-core
+    (transient-define-argument majutsu-transient-arg-ignore-immutable ()
+      :description "Ignore immutable"
+      :class 'transient-switch
+      :shortarg "-I"
+      :argument "--ignore-immutable"
+      :init-value (lambda (obj) (oset obj value "--ignore-immutable")))))
 
 ;; (use-package jujutsushi
 ;;   :ensure (jujutsushi
 ;;            :host sourcehut
 ;;            :repo "puercopop/jujutsushi"))
+
+(defun +majutsu-workspace-add-dir ()
+  "Default destination for `majutsu-workspace-add'.
+Templates to `~/jj-workspaces/<repo-name>/`, where <repo-name> is the
+basename of the current VC root."
+  (let* ((root (or (vc-root-dir) default-directory))
+         (repo-name (file-name-nondirectory
+                     (directory-file-name (expand-file-name root)))))
+    (expand-file-name (concat "jj-workspaces/" repo-name "/") "~")))
+
 
 (use-package vc-jj)
 

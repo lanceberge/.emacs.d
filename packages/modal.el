@@ -107,7 +107,8 @@ overrides applied via `minor-mode-overriding-map-alist'."
   (cond
    (+modal-desired-state +modal-desired-state)
    ((minibufferp) 'insert)
-   ((derived-mode-p 'special-mode 'dired-mode 'magit-mode
+   ((derived-mode-p 'dired-mode) 'none)
+   ((derived-mode-p 'special-mode 'magit-mode
                     'help-mode 'Info-mode 'compilation-mode
                     'diff-mode 'package-menu-mode
                     'Custom-mode 'messages-buffer-mode) 'motion)
@@ -116,6 +117,7 @@ overrides applied via `minor-mode-overriding-map-alist'."
 (defun +modal--turn-on ()
   "Activate the appropriate modal state for the current buffer."
   (pcase (+modal--desired-state)
+    ('none nil)
     ('insert (+insert-mode 1))
     ('motion (+motion-mode 1))
     ('sexp (+sexp-mode 1))
@@ -472,3 +474,5 @@ Otherwise insert the first char and handle the second normally."
   (unless (member last-command '(+unpop-to-mark))
     (setq mark-ring (append mark-ring (list (point-marker)))))
   (pop-to-mark-command))
+
+(provide 'modal)

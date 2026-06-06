@@ -128,7 +128,7 @@ unless a nonzero and non-negative prefix is provided."
   (magit-post-refresh . diff-hl-magit-post-refresh)
   (majutsu-split . diff-hl-magit-post-refresh)
   (+majutsu-post-new-hook . diff-hl-magit-post-refresh)
-  (+jj-post-squash . diff-hl-magit-post-refresh)
+  (majutsu-squash . diff-hl-magit-post-refresh)
   :bind
   (:map +leader-map
         ("gr" . #'diff-hl-revert-hunk))

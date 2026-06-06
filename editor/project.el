@@ -61,7 +61,7 @@
 (defun +project-reload-and-switch ()
   (interactive)
   (+project-load-projects)
-  (+switch-to-project 1))
+  (+project-visit-last-buffer 1))
 
 ;;;###autoload
 (defun +kill-zombie-buffers ()

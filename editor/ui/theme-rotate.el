@@ -50,7 +50,7 @@
         ("hackerman" . (doom-1337 . dark))
         ("kanagawa" . (kanagawa-wave . dark))
         ("lumon" . (doom-nova . dark))
-        ("matte-black" . (doom-badger . dark))
+        ("matte-black" . (kanagawa-wave . dark))
         ("miasma" . (doom-miramare . dark))
         ("nord" . (doom-nord . dark))
         ("osaka-jade" . (doom-miramare . dark))

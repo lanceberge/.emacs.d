@@ -119,11 +119,11 @@
   (interactive)
   (switch-to-buffer (other-buffer)))
 
-;;;###autoload
-(defun +pulsar-pulse-line-no-minibuffer ()
-  (unless (active-minibuffer-window)
-    (pulsar-pulse-line)))
-
 (use-package pulsar
   :hook
-  (buffer-list-update . +pulsar-pulse-line-no-minibuffer))
+  (window-buffer-change-functions . +pulsar-pulse-line-no-minibuffer))
+
+;;;###autoload
+(defun +pulsar-pulse-line-no-minibuffer (&rest _)
+  (unless (active-minibuffer-window)
+    (pulsar-pulse-line)))

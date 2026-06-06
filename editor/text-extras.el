@@ -2,11 +2,11 @@
 (defun pipe-region (start end command)
   "Pipe region through shell command. If the mark is inactive,
 pipe whole buffer."
-  (interactive (append
-                (if (use-region-p)
-                    (list (region-beginning) (region-end))
-                  (list (point-min) (point-max)))
-                (list (read-shell-command "Pipe through: "))))
+  text-extras.el  (interactive (append
+                                (if (use-region-p)
+                                    (list (region-beginning) (region-end))
+                                  (list (point-min) (point-max)))
+                                (list (read-shell-command "Pipe through: "))))
   (let ((exit-status (call-shell-region start end command t t)))
     (unless (equal 0 exit-status)
       (let ((error-msg (string-trim-right (buffer-substring (mark) (point)))))
@@ -25,8 +25,17 @@ pipe whole buffer."
   (:map +normal-mode-map
         ("|" . #'pipe-region))
   (:map +leader-map
-        ("u" . #'text-to-clipboard)))
+        ("u" . #'text-to-clipboard)
+        ("bw" . #'+buffer-name-kill-ring-save)))
 
+;;;###autoload
+(defun +buffer-name-kill-ring-save ()
+  "Copy current buffer name to the kill ring and system clipboard."
+  (interactive)
+  (let ((name (buffer-name)))
+    (kill-new name)
+    (gui-set-selection 'CLIPBOARD name)
+    (message "Copied buffer name: %s" name)))
 
 (defun text-to-clipboard ()
   "Pop up a temporary buffer to collect text to send to the clipboard.
