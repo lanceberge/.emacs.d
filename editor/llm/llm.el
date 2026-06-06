@@ -10,8 +10,6 @@
         ("C-RET" . #'+gptel-send)
         ([remap +org/insert-heading] . #'+gptel-send)
         ([remap gptel-send] . #'+gptel-send)
-        ;; ([remap +org/insert-heading] . #'gptel-send)
-        ;; ([remap org-return] . #'+gptel-send)
         ("S-<return>" . #'newline))
   :bind
   (:map +leader2-map
@@ -79,21 +77,3 @@
                "#+begin_src %s\n%s\n#+end_src")
               (t "%s%s"))))
         (insert (format src-pattern code-buffer-language content))))))
-
-(use-package elysium
-  :bind
-  (:map +leader2-map
-        ("sq" . #'elysium-query)
-        ("so" . #'elysium)
-        ("sw" . #'elysium-toggle-window))
-  (:map +leader-map
-        ("m SPC" . #'elysium-keep-all-suggested-changes)
-        ("m-" . #'elysium-discard-all-suggested-changes)))
-
-(use-package supermaven
-  :ensure (:host github :repo "luciusmagn/emacs-supermaven"))
-;; :hook (prog-mode . supermaven-mode))
-
-(use-package agent-shell
-  :init
-  (setq exec-path (append exec-path '("~/.local/share/mise/installs/node/25.9.0/lib/node_modules/@agentclientprotocol/"))))
