@@ -4,13 +4,11 @@
   :hook ((prog-mode text-mode) . corfu-mode)
   :custom
   (corfu-cycle t)
-  (corfu-auto t)
-  (corfu-auto-delay 0.01)
+  (corfu-auto nil) ; manual only — trigger with M-/ (see +insert-mode-map below)
   (corfu-separator ?\s)
   (corfu-quit-no-match t)
   (corfu-preview-current t)
   (corfu-preselect 'first)
-  (corfu-auto-prefix 2)
   (corfu-on-exact-match nil)
   (corfu-quit-at-boundary nil)
   (corfu-scroll-margin 5)
@@ -24,6 +22,8 @@
         ("C-y" . #'corfu-insert)
         ("RET" . #'newline)
         ("<tab>" . #'yas-expand))
+  (:map +insert-mode-map
+        ("M-/" . #'completion-at-point))
   :config
   (add-hook 'corfu-mode-hook
             (lambda ()
@@ -74,3 +74,14 @@
 ;;;###autoload
 (defun +cape-text-mode ()
   (setq-local corfu-auto-prefix 4))
+
+(use-package completion-preview
+  :ensure nil
+  :hook ((prog-mode text-mode) . completion-preview-mode)
+  :custom
+  (completion-preview-minimum-symbol-length 2)
+  :bind
+  (:map completion-preview-active-mode-map
+        ("TAB" . nil)
+        ("<tab>" . nil)
+        ("C-y" . #'completion-preview-insert)))
