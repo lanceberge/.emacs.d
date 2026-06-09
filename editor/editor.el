@@ -6,14 +6,6 @@
   (:map +leader-map
         ("=" . #'apheleia-format-buffer)))
 
-(use-package goto-chg
-  :disabled t
-  :bind
-  ;; (:map +normal-mode-map
-  ;;       ("C-p" . goto-last-change)
-  ;;       ("C-n" . goto-last-change-reverse))
-  )
-
 (use-package embark
   :custom
   (prefix-help-command 'embark-prefix-help-command)
@@ -124,6 +116,7 @@
   :hook (after-init . beginend-global-mode))
 
 ;; buffers restored from desktop.el initialize in fundamental-mode so this sets it correctly
+;;;###autoload
 (defun +restore-major-mode ()
   (when (and (eq major-mode 'fundamental-mode)
              (buffer-file-name))

@@ -21,6 +21,7 @@
     "R" #'smerge-refine
     "u" #'smerge-keep-upper))
 
+;;;###autoload
 (defun +embark-smerge-target-conflict-at-point ()
   "Target a Merge Conflict at point."
   (when smerge-mode

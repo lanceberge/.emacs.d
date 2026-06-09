@@ -16,4 +16,11 @@ emacsclient -e '(helpful-function #'example-symbol)
 
 # Variable -- shows what it's set to and the docstring
 emacsclient -e '(helpful-variable #'example-variable)
+
+# View all functions and variables beginning with pattern
+emacsclient -e '(apropos "pattern")
 ```
+
+## View Package source code
+
+View the source for packages in ./elpaca/sources
