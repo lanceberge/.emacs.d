@@ -124,6 +124,7 @@ unless a nonzero and non-negative prefix is provided."
 (use-package diff-hl
   :defer 0.5
   :hook
+  (dired-mode . #'diff-hl-dired-mode)
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
   (majutsu-split . diff-hl-magit-post-refresh)
@@ -142,30 +143,6 @@ unless a nonzero and non-negative prefix is provided."
   :bind
   (:map +leader2-map
         ("gl" . #'git-link)))
-
-(use-package +git
-  :ensure nil
-  :bind
-  (:map +leader2-map
-        ("gf" . #'git-modified-files)))
-
-(defun git-modified-files ()
-  "Display modified git files in the minibuffer."
-  (interactive)
-  (let* ((default-directory (or (vc-git-root default-directory)
-                                (error "Not in a Git repository")))
-         (output (shell-command-to-string
-                  "git status --porcelain | grep -E '^[AM][ M]?|^[ M][ M]|^\\?\\?' | awk '{print $2}'"))
-         (files (split-string (string-trim output) "\n" t))
-         (completion-table (lambda (string pred action)
-                             (if (eq action 'metadata)
-                                 `(metadata (category . file))
-                               (complete-with-action action files string pred)))))
-    (if (null files)
-        (message "No modified, new, or staged files found.")
-      (let ((selected-file (completing-read "Select modified git file: " completion-table nil t)))
-        (when selected-file
-          (find-file selected-file))))))
 
 (defun +magit-find-current-file-on-default-branch ()
   "View current file on the repository's default branch."
