@@ -11,3 +11,4 @@ ido.last
 projects
 recentf
 .agent-shell/
+*.elc
