@@ -38,6 +38,7 @@
         (";" . #'consult-ripgrep)
         ("d" . #'embark-find-definition)
         ("/" . #'consult-line)
+        ("W" . #'+buffer-name-kill-ring-save)
         ("g" . #'goolge-this-word))
   (:map embark-collect-mode-map
         ("F" . #'consult-focus-lines))

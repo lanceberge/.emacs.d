@@ -107,8 +107,7 @@ overrides applied via `minor-mode-overriding-map-alist'."
   (cond
    (+modal-desired-state +modal-desired-state)
    ((minibufferp) 'insert)
-   ((derived-mode-p 'dired-mode) 'none)
-   ((derived-mode-p 'special-mode 'magit-mode
+   ((derived-mode-p 'special-mode 'dired-mode 'magit-mode
                     'help-mode 'Info-mode 'compilation-mode
                     'diff-mode 'package-menu-mode
                     'Custom-mode 'messages-buffer-mode) 'motion)

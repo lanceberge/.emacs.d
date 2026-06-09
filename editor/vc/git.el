@@ -121,15 +121,39 @@ unless a nonzero and non-negative prefix is provided."
 (defvar +majutsu-post-new-hook nil
   "Hook run after `majutsu-new' finishes.")
 
+(declare-function majutsu-toplevel "majutsu-jj")
+(declare-function diff-hl-update "diff-hl")
+(defvar diff-hl-disable-on-remote)
+(defvar diff-hl-mode)
+
+(defun majutsu-diff-hl-post-refresh ()
+  "Refresh diff-hl in file buffers under the current jj repo.
+jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
+`majutsu-post-refresh-hook' and similar majutsu hooks."
+  (unless (and (bound-and-true-p diff-hl-disable-on-remote)
+               (file-remote-p default-directory))
+    (when-let* ((topdir (majutsu-toplevel)))
+      (dolist (buf (buffer-list))
+        (when (and (buffer-local-value 'diff-hl-mode buf)
+                   (not (buffer-modified-p buf))
+                   (buffer-file-name buf)
+                   (file-in-directory-p (buffer-file-name buf) topdir)
+                   (file-exists-p (buffer-file-name buf)))
+          (with-current-buffer buf
+            (let* ((file buffer-file-name)
+                   (backend (vc-backend file)))
+              (when backend
+                (vc-state-refresh file backend)
+                (diff-hl-update)))))))))
+
 (use-package diff-hl
   :defer 0.5
   :hook
-  (dired-mode . #'diff-hl-dired-mode)
+  (dired-mode . diff-hl-dired-mode)
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
-  (majutsu-split . diff-hl-magit-post-refresh)
-  (+majutsu-post-new-hook . diff-hl-magit-post-refresh)
-  (majutsu-squash . diff-hl-magit-post-refresh)
+  (majutsu-post-refresh . majutsu-diff-hl-post-refresh)
+  ;; (+majutsu-post-new-hook . majutsu-diff-hl-post-refresh)
   :bind
   (:map +leader-map
         ("gr" . #'diff-hl-revert-hunk))
