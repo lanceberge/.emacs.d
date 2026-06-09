@@ -123,7 +123,17 @@
   :hook
   (window-buffer-change-functions . +pulsar-pulse-line-no-minibuffer))
 
+(defvar +pulsar--last-buffer nil
+  "Buffer in the selected window the last time we pulsed.")
+
 ;;;###autoload
-(defun +pulsar-pulse-line-no-minibuffer (&rest _)
-  (unless (active-minibuffer-window)
-    (pulsar-pulse-line)))
+(defun +pulsar-pulse-line-no-minibuffer (frame-or-window)
+  (let* ((win (if (framep frame-or-window)
+                  (frame-selected-window frame-or-window)
+                frame-or-window))
+         (buf (window-buffer win)))
+    (unless (or (minibufferp buf)
+                (eq buf +pulsar--last-buffer))
+      (setq +pulsar--last-buffer buf)
+      (with-selected-window win
+        (pulsar-pulse-line)))))

@@ -8,14 +8,13 @@
   (dired-use-ls-dired nil)
   :hook (dired-mode . dired-hide-details-mode)
   :bind
-  ;; (:map +leader-map
-  ;;       ("-" . #'dired-jump))
   (:map dired-mode-map
         ("i" . +dired-maybe-insert-subdir)
-        ;; ("SPC" . #'dired-mark)
-        ;; ("m" . dired-do-flagged-delete)
+        ("x" . #'dired-do-flagged-delete)
         ([remap negative-argument] . #'+dired/up-dir))
   :config
+  (+modal-bind +motion-mode dired-mode-hook
+               "x" #'dired-do-flagged-delete)
   (put 'dired-find-alternate-file 'disabled nil))
 
 ;;;###autoload
