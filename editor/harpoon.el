@@ -1,14 +1,20 @@
-;;; -*- lexical-binding: t -*-
-(dotimes (i 10)
-  (let ((num (number-to-string i)))
-    (define-key +leader-map num
-                `(lambda ()
-                   (interactive)
-                   (+harpoon-goto ,num)))
-    (define-key +leader-map (kbd (format "SPC %s" num))
-                `(lambda ()
-                   (interactive)
-                   (+harpoon-bookmark ,num)))))
+;;; Numbered keybindings to save and jump to file locations -*- lexical-binding: t -*-
+(use-package harpoon
+  :ensure nil
+  :bind
+  (:map +leader-map
+        ("fh" . #'+consult-harpoon-bookmarks))
+  :init
+  (dotimes (i 10)
+    (let ((num (number-to-string i)))
+      (define-key +leader-map num
+                  `(lambda ()
+                     (interactive)
+                     (+harpoon-goto ,num)))
+      (define-key +leader-map (kbd (format "SPC %s" num))
+                  `(lambda ()
+                     (interactive)
+                     (+harpoon-bookmark ,num))))))
 
 ;;;###autoload
 (defun +harpoon-bookmark (n)
@@ -34,3 +40,11 @@
                     (format ":%s" name)
                   "")))
     (format "%s%s" project-prefix suffix)))
+
+;;;###autoload
+(defun +consult-harpoon-bookmarks ()
+  "Jump to a bookmark in the current project with consult preview."
+  (interactive)
+  (minibuffer-with-setup-hook
+      (lambda () (insert (+harpoon--get-name)))
+    (call-interactively #'consult-bookmark)))

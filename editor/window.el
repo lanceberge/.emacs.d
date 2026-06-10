@@ -86,8 +86,8 @@
                ("p" . #'winner-undo)
                ("n" . #'winner-redo))
   (:map +x-map
-        ("u" . #'winner-undo)
-        ("r" . #'winner-redo)))
+        ("p" . #'winner-undo)
+        ("n" . #'winner-redo)))
 
 (use-package windresize
   :custom
