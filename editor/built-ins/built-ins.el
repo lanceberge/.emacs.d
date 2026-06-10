@@ -165,13 +165,6 @@
   (when (buffer-file-name)
     (bookmark-set (file-name-nondirectory (buffer-file-name)) nil)))
 
-(use-package register
-  :ensure nil
-  :bind
-  (:map +leader-map
-        ("rj" . #'jump-to-register)
-        ("rw" . #'window-configuration-to-register)))
-
 (use-package delsel
   :ensure nil
   :hook

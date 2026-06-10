@@ -49,7 +49,7 @@
          ("rf" . #'consult-recent-file)
          ("rc" . #'consult-complex-command)
          ("fk" . #'+find-key)
-         ("fh" . #'consult-man)
+         ;; ("fh" . #'consult-man)
          ("ft" . #'+find-todos)
          ("fe" . #'consult-flymake)
          ("fo" . #'consult-outline)

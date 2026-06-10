@@ -8,6 +8,8 @@
 (bind-key "x" +x-map +motion-mode-map)
 (bind-key "x" +x-map +sexp-mode-map)
 
+(bind-key "r"  ctl-x-r-map +x-map)
+
 (bind-key "C-'" +leader2-map)
 (bind-key "'" +leader2-map +normal-mode-map)
 (bind-key "'" +leader2-map +motion-mode-map)
