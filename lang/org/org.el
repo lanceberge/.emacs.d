@@ -38,6 +38,7 @@
         ([remap +drag-stuff-right-dwim] . #'+org-metaright-dwim)
         ("M-l" . #'+org-metaright-dwim)
         ("M-h" . #'+org-metaleft-dwim)
+        ([remap consult-imenu] . #'consult-org-heading)
         ([remap insert-newline-indent] . #'org-return)
         ("M-H" . org-shifleft)
         ("M-J" . org-shiftdown)

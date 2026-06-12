@@ -29,10 +29,11 @@
         confirm-kill-emacs 'y-or-n-p
         kill-buffer-query-functions nil
         inhibit-compacting-font-caches t ; inhibit font compacting
-        highlight-nonselected-windows nil
+        highlight-nonselected-windows t
         ffap-machine-p-known 'reject ; don't ping things that look like domain names
         bidi-inhibit-bpa t
         fast-but-imprecise-scrolling t ; faster scrolling over unfontified regions
+        redisplay-skip-fontification-on-input t
 
         ;; Scrolling
         scroll-conservatively 1000
@@ -43,7 +44,7 @@
         ;; General
         apropos-do-all t ; more extensive apropos searches
         kill-whole-line t
-
+        save-interprogram-paste-before-kill t
         global-mark-ring-max 64
 
         use-file-ddialog nil
@@ -57,7 +58,61 @@
         ;; Disable bidirectional text rendering for performance
         bidi-display-reordering 'left-to-right
         bidi-paragraph-direction 'left-to-right
-        cursor-in-non-selected-windows nil)
+        cursor-in-non-selected-windows nil
+
+        ;; Security
+        enable-local-eval nil
+        epg-pinentry-mode 'loopback
+        auth-sources '("~/.authinfo.gpg")
+
+        ;; Editing defaults
+        uniquify-buffer-name-style 'forward
+        sentence-end-double-space nil
+        comment-multi-line t
+        comment-empty-lines t
+        mouse-yank-at-point t
+        tabify-regexp (rx line-start (zero-or-more ?\t) ?\s (one-or-more blank))
+        fill-nobreak-invisible t
+
+        ;; Paren
+        blink-matching-paren nil
+
+        ;; Help / find-library
+        find-library-include-other-files nil
+        help-enable-completion-autoload nil
+        help-enable-autoload nil
+        help-enable-symbol-autoload nil
+        help-window-select t
+
+        ;; Misc UX
+        delete-pair-blink-delay 0.03
+        global-text-scale-adjust-resizes-frames nil
+        diff-font-lock-prettify t
+        set-mark-command-repeat-pop t
+
+        ;; Dabbrev
+        dabbrev-upcase-means-case-search t
+        dabbrev-ignored-buffer-modes '(archive-mode image-mode docview-mode
+                                                    tags-table-mode pdf-view-mode)
+        dabbrev-ignored-buffer-regexps '("\\` "
+                                         "\\(?:\\(?:[EG]?\\|GR\\)TAGS\\|e?tags\\|GPATH\\)\\(<[0-9]+>\\)?")
+
+        ;; Compilation
+        compilation-ask-about-save nil
+        compilation-always-kill t
+        compilation-max-output-line-length 2048
+        compilation-scroll-output 'first-error
+
+        ;; Comint
+        ansi-color-for-comint-mode t
+        comint-prompt-read-only t
+        comint-buffer-maximum-size 4096
+
+        ;; Tramp
+        tramp-verbose 1
+        remote-file-name-inhibit-cache 50
+        remote-file-name-inhibit-locks t
+        remote-file-name-inhibit-auto-save-visited t)
 
 (when IS-MAC
   (dolist (path '("/opt/homebrew/opt/llvm/bin/"
@@ -73,7 +128,18 @@
 (setq-default
  tab-width 4
  require-final-newline t
- indent-tabs-mode nil) ; tabs are converted to spaces
+ indent-tabs-mode nil ; tabs are converted to spaces
+ word-wrap t
+ truncate-lines t
+ fill-column 80)
+
+(blink-cursor-mode -1)
+
+(dolist (cmd '(narrow-to-region narrow-to-page upcase-region downcase-region
+                                erase-buffer dired-find-alternate-file
+                                set-goal-column list-timers list-threads
+                                scroll-left))
+  (put cmd 'disabled nil))
 
 (advice-add #'tty-run-terminal-initialization :override #'ignore)
 

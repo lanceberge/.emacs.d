@@ -50,16 +50,9 @@
 (use-package terraform-mode)
 
 (use-package sh-mode
-  :ensure nil
-  :hook
-  (sh-base-mode
-   .
-   ;; make scripts executable on save
-   (lambda ()
-     (add-hook 'after-save-hook
-               'executable-make-buffer-file-executable-if-script-p
-               nil
-               t))))
+  :ensure nil)
+
+(add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 
 (use-package scala-mode
   :interpreter ("scala" . scala-mode)

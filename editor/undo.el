@@ -1,6 +1,10 @@
 ;;; -*- lexical-binding: t -*-
 (use-package undo
   :ensure nil
+  :custom
+  (undo-limit (* 13 160000))
+  (undo-strong-limit (* 13 240000))
+  (undo-outer-limit (* 13 24000000))
   :bind
   ("C-M--" . #'undo-redo)
   ;; (:repeat-map undo-repeat-map

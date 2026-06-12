@@ -107,8 +107,7 @@
     (when (file-directory-p worktree-dir)
       (dolist (subdir (directory-files worktree-dir t "^[^.]"))
         (when (file-directory-p subdir)
-          (project-remember-projects-under subdir)))))
-  )
+          (project-remember-projects-under subdir))))))
 
 ;;;###autoload
 (defun +project-replace-regex (search-regex replace-string &optional file-pattern)

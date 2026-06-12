@@ -21,6 +21,10 @@
   :custom
   (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
+  (eglot-report-progress nil)
+  (eglot-autoshutdown t)
+  (eglot-extend-to-xref t)
+  (eglot-events-buffer-config '(:size 0 :format short))
   :bind
   (:map +leader2-map
         ("er" . #'eglot-reconnect)
@@ -127,7 +131,8 @@
   :commands (xref-find-references xref-auto-jump-first-definition)
   :custom
   (xref-prompt-for-identifier nil)
-  (xref-show-xrefs-function #'consult-xref))
+  (xref-show-xrefs-function #'consult-xref)
+  (xref-show-definitions-function #'xref-show-definitions-completing-read))
 
 (use-package jsonrpc
   :config
@@ -155,7 +160,7 @@
 (use-package flymake
   :custom
   (flymake-no-changes-timeout 5)
-  (flymake-show-diagnostics-at-end-of-line t)
+  (flymake-show-diagnostics-at-end-of-line nil)
   :bind
   (:repeat-map flymake-repeat-map
                ("n" . #'flymake-goto-next-error)

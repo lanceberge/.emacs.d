@@ -1,7 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 (use-package simple
   :ensure nil
-  :hook (after-init . global-visual-line-mode)
+  :hook
+  ((prog-mode text-mode) . visual-line-mode)
   :custom
   (idle-update-delay 1.0) ; slow down how often emacs updates its ui
   (kill-do-not-save-duplicates t) ; no duplicates in kill ring
@@ -35,6 +36,9 @@
   (create-lockfiles nil)
   (auto-mode-case-fold nil)
   (auto-save-default nil)
+  (find-file-suppress-same-file-warnings t)
+  (large-file-warning-threshold (* 100 1024 1024))
+  (confirm-nonexistent-file-or-buffer nil)
   :bind
   (:map +leader-map
         ("re" . #'+restart-emacs))
@@ -49,7 +53,9 @@
 
 (use-package saveplace ; save location in files
   :ensure nil
-  :hook (after-init . save-place-mode))
+  :hook (after-init . save-place-mode)
+  :custom
+  (save-place-limit 600))
 
 (use-package whitespace
   :ensure nil
@@ -57,7 +63,9 @@
 
 (use-package autorevert
   :ensure nil
-  :hook (after-init . global-auto-revert-mode))
+  :hook (after-init . global-auto-revert-mode)
+  :custom
+  (global-auto-revert-non-file-buffers t))
 
 (use-package savehist ; save command history
   :ensure nil
@@ -65,11 +73,25 @@
   :custom
   (history-length 500)
   (history-delete-duplicates t)
-  (savehist-save-minibuffer-history t))
+  (savehist-save-minibuffer-history t)
+  (savehist-additional-variables '(register-alist
+                                   mark-ring global-mark-ring
+                                   search-ring regexp-search-ring)))
+
+;; Save the kill ring between restarts (remove non-string data)
+(add-hook 'savehist-save-hook
+          (lambda ()
+            (setq kill-ring
+                  (mapcar #'substring-no-properties
+                          (cl-remove-if-not #'stringp kill-ring)))))
 
 (use-package recentf
   :ensure nil
-  :hook (after-init . recentf-mode)
+  :defer 0.2
+  :commands
+  (consult-recentf)
+  :config
+  (recentf-mode)
   :custom
   (recentf-auto-cleanup 'never)
   (recentf-max-saved-items 200))
@@ -155,6 +177,8 @@
 
 (use-package bookmark
   :ensure nil
+  :custom
+  (bookmark-save-flag 1)
   :bind
   (:map +leader-map
         ("b SPC" . #'+bookmark-file)))

@@ -3,8 +3,11 @@
   :ensure nil
   :hook
   (minibuffer-setup . (lambda () (+insert-mode 1)))
+  (minibuffer-setup . cursor-intangible-mode)
   :custom
   (enable-recursive-minibuffers t)
+  (minibuffer-prompt-properties '(read-only t intangible t cursor-intangible t
+                                            face minibuffer-prompt))
   :bind
   (:map minibuffer-inactive-mode-map
         ([remap save-buffer] . #'kill-current-buffer))
@@ -60,9 +63,7 @@
          ("C-;" . #'consult-ripgrep)
          ("c;" . #'+consult-ripgrep-here)
          ("c'" . #'+consult-project-file-here)
-         ("pj" . #'consult-imenu-multi)
-         :map org-mode-map
-         ([remap consult-imenu] . #'consult-org-heading)))
+         ("pj" . #'consult-imenu-multi)))
 
 (use-package consult-eglot
   :hook (eglot-mode . consult-eglot-mode))
@@ -156,6 +157,9 @@ Otherwise, just call consult-yank-pop."
   (vertico-cycle t)
   (vertico-preselect 'first)
   :bind
+  (:map minibuffer-local-map
+        ([remap kill-visual-line] . #'kill-line)
+        ("C-k" . #'kill-line))
   (:map vertico-map
         ("C-;" . #'vertico-quick-insert)
         ("M-h" . #'vertico-directory-up)
