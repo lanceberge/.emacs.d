@@ -173,6 +173,11 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
   :config
   (global-diff-hl-mode))
 
+(use-package embark-diff-hl
+  :ensure (:type file :main "~/.emacs.d/packages/embark-diff-hl.el")
+  :after (embark diff-hl)
+  :demand t)
+
 (use-package git-link
   :custom
   (git-link-use-commit t)
@@ -180,6 +185,7 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
   (:map +leader2-map
         ("gl" . #'git-link)))
 
+;;;###autoload
 (defun +magit-find-current-file-on-default-branch ()
   "View current file on the repository's default branch."
   (interactive)

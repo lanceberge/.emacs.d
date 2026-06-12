@@ -24,36 +24,28 @@
   (xref-show-xrefs-function #'consult-xref)
   (consult-narrow-key "C-SPC")
   :bind (
+         :map +x-map
+         ("'" . #'consult-buffer)
          :map +normal-mode-map
-         ("M-q" . #'+consult-kmacro)
-         ("M-y" . #'+consult-yank-or-replace)
+         ("M-g" . #'consult-goto-line)
          :map +insert-mode-map
-         ("M-q" . #'+consult-kmacro)
+         ("M-/" . #'completion-at-point)
          :map minibuffer-mode-map
          ("M-r" . #'consult-history)
          :map isearch-mode-map
          ("M-r" . #'consult-isearch-history)
          :map +leader-map
-         ("," . #'+project-buffer)
          ("." . #'find-file)
-         ("SPC bf" . #'+consult-unfocus-lines)
-         ("SPC fm" . #'consult-minor-mode-menu)
-         ("/" . #'+consult-line)
-         ("cy" . #'+consult-yank-or-replace)
-         ("SPC /" . #'+consult-line-multi)
+         ("M-x" . #'consult-mode-command)
          ("fr" . #'consult-recent-file)
          ("fj" . #'consult-imenu)
          ("bb" . #'consult-buffer)
-         ("bf" . #'+consult-focus-lines)
          ("pm" . #'consult-global-mark)
          ("fb" . #'consult-bookmark)
          ("fm" . #'consult-mark)
-         ;; ("SPC k" . #'+consult-keep-lines)
          ("rf" . #'consult-recent-file)
          ("rc" . #'consult-complex-command)
-         ("fk" . #'+find-key)
          ;; ("fh" . #'consult-man)
-         ("ft" . #'+find-todos)
          ("fe" . #'consult-flymake)
          ("fo" . #'consult-outline)
          ("f." . #'consult-fd)
@@ -61,9 +53,34 @@
          ("fa" . #'consult-org-agenda)
          (";" . #'consult-ripgrep)
          ("C-;" . #'consult-ripgrep)
-         ("c;" . #'+consult-ripgrep-here)
-         ("c'" . #'+consult-project-file-here)
          ("pj" . #'consult-imenu-multi)))
+
+(use-package consult-extensions
+  :ensure (:type file :main "~/.emacs.d/packages/consult-extensions.el")
+  :custom
+  (consult-preview-excluded-buffers #'+consult-preview-tramp-excluded-p)
+  :bind
+  (:map +normal-mode-map
+        ("M-q" . #'+consult-kmacro)
+        ("M-y" . #'+consult-yank-or-replace))
+  (:map +insert-mode-map
+        ("M-q" . #'+consult-kmacro))
+  (:map +leader-map
+        ("," . #'+consult-project-buffer)
+        ("ft" . #'+consult-find-todos)
+        ("c;" . #'+consult-ripgrep-here)
+        ("SPC bf" . #'+consult-unfocus-lines)
+        ("SPC fm" . #'consult-minor-mode-menu)
+        ("/" . #'+consult-line)
+        ("bf" . #'+consult-focus-lines)
+        ("fk" . #'+consult-find-key)
+        ("cy" . #'+consult-yank-or-replace)
+        ("SPC k" . #'+consult-keep-lines)
+        ("fp" . #'+consult-find-package)
+        ("SPC /" . #'+consult-line-multi)
+        ("pt" . #'+consult-project-find-todos)
+        ("onf" . #'+consult-org-project-file)
+        ("c'" . #'+consult-project-file-here)))
 
 (use-package consult-eglot
   :hook (eglot-mode . consult-eglot-mode))
@@ -74,82 +91,6 @@
 ;;          ("C-x C-d" . consult-dir)
 ;;          ("C-x C-j" . consult-dir-jump-file)))
 
-;;;###autoload
-(defun +consult--buffer-in-dir (dir)
-  (let ((project (project-current nil dir)))
-    (let ((default-directory (project-root project)))
-      (consult--with-project
-        (consult-buffer consult-project-buffer-sources)))))
-
-;;;###autoload
-(defun +consult-focus-lines ()
-  (interactive)
-  (forward-char 1)
-  (call-interactively #'consult-focus-lines))
-
-;;;###autoload
-(defun +consult-keep-lines ()
-  (interactive)
-  (forward-char 1)
-  (call-interactively #'consult-keep-lines))
-
-;;;###autoload
-(defun +consult-yank-or-replace ()
-  "If region is active, replace it with selected text from kill ring using consult-yank-pop.
-Otherwise, just call consult-yank-pop."
-  (interactive)
-  (if (region-active-p)
-      (let ((region-start (region-beginning))
-            (region-end (region-end)))
-        (defun +consult-yank-replace-region (&rest _)
-          (when (region-active-p)
-            (delete-region region-start region-end)))
-        (unwind-protect
-            (progn
-              (add-function :after (symbol-function 'consult-yank-pop) #'+consult-yank-replace-region)
-              (call-interactively #'consult-yank-pop))
-          (remove-function (symbol-function 'consult-yank-pop) #'+consult-yank-replace-region)))
-    (call-interactively #'consult-yank-pop)))
-
-;;;###autoload
-(defun +consult-unfocus-lines ()
-  (interactive)
-  (let ((current-prefix-arg 1))
-    (call-interactively #'consult-focus-lines)))
-
-;;;###autoload
-(defun +consult-line ()
-  (interactive)
-  (call-interactively #'consult-line)
-  (let ((consult-search (car consult--line-history)))
-    (unless (string-match-p " " consult-search)
-      (+isearch-update-last-search consult-search))))
-
-;;;###autoload
-(defun +consult-line-multi ()
-  (interactive)
-  (call-interactively #'consult-line-multi)
-  (let ((consult-search (car consult--line-multi-history)))
-    (unless (string-match-p " " consult-search)
-      (+isearch-update-last-search consult-search))))
-
-;;;###autoload
-(defun +consult-ripgrep-here ()
-  (interactive)
-  (consult-ripgrep default-directory nil))
-
-;;;###autoload
-(defun +project-buffer ()
-  (interactive)
-  (if (project-root (project-current t))
-      (consult-project-buffer)
-    (consult-buffer)))
-
-;;;###autoload
-(defun +find-todos ()
-  "Search all todos."
-  (interactive)
-  (consult-line "TODO"))
 
 (use-package vertico
   :defer 0.1
@@ -163,6 +104,7 @@ Otherwise, just call consult-yank-pop."
   (:map vertico-map
         ("C-;" . #'vertico-quick-insert)
         ("M-h" . #'vertico-directory-up)
+        ("M-P" . #'+consult-toggle-preview)
         ("M-l" . #'vertico-directory-enter))
   :config
   ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
@@ -196,31 +138,6 @@ Otherwise, just call consult-yank-pop."
 
 (use-package embark-consult
   :after (consult embark))
-
-;; embark actions on smerge conflicts is what i use this for
-;; (use-package embark-vc)
-
-(defun +find-key (key-sequence)
-  "Goto the definition of the command bound to `KEY-SEQUENCE'"
-  (interactive
-   (list (read-key-sequence "Press key: ")))
-  (let ((sym (key-binding key-sequence)))
-    (cond
-     ((null sym)
-      (user-error "No command is bound to %s"
-                  key-sequence))
-     ((commandp sym t)
-      (consult-ripgrep "~/.emacs.d" (symbol-name sym)))
-     (t
-      (user-error "%s is bound to %s which is not a command"
-                  (key-description key-sequence)
-                  sym)))))
-
-;;;###autoload
-(defun +consult-kmacro ()
-  (interactive)
-  (with-undo-amalgamate
-    (call-interactively #'consult-kmacro)))
 
 (use-package vertico-posframe
   :after vertico

@@ -5,6 +5,7 @@
   (org-agenda-span 14)              ; show 14 days
   (org-agenda-start-on-weekday nil) ; start on today
   (org-agenda-tags-column 0)
+  (org-agenda-files '("~/org/projects"))
   (org-agenda-custom-commands
    '(("w" "Work"
       ((tags-todo "Work"))
@@ -25,11 +26,7 @@
   (:map org-agenda-mode-map
         ("g" . ace-link))
   (:map +leader2-map
-        ("oa" . #'org-agenda))
-  :config
-  ;; TODO add to agenda files everything in ~/org/projects
-  ;; (+org-roam-refresh-agenda-list)
-  )
+        ("oa" . #'org-agenda)))
 
 (use-package org-capture
   :ensure nil
@@ -96,7 +93,6 @@
 (use-package ol ; org links
   :ensure nil)
 
-;; autoload org babel functions for specific languages
 (use-package ob-haskell
   :ensure nil
   :commands org-babel-execute:haskell)
@@ -128,6 +124,7 @@
 (use-package org-indent
   :ensure nil
   :hook (org-mode . org-indent-mode))
+
 (use-package org-appear
   :custom
   (org-appear-autolinks t))

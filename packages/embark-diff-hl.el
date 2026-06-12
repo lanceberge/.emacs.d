@@ -1,20 +1,7 @@
 ;;; embark-diff-hl.el --- Embark actions for diff-hl hunks -*- lexical-binding: t; -*-
 
-(use-package +embark-diff-hl
-  :ensure nil
-  :after (embark)
-  :config
-  (setq embark-keymap-alist
-        (assq-delete-all 'diff-hl-hunk embark-keymap-alist))
-  (setq embark-target-finders
-        (delq #'+embark-diff-hl-target-hunk-at-point embark-target-finders))
-  (advice-remove #'embark--action-keymap #'+embark-diff-hl-add-hunk-actions)
-  (advice-add #'embark--action-keymap :filter-return #'+embark-diff-hl-add-hunk-actions)
-
-  (defvar-keymap +embark-diff-hl-hunk-map
-    :doc "Keymap for actions related to diff-hl hunks"
-    "s" #'diff-hl-show-hunk
-    "r" #'+embark-diff-hl-revert-hunk))
+(require 'embark)
+(require 'diff-hl)
 
 ;;;###autoload
 (defun +embark-diff-hl-revert-hunk ()
@@ -45,4 +32,18 @@
 This is kept only so reloading this file can remove the old target finder."
   nil)
 
-(provide '+embark-diff-hl)
+(defvar-keymap +embark-diff-hl-hunk-map
+  :doc "Keymap for actions related to diff-hl hunks"
+  "s" #'diff-hl-show-hunk
+  "R" #'+embark-diff-hl-revert-hunk)
+
+(setq embark-keymap-alist
+      (assq-delete-all 'diff-hl-hunk embark-keymap-alist))
+
+(setq embark-target-finders
+      (delq #'+embark-diff-hl-target-hunk-at-point embark-target-finders))
+
+(advice-remove #'embark--action-keymap #'+embark-diff-hl-add-hunk-actions)
+(advice-add #'embark--action-keymap :filter-return #'+embark-diff-hl-add-hunk-actions)
+
+(provide 'embark-diff-hl)

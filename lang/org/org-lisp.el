@@ -7,22 +7,6 @@
     (project-find-file-in nil (list org-dir) pr)))
 
 ;;;###autoload
-(defun +org-add-todo-to-project ()
-  (interactive)
-  (let* ((projects-dir "~/org/projects/")
-         (project-file (completing-read "Select project file: "
-                                        (directory-files projects-dir t "\\.org$")
-                                        nil t))
-         (template "** TODO %?"))
-    (let ((org-capture-templates
-           `(("p" "project todo" entry
-              (file+headline ,project-file "Tasks")
-              ,template
-              :empty-lines 1
-              :create-heading t))))
-      (org-capture nil "p"))))
-
-;;;###autoload
 (defun +org/insert-heading ()
   "insert a subheading in org mode and go to insert mode"
   (interactive)

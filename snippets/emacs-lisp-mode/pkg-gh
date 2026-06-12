@@ -1,0 +1,4 @@
+# key: pkg-gh
+# name: host
+# --
+:ensure (:host github :repo "$1")

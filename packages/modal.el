@@ -1,5 +1,16 @@
 ;;; -*- lexical-binding: t -*-
-;; Custom modal editing system with keybindings based on the default emacs keys
+(defvar +leader-map (make-sparse-keymap))
+(defvar +leader2-map (make-sparse-keymap))
+(defvar +leader3-map (make-sparse-keymap))
+(defvar +x-map (make-sparse-keymap))
+
+(defvar mark-forward-keymap (make-sparse-keymap))
+(defvar mark-backward-keymap (make-sparse-keymap))
+
+(defvar +normal-mode-map (make-sparse-keymap))
+(defvar +insert-mode-map (make-sparse-keymap))
+(defvar +motion-mode-map (make-sparse-keymap))
+(defvar +sexp-mode-map (make-keymap))
 
 (defvar-local +modal-desired-state nil
   "Buffer-local override for the desired modal state.
@@ -7,11 +18,6 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
 
 (defvar +modal--switching nil
   "Flag to prevent recursion when switching between modal states.")
-
-(defvar +normal-mode-map (make-sparse-keymap))
-(defvar +insert-mode-map (make-sparse-keymap))
-(defvar +motion-mode-map (make-sparse-keymap))
-(defvar +sexp-mode-map (make-keymap))
 
 (suppress-keymap +normal-mode-map t)
 (suppress-keymap +motion-mode-map t)
@@ -112,7 +118,7 @@ overrides applied via `minor-mode-overriding-map-alist'."
   (cond
    (+modal-desired-state +modal-desired-state)
    ((minibufferp) 'insert)
-   ((derived-mode-p 'special-mode 'dired-mode 'magit-mode
+   ((derived-mode-p 'special-mode 'dired-mode 'magit-mode 'org-agenda-mode
                     'help-mode 'Info-mode 'compilation-mode
                     'diff-mode 'package-menu-mode
                     'Custom-mode 'messages-buffer-mode) 'motion)
@@ -197,12 +203,12 @@ Otherwise insert the first char and handle the second normally."
 
 ;;; Insert entries
 ;;;###autoload
-(defun +kill-line-insert ()
+(defun +kill-line-insert (arg)
   "Kill region (or kill-visual-line if no region) then enter insert mode."
-  (interactive)
+  (interactive "P")
   (if (region-active-p)
       (kill-region (region-beginning) (region-end))
-    (kill-visual-line))
+    (kill-visual-line arg))
   (+insert-mode 1))
 
 ;;;###autoload

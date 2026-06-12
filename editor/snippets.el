@@ -27,6 +27,10 @@
   (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "defun"))
 
 ;;;###autoload
+(defun +yas-expand-snippet (snippet-name)
+  (yas-expand-snippet (yas-lookup-snippet snippet-name)))
+
+;;;###autoload
 (defun +yas-load-snippet-noconfirm()
   "Load and save the snippet buffer and quit the window
 while selecting the default table, file path, and not prompting

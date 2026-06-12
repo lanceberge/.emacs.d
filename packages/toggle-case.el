@@ -1,12 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(use-package +toggle-case
-  :ensure nil
-  :bind
-  (:map +normal-mode-map
-        ("~" . #'+toggle-region-or-number-dwim))
-  :config
-  (put 'upcase-region 'disabled nil))
-
 ;;;###autoload
 (defun +toggle-region-or-number-dwim (&optional arg)
   (interactive "p")
@@ -86,3 +78,5 @@ Version: 2024-06-17"
      ((equal 2 (get this-command 'state))
       (downcase-region xbeg xend)
       (put this-command 'state 0)))))
+
+(provide '+toggle-case)

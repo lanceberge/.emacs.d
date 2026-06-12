@@ -1,38 +1,22 @@
 ;;; -*- lexical-binding: t -*-
-;;;###autoload
-(defun +elixir-format-buffer ()
-  (interactive)
-  (unless buffer-file-name
-    (user-error "Buffer is not visiting a file"))
-  (let* ((buffer (current-buffer))
-         (file buffer-file-name)
-         (tick (buffer-chars-modified-tick))
-         (output (generate-new-buffer " *mix format*"))
-         (default-directory (or (locate-dominating-file file ".formatter.exs")
-                                default-directory))
-         (process-environment (cons "MIX_QUIET=1" process-environment)))
-    (make-process
-     :name "mix format"
-     :buffer output
-     :command (list "mix" "format" file)
-     :sentinel
-     (lambda (process _event)
-       (when (memq (process-status process) '(exit signal))
-         (unwind-protect
-             (if (zerop (process-exit-status process))
-                 (when (buffer-live-p buffer)
-                   (with-current-buffer buffer
-                     (if (= tick (buffer-chars-modified-tick))
-                         (revert-buffer :ignore-auto :noconfirm)
-                       (message "mix format finished; buffer changed, not reverting"))))
-               (display-buffer output))
-           (when (and (zerop (process-exit-status process))
-                      (buffer-live-p output))
-             (kill-buffer output))))))))
+(defvar elixir-web-mode-map
+  (make-sparse-keymap)
+  "Keymap for `elixir-web-mode'.")
+
+(define-minor-mode elixir-web-mode
+  "Elixir mode for web files."
+  :lighter " Web"
+  :keymap elixir-web-mode-map
+  (if elixir-web-mode
+      (progn
+        (add-hook 'elixir-mode-hook #'+elixir-web-maybe-enable nil t)
+        (add-hook 'elixir-ts-mode-hook #'+elixir-web-maybe-enable nil t))
+    (remove-hook 'elixir-mode-hook #'+elixir-web-maybe-enable t)
+    (remove-hook 'elixir-ts-mode-hook #'+elixir-web-maybe-enable t)))
 
 ;;;###autoload
-(defun +elixir-newline (arg)
-  "Insert two newlines and put point between them if the point is between two xml/html tags."
+(defun +elixir-web-newline (arg)
+  "Insert two newlines and put point between them if the point is between two /html tags."
   (interactive "p")
   (if (and (eq (char-before (point)) ?>)
            (eq (char-after (point)) ?<))
@@ -43,7 +27,7 @@
     (newline arg t)))
 
 ;;;###autoload
-(defun maybe-elixir-web-mode ()
+(defun +elixir-web-maybe-enable ()
   "Enable `elixir-web-mode' if the module is '*Web.'"
   (when (+elixir--web-mode-p)
     (elixir-web-mode 1)))
@@ -57,7 +41,7 @@
     (string-suffix-p "_web" second-part)))
 
 ;;;###autoload
-(defun +maybe-close-tag ()
+(defun +elixir-web-maybe-close-tag ()
   "Automatically close html tags."
   (interactive)
   (with-undo-amalgamate
@@ -74,52 +58,6 @@
             (forward-char)
             (insert (format "</%s>" tag-name))
             (backward-char (+ 2 (length tag-name)))))))))
-
-;;;###autoload
-;; TODO
-(defun +elixir-create-schema ()
-  (interactive)
-  ())
-
-;;;###autoload
-;; TODO hook to renaming .ex files
-;; TODO rename functional component function names as well
-(defun +elixir-rename-module ()
-  (interactive)
-  (let* ((current-module-name (+elixir--current-module-name))
-         (updated-module-name (+elixir--module-name-from-file))
-         (current-module-base (car (last (split-string current-module-name "\\." t))))
-         (updated-module-base (car (last (split-string updated-module-name "\\." t)))))
-    (when (buffer-modified-p)
-      (save-buffer))
-    (unless (string-equal current-module-name updated-module-name)
-      (+project-replace-regex
-       (concat "\\b" (regexp-quote current-module-name) "\\b")
-       updated-module-name)
-      "*.ex")
-    ;; Replace struct names
-    (when (and (not (string-equal current-module-name updated-module-name))
-               (save-excursion
-                 (goto-char (point-min))
-                 (re-search-forward "^[[:space:]]*defstruct" nil t)))
-      (+project-replace-regex
-       (concat "\\b" current-module-base ".")
-       (concat updated-module-base ".")
-       "*.ex")
-      (+project-replace-regex
-       (concat "%" current-module-base "{")
-       (concat "%" updated-module-base "{")
-       "*.ex"))
-    (revert-buffer nil t t)))
-
-;;;###autoload
-(defun +elixir--current-module-name ()
-  "Return the current module name."
-  (save-excursion
-    (goto-char (point-min))
-    (when (re-search-forward "^[ \t]*defmodule[ \t]+\\([A-Za-z0-9.]+\\)" nil t)
-      (let ((module-name (match-string-no-properties 1)))
-        module-name))))
 
 ;;;###autoload
 (defun +elixir--module-name-from-file ()
@@ -146,25 +84,17 @@
   (file-name-nondirectory (file-name-sans-extension (buffer-file-name))))
 
 ;;;###autoload
-(defun +elixir-mode ()
-  (interactive)
-  (add-hook 'before-save-hook #'+elixir-format-buffer nil t)
-  ;; (beginend-prog-mode -1)
-  )
-
-;;;###autoload
 (defun +elixir--maybe-setup-new-file ()
   (when (and buffer-file-name
              (not (file-exists-p buffer-file-name)))
-    (if (bound-and-true-p yas-minor-mode)
-        (+elixir--setup-new-file)
-      (add-hook 'yas-minor-mode-hook #'+elixir--setup-new-file nil t))))
+    (+elixir--setup-new-file)))
 
 ;;;###autoload
 (defun +elixir--setup-new-file ()
   "Fill in component, livecomponent, or module snippets on new elixir files based on their paths
 relative to the project root."
   (require 'yasnippet)
+  (yas-minor-mode 1)
   (if (+elixir--web-mode-p)
       ;; TODO live page
       (let* ((subdirectories (split-string (+project--buffer-relative-path) "/"))
@@ -195,7 +125,7 @@ relative to the project root."
         (progn
           nil)))))
 
-(defun +elixir-web-mode-comment ()
+(defun +elixir-web-comment ()
   (interactive)
   (let ((in-heex (+elixir--inside-heex-sigil-p)))
     (let ((comment-start (if in-heex "<!-- " comment-start))
@@ -203,3 +133,5 @@ relative to the project root."
       (if (region-active-p)
           (call-interactively #'comment-dwim)
         (call-interactively #'comment-line)))))
+
+(provide 'elixir-web)

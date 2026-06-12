@@ -15,11 +15,6 @@
   )
 
 ;;;###autoload
-(defun full-line-region-p ()
-  (and (save-excursion (goto-char (region-beginning)) (bolp))
-       (save-excursion (goto-char (region-end)) (eolp))))
-
-;;;###autoload
 (defun +drag-stuff-up ()
   (interactive)
   (call-interactively #'drag-stuff-up))

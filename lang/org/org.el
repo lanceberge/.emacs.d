@@ -54,10 +54,8 @@
         ([remap previous-line] . #'+org-up)
         ("C-S-l" . org-shiftcontrolright))
   (:map +leader-map
-        ("of" . #'+org-find-file)
-        ("ont" . #'+org-add-todo-to-project))
+        ("of" . #'+org-find-file))
   :config
-  (add-hook 'org-mode-hook 'org-mode-company-backends)
   (setq org-tag-alist '(("personal" . ?p)
                         ("easy tasks" . ?t)
                         ("hard tasks" . ?T)
@@ -76,10 +74,13 @@
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
   (plist-put org-format-latex-options :scale 1.75))
 
-;;;###autoload
-(defun org-mode-company-backends ()
-  (setq-local company-backends
-              '((company-files company-capf))))
+(use-package +org-project
+  :ensure (:type file :main "~/.emacs.d/packages/org-project.el")
+  :bind
+  (:map +leader-map
+        ("ont" . #'+org-project-add-todo)
+        ("ond" . #'+org-project-mark-done)
+        ("onx" . #'+org-project-add-done)))
 
 ;;;###autoload
 (defun +org-up (&optional arg)

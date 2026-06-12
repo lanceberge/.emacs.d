@@ -5,15 +5,6 @@
                         (?< . ("<" . ">"))
                         (?g . ("\"" . "\""))))
 
-(use-package +surround
-  :ensure nil
-  :hook
-  (org-mode . +setup-org-pairs)
-  :bind
-  ("M-s M-s" . #'+surround)
-  (:map +normal-mode-map
-        ("S" . #'+surround)))
-
 ;;;###autoload
 (defun +setup-org-pairs ()
   (add-to-list '+surround-pairs '(?e . ("#+BEGIN_SRC elixir\n" . "\n#+END_SRC\n"))))
@@ -46,13 +37,6 @@
         (goto-char start)
         (insert open-string)
         (keyboard-quit)))))
-
-;;;###autoload
-(defun +surround-delete ()
-  (interactive)
-  (save-excursion
-    (+surround--select-region)
-    (+surround-delete)))
 
 ;;;###autoload
 (defun +surround-change (char)
@@ -127,3 +111,5 @@
         (set-mark non-whitespace-end)
         (activate-mark))
     (user-error "No active region")))
+
+(provide '+surround)

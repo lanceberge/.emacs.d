@@ -1,11 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(use-package +increment-number
-  :ensure nil
-  :bind
-  (:map +normal-mode-map
-        ("M-`" . #'+increment-number-increment)
-        ("M-~" . #'+increment-number-decrement)))
-
 ;;;###autoload
 (defun +increment-number--number-at-point-bounds ()
   (save-excursion
@@ -69,3 +62,5 @@
   (interactive "p")
   (let ((decrement (or decrement 1)))
     (+increment-number-increment (- decrement))))
+
+(provide '+increment-number)

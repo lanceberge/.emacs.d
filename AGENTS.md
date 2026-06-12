@@ -1,4 +1,4 @@
-After editing any files, eval each modified buffer via `emacsclient`. Do this for every edit once it is finalized.
+After editing files, once you have finalized all changes, eval each modified buffer via `emacsclient`.
 
 Run this for each file you modified (substitute the absolute path):
 

@@ -1,12 +1,13 @@
 ;;; -*- lexical-binding: t -*-
+;;;###autoload
 (defun pipe-region (start end command)
   "Pipe region through shell command. If the mark is inactive,
 pipe whole buffer."
-  text-extras.el  (interactive (append
-                                (if (use-region-p)
-                                    (list (region-beginning) (region-end))
-                                  (list (point-min) (point-max)))
-                                (list (read-shell-command "Pipe through: "))))
+  (interactive (append
+                (if (use-region-p)
+                    (list (region-beginning) (region-end))
+                  (list (point-min) (point-max)))
+                (list (read-shell-command "Pipe through: "))))
   (let ((exit-status (call-shell-region start end command t t)))
     (unless (equal 0 exit-status)
       (let ((error-msg (string-trim-right (buffer-substring (mark) (point)))))
@@ -18,15 +19,6 @@ pipe whole buffer."
           (message "Signal %s" exit-status))
          (t
           (message "[%d] %s" exit-status error-msg)))))))
-
-(use-package text-extras
-  :ensure nil
-  :bind
-  (:map +normal-mode-map
-        ("|" . #'pipe-region))
-  (:map +leader-map
-        ("u" . #'text-to-clipboard)
-        ("bw" . #'+file-name-kill-ring-save)))
 
 ;;;###autoload
 (defun +file-name-kill-ring-save ()
@@ -109,3 +101,5 @@ already narrowed."
   (narrow-to-region
    (save-excursion (up-list -1 t t) (point))
    (save-excursion (up-list +1 t t) (point))))
+
+(provide '+text-extras)
