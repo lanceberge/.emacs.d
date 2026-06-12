@@ -213,8 +213,11 @@
     (pop-to-buffer frequencies-buffer)))
 
 (use-package keycast
-  ;; :disabled t
-  :hook (after-init . keycast-mode-line-mode)
+  :hook (emacs-startup . keycast-mode-line-mode)
+  :custom
+  (keycast-mode-line-remove-tail-elements nil)
+  (keycast-mode-line-insert-after 'mode-line-format-right-align)
+  (keycast-mode-line-format "%k%c%r")
   :config
   (dolist (input '(self-insert-command org-self-insert-command))
     (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))

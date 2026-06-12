@@ -47,6 +47,12 @@
      (if (string-suffix-p ".yaml.gotmpl" buffer-file-name)
          (remove-hook 'before-save-hook #'whitespace-cleanup)))))
 
+(use-package yaml-imenu
+  :init
+  (yaml-imenu-enable)
+  (remove-hook 'yaml-ts-mode-hook 'yaml-set-imenu-generic-expression)
+  (add-hook 'yaml-ts-mode-hook 'yaml-imenu-activate t))
+
 (use-package dockerfile-mode)
 
 (use-package terraform-mode)
