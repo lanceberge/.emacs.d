@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package corfu
+  :disabled t
   :defer 1.4
   :hook ((prog-mode text-mode) . corfu-mode)
   :custom

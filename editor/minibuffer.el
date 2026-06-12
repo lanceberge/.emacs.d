@@ -23,6 +23,7 @@
   :custom
   (xref-show-xrefs-function #'consult-xref)
   (consult-narrow-key "C-SPC")
+  (completion-in-region-function #'consult-completion-in-region)
   :bind (
          :map +x-map
          ("'" . #'consult-buffer)
