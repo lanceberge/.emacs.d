@@ -39,7 +39,9 @@
   :ensure nil
   :hook ((prog-mode text-mode) . show-paren-mode)
   :custom
-  (show-paren-when-point-inside-paren t))
+  (show-paren-delay 0.1)
+  (show-paren-when-point-inside-paren t)
+  (show-paren-when-point-in-periphery t))
 
 (use-package rainbow-mode ; higlight hex codes, colors with the color
   :custom (rainbow-x-colors nil) ; don't highlight white, blue, etc.

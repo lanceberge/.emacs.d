@@ -19,7 +19,15 @@
         (setq comp-speed 2
               package-native-compile t
               native-comp-async-report-warnings-errors nil
-              native-comp-deferred-compilation-deny-list nil)))
+              native-comp-deferred-compilation-deny-list nil
+              native-comp-async-query-on-exit t)))
+
+(setq warning-suppress-types '((defvaralias) (lexical-binding))
+      warning-inhibit-types '((files missing-lexbind-cookie)))
+
+(setq gnutls-verify-error t
+      tls-checktrust gnutls-verify-error
+      gnutls-min-prime-bits 3072)
 
 (advice-add #'package--ensure-init-file :override #'ignore)
 
@@ -94,9 +102,11 @@
         use-package-verbose t ; show which packages are being loaded on startup and when
         use-package-always-ensure t
         use-package-always-defer t
+        use-package-expand-minimally t
+        use-package-enable-imenu-support t
         byte-compile-warnings nil
         delete-by-moving-to-trash t
-        read-process-output-max (* 1024 1024))
+        read-process-output-max (* 4 1024 1024))
 
 (setq enable-local-variables nil)
 
@@ -126,7 +136,7 @@
                 " "
                 (:eval (if (fboundp '+modal--mode-line-indicator) (+modal--mode-line-indicator) ""))
                 "  "
-                (:eval (project-mode-line-format))
+                (:eval (if (fboundp 'project-mode-line-format) (project-mode-line-format) ""))
                 "  "
                 mode-line-buffer-identification ; buffer name
                 " "
@@ -139,5 +149,6 @@
 
 (when (>= emacs-major-version 29)
   (progn
-    (setopt use-short-answers t)
+    (setopt use-short-answers t
+            read-answer-short t)
     (add-to-list 'default-frame-alist '(undecorated-round . t))))

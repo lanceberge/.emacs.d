@@ -1,11 +1,13 @@
 ;;; -*- lexical-binding: t -*-
 (use-package dired
   :ensure nil
+  :after modal
   :custom
   (dired-auto-revert-buffer)
   (dired-recursive-copies 'always)
   (dired-dwim-target t)
   (dired-use-ls-dired nil)
+  (dired-vc-rename-file t)
   :hook (dired-mode . dired-hide-details-mode)
   :bind
   (:map dired-mode-map
