@@ -221,3 +221,8 @@ Otherwise, just call consult-yank-pop."
   (interactive)
   (with-undo-amalgamate
     (call-interactively #'consult-kmacro)))
+
+(use-package vertico-posframe
+  :after vertico
+  :init
+  (vertico-posframe-mode))
