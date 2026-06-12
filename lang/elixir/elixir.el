@@ -24,17 +24,18 @@
   (define-key +leader-map "i" +elixir-mode-map))
 
 (use-package elixir-ts-mode
+  :after modal
   :hook
   ((elixir-ts-mode elixir-mode) . maybe-elixir-web-mode)
   ((elixir-ts-mode elixir-mode) . +elixir-mode)
   ((elixir-ts-mode elixir-mode) . +elixir--maybe-setup-new-file)
   :bind
   (:map elixir-ts-mode-map
-        ([remap apheleia-format-buffer] . #'+elixir-format-buffer)))
-
-(+modal-bind +insert-mode elixir-web-mode-hook
-  ">" #'+maybe-close-tag
-  [remap newline] #'+elixir-newline
-  [remap +comment-dwim] #'+elixir-web-mode-comment)
+        ([remap apheleia-format-buffer] . #'+elixir-format-buffer))
+  :config
+  (+modal-bind +insert-mode elixir-web-mode-hook
+               ">" #'+maybe-close-tag
+               [remap newline] #'+elixir-newline
+               [remap +comment-dwim] #'+elixir-web-mode-comment))
 
 (add-hook 'find-file-not-found-functions #'+elixir--maybe-setup-new-file t)

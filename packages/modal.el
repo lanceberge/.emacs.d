@@ -8,6 +8,11 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
 (defvar +modal--switching nil
   "Flag to prevent recursion when switching between modal states.")
 
+(defvar +normal-mode-map (make-sparse-keymap))
+(defvar +insert-mode-map (make-sparse-keymap))
+(defvar +motion-mode-map (make-sparse-keymap))
+(defvar +sexp-mode-map (make-keymap))
+
 (suppress-keymap +normal-mode-map t)
 (suppress-keymap +motion-mode-map t)
 (suppress-keymap +sexp-mode-map t)

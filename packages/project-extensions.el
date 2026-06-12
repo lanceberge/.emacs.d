@@ -1,16 +1,6 @@
-;;; -*- lexical-binding: t -*-
-(use-package +proj-manager
-  :ensure nil
-  :bind
-  (:map +leader-map
-        ("SPC ;" . #'+project-switch-ripgrep)
-        ("SPC '" . #'+project-switch)
-        ("pk" . #'+project-kill-buffers)
-        ("j" . #'+project-other-project)
-        ("k" . #'+project-visit-last-buffer)
-        ("l" . #'+project-other-buffer)
-        ("bl" . #'+project-other-special-buffer-dwim)
-        ("fp" . #'+find-package)))
+;;; project-extensions.el --- Project navigation helpers -*- lexical-binding: t -*-
+
+(require 'project)
 
 ;;;###autoload
 (defun +project-switch (&optional dir callback)
@@ -45,7 +35,6 @@
   "Switch to the N'th most recent open buffer in the same vc-root-dir as the current buffer.
 Recurse through the buffer-list, skipping the first value since that's the current buffer."
   (interactive "p")
-  (require 'project)
   (let ((current-buffer (current-buffer))
         (project-root-dir
          (expand-file-name
@@ -78,10 +67,10 @@ Recurse through the buffer-list, skipping the first value since that's the curre
   (let ((dir (or dir (funcall project-prompter))))
     (+project-other-buffer n dir (lambda () (project-switch-project dir)))))
 
+;;;###autoload
 (defun +project-other-project (n)
   "Switch to the buffer in the last open project"
   (interactive "p")
-  (require 'project)
   (let ((current-buffer (current-buffer))
         (project-root-dir (when-let ((project (project-current nil)))
                             (expand-file-name (project-root project))))
@@ -115,7 +104,6 @@ Recurse through the buffer-list, skipping the first value since that's the curre
   "Switch to the most recent buffer with the same vc-root-dir. Unlike `+project-other-buffer',
 this function allows special buffers."
   (interactive)
-  (require 'project)
   (let ((current-buffer (current-buffer))
         (project-root-dir (when (project-current t)
                             (expand-file-name (project-root (project-current t))))))
@@ -132,3 +120,6 @@ this function allows special buffers."
               (switch-to-buffer buffer)
             (+switch-to-recent-buffer-helper (cdr buffer-list))))))
     (+switch-to-recent-buffer-helper (cdr (buffer-list)))))
+
+(provide 'project-extensions)
+;;; project-extensions.el ends here

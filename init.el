@@ -172,8 +172,9 @@
        (server-force-delete)
        (server-start)))))
 
-(add-to-list 'load-path (expand-file-name "packages" user-emacs-directory))
-(require 'modal)
+(use-package modal
+  :ensure (:type file :main "~/.emacs.d/packages/modal.el")
+  :demand t)
 
 (let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
   (mapc (lambda (dir)
