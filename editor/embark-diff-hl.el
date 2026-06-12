@@ -4,12 +4,15 @@
   :ensure nil
   :after (embark)
   :config
-  (add-to-list 'embark-keymap-alist '(diff-hl-hunk . +embark-diff-hl-hunk-map))
-  (add-to-list 'embark-target-finders #'+embark-diff-hl-target-hunk-at-point)
+  (setq embark-keymap-alist
+        (assq-delete-all 'diff-hl-hunk embark-keymap-alist))
+  (setq embark-target-finders
+        (delq #'+embark-diff-hl-target-hunk-at-point embark-target-finders))
+  (advice-remove #'embark--action-keymap #'+embark-diff-hl-add-hunk-actions)
+  (advice-add #'embark--action-keymap :filter-return #'+embark-diff-hl-add-hunk-actions)
 
   (defvar-keymap +embark-diff-hl-hunk-map
     :doc "Keymap for actions related to diff-hl hunks"
-    :parent embark-general-map
     "s" #'diff-hl-show-hunk
     "r" #'+embark-diff-hl-revert-hunk))
 
@@ -21,15 +24,25 @@
     (diff-hl-revert-hunk)))
 
 ;;;###autoload
-(defun +embark-diff-hl-target-hunk-at-point ()
-  "Target a diff-hl hunk at point."
+(defun +embark-diff-hl-hunk-at-point-p ()
+  "Return non-nil when point is in a diff-hl hunk."
   (when (bound-and-true-p diff-hl-mode)
-    (when-let* ((ovl (cl-loop for o in (overlays-in (line-beginning-position)
-                                                    (line-end-position))
-                              when (overlay-get o 'diff-hl)
-                              return o)))
-      `(diff-hl-hunk ,(symbol-name (or (overlay-get ovl 'diff-hl-hunk-type)
-                                       'hunk))
-                     ,(overlay-start ovl) . ,(overlay-end ovl)))))
+    (cl-loop for o in (overlays-in (line-beginning-position)
+                                   (line-end-position))
+             thereis (overlay-get o 'diff-hl))))
+
+;;;###autoload
+(defun +embark-diff-hl-add-hunk-actions (keymap)
+  "Add diff-hl hunk actions to KEYMAP when point is in a hunk."
+  (if (+embark-diff-hl-hunk-at-point-p)
+      (make-composed-keymap +embark-diff-hl-hunk-map keymap)
+    keymap))
+
+;;;###autoload
+(defun +embark-diff-hl-target-hunk-at-point ()
+  "Target a diff-hl hunk at point.
+
+This is kept only so reloading this file can remove the old target finder."
+  nil)
 
 (provide '+embark-diff-hl)

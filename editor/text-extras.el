@@ -26,16 +26,17 @@ pipe whole buffer."
         ("|" . #'pipe-region))
   (:map +leader-map
         ("u" . #'text-to-clipboard)
-        ("bw" . #'+buffer-name-kill-ring-save)))
+        ("bw" . #'+file-name-kill-ring-save)))
 
 ;;;###autoload
-(defun +buffer-name-kill-ring-save ()
-  "Copy current buffer name to the kill ring and system clipboard."
+(defun +file-name-kill-ring-save ()
+  "Copy current buffer file name to the kill ring and system clipboard."
   (interactive)
-  (let ((name (buffer-name)))
-    (kill-new name)
-    (gui-set-selection 'CLIPBOARD name)
-    (message "Copied buffer name: %s" name)))
+  (unless buffer-file-name
+    (user-error "Current buffer is not visiting a file"))
+  (kill-new buffer-file-name)
+  (gui-set-selection 'CLIPBOARD buffer-file-name)
+  (message "Copied file name: %s" buffer-file-name))
 
 (defun text-to-clipboard ()
   "Pop up a temporary buffer to collect text to send to the clipboard.

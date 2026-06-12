@@ -13,7 +13,7 @@
       tramp-archive-enabled nil)
 
 ;; don't use custom
-(setq custom-file (make-temp-file "emacs-custom-"))
+(setq custom-file nil)
 (setq custom-delayed-init-variables '())
 
 (if (fboundp 'native-comp-available-p)
@@ -137,13 +137,15 @@
                 " "
                 (:eval (if (fboundp '+modal--mode-line-indicator) (+modal--mode-line-indicator) ""))
                 "  "
-                (:eval (if (fboundp 'project-mode-line-format) (project-mode-line-format) ""))
-                "  "
+                (eval (if (fboundp 'project-mode-line-format) (project-mode-line-format) ""))
+                ;; "  "
                 mode-line-buffer-identification ; buffer name
                 " "
-                vc-mode
+                ;; vc-mode
                 " "
-                (:eval (breadcrumb-imenu-crumbs))))
+                (:eval (breadcrumb-imenu-crumbs))
+                mode-line-format-right-align
+                "    "))
 
 (use-package no-littering
   :demand t
