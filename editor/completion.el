@@ -4,7 +4,8 @@
   :hook ((prog-mode text-mode) . corfu-mode)
   :custom
   (corfu-cycle t)
-  (corfu-auto nil) ; manual only — trigger with M-/ (see +insert-mode-map below)
+  (corfu-auto t) ; manual only — trigger with M-/ (see +insert-mode-map below)
+  (corfu-delay 0.2)
   (corfu-separator ?\s)
   (corfu-quit-no-match t)
   (corfu-preview-current t)
@@ -80,6 +81,7 @@
   :hook ((prog-mode text-mode) . completion-preview-mode)
   :custom
   (completion-preview-minimum-symbol-length 2)
+  (completion-preview-idle-delay 0.3)
   :bind
   (:map completion-preview-active-mode-map
         ("TAB" . nil)

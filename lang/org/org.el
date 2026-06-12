@@ -5,7 +5,6 @@
   (org-mode . (lambda () (setq-local tab-width 2)))
   :custom
   (org-directory "~/org")
-  (org-default-notes-file (expand-file-name "notes.org/" org-directory ))
   (org-list-allow-alphabetical t)
   (org-startup-folded t)
   (org-fontify-done-headline t)
@@ -25,18 +24,6 @@
   (org-hide-emphasis-markers t)
   :bind
   (:map org-mode-map
-        ("M-<return>" . +org/insert-todo)
-        ("M-S-<return>" . +org/insert-todo-above)
-        ("C-<return>" . +org/insert-heading)
-        ("C-S-<return>" . +org/insert-heading-above)
-        ([remap +open-below] . +org-insert-below)
-        ([remap +open-above] . +org-insert-above)
-        ([remap drag-stuff-up] . #'+org-drag-stuff-up)
-        ([remap drag-stuff-down] . #'+org-drag-stuff-down)
-        ([remap +drag-stuff-left-dwim] . #'+org-metaleft-dwim)
-        ([remap +drag-stuff-right-dwim] . #'+org-metaright-dwim)
-        ("M-l" . #'+org-metaright-dwim)
-        ("M-h" . #'+org-metaleft-dwim)
         ([remap consult-imenu] . #'consult-org-heading)
         ([remap insert-newline-indent] . #'org-return)
         ("M-H" . org-shifleft)
@@ -50,14 +37,8 @@
         ("C-S-h" . org-shiftcontrolleft)
         ("C-S-j" . org-shiftcontroldown)
         ("C-S-k" . org-shiftcontrolup)
-        ([remap next-line] . #'+org-down)
-        ([remap previous-line] . #'+org-up)
         ("C-S-l" . org-shiftcontrolright))
-  (:map +leader-map
-        ("of" . #'+org-find-file)
-        ("ont" . #'+org-add-todo-to-project))
   :config
-  (add-hook 'org-mode-hook 'org-mode-company-backends)
   (setq org-tag-alist '(("personal" . ?p)
                         ("easy tasks" . ?t)
                         ("hard tasks" . ?T)
@@ -76,23 +57,40 @@
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
   (plist-put org-format-latex-options :scale 1.75))
 
-;;;###autoload
-(defun org-mode-company-backends ()
-  (setq-local company-backends
-              '((company-files company-capf))))
+(use-package org-extensions
+  :ensure (:type file :main "~/.emacs.d/packages/org-extensions.el")
+  :after org
+  :custom
+  (+org-directory "~/org/")
+  :bind
+  (:map org-mode-map
+        ([remap drag-stuff-up] . #'+org-drag-stuff-up)
+        ([remap drag-stuff-down] . #'+org-drag-stuff-down)
+        ([remap +drag-stuff-left-dwim] . #'+org-metaleft-dwim)
+        ([remap +drag-stuff-right-dwim] . #'+org-metaright-dwim)
+        ([remap next-line] . #'+org-down)
+        ([remap previous-line] . #'+org-up)
+        ("M-l" . #'+org-metaright-dwim)
+        ("M-h" . #'+org-metaleft-dwim))
+  (:map +leader-map
+        ("of" . #'+org-find-file)))
 
-;;;###autoload
-(defun +org-up (&optional arg)
-  (interactive "p")
-  (previous-line arg)
-  (when (eolp)
-    (org-end-of-line))
-  (deactivate-mark))
+(use-package modal-org
+  :ensure (:type file :main "~/.emacs.d/packages/modal-org.el")
+  :after (modal org)
+  :bind
+  (:map org-mode-map
+        ("M-<return>" . #'+modal-org-insert-todo)
+        ("M-S-<return>" . #'+modal-org-insert-todo-above)
+        ("C-<return>" . #'+modal-org-insert-heading)
+        ("C-S-<return>" . #'+modal-org-insert-heading-above)
+        ([remap +open-below] . #'+modal-org-insert-below)
+        ([remap +open-above] . #'+modal-org-insert-above)))
 
-;;;###autoload
-(defun +org-down (&optional arg)
-  (interactive "p")
-  (next-line arg)
-  (when (eolp)
-    (org-end-of-line))
-  (deactivate-mark))
+(use-package +org-project
+  :ensure (:type file :main "~/.emacs.d/packages/org-project.el")
+  :bind
+  (:map +leader-map
+        ("ont" . #'+org-project-add-todo)
+        ("ond" . #'+org-project-mark-done)
+        ("onx" . #'+org-project-add-done)))

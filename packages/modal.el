@@ -1,5 +1,16 @@
 ;;; -*- lexical-binding: t -*-
-;; Custom modal editing system with keybindings based on the default emacs keys
+(defvar +leader-map (make-sparse-keymap))
+(defvar +leader2-map (make-sparse-keymap))
+(defvar +leader3-map (make-sparse-keymap))
+(defvar +x-map (make-sparse-keymap))
+
+(defvar mark-forward-keymap (make-sparse-keymap))
+(defvar mark-backward-keymap (make-sparse-keymap))
+
+(defvar +normal-mode-map (make-sparse-keymap))
+(defvar +insert-mode-map (make-sparse-keymap))
+(defvar +motion-mode-map (make-sparse-keymap))
+(defvar +sexp-mode-map (make-keymap))
 
 (defvar-local +modal-desired-state nil
   "Buffer-local override for the desired modal state.
@@ -7,11 +18,6 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
 
 (defvar +modal--switching nil
   "Flag to prevent recursion when switching between modal states.")
-
-(defvar +normal-mode-map (make-sparse-keymap))
-(defvar +insert-mode-map (make-sparse-keymap))
-(defvar +motion-mode-map (make-sparse-keymap))
-(defvar +sexp-mode-map (make-keymap))
 
 (suppress-keymap +normal-mode-map t)
 (suppress-keymap +motion-mode-map t)
@@ -112,7 +118,7 @@ overrides applied via `minor-mode-overriding-map-alist'."
   (cond
    (+modal-desired-state +modal-desired-state)
    ((minibufferp) 'insert)
-   ((derived-mode-p 'special-mode 'dired-mode 'magit-mode
+   ((derived-mode-p 'special-mode 'dired-mode 'magit-mode 'org-agenda-mode
                     'help-mode 'Info-mode 'compilation-mode
                     'diff-mode 'package-menu-mode
                     'Custom-mode 'messages-buffer-mode) 'motion)
@@ -147,62 +153,20 @@ overrides applied via `minor-mode-overriding-map-alist'."
                  (universal-argument--mode))))
 
 ;;;###autoload
-(defun +create-escape (keys)
-  "Create and bind a two-key escape sequence KEYS in insert mode.
-KEYS is a 2-char string like \"jk\". Pressing the first char waits
-briefly for the second; if it arrives, exit to normal mode.
-Otherwise insert the first char and handle the second normally."
-  (let ((first (aref keys 0))
-        (second (aref keys 1)))
-    (define-key +insert-mode-map (string first)
-                (let ((f first) (s second))
-                  (lambda ()
-                    (interactive)
-                    (+escape--handle f s)))))
-  keys)
-
-(defun +escape--handle (first second)
-  (let* ((cooldown 0.5)
-         (event (read-event nil nil cooldown)))
-    (if (null event)
-        (+insert-char-overwrite-region first)
-      (if (and (characterp event) (= event second))
-          (progn
-            (when (bound-and-true-p corfu--frame)
-              (corfu-quit))
-            (deactivate-mark t)
-            (+normal-mode 1))
-        (+insert-char-overwrite-region first)
-        (let* ((key (if (eq event ?\e) [escape] (vector event)))
-               (command (key-binding key)))
-          (cond
-           ((null command))
-           ((not (commandp command)))
-           ((and (eq event ?\") (eq (char-after (point)) ?\"))
-            (forward-char))
-           ((and (characterp event)
-                 (memq command '(self-insert-command org-self-insert-command)))
-            (+insert-char-overwrite-region event))
-           (t
-            (call-interactively command))))))))
-
-;;;###autoload
 (defun +insert-char-overwrite-region (c)
   (interactive)
   (when (region-active-p)
     (call-interactively #'kill-region))
   (insert-char c))
 
-(+create-escape "jk")
-
 ;;; Insert entries
 ;;;###autoload
-(defun +kill-line-insert ()
+(defun +kill-line-insert (arg)
   "Kill region (or kill-visual-line if no region) then enter insert mode."
-  (interactive)
+  (interactive "P")
   (if (region-active-p)
       (kill-region (region-beginning) (region-end))
-    (kill-visual-line))
+    (kill-visual-line arg))
   (+insert-mode 1))
 
 ;;;###autoload

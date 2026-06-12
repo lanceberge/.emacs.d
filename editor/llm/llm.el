@@ -8,7 +8,7 @@
   (:map gptel-mode-map
         ("C-c C-l". #'+gptel-project-clear-buffer)
         ("C-RET" . #'+gptel-send)
-        ([remap +org/insert-heading] . #'+gptel-send)
+        ([remap +modal-org-insert-heading] . #'+gptel-send)
         ([remap gptel-send] . #'+gptel-send)
         ("S-<return>" . #'newline))
   :bind

@@ -96,8 +96,6 @@
 (elpaca elpaca-use-package
   (elpaca-use-package-mode))
 
-(elpaca-wait)
-
 ;; defer elisp compilation, great with native-comp branch
 (setq comp-deferred-compilation t
       use-package-verbose t ; show which packages are being loaded on startup and when

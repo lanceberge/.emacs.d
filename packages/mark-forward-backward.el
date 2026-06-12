@@ -1,45 +1,3 @@
-;;; -*- lexical-binding: t -*-
-(use-package +mark-forward
-  :ensure nil
-  :bind
-  (:repeat-map mark-forward-repeat-map
-               ("-" . #'+mark-forward-backward-ring-pop)
-               ("." . #'repeat)
-               ("s" . #'+mark-forward-sentence )
-               ("p" . #'+mark-forward-paragraph)
-               ("w" . #'+mark-forward-word)
-               ("d" . #'+mark-forward-sexp)
-               :exit
-               ("g" . (lambda () (interactive))))
-  (:map +normal-mode-map
-        ("E" . #'+mark-forward-word)
-        ("B" . #'+mark-backward-word))
-  (:map mark-forward-keymap
-        ("p" . #'+mark-forward-paragraph)
-        ("w" . #'+mark-forward-word)
-        ("d" . #'+mark-forward-sexp)
-        ("s" . #'+mark-forward-sentence)
-        ("b" . #'+mark-forward-buffer)))
-
-(use-package +mark-backward
-  :ensure nil
-  :bind
-  (:repeat-map mark-backward-repeat-map
-               ("-" . #'+mark-forward-backward-ring-pop)
-               ("." . #'repeat)
-               ("s" . #'+mark-backward-sentence )
-               ("p" . #'+mark-backward-paragraph)
-               ("w" . #'+mark-backward-word)
-               ("d" . #'+mark-backward-sexp)
-               :exit
-               ("g" . (lambda () (interactive))))
-  (:map mark-backward-keymap
-        ("p" . #'+mark-backward-paragraph)
-        ("d" . #'+mark-backward-sexp)
-        ("s" . #'+mark-backward-sentence)
-        ("w" . #'+mark-backward-word)
-        ("b" . #'+mark-backward-buffer)))
-
 (defvar +mark-forward-backward-ring nil
   "ring of (mark . point)")
 
@@ -268,3 +226,33 @@
   (unless (region-active-p)
     (set-mark (point)))
   (backward-char arg))
+
+;;;###autoload
+(defun +backward-global-mark ()
+  "use `pop-global-mark', pushing current point if not on ring."
+  (interactive)
+  (+push-mark-maybe)
+  (when (marker-is-point-p (car global-mark-ring))
+    (call-interactively 'pop-global-mark))
+  (call-interactively 'pop-global-mark))
+
+;;;###autoload
+(defun +forward-global-mark ()
+  "hack `pop-global-mark' to go in reverse, pushing current point if not on ring."
+  (interactive)
+  (+push-mark-maybe)
+  (setq global-mark-ring (nreverse global-mark-ring))
+  (when (marker-is-point-p (car global-mark-ring))
+    (call-interactively 'pop-global-mark))
+  (call-interactively 'pop-global-mark)
+  (setq global-mark-ring (nreverse global-mark-ring)))
+
+;;;###autoload
+(defun +push-mark-maybe ()
+  "push mark onto `global-mark-ring' if mark head or tail is not current location"
+  (if (not global-mark-ring) (error "global-mark-ring empty")
+    (unless (or (marker-is-point-p (car global-mark-ring))
+                (marker-is-point-p (car (reverse global-mark-ring))))
+      (push-mark))))
+
+(provide '+mark-forward-backward)

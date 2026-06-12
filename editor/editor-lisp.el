@@ -1,4 +1,6 @@
 ;;; -*- lexical-binding: t -*-
+(require 'cl)
+
 ;;;###autoload
 (defun read-file-contents (file-path)
   "Read the contents of FILE-PATH and return it as a string."
@@ -22,17 +24,6 @@
         t)
     (error nil)))
 
-;;;###autoload
-(defun +flycheck-list-errors ()
-  "Display the Flycheck error list and set its window height to take up 1/3 of the frame."
-  (interactive)
-  (flycheck-list-errors)
-  (let ((error-window (get-buffer-window "*Flycheck errors*" t)))
-    (when error-window
-      (with-selected-window error-window
-        (let ((window-height (round (* 0.33 (frame-height)))))
-          (enlarge-window (- window-height (window-height))))))))
-
 ;; https://stackoverflow.com/questions/3393834/how-to-move-forward-and-backward-in-emacs-mark-ring
 ;;;###autoload
 (defun marker-is-point-p (marker)
@@ -41,47 +32,9 @@
        (= (marker-position marker) (point))))
 
 ;;;###autoload
-(defun +push-mark-maybe ()
-  "push mark onto `global-mark-ring' if mark head or tail is not current location"
-  (if (not global-mark-ring) (error "global-mark-ring empty")
-    (unless (or (marker-is-point-p (car global-mark-ring))
-                (marker-is-point-p (car (reverse global-mark-ring))))
-      (push-mark))))
-
-(use-package mark-repeat-map
-  :ensure nil
-  :bind
-  (:repeat-map +mark-repeat-map
-               ("[" . #'+backward-global-mark)
-               ("]" . #'+forward-global-mark))
-  (:map +leader3-map
-        ("[" . #'+backward-global-mark)
-        ("]" . #'+forward-global-mark)))
-
-;;;###autoload
-(defun +backward-global-mark ()
-  "use `pop-global-mark', pushing current point if not on ring."
-  (interactive)
-  (+push-mark-maybe)
-  (when (marker-is-point-p (car global-mark-ring))
-    (call-interactively 'pop-global-mark))
-  (call-interactively 'pop-global-mark))
-
-;;;###autoload
-(defun +forward-global-mark ()
-  "hack `pop-global-mark' to go in reverse, pushing current point if not on ring."
-  (interactive)
-  (+push-mark-maybe)
-  (setq global-mark-ring (nreverse global-mark-ring))
-  (when (marker-is-point-p (car global-mark-ring))
-    (call-interactively 'pop-global-mark))
-  (call-interactively 'pop-global-mark)
-  (setq global-mark-ring (nreverse global-mark-ring)))
-
-;;;###autoload
-(defun +yas-expand-snippet (snippet-name)
-  (interactive)
-  (yas-expand-snippet (yas-lookup-snippet snippet-name)))
+(defun full-line-region-p ()
+  (and (save-excursion (goto-char (region-beginning)) (bolp))
+       (save-excursion (goto-char (region-end)) (eolp))))
 
 ;;;###autoload
 (defun +indent-left (arg)
@@ -122,7 +75,7 @@
     (user-error "region is not active")))
 
 ;; https://stackoverflow.com/questions/2588277/how-can-i-swap-or-replace-multiple-strings-in-code-at-the-same-time
-(require 'cl)
+;;;###autoload
 (defun parallel-replace (plist &optional start end)
   (interactive
    `(,(cl-loop with input = (read-from-minibuffer "Replace: ")
@@ -220,12 +173,6 @@
       (activate-mark))))
 
 ;;;###autoload
-(defun +project-shell-command ()
-  (interactive)
-  (let ((default-directory (project-root (project-current t))))
-    (call-interactively #'shell-command)))
-
-;;;###autoload
 (defun +source-init-file ()
   (interactive)
   (load-file "~/.emacs.d/init.el"))
@@ -237,39 +184,3 @@
     (end-of-line)
     (unless (looking-back ";" nil)
       (insert ";"))))
-
-(defvar consult-source-project-file-here
-  `( :name     "Project File Here"
-     :narrow   ?f
-     :category file
-     :face     consult-file
-     :history  file-name-history
-     :state    ,#'consult--file-state
-     :new
-     ,(lambda (file)
-        (consult--file-action file))
-     :enabled
-     ,(lambda ()
-        (project-current nil))
-     :items
-     ,(lambda ()
-        (when-let* ((project (project-current nil))
-                    (root (project-root project)))
-          (let* ((dir (file-name-as-directory
-                       (expand-file-name default-directory)))
-                 items)
-            (dolist (file (project-files project) (nreverse items))
-              (let ((abs (expand-file-name file root)))
-                (when (file-in-directory-p abs dir)
-                  (push
-                   (cons (file-relative-name abs dir) abs)
-                   items))))))))
-  "Project file source restricted to `default-directory'.")
-
-;;;###autoload
-(defun +consult-project-file-here ()
-  "Find a project file under `default-directory'."
-  (interactive)
-  (consult--with-project
-    (consult-buffer
-     (list consult-source-project-file-here))))

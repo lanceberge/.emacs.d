@@ -1,4 +1,27 @@
 ;;; -*- lexical-binding: t -*-
+(use-package elixir-mode
+  :bind
+  (:map elixir-mode-map
+        ([remap apheleia-format-buffer] . #'+elixir-format-buffer)))
+
+(use-package elixir-ts-mode
+  :bind
+  (:map elixir-ts-mode-map
+        ([remap apheleia-format-buffer] . #'+elixir-format-buffer)))
+
+(use-package elixir-web
+  :after modal
+  :ensure (:type file :main "~/.emacs.d/packages/elixir-web.el")
+  :hook
+  ((elixir-ts-mode elixir-mode) . +elixir-web-maybe-enable)
+  ((elixir-ts-mode elixir-mode) . +elixir--maybe-setup-new-file)
+  ((elixir-ts-mode elixir-mode) . #'+elixir--maybe-setup-new-file)
+  :config
+  (+modal-bind +insert-mode elixir-web-mode-hook
+               ">" #'+elixir-web-maybe-close-tag
+               [remap newline] #'+elixir-web-newline
+               [remap +comment-dwim] #'+elixir-web-comment))
+
 (use-package typescript-mode
   :mode
   ("\\.ts\\'" . typescript-mode)

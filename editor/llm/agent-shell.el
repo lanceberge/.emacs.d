@@ -1,4 +1,13 @@
 ;;; -*- lexical-binding: t -*-
+
+(use-package ace-link-agent-shell
+  :ensure (:type file :main "~/.emacs.d/packages/ace-link-agent-shell.el")
+  :after (ace-link agent-shell)
+  :demand t
+  :bind
+  (:map agent-shell-mode-map
+        ("M-i" . #'ace-link)))
+
 (use-package agent-shell
   :init
   (setq exec-path (append exec-path '("~/.local/share/mise/installs/node/25.9.0/lib/node_modules/@agentclientprotocol/")))

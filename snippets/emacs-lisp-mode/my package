@@ -1,0 +1,4 @@
+# key: pkg-my
+# name: my package
+# --
+:ensure (:type file :main "~/.emacs.d/packages/$0")
