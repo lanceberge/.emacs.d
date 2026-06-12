@@ -182,7 +182,7 @@
   (setq buffer-read-only t))
 
 (use-package keyfreq
-  :hook (after-init . keyfreq-mode)
+  :hook (emacs-startup . keyfreq-mode)
   :config
   (setq keyfreq-excluded-commands
         '(self-insert-command

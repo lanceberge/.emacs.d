@@ -131,3 +131,6 @@
 (use-package org-indent
   :ensure nil
   :hook (org-mode . org-indent-mode))
+(use-package org-appear
+  :custom
+  (org-appear-autolinks t))
