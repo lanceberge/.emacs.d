@@ -221,6 +221,9 @@
   ;; Completion integration
   (flyover-hide-during-completion t))
 
+(use-package breadcrumb)
+
+;;;###autoload
 (defun +xref-rename-symbol-at-point ()
   (interactive)
   (let* ((symbol (thing-at-point 'symbol t))

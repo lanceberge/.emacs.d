@@ -89,13 +89,6 @@
                 (exec-path-from-shell-initialize)
                 (setq exec-path (append exec-path '("/home/labergeron/miniconda3/bin" "~/go/bin")))))))
 
-(use-package google-this
-  :after embark
-  :commands (google-this-symbol)
-  :bind
-  (:map embark-general-map
-        ("g" . google-this-word)))
-
 (use-package ace-link
   :bind
   (:map text-mode-map

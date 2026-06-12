@@ -125,9 +125,6 @@
   :ensure nil
   :commands org-babel-execute:perl)
 
-(use-package toc-org
-  :hook ((org-mode markdown-mode) . toc-org-mode))
-
 (use-package org-indent
   :ensure nil
   :hook (org-mode . org-indent-mode))
