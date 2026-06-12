@@ -23,6 +23,20 @@
   (interactive)
   (consult-ripgrep (project-root (project-current t)) "TODO"))
 
+(use-package project-extensions
+  :ensure (:type file :main "~/.emacs.d/packages/project-extensions.el")
+  :demand t
+  :bind
+  (:map +leader-map
+        ("SPC ;" . #'+project-switch-ripgrep)
+        ("SPC '" . #'+project-switch)
+        ("pk" . #'+project-kill-buffers)
+        ("j" . #'+project-other-project)
+        ("k" . #'+project-visit-last-buffer)
+        ("l" . #'+project-other-buffer)
+        ("bl" . #'+project-other-special-buffer-dwim)
+        ("fp" . #'+find-package)))
+
 ;;;###autoload
 (defun +tmux-sessionizer-current-directory ()
   "Open the current git root or directory in the workspace-1 Alacritty tmux client."
