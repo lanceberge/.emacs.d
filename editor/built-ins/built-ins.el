@@ -97,6 +97,7 @@
   (recentf-max-saved-items 200))
 
 (use-package desktop ; save sessions to a file
+  :after (no-littering modal)
   :ensure nil
   :demand t
   :custom
@@ -106,7 +107,8 @@
   :config
   (dolist (var '(+themes-dark-theme-index +themes-light-theme-index +themes-current-style))
     (add-to-list 'desktop-globals-to-save var))
-  (desktop-save-mode))
+  (desktop-save-mode)
+  (desktop-read))
 
 (use-package electric-pair-mode
   :ensure nil
@@ -128,6 +130,7 @@
                              (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
 
 (use-package ediff
+  :defer t
   :ensure nil
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain)

@@ -2,7 +2,7 @@
 (use-package majutsu
   :ensure (:host github :repo "lanceberge/majutsu")
   :bind
-  (:map +normal-mode
+  (:map +normal-mode-map
         ("j" . nil)
         ("ji" . #'+jj-init)
         ("jc" . #'+jj-git-clone)

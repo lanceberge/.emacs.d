@@ -13,9 +13,11 @@
 (use-package json-mode
   :ensure nil)
 
-(use-package clojure-mode)
+(use-package clojure-mode
+  :disabled t)
 
-(use-package cider)
+(use-package cider
+  :disabled t)
 
 (use-package go-mode
   :hook
@@ -55,11 +57,13 @@
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 
 (use-package scala-mode
+  :disabled t
   :interpreter ("scala" . scala-mode)
   :config
   (setenv "JAVA_HOME" "/usr/lib/jvm/java-17-openjdk-amd64"))
 
 (use-package sbt-mode
+  :disabled t
   :commands sbt-start sbt-command
   :config
   ;; https://github.com/ensime/emacs-sbt-mode/issues/31
@@ -92,3 +96,11 @@
 (use-package rust-mode)
 
 (use-package nix-mode)
+
+(use-package java-mode
+  :ensure nil
+  :hook
+  (java-mode . (lambda ()
+                 (setq-local indent-tabs-mode nil)))
+  :config
+  (setenv "JAVA_HOME" "/usr/lib/jvm/java-17-openjdk-amd64"))

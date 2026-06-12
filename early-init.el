@@ -8,7 +8,9 @@
 (defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
 (defconst IS-MAC (eq system-type 'darwin))
 
-(setq package-enable-at-startup nil) ; disable package.el at startup
+(setq package-enable-at-startup nil ; disable package.el at startup
+      default-file-name-handler-alist file-name-handler-alist
+      tramp-archive-enabled nil)
 
 ;; don't use custom
 (setq custom-file (make-temp-file "emacs-custom-"))
@@ -44,7 +46,6 @@
       site-run-file nil)
 
 (set-face-attribute 'default nil
-                    :family "DejaVu Sans Mono"
                     :height 155
                     :weight 'normal
                     :width 'normal)
@@ -98,15 +99,15 @@
 (elpaca-wait)
 
 ;; defer elisp compilation, great with native-comp branch
-(setopt comp-deferred-compilation t
-        use-package-verbose t ; show which packages are being loaded on startup and when
-        use-package-always-ensure t
-        use-package-always-defer t
-        use-package-expand-minimally t
-        use-package-enable-imenu-support t
-        byte-compile-warnings nil
-        delete-by-moving-to-trash t
-        read-process-output-max (* 4 1024 1024))
+(setq comp-deferred-compilation t
+      use-package-verbose t ; show which packages are being loaded on startup and when
+      use-package-always-ensure t
+      use-package-always-defer t
+      use-package-expand-minimally t
+      use-package-enable-imenu-support t
+      byte-compile-warnings nil
+      delete-by-moving-to-trash t
+      read-process-output-max (* 4 1024 1024))
 
 (setq enable-local-variables nil)
 
@@ -122,9 +123,9 @@
   :demand t
   :config
   (unless IS-WINDOWS
-    (setopt display-line-numbers-type 'visual
-            display-line-numbers-width-start t ; auto count number of lines to start numbers
-            display-line-numbers-grow-only t)) ; don't shrink line number width
+    (setq display-line-numbers-type 'visual
+          display-line-numbers-width-start t ; auto count number of lines to start numbers
+          display-line-numbers-grow-only t)) ; don't shrink line number width
 
   (global-display-line-numbers-mode))
 
@@ -140,7 +141,9 @@
                 "  "
                 mode-line-buffer-identification ; buffer name
                 " "
-                vc-mode))
+                vc-mode
+                " "
+                (:eval (breadcrumb-imenu-crumbs))))
 
 (use-package no-littering
   :demand t
@@ -149,6 +152,6 @@
 
 (when (>= emacs-major-version 29)
   (progn
-    (setopt use-short-answers t
-            read-answer-short t)
+    (setq use-short-answers t
+          read-answer-short t)
     (add-to-list 'default-frame-alist '(undecorated-round . t))))

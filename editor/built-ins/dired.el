@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package dired
+  :defer t
   :ensure nil
   :after modal
   :custom

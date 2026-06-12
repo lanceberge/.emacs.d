@@ -46,6 +46,7 @@
   (other-frame -1))
 
 (use-package ace-window
+  :disabled t
   :custom
   (aw-keys '(?j ?k ?l ?s ?d ?s ?h ?a))
   (aw-scope 'frame)

@@ -1,6 +1,5 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org
-  :ensure (:wait t)
   :defer 2.0
   :hook
   (org-mode . (lambda () (setq-local tab-width 2)))
