@@ -1,4 +1,0 @@
-# key: host
-# name: host
-# --
-:ensure (:host github :repo "$1")

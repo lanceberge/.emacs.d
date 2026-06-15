@@ -23,8 +23,6 @@
         ("C-y" . #'corfu-insert)
         ("RET" . #'newline)
         ("<tab>" . #'yas-expand))
-  (:map +insert-mode-map
-        ("M-/" . #'completion-at-point))
   :config
   (add-hook 'corfu-mode-hook
             (lambda ()

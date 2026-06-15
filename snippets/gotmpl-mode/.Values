@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: .Values
+# key: val
+# --
+{{ .Values.$0 }}

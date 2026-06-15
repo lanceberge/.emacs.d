@@ -22,9 +22,9 @@
            (eq (char-after (point)) ?<))
       (progn
         (newline 2 t)
-        (previous-line)
-        (indent-according-to-mode))
-    (newline arg t)))
+        (previous-line))
+    (newline arg))
+  (indent-according-to-mode))
 
 ;;;###autoload
 (defun +elixir-web-maybe-enable ()

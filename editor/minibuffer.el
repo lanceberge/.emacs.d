@@ -19,7 +19,6 @@
 
 (use-package consult
   :defer 0.2
-  :hook (completion-list-mode . consult-preview-at-point-mode)
   :custom
   (xref-show-xrefs-function #'consult-xref)
   (consult-narrow-key "C-SPC")
@@ -28,8 +27,6 @@
          ("'" . #'consult-buffer)
          :map +normal-mode-map
          ("M-g" . #'consult-goto-line)
-         :map +insert-mode-map
-         ("M-/" . #'completion-at-point)
          :map minibuffer-mode-map
          ("M-r" . #'consult-history)
          :map isearch-mode-map

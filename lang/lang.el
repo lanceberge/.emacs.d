@@ -61,20 +61,20 @@
   :custom
   (text-mode-ispell-word-completion nil))
 
-(use-package yaml-mode
-  :mode ("\\.gotmpl\\'" . yaml-mode)
-  :hook
-  (yaml-mode
-   .
-   (lambda ()
-     (if (string-suffix-p ".yaml.gotmpl" buffer-file-name)
-         (remove-hook 'before-save-hook #'whitespace-cleanup)))))
+(use-package yaml-mode)
+
+;;;###autoload
+(define-derived-mode gotmpl-mode yaml-mode "GoTmpl"
+  :syntax-table yaml-mode-syntax-table)
+
+(add-to-list 'auto-mode-alist '("\\.gotmpl\\'" . gotmpl-mode))
 
 (use-package yaml-imenu
   :init
   (yaml-imenu-enable)
   (remove-hook 'yaml-ts-mode-hook 'yaml-set-imenu-generic-expression)
-  (add-hook 'yaml-ts-mode-hook 'yaml-imenu-activate t))
+  (add-hook 'yaml-ts-mode-hook 'yaml-imenu-activate t)
+  (add-hook 'gotmpl-mode-hook 'yaml-imenu-activate t))
 
 (use-package dockerfile-mode)
 

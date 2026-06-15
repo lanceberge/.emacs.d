@@ -134,16 +134,16 @@
                 mode-line-modified
                 " "
                 (:eval (if (fboundp '+modal--mode-line-indicator) (+modal--mode-line-indicator) ""))
-                "  "
-                (eval (if (fboundp 'project-mode-line-format) (project-mode-line-format) ""))
-                ;; "  "
+                "   "
+                (:eval (if (fboundp 'project-mode-line-format) (project-mode-line-format) ""))
+                "   "
                 mode-line-buffer-identification ; buffer name
-                " "
+                "  "
                 ;; vc-mode
-                " "
-                (:eval (breadcrumb-imenu-crumbs))
+                ;; " "
+                (:eval (if (fboundp 'breadcrumb-imenu-crumbs) (breadcrumb-imenu-crumbs) ""))
                 mode-line-format-right-align
-                "    "))
+                "      "))
 
 (use-package no-littering
   :demand t
