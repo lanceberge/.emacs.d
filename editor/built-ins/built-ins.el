@@ -53,7 +53,7 @@
 
 (use-package saveplace ; save location in files
   :ensure nil
-  :hook (after-init . save-place-mode)
+  :hook (emacs-startup . save-place-mode)
   :custom
   (save-place-limit 600))
 
@@ -63,13 +63,13 @@
 
 (use-package autorevert
   :ensure nil
-  :hook (after-init . global-auto-revert-mode)
+  :hook (emacs-startup . global-auto-revert-mode)
   :custom
   (global-auto-revert-non-file-buffers t))
 
 (use-package savehist ; save command history
   :ensure nil
-  :hook (after-init . savehist-mode)
+  :hook (emacs-startup . savehist-mode)
   :custom
   (history-length 500)
   (history-delete-duplicates t)
@@ -195,7 +195,7 @@
 (use-package delsel
   :ensure nil
   :hook
-  (after-init . delete-selection-mode))
+  (emacs-startup . delete-selection-mode))
 
 (use-package indent
   :ensure nil
@@ -207,6 +207,15 @@
         ("H" . #'indent-rigidly-left-to-tab-stop)
         ("l" . #'indent-rigidly-right)
         ("L" . #'indent-rigidly-right-to-tab-stop)))
+
+(use-package compile
+  :ensure nil
+  :commands
+  (compile)
+  :config
+  (require 'ansi-color)
+  :hook
+  (compilation-filter . ansi-color-compilation-filter))
 
 ;;;###autoload
 (defun +indent-rigidly-dwim ()

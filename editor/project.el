@@ -10,9 +10,15 @@
   (project-mode-line t)
   :bind
   (:map +leader-map
-        ("t" . #'+tmux-sessionizer-current-directory)
         ("'" . #'project-find-file)))
 
+(use-package project-compile
+  :ensure (:type file :main "~/.emacs.d/packages/project-compile.el")
+  :hook
+  (savehist-mode . +project-compile-save-hist-mode)
+  :bind
+  (:map +x-map
+        ("pc" . #'+project-compile)))
 
 (use-package project-extensions
   :ensure (:type file :main "~/.emacs.d/packages/project-extensions.el")
