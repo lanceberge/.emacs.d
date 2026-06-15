@@ -63,3 +63,44 @@
    . highlight-indent-guides-mode)
   :custom
   (highlight-indent-guides-method 'character))
+
+(use-package kanagawa-themes
+  :ensure (:host github :repo "lanceberge/kanagawa-emacs"))
+
+(use-package doom-themes)
+
+(use-package theme-rotate
+  :ensure (:type file :main "~/.emacs.d/packages/theme-rotate.el")
+  :hook (emacs-startup . +theme-rotate-load-current-theme)
+  :custom
+  (+theme-rotate-dark-themes
+   '(gruvbox-dark-hard kanagawa-wave doom-badger doom-oceanic-next
+                       doom-tomorrow-night doom-spacegrey doom-tokyo-night
+                       doom-palenight doom-Iosvkem doom-one doom-dark+
+                       doom-monokai-octagon))
+  (+theme-rotate-light-themes
+   '(tango kanagawa-paper doom-nord-light doom-oksolar-light
+           doom-solarized-light tsdh-light doom-opera-light))
+  (+theme-rotate-current-style 'dark)
+  :bind
+  (:repeat-map +theme-rotate-repeat-map
+               ("n" . #'+theme-rotate-rotate)
+               ("l" . #'+theme-rotate-toggle-dark-light)
+               ("p" . #'+theme-rotate-prev))
+  (:map +leader2-map
+        ("tn" . #'+theme-rotate-rotate)
+        ("tj" . #'+theme-rotate-toggle-dark-light)
+        ("tp" . #'+theme-rotate-prev)))
+
+(use-package consult-theme-rotate
+  :ensure (:type file :main "~/.emacs.d/packages/consult-theme-rotate.el")
+  :after (consult theme-rotate)
+  :bind
+  (:map +leader2-map
+        ("tf" . #'+consult-theme-rotate))
+  (:map +consult-theme-rotate-minibuffer-mode-map
+        ("M-P" . #'+consult-theme-rotate-toggle-style)))
+
+(use-package theme-rotate-omarchy
+  :demand t
+  :ensure (:type file :main "~/.emacs.d/packages/theme-rotate-omarchy.el"))
