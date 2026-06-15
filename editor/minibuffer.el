@@ -28,8 +28,6 @@
          ("'" . #'consult-buffer)
          :map +normal-mode-map
          ("M-g" . #'consult-goto-line)
-         :map +insert-mode-map
-         ("M-/" . #'completion-at-point)
          :map minibuffer-mode-map
          ("M-r" . #'consult-history)
          :map isearch-mode-map

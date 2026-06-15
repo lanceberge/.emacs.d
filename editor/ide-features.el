@@ -170,11 +170,10 @@
         ("ep" . #'flymake-goto-prev-error)))
 
 (use-package flyover
-  :ensure t
-  :hook ((flycheck-mode . flyover-mode)
-         (flymake-mode . flyover-mode))
+  :hook ((flymake-mode . flyover-mode))
   :custom
   ;; Checker settings
+  ;; (flyover-checkers '(flymake))
   (flyover-checkers '(flymake))
   (flyover-levels '(error warning info))
 
