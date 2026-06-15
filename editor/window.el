@@ -81,14 +81,14 @@
 (use-package winner ; Undo and redo window configs
   :ensure nil
   :hook
-  (after-init . winner-mode)
+  (emacs-startup . winner-mode)
   :bind
   (:repeat-map winner-repeat-map
                ("p" . #'winner-undo)
                ("n" . #'winner-redo))
   (:map +x-map
-        ("p" . #'winner-undo)
-        ("n" . #'winner-redo)))
+        ("wp" . #'winner-undo)
+        ("wn" . #'winner-redo)))
 
 (use-package windresize
   :custom
