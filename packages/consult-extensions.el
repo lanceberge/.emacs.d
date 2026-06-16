@@ -120,17 +120,58 @@ Otherwise, just call consult-yank-pop."
   (consult-ripgrep default-directory nil))
 
 ;;;###autoload
+(defun +consult--buffer (&optional sources initial-narrow)
+  "Run `consult-buffer' with SOURCES and INITIAL-NARROW."
+  (let ((selected (consult--multi (or sources consult-buffer-sources)
+                                  :require-match
+                                  (confirm-nonexistent-file-or-buffer)
+                                  :prompt "Switch to: "
+                                  :history 'consult--buffer-history
+                                  :sort nil
+                                  :initial-narrow initial-narrow)))
+    ;; For non-matching candidates, fall back to buffer creation.
+    (unless (plist-get (cdr selected) :match)
+      (consult--buffer-action (car selected)))))
+
+;;;###autoload
 (defun +consult-project-buffer ()
   (interactive)
-  (if (project-root (project-current t))
-      (consult-project-buffer)
-    (consult-buffer)))
+  (if (project-current nil)
+      (consult--with-project
+        (+consult--buffer consult-project-buffer-sources ?b))
+    (+consult--buffer consult-buffer-sources ?b)))
 
 ;;;###autoload
 (defun +consult-find-todos ()
   "Search all todos."
   (interactive)
   (consult-line "TODO"))
+
+;;;###autoload
+(defun +consult-org-agenda-todos (&optional match)
+  "Jump to an Org agenda TODO heading.
+
+MATCH is as in `org-map-entries'."
+  (interactive)
+  (require 'consult-org)
+  (unless org-agenda-files
+    (user-error "No agenda files"))
+  (let ((prefix t))
+    (consult--read
+     (consult--slow-operation "Collecting headings..."
+       (or (consult-org--headings prefix match 'agenda)
+           (user-error "No headings")))
+     :prompt "Go to heading: "
+     :category 'org-heading
+     :sort nil
+     :require-match t
+     :history '(:input consult-org--history)
+     :narrow (consult-org--narrow)
+     :initial-narrow ?t
+     :state (consult--jump-state)
+     :annotate #'consult-org--annotate
+     :group #'consult-org--group
+     :lookup (apply-partially #'consult--lookup-prop 'org-marker))))
 
 ;;;###autoload
 (defun +consult-find-key (key-sequence)

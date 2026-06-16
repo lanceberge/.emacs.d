@@ -47,6 +47,63 @@ overrides applied via `minor-mode-overriding-map-alist'."
                        (cons (cons ',modal-mode map)
                              minor-mode-overriding-map-alist))))
        (add-hook ',hook #',fn))))
+
+(defmacro +modal-create-mode-switching-function (function &rest args)
+  "Create a command wrapping FUNCTION and switching modes afterward.
+ARGS must provide an `:ending-mode-function' atom.  The created
+command is named `+modal-FUNCTION-MODE', unless ARGS provides a
+`:name' atom."
+  (declare (indent defun))
+  (let* ((name (plist-get args :name))
+         (ending-mode-function (plist-get args :ending-mode-function))
+         (function-name (symbol-name function))
+         (function-name (if (string-prefix-p "+" function-name)
+                            (substring function-name 1)
+                          function-name))
+         (mode-name (and ending-mode-function
+                         (symbol-name ending-mode-function)))
+         (mode-name (and mode-name
+                         (if (string-prefix-p "+" mode-name)
+                             (substring mode-name 1)
+                           mode-name)))
+         (mode-name (and mode-name
+                         (if (string-match-p "-mode\\'" mode-name)
+                             (substring mode-name 0 (- (length "-mode")))
+                           mode-name)))
+         (fn (or name
+                 (intern (format "+modal-%s-%s" function-name mode-name))))
+         (valid-args t))
+    (let ((remaining args))
+      (while remaining
+        (if (and (memq (car remaining) '(:name :ending-mode-function))
+                 (cdr remaining))
+            (setq remaining (cddr remaining))
+          (setq valid-args nil
+                remaining nil))))
+    (when (or (not ending-mode-function)
+              (not (symbolp ending-mode-function))
+              (and name (not (symbolp name)))
+              (not valid-args))
+      (error "Expected :ending-mode-function atom and optional :name atom"))
+    `(progn
+       ;;;###autoload
+       (defun ,fn (&rest args)
+         ,(format "Call `%s' interactively, then switch to `%s'."
+                  function ending-mode-function)
+         (interactive)
+         (if args
+             (apply #',function args)
+           (call-interactively #',function))
+         (,ending-mode-function 1)))))
+
+(defmacro +modal-create-insert-function (function &rest args)
+  "Create an insert-mode command wrapping FUNCTION.
+The created command is named `+modal-FUNCTION-insert', unless
+ARGS provides a `:name' atom."
+  (declare (indent defun))
+  `(+modal-create-mode-switching-function ,function
+     :ending-mode-function +insert-mode
+     ,@args))
 ;;; Mode-line indicator
 
 (defun +modal--mode-line-indicator ()
@@ -117,7 +174,7 @@ overrides applied via `minor-mode-overriding-map-alist'."
   "Determine what modal state the current buffer should be in."
   (cond
    (+modal-desired-state +modal-desired-state)
-   ((minibufferp) 'insert)
+   ((or (minibufferp) (derived-mode-p 'eshell-mode)) 'insert)
    ((derived-mode-p 'special-mode 'dired-mode 'magit-mode 'org-agenda-mode
                     'help-mode 'Info-mode 'compilation-mode
                     'diff-mode 'package-menu-mode
@@ -160,134 +217,39 @@ overrides applied via `minor-mode-overriding-map-alist'."
   (insert-char c))
 
 ;;; Insert entries
+(dolist (function '(+kill-line
+                    delete-char
+                    forward-char
+                    backward-char
+                    forward-word
+                    backward-word
+                    end-of-line
+                    beginning-of-visual-line
+                    back-to-indentation
+                    +mark-forward-word
+                    +mark-backward-word
+                    kill-word
+                    kill-region
+                    +mark-forward-char
+                    +mark-backward-char
+                    +mark-forward-line
+                    +mark-backward-line
+                    next-line
+                    previous-line
+                    backward-kill-word
+                    zap-up-to-char
+                    +start-of-region-or-backward-char
+                    +end-of-region-or-forward-char
+                    end-of-buffer))
+  (eval `(+modal-create-insert-function ,function)))
+
 ;;;###autoload
-(defun +kill-line-insert (arg)
-  "Kill region (or kill-visual-line if no region) then enter insert mode."
+(defun +kill-line (arg)
+  "Kill region, or kill visual line if no region is active."
   (interactive "P")
   (if (region-active-p)
       (kill-region (region-beginning) (region-end))
-    (kill-visual-line arg))
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +delete-char-insert (arg)
-  (interactive "p")
-  (delete-char arg)
-  (+insert-mode))
-
-;;;###autoload
-(defun +forward-char-insert (arg)
-  (interactive "p")
-  (forward-char arg)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +backward-char-insert (arg)
-  (interactive "p")
-  (backward-char arg)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +forward-word-insert (arg)
-  (interactive "p")
-  (forward-word arg)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +backward-word-insert (arg)
-  (interactive "p")
-  (backward-word arg)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +end-of-line-insert ()
-  (interactive)
-  (end-of-line)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +beginning-of-line-insert ()
-  (interactive)
-  (beginning-of-visual-line)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +back-to-indentation-insert ()
-  (interactive)
-  (back-to-indentation)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +mark-forward-insert ()
-  (interactive)
-  (+mark-forward-word)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +mark-backward-insert ()
-  (interactive)
-  (+mark-backward-word)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +delete-word-insert (arg)
-  (interactive "p")
-  (kill-word arg)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +kill-region-insert ()
-  (interactive)
-  (call-interactively #'kill-region)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +mark-forward-char-insert (arg)
-  (interactive "p")
-  (+insert-mode 1)
-  (+mark-forward-char arg))
-
-;;;###autoload
-(defun +mark-backward-char-insert (arg)
-  (interactive "p")
-  (+mark-backward-char arg)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +mark-forward-line-insert ()
-  (interactive)
-  (call-interactively #'+mark-forward-line)
-  (+insert-mode))
-
-;;;###autoload
-(defun +mark-backward-line-insert ()
-  (interactive)
-  (call-interactively #'+mark-backward-line)
-  (+insert-mode))
-
-;;;###autoload
-(defun +next-line-insert (arg)
-  (interactive "p")
-  (next-line arg)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +previous-line-insert (arg)
-  (interactive "p")
-  (previous-line arg)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +backward-kill-word-insert ()
-  (interactive)
-  (call-interactively #'backward-kill-word)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +zap-up-to-char-insert ()
-  (interactive)
-  (call-interactively #'zap-up-to-char)
-  (+insert-mode 1))
+    (kill-visual-line arg)))
 
 ;;; Insert Exits
 ;;;###autoload
@@ -295,6 +257,24 @@ overrides applied via `minor-mode-overriding-map-alist'."
   (interactive "p")
   (save-buffer arg)
   (+normal-mode))
+
+;;;###autoload
+(defun +start-of-region-or-backward-char (&optional arg)
+  (interactive "P")
+  (if (region-active-p)
+      (let ((dest (min (point) (mark))))
+        (goto-char (- dest (or arg 0)))
+        (deactivate-mark t))
+    (backward-char (or arg 1))))
+
+;;;###autoload
+(defun +end-of-region-or-forward-char (&optional arg)
+  (interactive "P")
+  (if (region-active-p)
+      (let ((dest (max (point) (mark))))
+        (goto-char (+ dest (or arg 0)))
+        (deactivate-mark t))
+    (forward-char (or arg 1))))
 
 ;;; Modal Utils
 

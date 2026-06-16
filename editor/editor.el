@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package apheleia ;; format on save
   :hook
-  (emacs-lisp-mode . apheleia-mode)
+  ((emacs-lisp-mode bash-ts-mode) . apheleia-mode)
   :bind
   (:map +leader-map
         ("=" . #'apheleia-format-buffer)))
@@ -10,7 +10,15 @@
   :custom
   (prefix-help-command 'embark-prefix-help-command)
   (embark-confirm-act-all nil)
-  (embark-quit-after-action nil)
+  (embark-quit-after-action
+   '((find-file . t)
+     (consult-grep . t)
+     (consult-ripgrep . t)
+     (eshell . t)
+     (project-eshell . t)
+     (describe-symbol . nil)
+     (embark-copy-as-kill . nil)
+     (t . nil)))
   :bind
   (:map +normal-mode-map
         ("C-." . #'embark-act)
@@ -20,7 +28,7 @@
         ("M-," . #'+embark-select)
         ("M-a" . #'embark-act-all)
         ("M-r" . #'embark-become)
-        ("C-c C-e" . #'embark-export))
+        ("M-e" . #'embark-export))
   (:map embark-symbol-map
         ("s" . #'+project-replace-regex)
         ("h" . #'helpful-symbol))
@@ -33,6 +41,8 @@
         ("k" . #'helpful-key))
   (:map embark-region-map
         ("s" . #'+project-replace-regex))
+  (:map embark-file-map
+        ("y" . #'project-eshell))
   (:map embark-general-map
         ("'" . #'embark-dwim)
         (";" . #'consult-ripgrep)
@@ -73,7 +83,8 @@
 
 (add-hook 'after-init-hook
           (lambda ()
-            (setq exec-path (append exec-path '("~/go/bin")))))
+            (add-to-list 'exec-path "~/go/bin")
+            (add-to-list 'exec-path "~/.cargo/bin")))
 
 (when (version< emacs-version "29.1")
   (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
@@ -196,8 +207,6 @@
 (use-package +mark-backward
   :ensure nil
   :bind
-  (:map +normal-mode-map
-        ("E" . #'+mark-forward-word))
   (:repeat-map mark-forward-repeat-map
                ("-" . #'+mark-forward-backward-ring-pop)
                ("." . #'repeat)
@@ -223,5 +232,20 @@
   (:map +leader3-map
         ("[" . #'+backward-global-mark)
         ("]" . #'+forward-global-mark)))
+
+(use-package newcomment
+  :ensure nil
+  :bind
+  (:map text-mode-map
+        ("M-;" . #'+comment-dwim))
+  (:map prog-mode-map
+        ("M-;" . #'+comment-dwim)))
+
+;;;###autoload
+(defun +comment-dwim ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively #'comment-dwim)
+    (call-interactively #'comment-line)))
 
 (add-hook 'window-configuration-change-hook '+restore-major-mode)

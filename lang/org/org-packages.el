@@ -26,11 +26,12 @@
   (:map org-agenda-mode-map
         ("g" . ace-link))
   (:map +leader2-map
+        ("ot" . #'org-todo-list)
         ("oa" . #'org-agenda)))
 
 (use-package org-capture
   :ensure nil
-  :hook (org-capture-mode . (lambda () (+insert-mode 1)))
+  :hook (org-capture-mode . +insert-mode)
   :custom
   (org-capture-templates
    '(("t" "Todo"
@@ -108,7 +109,7 @@
 
 (use-package ob-shell
   :ensure nil
-  :commands org-babel-execute:sh)
+  :commands (org-babel-execute:sh org-babel-execute:shell))
 
 (use-package ob-C
   :ensure nil
@@ -135,5 +136,7 @@
   :hook (org-mode . org-indent-mode))
 
 (use-package org-appear
+  :hook
+  (org-mode . org-appear-mode)
   :custom
   (org-appear-autolinks t))

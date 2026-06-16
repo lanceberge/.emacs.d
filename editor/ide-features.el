@@ -26,6 +26,8 @@
   (eglot-extend-to-xref t)
   (eglot-events-buffer-config '(:size 0 :format short))
   :bind
+  (:map +leader-map
+        ("te" . #'+eglot-toggle-debug))
   (:map +leader2-map
         ("er" . #'eglot-reconnect)
         ("r" . #'eglot-rename)
@@ -69,8 +71,9 @@
     `(:typescript (:tsdk ,tsdk-path)
                   :vue (:hybridMode :json-false))))
 
-(unload-feature 'eldoc t)
-(defvar global-eldoc-mode nil)
+(when (featurep 'eldoc)
+  (unload-feature 'eldoc t)
+  (defvar global-eldoc-mode nil))
 
 (use-package eldoc
   :hook (emacs-lisp-mode . eldoc-mode)
@@ -80,7 +83,7 @@
   (eglot-code-action-indications '(eldoc-hint)))
 
 ;;;###autoload
-(defun +eldoc-elp ()
+(defun +eldoc-help ()
   "Show eldoc info for current symbol and restore cursor position."
   (interactive)
   (let ((win (selected-window)))
@@ -143,7 +146,6 @@
     (setq +eglot--jsonrpc-log-event-default
           (symbol-function 'jsonrpc--log-event)))
 
-
   (fset 'jsonrpc--log-event #'ignore))
 
 ;;;###autoload
@@ -153,8 +155,10 @@
   (if (eq (symbol-function 'jsonrpc--log-event) #'ignore)
       (progn
         (fset 'jsonrpc--log-event +eglot--jsonrpc-log-event-default)
+        (setq eglot-events-buffer-config '(:size 2000000 :format full))
         (message "Eglot JSONRPC debug logging enabled"))
     (fset 'jsonrpc--log-event #'ignore)
+    (setq eglot-events-buffer-config '(:size 0 :format short))
     (message "Eglot JSONRPC debug logging disabled")))
 
 (use-package flymake
@@ -169,8 +173,76 @@
         ("en" . #'flymake-goto-next-error)
         ("ep" . #'flymake-goto-prev-error)))
 
+;;;###autoload
+(defun +modal-flyover-on ()
+  "Enable `flyover-mode' for the current buffer."
+  (flyover-mode 1))
+
+;;;###autoload
+(defun +modal-flyover-off ()
+  "Disable `flyover-mode' for the current buffer."
+  (flyover-mode -1))
+
+(define-minor-mode +modal-flyover-mode
+  "Toggle flyover in normal mode."
+  :lighter ""
+  (if +modal-flyover-mode
+      (progn
+        (add-hook '+normal-mode-hook '+modal-flyover-on nil t)
+        (add-hook '+insert-mode-hook '+modal-flyover-off nil t))
+    (remove-hook '+normal-mode-hook '+modal-flyover-on t)
+    (remove-hook '+insert-mode-hook '+modal-flyover-off t)))
+
+;;;###autoload
+(defun +flyover-configure-next-line-overlay (overlay face msg beg error)
+  "Configure Flyover OVERLAY before the next line instead of on the previous newline."
+  (condition-case configure-err
+      (when (overlayp overlay)
+        (flyover--setup-basic-overlay-properties overlay error t)
+        (let* ((components (flyover--create-overlay-display-components face error msg))
+               (final-string (flyover--build-final-overlay-string components error msg)))
+          (overlay-put overlay 'before-string
+                       (propertize final-string
+                                   'help-echo msg
+                                   'rear-nonsticky t
+                                   'cursor-sensor-functions nil))))
+    (error
+     (flyover--handle-error 'overlay-configuration configure-err
+                            "configure-next-line-overlay" (format "beg=%S" beg)))))
+
+;;;###autoload
+(defun +flyover-create-next-line-overlay (original region level msg &optional error)
+  "Create Flyover's below-line overlay without replacing the current line's newline."
+  (if flyover-show-at-eol
+      (funcall original region level msg error)
+    (let ((overlay nil))
+      (condition-case ov-err
+          (let ((beg (car region))
+                (end (cdr region)))
+            (save-excursion
+              (goto-char (min end (point-max)))
+              (forward-line flyover-line-position-offset)
+              (let ((overlay-pos (line-beginning-position))
+                    (face (flyover--get-face level)))
+                (when (and (numberp beg)
+                           (numberp end)
+                           (numberp overlay-pos)
+                           (> beg 0)
+                           (> end 0)
+                           (> overlay-pos 0)
+                           (<= beg (point-max))
+                           (<= end (point-max))
+                           (<= overlay-pos (point-max)))
+                  (setq overlay (make-overlay overlay-pos overlay-pos))
+                  (overlay-put overlay 'flyover-beg beg)
+                  (+flyover-configure-next-line-overlay overlay face msg beg error)))))
+        (error
+         (flyover--handle-error 'overlay-creation ov-err "create-next-line-overlay"
+                                (format "region=%S level=%S" region level))))
+      overlay)))
+
 (use-package flyover
-  :hook ((flymake-mode . flyover-mode))
+  :hook ((flymake-mode . +modal-flyover-mode))
   :custom
   ;; Checker settings
   ;; (flyover-checkers '(flymake))
@@ -218,7 +290,12 @@
   (flyover-display-mode 'always)
 
   ;; Completion integration
-  (flyover-hide-during-completion t))
+  (flyover-hide-during-completion t)
+  :config
+  (unless (advice-member-p #'+flyover-create-next-line-overlay
+                           'flyover--create-overlay)
+    (advice-add 'flyover--create-overlay
+                :around #'+flyover-create-next-line-overlay)))
 
 (use-package breadcrumb)
 
@@ -241,34 +318,3 @@
   (unless (derived-mode-p 'emacs-lisp-mode)
     (add-hook 'xref-backend-functions
               #'+dumb-jump-xref-activate-unless-eglot nil t)))
-
-;;;###autoload
-(defun +xref-rename-symbol-at-point ()
-  (interactive)
-  (let* ((symbol (thing-at-point 'symbol t))
-         (identifier (or symbol (user-error "No symbol at point")))
-         (to (read-string (format "Replace '%s' with: " symbol))))
-    (when (string-equal symbol to)
-      (message "No change needed")
-      (cl-return-from my/elixir-rename-symbol-at-point))
-    (let ((xref-show-xrefs-function
-           (lambda (fetcher _display-action)
-             (funcall fetcher)))
-          xrefs)
-      (setq xrefs (xref-find-references identifier))
-      (if (not xrefs)
-          (message "No references found for '%s' — nothing to rename" identifier)
-        (let ((count 0))
-          (dolist (xref xrefs)
-            (let* ((loc (xref-item-location xref))
-                   (marker (xref-location-marker loc)))
-              (when (and marker (buffer-live-p (marker-buffer marker)))
-                (with-current-buffer (marker-buffer marker)
-                  (save-excursion
-                    (goto-char marker)
-                    (let ((bounds (bounds-of-thing-at-point 'symbol)))
-                      (when bounds
-                        (delete-region (car bounds) (cdr bounds))
-                        (insert to)
-                        (setq count (1+ count)))))))))
-          (message "Replaced '%s' → '%s' (%d occurrences)" symbol to count))))))

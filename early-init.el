@@ -52,7 +52,7 @@
 
 (advice-add #'x-apply-session-resources :override #'ignore)
 
-(load (expand-file-name "early-init.local.el" user-emacs-directory) t)
+(load (expand-file-name "early-init-local.el" user-emacs-directory) t)
 
 (defvar elpaca-installer-version 0.12)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -140,7 +140,6 @@
                 mode-line-buffer-identification ; buffer name
                 "  "
                 ;; vc-mode
-                ;; " "
                 (:eval (if (fboundp 'breadcrumb-imenu-crumbs) (breadcrumb-imenu-crumbs) ""))
                 mode-line-format-right-align
                 "      "))

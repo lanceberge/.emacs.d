@@ -2,6 +2,9 @@
 (use-package isearch
   :ensure nil
   :hook (isearch-mode-end . +isearch-exit-at-start)
+  :custom
+  (isearch-lazy-count t)
+  (search-invisible nil)
   :bind
   (:map isearch-mode-map
         ("C-j" . #'isearch-repeat-forward)

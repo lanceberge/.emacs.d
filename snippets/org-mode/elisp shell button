@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: elisp shell button
+# key: elsb
+# --
+[[elisp:(async-shell-command "${1:command}")][${0:label}]]

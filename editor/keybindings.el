@@ -30,7 +30,7 @@
   :bind
   (:map +leader-map
         ("h" . #'help-command)
-        ("d" . #'duplicate-line)
+        ("d" . #'duplicate-dwim)
         ("q" . #'+server-edit)
         ("er" . #'+source-init-file)
         ;; ("[" . #'beginning-of-buffer)
@@ -101,7 +101,6 @@
         ([remap +change] . #'replace-rectangle)))
 
 (use-package key-chord
-  :demand t
   :hook
   (emacs-startup . key-chord-mode)
   :config

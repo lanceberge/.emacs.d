@@ -70,6 +70,7 @@
 (add-to-list 'auto-mode-alist '("\\.gotmpl\\'" . gotmpl-mode))
 
 (use-package yaml-imenu
+  :if (executable-find "ruby")
   :init
   (yaml-imenu-enable)
   (remove-hook 'yaml-ts-mode-hook 'yaml-set-imenu-generic-expression)
@@ -133,3 +134,9 @@
                  (setq-local indent-tabs-mode nil)))
   :config
   (setenv "JAVA_HOME" "/usr/lib/jvm/java-17-openjdk-amd64"))
+
+(use-package typst-ts-mode
+  :ensure (:host codeberg :repo "meow_king/typst-ts-mode")
+  :config
+  (add-to-list 'treesit-language-source-alist
+               '(typst "https://github.com/Ziqi-Yang/tree-sitter-typst")))

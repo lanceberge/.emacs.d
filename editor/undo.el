@@ -6,14 +6,7 @@
   (undo-strong-limit (* 13 240000))
   (undo-outer-limit (* 13 24000000))
   :bind
-  ("C-M--" . #'undo-redo)
-  ;; (:repeat-map undo-repeat-map
-  ;; ("u" . #'+undo)
-  ;; ("r" . #'+redo))
-  ;; (:map meow-normal-state-keymap
-  ;;       ("u" . #'+undo)
-  ;;       ("z" . #'+redo))
-  )
+  ("C-M--" . #'undo-redo))
 
 ;;;###autoload
 (defun +undo (&optional arg)

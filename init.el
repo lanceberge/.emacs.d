@@ -23,7 +23,7 @@
 
       find-file-visit-truename t ; auto go to symlinks
       vc-follow-symlinks t
-      confirm-kill-emacs 'y-or-n-p
+      confirm-kill-emacs nil
       kill-buffer-query-functions nil
       inhibit-compacting-font-caches t ; inhibit font compacting
       highlight-nonselected-windows t
@@ -272,29 +272,31 @@
         ("i" . #'+insert-mode)
 
         ;; Enter insert mode with default emacs keys
-        ("C-a" . #'+beginning-of-line-insert)
-        ("C-e" . #'+end-of-line-insert)
-        ("M-m" . #'+back-to-indentation-insert)
-        ("M-F" . #'+mark-forward-insert)
-        ("M-B" . #'+mark-backward-insert)
-        ("M-f" . #'+forward-word-insert)
-        ("M-b" . #'+backward-word-insert)
-        ("C-k" . #'+kill-line-insert)
-        ("C-f" . #'+forward-char-insert)
-        ("C-b" . #'+backward-char-insert)
-        ("C-d" . #'+delete-char-insert)
-        ("C-w" . #'+kill-region-insert)
-        ("M-d" . #'+delete-word-insert)
-        ("C-S-f" . #'+mark-forward-char-insert)
-        ("C-S-b" . #'+mark-backward-char-insert)
-        ("C-n" . #'+next-line-insert)
-        ("C-p" . #'+previous-line-insert)
-        ("C-S-n" . #'+mark-forward-line-insert)
-        ("C-S-p" . #'+mark-backward-line-insert)
-        ("C-<backspace>" . #'+backward-kill-word-insert)
-        ("M-<backspace>" . #'+backward-kill-word-insert)
-        ("M-z" . #'+zap-up-to-char-insert)
+        ("C-a" . #'+modal-beginning-of-visual-line-insert)
+        ("C-e" . #'+modal-end-of-line-insert)
+        ("M-m" . #'+modal-back-to-indentation-insert)
+        ("M-F" . #'+modal-mark-forward-word-insert)
+        ("M-B" . #'+modal-mark-backward-word-insert)
+        ("M-f" . #'+modal-forward-word-insert)
+        ("M-b" . #'+modal-backward-word-insert)
+        ("C-k" . #'+modal-kill-line-insert)
+        ("C-f" . #'+modal-end-of-region-or-forward-char-insert)
+        ("C-b" . #'+modal-start-of-region-or-backward-char-insert)
+        ("C-d" . #'+modal-delete-char-insert)
+        ("C-w" . #'+modal-kill-region-insert)
+        ("M-d" . #'+modal-kill-word-insert)
+        ("C-S-f" . #'+modal-mark-forward-char-insert)
+        ("C-S-b" . #'+modal-mark-backward-char-insert)
+        ("C-n" . #'+modal-next-line-insert)
+        ("C-p" . #'+modal-previous-line-insert)
+        ("C-S-n" . #'+modal-mark-forward-line-insert)
+        ("C-S-p" . #'+modal-mark-backward-line-insert)
+        ("C-<backspace>" . #'+modal-backward-kill-word-insert)
+        ("M-<backspace>" . #'+modal-backward-kill-word-insert)
+        ("M->" . #'+modal-end-of-buffer-insert)
+        ("M-z" . #'+modal-zap-up-to-char-insert)
 
+        ("X" . #'exchange-point-and-mark)
         ("s-u" . #'+revert-buffer)
         ("S-<backspace>" . #'backward-kill-word)
         ("R" . #'+replace-char)
@@ -337,7 +339,7 @@
         ("T" . #'transpose-words)
         ("?" . #'undo-redo)
         ("D" . #'kill-word)
-        ("w" . #'kill-region)
+        ("w" . #'+kill-line-or-region)
         ("W" . #'kill-ring-save)
         ("}" . #'forward-paragraph)
         ("{" . #'backward-paragraph)

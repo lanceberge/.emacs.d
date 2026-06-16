@@ -2,11 +2,11 @@
 (use-package elisp-mode
   :ensure nil
   :bind
+  (:map +x-map
+        ("e" . #'eval-last-sexp))
   (:map +leader-map
-        ("es" . #'eval-last-sexp)
-        ("ee" . #'eval-expression)
-        ("eb" . #'eval-buffer)
-        ("ef" . #'eval-defun)))
+        (":" . #'eval-expression)
+        ("eb" . #'eval-buffer)))
 
 (use-package +emacs-lisp-extensions
   :ensure (:type file :main "~/.emacs.d/packages/emacs-lisp-extensions.el")

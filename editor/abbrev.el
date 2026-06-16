@@ -29,11 +29,11 @@
       ("lv" "use Phoenix.LiveView")
       ("heex" "~H\"\"\"")
 
-      ("ok" "{:ok,")
-      ("err" "{:error,")
-      ("norep" "{:noreply, socket}")
-      ("reply" "{:reply,")
-      ("cont" "{:cont,")))
+      (";ok" "{:ok,")
+      (";err" "{:error,")
+      (";norep" "{:noreply, socket}")
+      (";reply" "{:reply,")
+      (";cont" "{:cont,")))
 
   (defvar elixir-ts-mode-abbrev-table)
   (setq elixir-ts-mode-abbrev-table elixir-mode-abbrev-table)

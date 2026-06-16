@@ -2,12 +2,12 @@
 .agent-shell/
 auto-save-list
 custom.el
-early-init.local.el
+early-init-local.el
 editor/local.el
 eln-cache/
 elpa
 elpaca
-etc
+etc/*
 history
 ido.last
 projects

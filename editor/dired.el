@@ -13,6 +13,7 @@
   :bind
   (:map dired-mode-map
         ("i" . +dired-maybe-insert-subdir)
+        ("e" . #'dired-toggle-read-only)
         ("x" . #'dired-do-flagged-delete)
         ([remap negative-argument] . #'+dired/up-dir))
   :config

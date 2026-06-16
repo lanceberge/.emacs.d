@@ -32,10 +32,11 @@ Recurse through the buffer-list, skipping the first value since that's the curre
   (interactive "p")
   (let ((current-buffer (current-buffer))
         (project-root-dir
-         (expand-file-name
-          (or project
-              (when (project-current t)
-                (project-root (project-current t))))))
+         (when-let ((project (or project (project-current nil))))
+           (expand-file-name
+            (if (stringp project)
+                project
+              (project-root project)))))
         (target-index (1- (abs n)))) ; Convert to 0-based index
     (defun +switch-to-recent-buffer-helper (buffer-list remaining)
       (if (not buffer-list)

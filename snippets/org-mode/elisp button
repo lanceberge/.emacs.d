@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: elisp button
+# key: elb
+# --
+[[elisp:("${1:command}")][${2:label}]]$0

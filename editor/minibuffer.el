@@ -22,35 +22,32 @@
   :custom
   (xref-show-xrefs-function #'consult-xref)
   (consult-narrow-key "C-SPC")
-  :bind (
-         :map +x-map
-         ("'" . #'consult-buffer)
-         :map +normal-mode-map
-         ("M-g" . #'consult-goto-line)
-         :map minibuffer-mode-map
-         ("M-r" . #'consult-history)
-         :map isearch-mode-map
-         ("M-r" . #'consult-isearch-history)
-         :map +leader-map
-         ("." . #'find-file)
-         ("M-x" . #'consult-mode-command)
-         ("fr" . #'consult-recent-file)
-         ("fj" . #'consult-imenu)
-         ("bb" . #'consult-buffer)
-         ("pm" . #'consult-global-mark)
-         ("fb" . #'consult-bookmark)
-         ("fm" . #'consult-mark)
-         ("rf" . #'consult-recent-file)
-         ("rc" . #'consult-complex-command)
-         ;; ("fh" . #'consult-man)
-         ("fe" . #'consult-flymake)
-         ("fo" . #'consult-outline)
-         ("f." . #'consult-fd)
-         ("fl" . #'consult-goto-line)
-         ("fa" . #'consult-org-agenda)
-         (";" . #'consult-ripgrep)
-         ("C-;" . #'consult-ripgrep)
-         ("pj" . #'consult-imenu-multi)))
+  :bind
+  (:map +x-map
+        ("b" . #'consult-buffer)
+        ("'" . #'consult-recent-file))
+  (:map +normal-mode-map
+        ("M-g" . #'consult-goto-line))
+  (:map minibuffer-mode-map
+        ("M-r" . #'consult-history))
+  (:map isearch-mode-map
+        ("M-r" . #'consult-isearch-history))
+  (:map +leader-map
+        ("." . #'find-file)
+        ("M-x" . #'consult-mode-command)
+        ("fj" . #'consult-imenu)
+        ("pm" . #'consult-global-mark)
+        ("fb" . #'consult-bookmark)
+        ("fm" . #'consult-mark)
+        ("rc" . #'consult-complex-command)
+        ;; ("fh" . #'consult-man)
+        ("fe" . #'consult-flymake)
+        ("fo" . #'consult-outline)
+        ("f." . #'consult-fd)
+        ("fl" . #'consult-goto-line)
+        (";" . #'consult-ripgrep)
+        ("C-;" . #'consult-ripgrep)
+        ("pj" . #'consult-imenu-multi)))
 
 (use-package consult-extensions
   :ensure (:type file :main "~/.emacs.d/packages/consult-extensions.el")
@@ -75,6 +72,7 @@
         ("SPC k" . #'+consult-keep-lines)
         ("fp" . #'+consult-find-package)
         ("SPC /" . #'+consult-line-multi)
+        ("fa" . #'+consult-org-agenda-todos)
         ("pt" . #'+consult-project-find-todos)
         ("onf" . #'+consult-org-project-file)
         ("c'" . #'+consult-project-file-here)))

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: shell src output block
+# key: sso
+# --
+#+BEGIN_SRC shell :results output replace
+$0
+#+END_SRC

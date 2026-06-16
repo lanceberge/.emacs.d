@@ -14,6 +14,8 @@
         ("S-<return>" . #'insert-newline-above-dwim))
   (:map prog-mode-map
         ("C-g" . #'+keyboard-quit))
+  (:map +normal-mode-map
+        ("C-g" . #'+keyboard-quit))
   (:map text-mode-map
         ("C-g" . #'+keyboard-quit))
   (:map +leader-map
@@ -121,6 +123,8 @@
               (setq-local electric-pair-pairs
                           (append electric-pair-pairs '((?< . ?>))))))
   :config
+  (remove-hook 'self-insert-uses-region-functions
+               #'electric-pair-will-use-region)
   (setq electric-pair-inhibit-predicate
         (lambda (c)
           (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
@@ -170,7 +174,7 @@
   :ensure nil
   :bind
   (:map +leader-map
-        ("ed" . #'toggle-debug-on-error)))
+        ("td" . #'toggle-debug-on-error)))
 
 (use-package occur
   :ensure nil
@@ -210,14 +214,39 @@
         ("l" . #'indent-rigidly-right)
         ("L" . #'indent-rigidly-right-to-tab-stop)))
 
+
 (use-package compile
   :ensure nil
   :commands
   (compile)
   :config
   (require 'ansi-color)
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(+elixir-exunit
+                 "^[[:space:]]*\\([^:\n]+\\.exs?\\):\\([0-9]+\\):"
+                 1 2))
+  (add-to-list 'compilation-error-regexp-alist '+elixir-exunit)
   :hook
   (compilation-filter . ansi-color-compilation-filter))
+
+(use-package ibuffer
+  :ensure nil
+  :after modal
+  :config
+  (+modal-bind +motion-mode ibuffer-mode-hook
+               "x" #'ibuffer-do-kill-on-deletion-marks))
+
+(use-package subword-mode ;; enable `word' based commands to tread camel case text as separate words
+  :ensure nil
+  :hook
+  ((java-mode java-ts-mode yaml-mode yaml-ts-mode) . subword-mode))
+
+(use-package view-mode
+  :ensure nil
+  :hook (read-only-mode . view-mode)
+  :bind
+  (:map view-mode-map
+        ("v" . #'View-scroll-page-forward)))
 
 ;;;###autoload
 (defun +indent-rigidly-dwim ()

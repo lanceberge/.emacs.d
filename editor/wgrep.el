@@ -9,6 +9,38 @@
         ([remap quit-window] . #'+wgrep-finish-edit)
         ("%" . #'+wgrep-replace)))
 
+(with-eval-after-load 'xref
+  (define-key xref--xref-buffer-mode-map (kbd "E") #'+xref-export-to-grep))
+
+;;TODO remove this in emacs 31 where it's built in
+;;;###autoload
+(defun +xref-export-to-grep ()
+  "Export Xref results to a grep-mode buffer."
+  (interactive)
+  (unless (derived-mode-p 'xref--xref-buffer-mode)
+    (user-error "Not in an Xref buffer"))
+  (let* ((xrefs (or (and (boundp 'xref--fetcher)
+                         xref--fetcher
+                         (funcall xref--fetcher))
+                    (user-error "No xref items found")))
+         (xref-default-directory default-directory)
+         (buffer (get-buffer-create "*xref export - grep*")))
+    (with-current-buffer buffer
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert (format "-*- mode: grep; default-directory: %S -*-\n\n"
+                        xref-default-directory))
+        (dolist (xref xrefs)
+          (let* ((location (xref-item-location xref))
+                 (group (xref-location-group location))
+                 (line (xref-location-line location))
+                 (summary (xref-item-summary xref)))
+            (when (and group line)
+              (insert (format "%s:%d:%s\n" group line summary))))))
+      (grep-mode)
+      (setq default-directory xref-default-directory))
+    (pop-to-buffer buffer)))
+
 ;;;###autoload
 (defun +grep-wgrep-replace ()
   (interactive)

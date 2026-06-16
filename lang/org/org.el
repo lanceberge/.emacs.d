@@ -22,6 +22,7 @@
                               ("style" "emacs")))
   (org-pretty-entities t)
   (org-hide-emphasis-markers t)
+  (org-confirm-elisp-link-function nil)
   :bind
   (:map org-mode-map
         ([remap consult-imenu] . #'consult-org-heading)

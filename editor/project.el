@@ -1,8 +1,8 @@
 ;;; -*- lexical-binding: t -*-
-(require 'subr-x)
-
 (use-package project
   :demand t
+  :hook
+  (eshell-mode . +insert-mode)
   :commands
   (project-switch-project project-prompter project-root)
   :custom
@@ -10,6 +10,8 @@
   (project-mode-line t)
   :bind
   (:map +leader-map
+        ("y" . #'project-eshell)
+        ("r." . #'project-root-find-file)
         ("'" . #'project-find-file)))
 
 (use-package project-compile
