@@ -56,6 +56,19 @@ Recurse through the buffer-list, skipping the first value since that's the curre
     (+switch-to-recent-buffer-helper (cdr (buffer-list)) target-index)))
 
 ;;;###autoload
+(defun +project-kill-buffer ()
+  "Kill the current buffer and switch to the most recent buffer in the same project."
+  (interactive)
+  (let ((buffer (current-buffer))
+        (project-root-dir (when (project-current t)
+                            (expand-file-name (project-root (project-current t))))))
+    (+project-other-buffer 1 project-root-dir
+                           (lambda ()
+                             (switch-to-buffer (other-buffer buffer t))))
+    (unless (eq buffer (current-buffer))
+      (kill-buffer buffer))))
+
+;;;###autoload
 (defun +project-visit-last-buffer (n &optional dir)
   "Switch to the last open buffer in a project at `DIR'."
   (interactive "p")

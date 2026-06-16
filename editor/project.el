@@ -24,6 +24,8 @@
   :ensure (:type file :main "~/.emacs.d/packages/project-extensions.el")
   :demand t
   :bind
+  (:map +x-map
+        ("k" . #'+project-kill-buffer))
   (:map +leader-map
         ("SPC ;" . #'+project-switch-ripgrep)
         ("SPC '" . #'+project-switch)

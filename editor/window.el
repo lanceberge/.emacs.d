@@ -8,7 +8,6 @@
                ("n" . #'next-buffer)
                ("p" . #'previous-buffer))
   (:map +leader-map
-        ("bd" . #'kill-current-buffer)
         ("bq" . #'+save-and-kill-buffer)
         ("br" . #'+revert-buffer)
         ("SPC l" . #'+other-buffer)

@@ -245,7 +245,6 @@
         ("x" . #'exchange-point-and-mark)
         ("TAB" . #'+indent-rigidly-dwim)
         ("SPC" . #'rectangle-mark-mode)
-        ("k" . #'kill-current-buffer)
         ("h" . #'mark-whole-buffer)
         ("0" . #'delete-window)
         ("1" . #'delete-other-windows)
