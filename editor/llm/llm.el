@@ -1,8 +1,9 @@
 ;;; -*- lexical-binding: t -*-
 (use-package gptel
   :custom
-  (gptel-model 'claude-sonnet-4-20250514)
+  (gptel-model nil)
   (gptel-default-mode 'org-mode)
+  (gptel-cache '(system message tool))
   :bind
   ("C-c C-l". #'+gptel-project-clear-buffer)
   (:map gptel-mode-map
@@ -20,7 +21,23 @@
   (setq
    gptel-backend (gptel-make-anthropic "Claude"
                    :stream t
-                   :key #'gptel-api-key)))
+                   :key #'gptel-api-key))
+  (add-hook 'gptel-rewrite-directives-hook #'+gptel-rewrite-directive-from-agents-md))
+
+(use-package agent-lisp
+  :ensure (:type file :main "~/.emacs.d/packages/agent-lisp.el")
+  :commands
+  (+agent-lisp-trace +agent-lisp-apropos +agent-lisp-eval-buffer +agent-lisp-function-source))
+
+;;;###autoload
+(defun +gptel-rewrite-directive-from-agents-md ()
+  "Return the contents of the current project's AGENTS.md, if any."
+  (when-let* ((root (ignore-errors (+project--current-proj-name)))
+              (agents-file (expand-file-name "AGENTS.md" root))
+              ((file-exists-p agents-file)))
+    (with-temp-buffer
+      (insert-file-contents agents-file)
+      (buffer-string))))
 
 ;;;###autoload
 (defun +gptel-send ()

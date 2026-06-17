@@ -20,6 +20,7 @@ Keep the package small and focused:
 - Put interactive/core commands above helper functions they call.
 - End the file with `(provide '<name>)`. The provide block should not include the "+" prefix
 - Have a use package block somewhere in the editor subdirectory, typically editor.el but if there is another file where this functionality makes sense, then put it there, for example:
+- If the package is requested to end in `-extensions`, e.g. `+consult-extensions`, then functions and variables should just be named `+consult-<function name>`. `-extensions` should be omitted from the names
 
 ```
 (use-package consult-extensions

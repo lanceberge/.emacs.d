@@ -59,8 +59,17 @@
     (or (memq 'link face)
         (seq-some #'+ace-link-agent-shell--link-face-p face)))))
 
-(add-to-list 'ace-link-major-mode-actions
-             '(+ace-link-agent-shell-open agent-shell-mode))
+;;;###autoload
+(define-minor-mode +ace-link-agent-shell-mode
+  "Enable ace-link support for `agent-shell-mode'."
+  :global t
+  :keymap (make-sparse-keymap)
+  (if +ace-link-agent-shell-mode
+      (add-to-list 'ace-link-major-mode-actions
+                   '(+ace-link-agent-shell-open agent-shell-mode))
+    (setq ace-link-major-mode-actions
+          (remove '(+ace-link-agent-shell-open agent-shell-mode)
+                  ace-link-major-mode-actions))))
 
 (provide 'ace-link-agent-shell)
 ;;; ace-link-agent-shell.el ends here

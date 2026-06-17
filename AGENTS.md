@@ -1,26 +1,38 @@
-After editing files, once you have finalized all changes, eval each modified buffer via `emacsclient`.
-
-Run this for each file you modified (substitute the absolute path):
+## Rules
+- After editing Emacs Lisp files, once you have finalized all changes, eval each modified buffer via `emacsclient`. Run this for each file you modified (substitute the absolute path):
 
 ```sh
-emacsclient -e '(with-current-buffer (or (get-file-buffer "/abs/path/to/file.el") (find-file-noselect "/abs/path/to/file.el")) (revert-buffer t t t) (eval-buffer) "ok")'
+emacsclient -e '(+agent-lisp-eval-buffer "/abs/path/to/file.el")'
 ```
 
-All custom functions and variables should be named starting with `+` and should have `;;;###autoload` on the line above the `defun` declaration
+- If you are editing a file in ./packages, then once you are done with your changes, run `emacsclient -e '(elpaca-rebuild (quote <package name>))` where <package name> is the name of the package provided at the end
+- Use jj for version control. Not git. Run `jj diff --git` after making changes to ensure the diff is as minimal as it needs to be
+- All custom functions and variables should be named starting with `+`. Custom functions should have `;;;###autoload` on the line above the `defun` declaration.
+- If you encounter changes you didn't make, assume the user made them and wants to keep them and do not undo them
 
 ## Look up documentation using `emacsclient`
 
 ```sh
-# Function -- shows source code and docstring
-emacsclient -e '(helpful-function #'example-symbol)
+# Function documentation
+emacsclient -e '(substring-no-properties (documentation (symbol-function (quote example-symbol))))'
 
-# Variable -- shows what it's set to and the docstring
-emacsclient -e '(helpful-variable #'example-variable)
+# Function source code
+emacsclient -e '(+agent-lisp-function-source "example-symbol")'
 
-# View all functions and variables beginning with pattern
-emacsclient -e '(apropos "pattern")
+# Variable value
+emacsclient -e '(symbol-value (quote example-variable))'
+
+# Variable documentation
+emacsclient -e '(substring-no-properties (documentation-property (quote example-variable) (quote variable-documentation)))'
+
+# View matching functions and variables
+emacsclient -e '(+agent-lisp-apropos "pattern")'
 ```
 
 ## View Package source code
 
 View the source for packages in ./elpaca/sources
+
+## Style
+
+Put core functions e.g. commands above helper functions that they call, never below
