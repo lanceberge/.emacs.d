@@ -7,8 +7,8 @@ emacsclient -e '(+agent-lisp-eval-buffer "/abs/path/to/file.el")'
 
 - If you are editing a file in ./packages, then once you are done with your changes, run `emacsclient -e '(elpaca-rebuild (quote <package name>))` where <package name> is the name of the package provided at the end
 - Use jj for version control. Not git. Run `jj diff --git` after making changes to ensure the diff is as minimal as it needs to be
-- All custom functions and variables should be named starting with `+`. Custom functions should have `;;;###autoload` on the line above the `defun` declaration.
-- If you encounter changes you didn't make, assume the user made them and wants to keep them and do not undo them
+- All custom functions and variables, except eshell alias functions, should be named starting with `+`. Custom functions should have `;;;###autoload` on the line above the `defun` declaration.
+- If you encounter changes you didn't make, assume the user made them and wants to keep them. Do not undo them
 
 ## Look up documentation using `emacsclient`
 

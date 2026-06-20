@@ -40,6 +40,7 @@
   :bind
   (:map org-capture-mode-map
         ([remap delete-window] . #'org-capture-kill)
+        ([remap +project-kill-buffer] . #'org-capture-kill)
         ([remap save-buffer] . org-capture-finalize))
   (:map +leader-map
         ("oc" . #'org-capture)))
@@ -83,8 +84,11 @@
   (:map +leader3-map
         ("oj" . #'org-journal-new-entry)))
 
-(use-package +org-timer
-  :ensure (:type file :main "~/.emacs.d/packages/org-timer.el")
+(use-package org-timer
+  :ensure nil)
+
+(use-package org-timer-extensions
+  :ensure (:type file :main "~/.emacs.d/packages/org-timer-extensions.el")
   :custom
   (+org-timer-log-file "~/org-roam/Time_Log.org")
   :bind

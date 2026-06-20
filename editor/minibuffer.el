@@ -74,7 +74,6 @@
         ("SPC /" . #'+consult-line-multi)
         ("fa" . #'+consult-org-agenda-todos)
         ("pt" . #'+consult-project-find-todos)
-        ("onf" . #'+consult-org-project-file)
         ("c'" . #'+consult-project-file-here)))
 
 (use-package consult-eglot

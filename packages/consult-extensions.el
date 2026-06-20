@@ -38,11 +38,6 @@
        (list (+consult-project-file-source default-directory name))))))
 
 ;;;###autoload
-(defun +consult-org-project-file ()
-  (interactive)
-  (+consult--project-file-at-dir "~/org/projects/" "Org Project File"))
-
-;;;###autoload
 (defun +consult-project-file-here ()
   "Find a project file under `default-directory'."
   (interactive)
@@ -218,4 +213,4 @@ MATCH is as in `org-map-entries'."
   (interactive)
   (consult-ripgrep (project-root (project-current t)) "TODO"))
 
-(provide '+consult-extensions)
+(provide 'consult-extensions)

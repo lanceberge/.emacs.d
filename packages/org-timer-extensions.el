@@ -97,5 +97,5 @@
    (+ (org-timer-hms-to-secs first)
       (org-timer-hms-to-secs second))))
 
-(provide '+org-timer)
+(provide 'org-timer-extensions)
 ;;; org-timer-extensions.el ends here

@@ -88,10 +88,29 @@
         ([remap +open-below] . #'+modal-org-insert-below)
         ([remap +open-above] . #'+modal-org-insert-above)))
 
-(use-package +org-project
-  :ensure (:type file :main "~/.emacs.d/packages/org-project.el")
+(use-package org-project
+  :ensure (:type file :main "~/.emacs.d/packages/org-project/org-project.el")
+  :hook
+  (savehist-mode . +org-project-savehist-mode)
+  :config
+  (require 'org-project-consult)
+  (when (bound-and-true-p savehist-mode)
+    (+org-project-savehist-mode 1))
   :bind
   (:map +leader-map
         ("ont" . #'+org-project-add-todo)
         ("ond" . #'+org-project-mark-done)
-        ("onx" . #'+org-project-add-done)))
+        ("onx" . #'+org-project-add-done)
+        ("onr" . #'+org-project-reset-project-file-for-current-project)))
+
+(use-package org-project-consult
+  :ensure (:type file :main "~/.emacs.d/packages/org-project/org-project-consult.el")
+  :custom
+  (+org-project-consult-preview-files nil)
+  :config
+  (+org-project-consult-mode 1)
+  :bind
+  (:map +leader-map
+        ("onj" . #'+org-project-consult-file-for-current-project)
+        ("onf" . #'+org-project-consult-file)
+        ("ona" . #'+org-project-consult-agenda)))
