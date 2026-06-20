@@ -238,6 +238,7 @@
 (use-package modal
   :ensure (:type file :main "~/.emacs.d/packages/modal.el")
   :demand t
+  :hook (org-mode . +modal-org-mode)
   :bind
   ("M-[" . #'+pop-to-mark)
   ("M-]" . #'+unpop-to-mark)

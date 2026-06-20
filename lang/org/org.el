@@ -26,19 +26,13 @@
   :bind
   (:map org-mode-map
         ([remap consult-imenu] . #'consult-org-heading)
-        ([remap insert-newline-indent] . #'org-return)
-        ("M-H" . org-shifleft)
-        ("M-J" . org-shiftdown)
-        ("M-K" . org-shiftup)
-        ("M-L" . org-shiftright)
-        ("C-M-h" . org-shiftmetaleft)
-        ("C-M-j" . org-shiftmetadown)
-        ("C-M-k" . org-shiftmetaup)
-        ("C-M-l" . org-shiftmetaright)
-        ("C-S-h" . org-shiftcontrolleft)
-        ("C-S-j" . org-shiftcontroldown)
-        ("C-S-k" . org-shiftcontrolup)
-        ("C-S-l" . org-shiftcontrolright))
+        ([remap +drag-stuff-down] . #'org-metadown)
+        ([remap newline] . #'org-return)
+        ([remap +drag-stuff-up] . #'org-metaup)
+        ("C-j" . #'org-insert-heading-respect-content)
+        ("C-S-j" . #'org-insert-todo-heading-respect-content)
+        ("M-l" . #'org-shiftmetaright)
+        ("M-h" . #'org-shiftmetaleft))
   :config
   (setq org-tag-alist '(("personal" . ?p)
                         ("easy tasks" . ?t)
@@ -65,28 +59,10 @@
   (+org-directory "~/org/")
   :bind
   (:map org-mode-map
-        ([remap drag-stuff-up] . #'+org-drag-stuff-up)
-        ([remap drag-stuff-down] . #'+org-drag-stuff-down)
-        ([remap +drag-stuff-left-dwim] . #'+org-metaleft-dwim)
-        ([remap +drag-stuff-right-dwim] . #'+org-metaright-dwim)
         ([remap next-line] . #'+org-down)
-        ([remap previous-line] . #'+org-up)
-        ("M-l" . #'+org-metaright-dwim)
-        ("M-h" . #'+org-metaleft-dwim))
+        ([remap previous-line] . #'+org-up))
   (:map +leader-map
         ("of" . #'+org-find-file)))
-
-(use-package modal-org
-  :ensure (:type file :main "~/.emacs.d/packages/modal-org.el")
-  :after (modal org)
-  :bind
-  (:map org-mode-map
-        ("M-<return>" . #'+modal-org-insert-todo)
-        ("M-S-<return>" . #'+modal-org-insert-todo-above)
-        ("C-<return>" . #'+modal-org-insert-heading)
-        ("C-S-<return>" . #'+modal-org-insert-heading-above)
-        ([remap +open-below] . #'+modal-org-insert-below)
-        ([remap +open-above] . #'+modal-org-insert-above)))
 
 (use-package org-project
   :ensure (:type file :main "~/.emacs.d/packages/org-project/org-project.el")

@@ -36,34 +36,6 @@
          (pr (cons 'transient org-dir)))
     (project-find-file-in nil (list org-dir) pr)))
 
-;;;###autoload
-(defun +org-drag-stuff-up (n)
-  (interactive "p")
-  (cond ((full-line-region-p)
-         (drag-stuff-up n))
-        ((org-at-heading-p)
-         (org-move-subtree-up n))
-        (t
-         (drag-stuff-up n))))
-
-;;;###autoload
-(defun +org-drag-stuff-down (n)
-  (interactive "p")
-  (cond ((full-line-region-p)
-         (drag-stuff-down n))
-        ((org-at-heading-p)
-         (org-move-subtree-down n))
-        (t
-         (drag-stuff-down n))))
-
-;;;###autoload
-(defun +org-cycle ()
-  (interactive)
-  (if (save-excursion
-        (beginning-of-visual-line)
-        (org-at-heading-p))
-      (outline-toggle-children)
-    (org-cycle)))
 
 ;;;###autoload
 (defun +org-metaleft-dwim (arg)

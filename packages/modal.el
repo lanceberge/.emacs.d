@@ -423,4 +423,13 @@ ARGS provides a `:name' atom."
     (setq mark-ring (append mark-ring (list (point-marker)))))
   (pop-to-mark-command))
 
+;;;###autoload
+(define-minor-mode +modal-org-mode
+  "Modal editing integration for Org buffers."
+  :lighter nil
+  (if +modal-org-mode
+      (progn
+        (add-hook 'org-insert-heading-hook #'+insert-mode nil t))
+    (remove-hook 'org-insert-heading-hook #'+insert-mode t)))
+
 (provide 'modal)
