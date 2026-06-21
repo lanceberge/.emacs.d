@@ -249,3 +249,28 @@
     (call-interactively #'comment-line)))
 
 (add-hook 'window-configuration-change-hook '+restore-major-mode)
+
+(use-package easy-kill
+  :custom
+  (easy-kill-alist
+   `((?f word " ")
+     (?s sexp "\n")
+     ;; (?l list "\n")
+     (?d defun "\n\n")
+     (?D defun-name " ")
+     (?l line "\n")
+     (?b buffer-file-name)))
+  :bind
+  (:map easy-kill-base-map
+        ("SPC" . #'easy-kill-mark-region)
+        ("w" . #'easy-kill-region)
+        ([remap +modal-kill-region-insert] . #'+easy-kill-region-insert))
+  (:map +normal-mode-map
+        ("," . #'easy-mark)
+        ([remap kill-ring-save] . #'easy-kill)))
+
+;;;###autoload
+(defun +easy-kill-region-insert ()
+  (interactive)
+  (call-interactively #'easy-kill-region)
+  (+insert-mode))
