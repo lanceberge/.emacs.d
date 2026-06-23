@@ -5,6 +5,8 @@
 (require 'seq)
 (require 'subr-x)
 
+(defvar-local +agent-shell--sent-first-prompt nil)
+
 ;;;###autoload
 (defun +agent-shell-toggle-dwim ()
   "Toggle agent shell display, starting one if none exists."
@@ -13,6 +15,11 @@
       (agent-shell-toggle)
     (user-error
      (agent-shell))))
+
+;;;###autoload
+(defun +consult-agent-shell-project-buffers ()
+  (interactive)
+  (+consult-project-buffer "Agent"))
 
 ;;;###autoload
 (defun +agent-shell-send-region-with-prompt (prompt &optional arg)
@@ -40,6 +47,35 @@ an existing shell."
        :submit t
        :no-focus t
        :shell-buffer shell-buffer))))
+
+;;;###autoload
+(define-minor-mode +agent-shell-auto-rename-mode
+  "Rename the current agent shell buffer from its first submitted prompt."
+  :lighter nil
+  (setq-local +agent-shell--sent-first-prompt nil)
+  (when +agent-shell-auto-rename-mode
+    (+agent-shell--ensure-auto-rename-first-submit-advice)))
+
+;;;###autoload
+(defun +agent-shell--shell-maker-submit (orig &rest args)
+  "Call ORIG with ARGS and auto-rename agent shell buffers when enabled."
+  (let ((prompt (+agent-shell--pending-submit-prompt args))
+        (should-rename (and +agent-shell-auto-rename-mode
+                            (not +agent-shell--sent-first-prompt))))
+    (prog1 (apply orig args)
+      (when (and should-rename
+                 (stringp prompt)
+                 (not (string-empty-p prompt)))
+        (setq +agent-shell--sent-first-prompt t)
+        (+agent-shell--rename-from-first-prompt-async prompt (current-buffer))))))
+
+;;;###autoload
+(defun +agent-shell--ensure-auto-rename-first-submit-advice ()
+  "Ensure `shell-maker-submit' can dispatch to auto-renaming minor modes."
+  (unless (advice-member-p #'+agent-shell--shell-maker-submit
+                           'shell-maker-submit)
+    (advice-add 'shell-maker-submit
+                :around #'+agent-shell--shell-maker-submit)))
 
 ;;;###autoload
 (defun +agent-shell--toggle-shell-buffer ()
@@ -73,6 +109,115 @@ an existing shell."
      ((string-empty-p prompt) context)
      ((string-empty-p (or context "")) prompt)
      (t (concat prompt "\n\n" context)))))
+
+;;;###autoload
+(defun +agent-shell--pending-submit-prompt (args)
+  "Return the prompt about to be submitted from shell-maker ARGS."
+  (let ((input (plist-get args :input)))
+    (if (stringp input)
+        input
+      (buffer-substring-no-properties (comint-line-beginning-position)
+                                      (point-max)))))
+
+;;;###autoload
+(defun +agent-shell--rename-from-first-prompt-async (prompt shell-buffer)
+  "Use `claude -p' to title SHELL-BUFFER from PROMPT asynchronously."
+  (when (executable-find "claude")
+    (let* ((output-buffer (generate-new-buffer " *agent-shell-title*"))
+           (instruction
+            (concat
+             "Create a 1-4 word concise Title Case summary of this prompt to represent the title of this conversation. "
+             "Return only the title, with no quotes or punctuation.\n\n"
+             prompt))
+           (process-environment
+            (append (list (concat "ANTHROPIC_API_KEY=" (gptel-api-key))
+                          "TERM=dumb"
+                          "NO_COLOR=1")
+                    process-environment)))
+      (make-process
+       :name "agent-shell-title"
+       :buffer output-buffer
+       :command (list shell-file-name "-lc"
+                      (format "claude -p %s < /dev/null"
+                              (shell-quote-argument instruction)))
+       :connection-type 'pipe
+       :noquery t
+       :sentinel
+       (lambda (process _event)
+         (when (memq (process-status process) '(exit signal))
+           (unwind-protect
+               (let* ((status (process-exit-status process))
+                      (output (with-current-buffer (process-buffer process)
+                                (buffer-string)))
+                      (title (+agent-shell--clean-first-prompt-title output)))
+                 (cond
+                  ((not (= status 0))
+                   (message "agent-shell title failed, using fallback: %s"
+                            (string-trim output))
+                   (when (buffer-live-p shell-buffer)
+                     (+agent-shell--rename-shell-buffer
+                      (+agent-shell--fallback-first-prompt-title prompt)
+                      shell-buffer)))
+                  ((string-empty-p title)
+                   (message "agent-shell title failed, using fallback: empty title")
+                   (when (buffer-live-p shell-buffer)
+                     (+agent-shell--rename-shell-buffer
+                      (+agent-shell--fallback-first-prompt-title prompt)
+                      shell-buffer)))
+                  ((buffer-live-p shell-buffer)
+                   (+agent-shell--rename-shell-buffer title shell-buffer))))
+             (when (buffer-live-p (process-buffer process))
+               (kill-buffer (process-buffer process))))))))))
+
+;;;###autoload
+(defun +agent-shell--rename-shell-buffer (title shell-buffer)
+  "Rename SHELL-BUFFER using TITLE, preserving an existing viewport name."
+  (let* ((old-name (buffer-name shell-buffer))
+         (viewport-buffer (+agent-shell--viewport-buffer-for-name old-name)))
+    (with-current-buffer shell-buffer
+      (rename-buffer
+       (generate-new-buffer-name
+        (format "%s -- %s" (+agent-shell--buffer-prefix old-name) title))
+       t))
+    (when (buffer-live-p viewport-buffer)
+      (with-current-buffer viewport-buffer
+        (rename-buffer
+         (generate-new-buffer-name
+          (concat (buffer-name shell-buffer) agent-shell-viewport--suffix))
+         t)))))
+
+;;;###autoload
+(defun +agent-shell--clean-first-prompt-title (title)
+  "Clean TITLE returned by `claude -p'."
+  (string-trim (substring-no-properties title)))
+;; (let ((title (substring-no-properties title)))
+;; (setq title (replace-regexp-in-string "\e\\[[?0-9;]*[a-zA-Z]" "" title))
+;; (setq title (replace-regexp-in-string "\\[\\?[0-9;]*[a-zA-Z]" "" title))
+;; (setq title (string-trim title))
+;; (setq title (replace-regexp-in-string "\\`Title:[ \t]*" "" title))
+;; (setq title (replace-regexp-in-string "[\n\r\t ]+" " " title))
+;; (setq title (replace-regexp-in-string "\\`[\"'`]+\\|[\"'`.!?:;]+\\'" "" title))
+;; (truncate-string-to-width (string-trim title) 48 nil nil "...")))
+
+;;;###autoload
+(defun +agent-shell--fallback-first-prompt-title (prompt)
+  "Return a local fallback title for PROMPT."
+  (let* ((words (split-string prompt "[^[:alnum:]]+" t))
+         (words (seq-take words 4)))
+    (if words
+        (string-join (mapcar #'capitalize words) " ")
+      "Untitled Prompt")))
+
+;;;###autoload
+(defun +agent-shell--buffer-prefix (buffer-name)
+  "Return the agent prefix from BUFFER-NAME."
+  (replace-regexp-in-string "\\(?: @ .*\\| -- .*\\)\\'" "" buffer-name))
+
+;;;###autoload
+(defun +agent-shell--viewport-buffer-for-name (shell-buffer-name)
+  "Return the viewport buffer for SHELL-BUFFER-NAME, if one exists."
+  (when (boundp 'agent-shell-viewport--suffix)
+    (get-buffer (concat shell-buffer-name agent-shell-viewport--suffix))))
 
 ;;;###autoload
 (defun +agent-shell-make-permission (rules)
