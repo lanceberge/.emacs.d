@@ -115,26 +115,27 @@ Otherwise, just call consult-yank-pop."
   (consult-ripgrep default-directory nil))
 
 ;;;###autoload
-(defun +consult--buffer (&optional sources initial-narrow)
-  "Run `consult-buffer' with SOURCES and INITIAL-NARROW."
+(defun +consult--buffer (&optional sources initial-narrow initial)
+  "Run `consult-buffer' with SOURCES, INITIAL-NARROW, and INITIAL."
   (let ((selected (consult--multi (or sources consult-buffer-sources)
                                   :require-match
                                   (confirm-nonexistent-file-or-buffer)
                                   :prompt "Switch to: "
                                   :history 'consult--buffer-history
                                   :sort nil
+                                  :initial initial
                                   :initial-narrow initial-narrow)))
     ;; For non-matching candidates, fall back to buffer creation.
     (unless (plist-get (cdr selected) :match)
       (consult--buffer-action (car selected)))))
 
 ;;;###autoload
-(defun +consult-project-buffer ()
+(defun +consult-project-buffer (&optional initial)
   (interactive)
   (if (project-current nil)
       (consult--with-project
-        (+consult--buffer consult-project-buffer-sources ?b))
-    (+consult--buffer consult-buffer-sources ?b)))
+        (+consult--buffer consult-project-buffer-sources ?b initial))
+    (+consult--buffer consult-buffer-sources ?b initial)))
 
 ;;;###autoload
 (defun +consult-find-todos ()
