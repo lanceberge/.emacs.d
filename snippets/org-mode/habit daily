@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: habit daily
+# key: habit
+# --
+** TODO ${1:Habit}
+SCHEDULED: <`(format-time-string "%Y-%m-%d %a")` .+1d>
+:PROPERTIES:
+:STYLE: habit
+:END:
+$0

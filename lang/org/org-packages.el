@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org-agenda
   :ensure nil
+  :defer 0.8
   :custom
   (org-agenda-span 14)              ; show 14 days
   (org-agenda-start-on-weekday nil) ; start on today
@@ -28,6 +29,16 @@
   (:map +leader2-map
         ("ot" . #'org-todo-list)
         ("oa" . #'org-agenda)))
+
+(use-package org-habit
+  :ensure nil
+  :after org-agenda
+  :demand t
+  :custom
+  (org-habit-graph-column 60)
+  (org-habit-preceding-days 21)
+  (org-habit-following-days 7)
+  (org-habit-show-habits-only-for-today nil))
 
 (use-package org-capture
   :ensure nil
