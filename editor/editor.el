@@ -269,6 +269,13 @@
         ("," . #'easy-mark)
         ([remap kill-ring-save] . #'easy-kill)))
 
+(use-package +dot-repeat
+  :ensure (:type file :main "~/.emacs.d/packages/dot-repeat/dot-repeat.el")
+  :hook (after-init . +dot-repeat-mode)
+  :bind
+  (:map +normal-mode-map
+        ("." . #'+dot-repeat)))
+
 ;;;###autoload
 (defun +easy-kill-region-insert ()
   (interactive)
