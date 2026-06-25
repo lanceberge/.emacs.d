@@ -32,13 +32,7 @@
         ("h" . #'help-command)
         ("d" . #'duplicate-dwim)
         ("q" . #'+server-edit)
-        ("er" . #'+source-init-file)
-        ;; ("[" . #'beginning-of-buffer)
-        ;; ("]" . #'end-of-buffer)
-        )
-  (:map +leader2-map
-        ("br" . #'rename-buffer))
-  ;; escape sequences bound via +create-escape below
+        ("er" . #'+source-init-file))
   (:map +normal-mode-map
         ("[ SPC" . #'+insert-newlines-above)
         ("] SPC" . #'+insert-newlines-below)))
@@ -96,11 +90,20 @@
   :ensure nil
   :bind
   (:map rectangle-mark-mode-map
-        ([remap +smart-delete] . #'kill-rectangle)
+        ("w" . #'kill-rectangle)
         ("i" . #'string-insert-rectangle)
         ([remap +change] . #'replace-rectangle)))
 
+;;;###autoload
+(defun +key-chord-define-keymap (keymap keys prefix-keymap)
+  "In KEYMAP, bind key chord KEYS as a prefix for PREFIX-KEYMAP."
+  (unless (keymapp prefix-keymap)
+    (user-error "Expected a keymap, got %S" prefix-keymap))
+  (key-chord-define keymap keys prefix-keymap))
+
 (use-package key-chord
+  :custom
+  (key-chord-two-keys-delay 0.2)
   :hook
   (emacs-startup . key-chord-mode)
   :config

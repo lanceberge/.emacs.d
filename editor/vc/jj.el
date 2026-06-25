@@ -6,6 +6,7 @@
         ("j" . nil)
         ("ji" . #'+jj-init)
         ("jc" . #'+jj-git-clone)
+        ("j SPC c" . #'majutsu-commit)
         ("jN" . #'majutsu-new-dwim)
         ("jn" . #'+majutsu-new-hook)
         ("jr" . #'majutsu-rebase)
@@ -23,7 +24,7 @@
         ("jbn" . #'majutsu-bookmark-create)
         ("jw" . #'majutsu-workspace)
         ("jh" . #'majutsu-list-commits-for-file-dwim)
-        ("jH" . #'majutsu-list-commits-for-file))
+        ("j SPC h" . #'majutsu-list-commits-for-file)) ;; TODO should be an embark file command
   (:map majutsu-log-mode-map
         ("P" . #'majutsu-git-push)
         ("m" . #'majutsu-describe))
@@ -43,11 +44,6 @@
       :shortarg "-I"
       :argument "--ignore-immutable"
       :init-value (lambda (obj) (oset obj value "--ignore-immutable")))))
-
-;; (use-package jujutsushi
-;;   :ensure (jujutsushi
-;;            :host sourcehut
-;;            :repo "puercopop/jujutsushi"))
 
 (defun +majutsu-workspace-add-dir ()
   "Default destination for `majutsu-workspace-add'.

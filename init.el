@@ -29,6 +29,8 @@
       highlight-nonselected-windows t
       ffap-machine-p-known 'reject ; don't ping things that look like domain names
       bidi-inhibit-bpa t
+      bidi-display-reordering 'left-to-right
+      bidi-paragraph-direction 'left-to-right
       fast-but-imprecise-scrolling t ; faster scrolling over unfontified regions
       redisplay-skip-fontification-on-input t
 
@@ -145,19 +147,7 @@
 
 (fset 'yes-or-no-p 'y-or-n-p) ; y or n prompt, not yes or no
 
-(unless IS-WINDOWS
-  (setq selection-coding-system 'utf-8))
-
-(when IS-WINDOWS
-  (setq w32-get-true-file-attributes nil
-        w32-pipe-read-delay 0
-        w32-pipe-buffer-size (* 64 1024)
-        w32-lwindow-modifier 'super
-        w32-rwindow-modifier 'super
-        abbreviated-home-dir "\\ `'"))
-
-(when (and IS-WINDOWS (null (getenv "HOME")))
-  (setenv "HOME" (getenv "USERPROFILE")))
+(setq selection-coding-system 'utf-8)
 
 (unless IS-MAC
   (setq command-line-ns-option-alist nil))
@@ -247,11 +237,7 @@
         ("TAB" . #'+indent-rigidly-dwim)
         ("SPC" . #'rectangle-mark-mode)
         ("h" . #'mark-whole-buffer)
-        ("0" . #'delete-window)
-        ("1" . #'delete-other-windows)
-        ("2" . #'split-window-below)
-        ("3" . #'split-window-right)
-        ("f" . #'project-find-file)
+        ("f" . #'find-file)
         ("j" . #'dired-jump)
         ("," . #'consult-recent-file)
         ("g" . #'magit-status))
@@ -272,6 +258,8 @@
   (:map +normal-mode-map
         ("i" . #'+insert-mode)
 
+        ("M-{" . #'+backward-global-mark)
+        ("M-}" . #'+forward-global-mark)
         ;; Enter insert mode with default emacs keys
         ("C-a" . #'+modal-beginning-of-visual-line-insert)
         ("C-e" . #'+modal-end-of-line-insert)
@@ -307,7 +295,6 @@
         ("e" . #'end-of-visual-line)
         ("y" . #'yank)
         ("-" . #'negative-argument)
-        ("\\" . #'+sexp-mode)
         ("v" . #'scroll-up-command)
         ("d" . #'kill-word)
         ("z" . #'zap-up-to-char)
@@ -345,6 +332,7 @@
         ("}" . #'forward-paragraph)
         ("{" . #'backward-paragraph)
         ("<escape>" . #'keyboard-quit))
+  ;; TODO figure out what to do with this
   ;; (:map +sexp-mode-map
   ;;       ("h" . #'backward-paragraph)
   ;;       ("l" . #'backward-paragraph)

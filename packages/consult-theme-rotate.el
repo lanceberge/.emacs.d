@@ -20,6 +20,9 @@
 (defvar +consult-theme-rotate--initial-style nil
   "Initial style for the active `+consult-theme-rotate' minibuffer.")
 
+(defvar +consult-theme-rotate--active-style nil
+  "Style selected by the active `+consult-theme-rotate' command.")
+
 ;;;###autoload
 (defun +consult-theme-rotate--minibuffer-buffer ()
   "Return the active minibuffer buffer, if any."
@@ -32,6 +35,7 @@
   (or (when-let* ((buffer (+consult-theme-rotate--minibuffer-buffer)))
         (buffer-local-value '+consult-theme-rotate-style buffer))
       +consult-theme-rotate-style
+      +consult-theme-rotate--active-style
       +consult-theme-rotate--initial-style
       +theme-rotate-current-style
       'light))
@@ -88,6 +92,7 @@
               (if (eq (+consult-theme-rotate--current-style) 'dark)
                   'light
                 'dark))
+  (setq +consult-theme-rotate--active-style +consult-theme-rotate-style)
   (+consult-theme-rotate--refresh)
   (+consult-theme-rotate--select-first)
   (+consult-theme-rotate--preview-current)
@@ -110,11 +115,15 @@ minibuffer is local to that minibuffer until a theme is selected."
   (interactive)
   (let* ((+consult-theme-rotate--initial-style
           (or style +theme-rotate-current-style 'light))
+         (+consult-theme-rotate--active-style
+          +consult-theme-rotate--initial-style)
          (saved-theme (car custom-enabled-themes))
          (minibuffer-setup-hook
           (cons (lambda ()
                   (setq-local +consult-theme-rotate-style
                               +consult-theme-rotate--initial-style)
+                  (setq +consult-theme-rotate--active-style
+                        +consult-theme-rotate-style)
                   (+consult-theme-rotate-minibuffer-mode 1))
                 minibuffer-setup-hook)))
     (consult--read

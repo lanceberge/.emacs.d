@@ -17,8 +17,6 @@
   :defer 0.3
   :hook (agent-shell-mode . +agent-shell-auto-rename-mode)
   :bind
-  (:map +leader-map
-        ("a," . #'+consult-agent-shell-project-buffers))
   (:map +leader2-map
         ("st" . #'+agent-shell-toggle-dwim)
         ("sp" . #'+agent-shell-send-region-with-prompt))

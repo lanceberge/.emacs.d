@@ -103,28 +103,31 @@ This command is intentionally limited to `+normal-mode'."
           (setq +dot-repeat--suppress-current-command nil)
           (+dot-repeat--clear-pending-insert-episode))
          ((not +dot-repeat--replaying)
-          (let ((after-state (+dot-repeat--modal-state))
-                (changed-p (+dot-repeat--current-buffer-changed-p))
-                (command (+dot-repeat--current-command)))
+          (let* ((after-state (+dot-repeat--modal-state))
+                 (changed-p (+dot-repeat--current-buffer-changed-p))
+                 (command (+dot-repeat--current-command))
+                 (command-form (+dot-repeat--command-form)))
             (cond
-             ((not (eq +dot-repeat--before-buffer (current-buffer)))
+             ((and (not (eq +dot-repeat--before-buffer (current-buffer)))
+                   (not command-form))
               (+dot-repeat--clear-pending-insert-episode))
              ((and +dot-repeat--pending-insert-episode
                    (eq +dot-repeat--before-state 'insert))
               (+dot-repeat--record-insert-command changed-p after-state))
-             ((and (eq +dot-repeat--before-state 'normal)
+             ((and (or (eq +dot-repeat--before-state 'normal)
+                       command-form)
                    (eq after-state 'insert))
               (+dot-repeat--start-insert-episode command
                                                  +dot-repeat--before-prefix
-                                                 (+dot-repeat--command-form)
-                                                 changed-p))
+                                                 command-form
+                                                 (or changed-p command-form)))
              ((and changed-p
                    (eq +dot-repeat--before-state 'normal)
                    (eq after-state 'normal)
                    (+dot-repeat--recordable-command-p command))
               (+dot-repeat--record-normal-edit command
                                                +dot-repeat--before-prefix
-                                               (+dot-repeat--command-form)))
+                                               command-form))
              ((not (eq after-state 'insert))
               (+dot-repeat--clear-pending-insert-episode))))))
       (setq +dot-repeat--last-command-history (car command-history)))))

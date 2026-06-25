@@ -53,9 +53,26 @@
     (+eshell-command-output-mode 1))
   nil)
 
+;;;###autoload
+(defun +eshell-outline-after-jump ()
+  "Move to Eshell input after a `consult-outline' jump."
+  (when (derived-mode-p 'eshell-mode)
+    (end-of-line)
+    (eshell-bol)
+    (when (fboundp '+insert-mode)
+      (+insert-mode 1))))
+
+;;;###autoload
+(defun +eshell-outline-setup ()
+  "Configure outline navigation for Eshell prompts."
+  (setq-local outline-regexp eshell-prompt-regexp)
+  (add-hook 'consult-after-jump-hook #'+eshell-outline-after-jump nil t))
+
 (use-package eshell
   :ensure nil
   :defer 0.7
+  :commands
+  (eshell project-eshell eshell-command)
   :init
   (add-to-list 'display-buffer-alist
                '("\\`\\*Eshell Command Output\\*\\'"
@@ -63,13 +80,14 @@
   :config
   (add-to-list 'eshell-modules-list 'eshell-elecslash)
   (add-to-list 'eshell-modules-list 'eshell-xtra)
-
-  :commands
-  (eshell project-eshell eshell-command))
+  (add-hook 'eshell-mode-hook #'+eshell-outline-setup))
 
 (use-package esh-mode
   :ensure nil
   :after eshell
+  :bind
+  (:map eshell-mode-map
+        ([remap consult-imenu] . #'consult-outline))
   :config
   (add-to-list 'eshell-expand-input-functions #'eshell-expand-history-references))
 

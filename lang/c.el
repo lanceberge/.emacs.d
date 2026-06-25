@@ -20,16 +20,3 @@
                    ensure dape-ensure-command
                    command-cwd ,(file-name-directory (buffer-file-name))
                    :cwd "." :program ,file-name-base)))))
-
-;;;###autoload
-(defun +dape-debug-cpp ()
-  (interactive)
-  (+cpp-compile "-g")
-  (call-interactively #'+dape))
-
-;;;###autoload
-(defun +cpp-compile (&optional flags)
-  (interactive)
-  (let* ((file-name (file-name-nondirectory (buffer-file-name)))
-         (file-name-base (file-name-base file-name)))
-    (compile (concat "g++-14 " file-name " -o " file-name-base " -std=c++20 " flags))))

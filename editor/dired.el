@@ -8,6 +8,7 @@
   (dired-recursive-copies 'always)
   (dired-dwim-target t)
   (dired-use-ls-dired nil)
+  (dired-kill-when-opening-new-dired-buffer t)
   (dired-vc-rename-file t)
   :hook (dired-mode . dired-hide-details-mode)
   :bind
@@ -15,17 +16,10 @@
         ("i" . +dired-maybe-insert-subdir)
         ("e" . #'dired-toggle-read-only)
         ("x" . #'dired-do-flagged-delete)
-        ([remap negative-argument] . #'+dired/up-dir))
+        ("-" . #'dired-up-directory))
   :config
   (+modal-bind +motion-mode dired-mode-hook
-               "x" #'dired-do-flagged-delete)
-  (put 'dired-find-alternate-file 'disabled nil))
-
-;;;###autoload
-(defun +dired/up-dir ()
-  "navigate up a directory in dired in the same buffer"
-  (interactive)
-  (find-alternate-file ".."))
+               "x" #'dired-do-flagged-delete))
 
 ;;;###autoload
 (defun +dired-maybe-insert-subdir ()
@@ -43,7 +37,8 @@
 (defun +wdired-finish-edit ()
   (interactive)
   (wdired-finish-edit)
-  (+normal-mode -1))
+  (+normal-mode -1)
+  (+insert-mode -1))
 
 (use-package dired-x
   :ensure nil

@@ -1,5 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 
+(require 'consult)
+
 ;;;###autoload
 (defun +consult-project-file-source (dir &optional name)
   "Return a Consult project file source restricted to DIR."
@@ -56,18 +58,6 @@ Excludes Tramp buffers so preview never opens a remote connection."
     (let ((default-directory (project-root project)))
       (consult--with-project
         (consult-buffer consult-project-buffer-sources)))))
-
-;;;###autoload
-(defun +consult-focus-lines ()
-  (interactive)
-  (forward-char 1)
-  (call-interactively #'consult-focus-lines))
-
-;;;###autoload
-(defun +consult-keep-lines ()
-  (interactive)
-  (forward-char 1)
-  (call-interactively #'consult-keep-lines))
 
 ;;;###autoload
 (defun +consult-yank-or-replace ()
@@ -213,5 +203,36 @@ MATCH is as in `org-map-entries'."
 (defun +consult-project-find-todos ()
   (interactive)
   (consult-ripgrep (project-root (project-current t)) "TODO"))
+
+(define-key consult-narrow-map (kbd "C-h") #'consult-narrow-cycle-backward)
+(define-key consult-narrow-map (kbd "C-l") #'consult-narrow-cycle-forward)
+
+;; https://github.com/minad/consult/wiki#cycle-through-narrowing-keys
+(defun consult-narrow-cycle-backward ()
+  "Cycle backward through the narrowing keys."
+  (interactive)
+  (let ((consult--narrow-keys (plist-get consult--narrow-config :keys)))
+    (when consult--narrow-keys
+      (consult-narrow
+       (if consult--narrow
+           (let ((idx (seq-position
+                       consult--narrow-keys
+                       (assq consult--narrow consult--narrow-keys))))
+             (unless (eq idx 0)
+               (car (nth (1- idx) consult--narrow-keys))))
+         (caar (last consult--narrow-keys)))))))
+(defun consult-narrow-cycle-forward ()
+  "Cycle forward through the narrowing keys."
+  (interactive)
+  (let ((consult--narrow-keys (plist-get consult--narrow-config :keys)))
+    (when consult--narrow-keys
+      (consult-narrow
+       (if consult--narrow
+           (let ((idx (seq-position
+                       consult--narrow-keys
+                       (assq consult--narrow consult--narrow-keys))))
+             (unless (eq idx (1- (length consult--narrow-keys)))
+               (car (nth (1+ idx) consult--narrow-keys))))
+         (caar consult--narrow-keys))))))
 
 (provide 'consult-extensions)

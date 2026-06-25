@@ -13,6 +13,7 @@
   (org-modules nil)
   (org-image-actual-width nil)
   (org-export-backends '(html latex md))
+  (org-special-ctrl-a t)
   (org-latex-listings 'minted) ; syntax-highlighted code blocks
   ;; (org-latex-packages-alist '(("margin=0.5in" "geometry" nil) (nil "minted" "color")))
   (org-latex-pdf-process ; required to use minted
@@ -31,6 +32,8 @@
         ([remap +drag-stuff-up] . #'org-metaup)
         ("C-j" . #'org-insert-heading-respect-content)
         ("C-S-j" . #'org-insert-todo-heading-respect-content)
+        ("M-<return>" . #'+modal-org-meta-return-insert)
+        ("M-S-<return>" . #'+modal-org-insert-todo-heading-insert)
         ("M-l" . #'org-shiftmetaright)
         ("M-h" . #'org-shiftmetaleft))
   :config
@@ -46,6 +49,9 @@
                         ("C" . ?c)
                         ("Music" . ?m)
                         ("drill" . ?d)))
+
+  (+modal-create-insert-function org-meta-return)
+  (+modal-create-insert-function org-insert-todo-heading)
 
   (add-to-list 'org-babel-default-header-args
                '(:eval . "never-export"))

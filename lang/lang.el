@@ -36,12 +36,6 @@
 (use-package json-mode
   :ensure nil)
 
-(use-package clojure-mode
-  :disabled t)
-
-(use-package cider
-  :disabled t)
-
 (use-package go-mode
   :hook
   (go-mode . (lambda () (setq-local use-tabs-mode t))))
@@ -140,3 +134,9 @@
   :config
   (add-to-list 'treesit-language-source-alist
                '(typst "https://github.com/Ziqi-Yang/tree-sitter-typst")))
+
+(use-package python-mode
+  :ensure nil
+  :mode ("\\.py\\'" . python-mode)
+  :interpreter
+  ("python" . python-mode))

@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package gptel
   :custom
-  (gptel-model nil)
+  (gptel-model 'claude-sonnet-4-6)
   (gptel-default-mode 'org-mode)
   (gptel-cache '(system message tool))
   :bind
@@ -9,7 +9,7 @@
   (:map gptel-mode-map
         ("C-c C-l". #'+gptel-project-clear-buffer)
         ("C-RET" . #'+gptel-send)
-        ([remap +modal-org-insert-heading] . #'+gptel-send)
+        ([remap org-insert-heading-respect-content] . #'+gptel-send)
         ([remap gptel-send] . #'+gptel-send)
         ("S-<return>" . #'newline))
   :bind

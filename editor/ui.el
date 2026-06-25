@@ -49,9 +49,6 @@
   (prog-mode . rainbow-mode)
   (text-mode . rainbow-mode))
 
-(use-package hydra
-  :disabled t)
-
 (use-package fringe
   :ensure nil)
 

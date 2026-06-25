@@ -6,6 +6,7 @@
 (defun +project-switch (&optional dir callback)
   (interactive)
   (let* ((dir (or dir (funcall project-prompter)))
+         (default-directory dir)
          (callback (or callback #'project-switch-project)))
     (funcall callback dir)))
 
@@ -24,6 +25,11 @@
 (defun +project-switch-ripgrep ()
   (interactive)
   (+project-switch nil #'consult-ripgrep))
+
+;;;###autoload
+(defun +project-switch-eshell ()
+  (interactive)
+  (+project-switch nil #'eshell))
 
 ;;;###autoload
 (defun +project-other-buffer (n &optional project not-found-callback)

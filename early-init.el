@@ -5,7 +5,6 @@
 (defvar emacs-load-start-time (current-time))
 
 (defconst IS-LINUX (eq system-type 'gnu/linux))
-(defconst IS-WINDOWS (memq system-type '(cygwin windows-nt ms-dos)))
 (defconst IS-MAC (eq system-type 'darwin))
 
 (setq package-enable-at-startup nil ; disable package.el at startup
@@ -120,10 +119,9 @@
   :ensure nil
   :demand t
   :config
-  (unless IS-WINDOWS
-    (setq display-line-numbers-type 'visual
-          display-line-numbers-width-start t ; auto count number of lines to start numbers
-          display-line-numbers-grow-only t)) ; don't shrink line number width
+  (setq display-line-numbers-type 'visual
+        display-line-numbers-width-start t ; auto count number of lines to start numbers
+        display-line-numbers-grow-only t) ; don't shrink line number width
 
   (global-display-line-numbers-mode))
 
