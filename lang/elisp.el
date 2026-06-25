@@ -3,10 +3,7 @@
   :ensure nil
   :bind
   (:map +x-map
-        ("e" . #'eval-last-sexp))
-  (:map +leader-map
-        (":" . #'eval-expression)
-        ("eb" . #'eval-buffer)))
+        ("e" . #'eval-last-sexp)))
 
 (use-package +emacs-lisp-extensions
   :ensure (:type file :main "~/.emacs.d/packages/emacs-lisp-extensions.el")

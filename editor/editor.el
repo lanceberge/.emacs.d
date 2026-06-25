@@ -1,10 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 (use-package apheleia ;; format on save
   :hook
-  ((emacs-lisp-mode bash-ts-mode) . apheleia-mode)
-  :bind
-  (:map +leader-map
-        ("=" . #'apheleia-format-buffer)))
+  ((emacs-lisp-mode bash-ts-mode) . apheleia-mode))
 
 (use-package embark
   :custom
@@ -15,9 +12,9 @@
      (consult-grep . t)
      (consult-ripgrep . t)
      (eshell . t)
+     (embark-insert . t)
      (project-eshell . t)
-     (describe-symbol . nil)
-     (embark-copy-as-kill . nil)
+     (switch-to-buffer-other-window . t)
      (t . nil)))
   :bind
   (:map +normal-mode-map
@@ -27,7 +24,7 @@
         ("C-." . #'embark-act)
         ("M-," . #'+embark-select)
         ("M-a" . #'embark-act-all)
-        ("M-r" . #'embark-become)
+        ("M-m" . #'embark-become)
         ("M-e" . #'embark-export))
   (:map embark-symbol-map
         ("s" . #'+project-replace-regex)
@@ -35,6 +32,14 @@
   (:map +motion-mode-map
         ("C-." . #'embark-act)
         ("M-'" . #'embark-dwim))
+  (:map embark-become-file+buffer-map
+        ("k" . #'+project-switch)
+        ("'" . #'project-find-file)
+        (";" . #'consult-ripgrep)
+        ("," . #'+consult-project-buffer)
+        ("SPC '" . #'+project-switch)
+        ("SPC ;" . #'+project-switch-ripgrep)
+        ("d" . #'consult-dir))
   (:map embark-become-help-map
         ("v" . #'helpful-variable)
         ("f" . #'helpful-function)
@@ -44,22 +49,34 @@
   (:map embark-file-map
         ("y" . #'project-eshell))
   (:map embark-general-map
-        ("'" . #'embark-dwim)
         (";" . #'consult-ripgrep)
         ("d" . #'embark-find-definition)
         ("/" . #'consult-line)
-        ("W" . #'+file-name-kill-ring-save)
         ("g" . #'goolge-this-word))
   (:map embark-collect-mode-map
         ("F" . #'consult-focus-lines))
   (:map embark-identifier-map
+        ("R" . #'eglot-rename)
         ("SPC" . #'eglot-code-actions))
+  (:map help-map
+        ("b" . #'embark-bindings))
   :config
+  (add-to-list 'embark-around-action-hooks
+               '(pipe-region embark--mark-target))
+  (add-to-list 'embark-target-injection-hooks
+               '(pipe-region embark--ignore-target))
+
   ;; Noconform embark actions
   (setq embark-pre-action-hooks
         (cl-remove-if (lambda (hook)
                         (eq (car (cdr hook)) 'embark--confirm))
                       embark-pre-action-hooks)))
+
+(use-package embark-this-buffer
+  :ensure (:type file :main "~/.emacs.d/packages/embark-this-buffer.el")
+  :bind
+  (:map +leader-map
+        ("." . #'embark-on-this-buffer)))
 
 ;;;###autoload
 (defun +embark-select ()
@@ -168,12 +185,11 @@
 (use-package +text-extras
   :ensure (:type file :main "~/.emacs.d/packages/text-extras.el")
   :bind
-  (:map +normal-mode-map
+  (:map embark-region-map
         ("|" . #'pipe-region))
 
   (:map +leader-map
-        ("u" . #'text-to-clipboard)
-        ("bw" . #'+file-name-kill-ring-save)))
+        ("u" . #'text-to-clipboard)))
 
 (use-package +increment-number
   :ensure (:type file :main "~/.emacs.d/packages/increment-number.el")
@@ -223,16 +239,6 @@
         ("s" . #'+mark-forward-sentence)
         ("b" . #'+mark-forward-buffer)))
 
-(use-package mark-repeat-map
-  :ensure nil
-  :bind
-  (:repeat-map +mark-repeat-map
-               ("[" . #'+backward-global-mark)
-               ("]" . #'+forward-global-mark))
-  (:map +leader3-map
-        ("[" . #'+backward-global-mark)
-        ("]" . #'+forward-global-mark)))
-
 (use-package newcomment
   :ensure nil
   :bind
@@ -269,6 +275,12 @@
         ("," . #'easy-mark)
         ([remap kill-ring-save] . #'easy-kill)))
 
+;;;###autoload
+(defun +easy-kill-region-insert ()
+  (interactive)
+  (call-interactively #'easy-kill-region)
+  (+insert-mode))
+
 (use-package +dot-repeat
   :ensure (:type file :main "~/.emacs.d/packages/dot-repeat/dot-repeat.el")
   :hook (after-init . +dot-repeat-mode)
@@ -276,8 +288,8 @@
   (:map +normal-mode-map
         ("." . #'+dot-repeat)))
 
-;;;###autoload
-(defun +easy-kill-region-insert ()
-  (interactive)
-  (call-interactively #'easy-kill-region)
-  (+insert-mode))
+(use-package narrow-extras
+  :ensure (:type file :main "~/.emacs.d/packages/narrow-extras.el")
+  :bind
+  (:map +x-map
+        ("n" . #'narrow-or-widen-dwim)))

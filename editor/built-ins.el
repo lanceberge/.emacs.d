@@ -116,24 +116,13 @@
 
 (use-package electric-pair-mode
   :ensure nil
-  :hook (prog-mode . electric-pair-mode)
+  :hook
+  ((prog-mode text-mode) . electric-pair-mode)
   :init
   (add-hook 'web-mode-hook
             (lambda ()
               (setq-local electric-pair-pairs
-                          (append electric-pair-pairs '((?< . ?>))))))
-  :config
-  (remove-hook 'self-insert-uses-region-functions
-               #'electric-pair-will-use-region)
-  (setq electric-pair-inhibit-predicate
-        (lambda (c)
-          (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
-
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (setq-local electric-pair-inhibit-predicate
-                          `(lambda (c)
-                             (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c)))))))
+                          (append electric-pair-pairs '((?< . ?>)))))))
 
 (use-package ediff
   :defer t
@@ -156,12 +145,6 @@
 (use-package repeat
   :ensure nil
   :hook (after-init . repeat-mode))
-
-(use-package ispell
-  :disabled t
-  :ensure nil
-  :custom
-  (ispell-complete-word-dict t))
 
 (use-package grep
   :ensure nil
@@ -187,16 +170,7 @@
 (use-package bookmark
   :ensure nil
   :custom
-  (bookmark-save-flag 1)
-  :bind
-  (:map +leader-map
-        ("b SPC" . #'+bookmark-file)))
-
-;;;###autoload
-(defun +bookmark-file ()
-  (interactive)
-  (when (buffer-file-name)
-    (bookmark-set (file-name-nondirectory (buffer-file-name)) nil)))
+  (bookmark-save-flag 1))
 
 (use-package delsel
   :ensure nil

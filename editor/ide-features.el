@@ -29,9 +29,7 @@
   (:map +leader-map
         ("te" . #'+eglot-toggle-debug))
   (:map +leader2-map
-        ("er" . #'eglot-reconnect)
-        ("r" . #'eglot-rename)
-        ("a" . #'eglot-code-actions))
+        ("er" . #'eglot-reconnect))
   :config
   (setq eglot-sync-connect 3) ; Wait longer for connection
 

@@ -10,7 +10,6 @@
   (project-mode-line t)
   :bind
   (:map +leader-map
-        ("y" . #'project-eshell)
         ("r." . #'project-root-find-file)
         ("'" . #'project-find-file)))
 
@@ -31,6 +30,7 @@
   (:map +leader-map
         ("SPC ;" . #'+project-switch-ripgrep)
         ("SPC '" . #'+project-switch)
+        ("SPC y" . #'+project-switch-eshell)
         ("pk" . #'+project-kill-buffers)
         ("j" . #'+project-other-project)
         ("k" . #'+project-visit-last-buffer)

@@ -9,13 +9,6 @@
     (buffer-string)))
 
 ;;;###autoload
-(defun +save-and-kill-buffer ()
-  "save and kill buffer"
-  (interactive)
-  (save-buffer)
-  (kill-current-buffer))
-
-;;;###autoload
 (defun balanced-parens-p ()
   "Return `t' if parentheses are balanced; otherwise `nil'."
   (condition-case nil

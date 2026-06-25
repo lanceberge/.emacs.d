@@ -25,6 +25,9 @@
   :bind
   (:map +x-map
         ("b" . #'consult-buffer)
+        ("rl" . #'consult-register-load)
+        ("rs" . #'consult-register-store)
+        (":" . #'consult-complex-command)
         ("'" . #'consult-recent-file))
   (:map +normal-mode-map
         ("M-g" . #'consult-goto-line))
@@ -33,14 +36,13 @@
   (:map isearch-mode-map
         ("M-r" . #'consult-isearch-history))
   (:map +leader-map
-        ("." . #'find-file)
         ("M-x" . #'consult-mode-command)
         ("fj" . #'consult-imenu)
         ("pm" . #'consult-global-mark)
         ("fb" . #'consult-bookmark)
         ("fm" . #'consult-mark)
-        ("rc" . #'consult-complex-command)
         ;; ("fh" . #'consult-man)
+        ("SPC m" . #'consult-minor-mode-menu)
         ("fe" . #'consult-flymake)
         ("fo" . #'consult-outline)
         ("f." . #'consult-fd)
@@ -64,27 +66,30 @@
         ("ft" . #'+consult-find-todos)
         ("c;" . #'+consult-ripgrep-here)
         ("SPC bf" . #'+consult-unfocus-lines)
-        ("SPC fm" . #'consult-minor-mode-menu)
         ("/" . #'+consult-line)
-        ("bf" . #'+consult-focus-lines)
+        ("bf" . #'consult-focus-lines)
         ("fk" . #'+consult-find-key)
         ("cy" . #'+consult-yank-or-replace)
-        ("SPC k" . #'+consult-keep-lines)
+        ("SPC k" . #'consult-keep-lines)
         ("fp" . #'+consult-find-package)
         ("SPC /" . #'+consult-line-multi)
         ("fa" . #'+consult-org-agenda-todos)
         ("pt" . #'+consult-project-find-todos)
         ("c'" . #'+consult-project-file-here)))
 
+(use-package consult-buffer-extensions
+  :ensure (:type file :main "~/.emacs.d/packages/consult-buffer-extensions.el")
+  :after consult
+  :demand t
+  :bind
+  (:map +leader-map
+        ("ba" . #'+consult-buffer-agent-shell)
+        ("by" . #'+consult-buffer-project-eshell)))
+
 (use-package consult-eglot
-  :hook (eglot-mode . consult-eglot-mode))
-
-;; (use-package consult-dir
-;;   :bind (("C-x C-d" . consult-dir)
-;;          :map vertico-map
-;;          ("C-x C-d" . consult-dir)
-;;          ("C-x C-j" . consult-dir-jump-file)))
-
+  :bind
+  (:map +leader-map
+        ("s" . #'consult-eglot-symbols)))
 
 (use-package vertico
   :defer 0.1
@@ -123,8 +128,6 @@
 (use-package marginalia
   :defer 0.4
   :bind
-  (:map minibuffer-local-map
-        ("M-A" . #'marginalia-cycle))
   :config
   (marginalia-mode)
   (setf (alist-get 'function marginalia-annotators)

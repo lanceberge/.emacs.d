@@ -9,6 +9,7 @@ emacsclient -e '(+agent-lisp-eval-buffer "/abs/path/to/file.el")'
 - Use jj for version control. Not git. Run `jj diff --git` after making changes to ensure the diff is as minimal as it needs to be
 - All custom functions and variables, except eshell alias functions, should be named starting with `+`. Custom functions should have `;;;###autoload` on the line above the `defun` declaration.
 - If you encounter changes you didn't make, assume the user made them and wants to keep them. Do not undo them
+- Avoid advice wherever possible in favor of hooks/custom modes or commands
 
 ## Look up documentation using `emacsclient`
 

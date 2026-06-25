@@ -1,19 +1,20 @@
 ;;; -*- lexical-binding: t -*-
 (use-package corfu
-  :defer 1.4
+  :defer 0.7
   :hook
   ((prog-mode text-mode agent-shell-mode eshell-mode) . corfu-mode)
+  (eshell-mode . +corfu-eshell-mode)
   (+normal-mode . corfu-quit)
   (corfu-mode . corfu-indexed-mode)
   :custom
   (corfu-cycle t)
   (corfu-auto t)
-  (corfu-delay 0.2)
+  (corfu-delay 0.1)
   (corfu-separator ?\s)
+  (corfu-on-exact-match 'show)
   (corfu-quit-no-match t)
   (corfu-preview-current t)
   (corfu-preselect 'first)
-  (corfu-on-exact-match nil)
   (corfu-quit-at-boundary nil)
   (corfu-scroll-margin 5)
   (completion-ignore-case t)
@@ -36,6 +37,12 @@
                             (call-interactively #'corfu-complete))))))
 
 ;;;###autoload
+(defun +corfu-eshell-mode ()
+  "Bind RET in `corfu-map' to `eshell-send-input' for this Eshell buffer."
+  (setq-local corfu-map (copy-keymap corfu-map))
+  (keymap-set corfu-map "RET" #'eshell-send-input))
+
+;;;###autoload
 (defun +corfu-minibuffer-mode ()
   "Enable `corfu-mode' in minibuffers where no completion UI is active."
   (when (and (not (bound-and-true-p vertico--input))
@@ -53,31 +60,36 @@
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package cape
-  :after corfu
   :hook
-  (text-mode . +cape-text-mode)
   (minibuffer-setup . +cape-minibuffer-mode)
   (org-mode . +org-completion)
+  (emacs-lisp-mode . +elisp-completion)
   :custom
   (cape-file-directory-must-exist nil)
+  (cape-dict-file "/usr/share/cracklib/cracklib-small")
   :init
-  (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'completion-at-point-functions #'cape-file))
+  (setq-default completion-at-point-functions
+                '(cape-file cape-dabbrev)))
+
+;;;###autoload
+(defun +elisp-completion ()
+  (setq-local completion-at-point-functions
+              (list
+               (cape-capf-super
+                #'elisp-completion-at-point
+                #'cape-dabbrev)
+               t)))
 
 ;;;###autoload
 (defun +org-completion ()
-  (dolist (backend '(cape-elisp-block))
-    (add-to-list 'completion-at-point-functions backend)))
+  (dolist (backend '(cape-dict cape-dabbrev cape-elisp-block))
+    (add-hook 'completion-at-point-functions backend nil t)))
 
 ;;;###autoload
 (defun +cape-minibuffer-mode ()
   (dolist (backend '(cape-history))
-    (add-to-list 'completion-at-point-functions backend))
+    (add-hook 'completion-at-point-functions backend nil t))
   (setq-local corfu-auto-prefix 3))
-
-;;;###autoload
-(defun +cape-text-mode ()
-  (setq-local corfu-auto-prefix 4))
 
 (use-package completion-preview
   :disabled t

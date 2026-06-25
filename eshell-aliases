@@ -1,5 +1,5 @@
-alias j jj
+alias j jj $*
 alias cdr cd (vc-root-dir)
-alias k kubectl
+alias k kubectl $*
 alias d dired $1
 alias vf view-file $1

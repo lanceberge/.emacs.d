@@ -7,11 +7,11 @@
   (yas-indent-line 'auto)
   :bind
   (:map +leader-map
-        ("si" . #'yas-insert-snippet)
-        ("sn" . #'yas-new-snippet)
-        ("sf" . #'yas-visit-snippet-file)
-        ("sl" . #'yas-describe-tables)
-        ("sr" . #'yas-reload-all))
+        ("yi" . #'yas-insert-snippet)
+        ("yn" . #'yas-new-snippet)
+        ("yf" . #'yas-visit-snippet-file)
+        ("yl" . #'yas-describe-tables)
+        ("yr" . #'yas-reload-all))
   (:map yas-keymap
         ("<tab>" . #'yas-next-field))
   (:map snippet-mode-map

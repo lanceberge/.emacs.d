@@ -17,11 +17,6 @@
      (agent-shell))))
 
 ;;;###autoload
-(defun +consult-agent-shell-project-buffers ()
-  (interactive)
-  (+consult-project-buffer "Agent"))
-
-;;;###autoload
 (defun +agent-shell-send-region-with-prompt (prompt &optional arg)
   "Send agent-shell DWIM context with PROMPT without focusing the shell.
 

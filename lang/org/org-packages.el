@@ -83,9 +83,10 @@
 (use-package org-modern
   :custom
   (org-modern-star 'replace)
-  :hook
-  (org-mode . org-modern-mode)
-  (org-agenda-finalize . org-modern-agenda))
+  :after org
+  :demand t
+  :config
+  (global-org-modern-mode))
 
 (use-package org-journal
   :custom

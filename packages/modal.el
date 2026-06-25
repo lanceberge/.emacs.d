@@ -195,19 +195,22 @@ ARGS provides a `:name' atom."
 
 ;;; Digit keys - universal argument in normal + sexp modes
 
-(dotimes (i 10)
+(dolist (i (number-sequence 1 9))
   (define-key +sexp-mode-map
               (number-to-string i)
               `(lambda ()
                  (interactive)
                  (setq prefix-arg ,i)
                  (universal-argument--mode)))
+
   (define-key +normal-mode-map
               (number-to-string i)
               `(lambda ()
                  (interactive)
                  (setq prefix-arg ,i)
                  (universal-argument--mode))))
+
+(define-key +normal-mode-map "0" #'universal-argument)
 
 ;;;###autoload
 (defun +insert-char-overwrite-region (c)

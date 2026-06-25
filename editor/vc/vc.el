@@ -36,8 +36,8 @@
         ("x" . #'magit-discard)
         ("V" . #'set-mark-command))
   (:map +leader-map
+        ;; ("gd" . #'magit-file-delete)
         ("gb" . #'magit-branch-or-checkout)
-        ("gd" . #'magit-file-delete)
         ("SPC gf" . #'magit-fetch)
         ("SPC gb" . #'magit-branch-and-checkout)
         ("gc" . #'magit-branch-spinoff)
