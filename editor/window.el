@@ -86,6 +86,12 @@
                 name)
       name)))
 
+(use-package consult-tab-bar
+  :ensure (:type file :main "~/.emacs.d/packages/consult-tab.el")
+  :bind
+  (:map +leader-map
+        ("SPC t" . #'+consult-tab)))
+
 (use-package tab-bar-repeat
   :ensure nil
   :bind
