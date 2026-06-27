@@ -1,6 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(setq tab-bar-show nil)
-
 (use-package +window
   :ensure nil
   :bind
@@ -8,7 +6,7 @@
                ("n" . #'next-buffer)
                ("p" . #'previous-buffer))
   (:map +x-map
-        ("1" . #'+toggle-zoom))
+        ("1" . #'+toggle-tab-zoom))
   (:map +leader-map
         ("SPC l" . #'+other-buffer)
         ("bn" . #'next-buffer)
@@ -44,10 +42,7 @@
   :bind
   (:repeat-map winner-repeat-map
                ("p" . #'winner-undo)
-               ("n" . #'winner-redo))
-  (:map +x-map
-        ("wp" . #'winner-undo)
-        ("wn" . #'winner-redo)))
+               ("n" . #'winner-redo)))
 
 (use-package windresize
   :custom
@@ -61,6 +56,45 @@
         ("k" . #'windresize-up)
         ("j" . #'windresize-down)
         (";" . #'windresize-exit)))
+
+(use-package tab-bar
+  :ensure nil
+  :custom
+  (tab-bar-show nil)
+  (tab-bar-tab-name-function #'+tab-bar-tab-name-project)
+  :hook
+  (after-init . tab-bar-mode)
+  (tab-bar-mode . tab-bar-history-mode)
+  :bind
+  (:map +leader-map
+        ("tj" . #'tab-bar-switch-to-recent-tab)
+        ("tn" . #'tab-bar-new-tab)
+        ("tf" . #'tab-bar-switch-to-tab)))
+
+;;;###autoload
+(defun +tab-bar-tab-name-project ()
+  "Generate tab name as PROJECT:BUFFER from the selected window's buffer."
+  (let* ((win (or (minibuffer-selected-window)
+                  (and (window-minibuffer-p) (get-mru-window))))
+         (buf (window-buffer win))
+         (name (buffer-name buf))
+         (project (with-current-buffer buf (project-current))))
+    (if project
+        (format "%s:%s"
+                (file-name-nondirectory
+                 (directory-file-name (project-root project)))
+                name)
+      name)))
+
+(use-package tab-bar-repeat
+  :ensure nil
+  :bind
+  (:repeat-map window-repeat-map
+               ("p" . #'tab-bar-history-back)
+               ("n" . #'tab-bar-history-forward))
+  (:map +x-map
+        ("wp" . #'tab-bar-history-back)
+        ("wn" . #'tab-bar-history-forward)))
 
 ;;;###autoload
 (defun +revert-buffer ()
@@ -91,23 +125,13 @@
       (with-selected-window win
         (pulsar-pulse-line)))))
 
-(defvar +toggle-zoom--frame-parameter
-  '+toggle-zoom--configuration
-  "Frame parameter used to store the zoomed window configuration.")
-
 ;;;###autoload
-(defun +toggle-zoom ()
-  "Delete other windows in frame, or restore the previous window config."
+(defun +toggle-tab-zoom ()
+  "Delete other windows in frame if any, or restore previous window config."
   (interactive)
-  (let ((configuration
-         (frame-parameter nil +toggle-zoom--frame-parameter)))
-    (if (and (one-window-p t)
-             (window-configuration-p configuration))
-        (progn
-          (set-frame-parameter nil +toggle-zoom--frame-parameter nil)
-          (set-window-configuration configuration))
-      (unless (one-window-p t)
-        (set-frame-parameter nil
-                             +toggle-zoom--frame-parameter
-                             (current-window-configuration)))
-      (delete-other-windows))))
+  (if (and tab-bar-mode
+           (equal (selected-window) (next-window)))
+      (tab-bar-history-back)
+    ;; Force tab-bar history to record this command even if it was repeated.
+    (setq tab-bar-history-done-command nil)
+    (delete-other-windows)))
