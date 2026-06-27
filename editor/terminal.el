@@ -82,21 +82,39 @@
   (add-to-list 'eshell-modules-list 'eshell-xtra)
   (add-hook 'eshell-mode-hook #'+eshell-outline-setup))
 
+;;;###autoload
+(defun +eshell-expand-less-pipe (beg end)
+  "Rewrite literal \"| less\" pipes in Eshell input to \"*| less\"."
+  (let ((end-marker (copy-marker end)))
+    (save-excursion
+      (goto-char beg)
+      (while (search-forward "| less" end-marker t)
+        (unless (eq (char-before (match-beginning 0)) ?*)
+          (replace-match "*| less" t t))))))
+
 (use-package esh-mode
   :ensure nil
   :after eshell
   :bind
-  (:map eshell-mode-map
-        ([remap consult-imenu] . #'consult-outline))
   :config
+  (add-to-list 'eshell-expand-input-functions #'+eshell-expand-less-pipe)
   (add-to-list 'eshell-expand-input-functions #'eshell-expand-history-references))
 
 (use-package em-hist
   :ensure nil
   :after eshell
   :bind
+  (:map eshell-mode-map
+        ("C-M-i" . #'completion-at-point)
+        ([remap consult-imenu] . #'consult-outline))
   (:map eshell-hist-mode-map
         ("M-r" . #'cape-history)))
+
+(use-package em-cmpl
+  :ensure nil
+  :bind
+  (:map eshell-cmpl-mode-map
+        ("C-M-i" . #'completion-at-point)))
 
 ;;;###autoload
 (define-derived-mode +eshell-alias-mode fundamental-mode "Eshell Alias"

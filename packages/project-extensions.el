@@ -248,11 +248,5 @@ If FILE-PATTERN is provided (e.g. \"*.ex\"), only match files with that pattern.
    str
    t))
 
-;;;###autoload
-(defun +project-shell-command ()
-  (interactive)
-  (let ((default-directory (project-root (project-current t))))
-    (call-interactively #'shell-command)))
-
 (provide 'project-extensions)
 ;;; project-extensions.el ends here

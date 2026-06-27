@@ -3,7 +3,6 @@
   :defer 0.7
   :hook
   ((prog-mode text-mode agent-shell-mode eshell-mode) . corfu-mode)
-  (eshell-mode . +corfu-eshell-mode)
   (+normal-mode . corfu-quit)
   (corfu-mode . corfu-indexed-mode)
   :custom
@@ -21,9 +20,9 @@
   :bind
   (:map corfu-map
         ("C-y" . #'corfu-insert)
-        ("RET" . #'newline)
         ("<tab>" . #'yas-expand))
   :config
+  (keymap-unset corfu-map "RET")
   (add-hook 'corfu-mode-hook
             (lambda ()
               (setq-local completion-styles '(flex basic)
@@ -35,12 +34,6 @@
                        `(lambda () (interactive)
                           (let ((corfu--index ,idx))
                             (call-interactively #'corfu-complete))))))
-
-;;;###autoload
-(defun +corfu-eshell-mode ()
-  "Bind RET in `corfu-map' to `eshell-send-input' for this Eshell buffer."
-  (setq-local corfu-map (copy-keymap corfu-map))
-  (keymap-set corfu-map "RET" #'eshell-send-input))
 
 ;;;###autoload
 (defun +corfu-minibuffer-mode ()
@@ -107,6 +100,12 @@
                (cape-capf-super #'eglot-completion-at-point #'yasnippet-capf)
                #'eglot-completion-at-point
                t)))
+
+(use-package esh-completion
+  :ensure (:type file :main "~/.emacs.d/packages/esh-completion.el")
+  :hook (eshell-mode . +esh-completion-mode)
+  :custom
+  (+esh-completion-script (expand-file-name "list_completions.sh" user-emacs-directory)))
 
 ;;;###autoload
 (use-package completion-preview

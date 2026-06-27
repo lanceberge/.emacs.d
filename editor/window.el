@@ -68,8 +68,7 @@
   :bind
   (:map +leader-map
         ("tj" . #'tab-bar-switch-to-recent-tab)
-        ("tn" . #'tab-bar-new-tab)
-        ("tf" . #'tab-bar-switch-to-tab)))
+        ("tn" . #'tab-bar-new-tab)))
 
 ;;;###autoload
 (defun +tab-bar-tab-name-project ()
