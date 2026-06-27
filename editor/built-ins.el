@@ -190,17 +190,60 @@
         ("l" . #'indent-rigidly-right)
         ("L" . #'indent-rigidly-right-to-tab-stop)))
 
+(defconst +elixir-mix-compilation-regexp
+  (rx line-start
+      (zero-or-more (not "\n"))
+      (or line-start blank)
+      (group (or "lib" "test")
+             "/"
+             (one-or-more (not (any ":\n")))
+             ".ex"
+             (optional "s"))
+      ":"
+      (group (one-or-more digit))
+      (optional ":" (group (one-or-more digit)))
+      (or ":" line-end))
+  "Match existing local Elixir project paths in Mix compilation output.")
+
+;;;###autoload
+(defun +compilation-setup-mix-error-regexp (process)
+  "Use Mix-specific compilation parsing in PROCESS' buffer."
+  (when-let ((buffer (process-buffer process)))
+    (with-current-buffer buffer
+      (when (+compilation-mix-command-p)
+        (setq-local compilation-error-regexp-alist-alist
+                    (cons `(+elixir-mix
+                            ,+elixir-mix-compilation-regexp
+                            +elixir-compilation-file 2 3)
+                          (default-value 'compilation-error-regexp-alist-alist)))
+        (setq-local compilation-error-regexp-alist
+                    (cons '+elixir-mix
+                          (default-value 'compilation-error-regexp-alist)))))))
+
+;;;###autoload
+(defun +elixir-compilation-file ()
+  "Return the current Mix compilation match if it exists on disk."
+  (let* ((path (match-string-no-properties 1))
+         (file (and path (expand-file-name path default-directory))))
+    (when (and file (file-exists-p file))
+      path)))
+
+;;;###autoload
+(defun +compilation-mix-command-p ()
+  "Return non-nil when the current compilation command invokes Mix."
+  (when-let ((command (car-safe compilation-arguments)))
+    (string-match-p (rx (or string-start (not (any alnum "_" "-")))
+                        "mix"
+                        (or string-end (not (any alnum "_" "-"))))
+                    command)))
+
 (use-package compile
   :ensure nil
   :commands
   (compile)
   :config
   (require 'ansi-color)
-  (add-to-list 'compilation-error-regexp-alist-alist
-               '(+elixir-exunit
-                 "^[[:space:]]*\\([^:\n]+\\.exs?\\):\\([0-9]+\\):"
-                 1 2))
-  (add-to-list 'compilation-error-regexp-alist '+elixir-exunit)
+  (add-hook 'compilation-start-hook #'+compilation-setup-mix-error-regexp)
   :hook
   (compilation-filter . ansi-color-compilation-filter))
 
