@@ -61,9 +61,10 @@
 
 (use-package cape
   :hook
-  (minibuffer-setup . +cape-minibuffer-mode)
-  (org-mode . +org-completion)
-  (emacs-lisp-mode . +elisp-completion)
+  (minibuffer-setup . +minibuffer-completion-mode)
+  (org-mode . +org-completion-mode)
+  (emacs-lisp-mode . +elisp-completion-mode)
+  (eglot-managed-mode . +eglot-completion-mode)
   :custom
   (cape-file-directory-must-exist nil)
   (cape-dict-file "/usr/share/cracklib/cracklib-small")
@@ -72,25 +73,42 @@
                 '(cape-file cape-dabbrev)))
 
 ;;;###autoload
-(defun +elisp-completion ()
+(defun +elisp-completion-mode ()
   (setq-local completion-at-point-functions
               (list
-               (cape-capf-super
-                #'elisp-completion-at-point
-                #'cape-dabbrev)
+               #'elisp-completion-at-point
+               #'cape-dabbrev
                t)))
 
 ;;;###autoload
-(defun +org-completion ()
+(defun +org-completion-mode ()
   (dolist (backend '(cape-dict cape-dabbrev cape-elisp-block))
     (add-hook 'completion-at-point-functions backend nil t)))
 
 ;;;###autoload
-(defun +cape-minibuffer-mode ()
+(defun +minibuffer-completion-mode ()
   (dolist (backend '(cape-history))
     (add-hook 'completion-at-point-functions backend nil t))
   (setq-local corfu-auto-prefix 3))
 
+(use-package yasnippet-capf
+  :ensure (:host github :repo "elken/yasnippet-capf")
+  :hook
+  (yas-minor-mode . +yas-completion-mode))
+
+;;;###autoload
+(defun +yas-completion-mode ()
+  (add-hook 'completion-at-point-functions #'yasnippet-capf))
+
+;;;###autoload
+(defun +eglot-completion-mode ()
+  (setq-local completion-at-point-functions
+              (list
+               (cape-capf-super #'eglot-completion-at-point #'yasnippet-capf)
+               #'eglot-completion-at-point
+               t)))
+
+;;;###autoload
 (use-package completion-preview
   :disabled t
   :ensure nil

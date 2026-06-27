@@ -76,6 +76,7 @@
 (use-package eldoc
   :hook (emacs-lisp-mode . eldoc-mode)
   :custom
+  (eldoc-display-functions '(eldoc-display-in-echo-area))
   (eldoc-idle-delay 1)
   ;; https://www.reddit.com/r/emacs/comments/1lbo5jy/comment/myig4p7/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
   (eglot-code-action-indications '(eldoc-hint)))

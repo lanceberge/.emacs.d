@@ -1,7 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 (use-package yasnippet ; snippets
   ;; https://joaotavora.github.io/yasnippet/snippet-development.html
-  :defer 0.7
+  :hook
+  ((prog-mode text-mode) . yas-minor-mode)
   :custom
   (yas-snippet-dirs '("~/.emacs.d/snippets"))
   (yas-indent-line 'auto)
@@ -15,9 +16,7 @@
   (:map yas-keymap
         ("<tab>" . #'yas-next-field))
   (:map snippet-mode-map
-        ([remap save-buffer] . #'+yas-load-snippet-noconfirm))
-  :config
-  (yas-global-mode 1))
+        ([remap save-buffer] . #'+yas-load-snippet-noconfirm)))
 
 (use-package yasnippet-snippets
   :after yasnippet
