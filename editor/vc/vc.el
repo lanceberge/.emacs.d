@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package consult-vc
-  :ensure (:type file :main "~/.emacs.d/packages/consult-vc.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-vc.el")
   :bind
   (:map +leader2-map
         ("gf" . #'+vc-modified-files)
@@ -174,7 +174,7 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
   (global-diff-hl-mode))
 
 (use-package embark-diff-hl
-  :ensure (:type file :main "~/.emacs.d/packages/embark-diff-hl.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/embark-diff-hl.el")
   :after (embark diff-hl)
   :demand t)
 

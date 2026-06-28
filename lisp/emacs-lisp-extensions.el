@@ -20,7 +20,7 @@
   (when-let* ((file buffer-file-name)
               ((file-in-directory-p
                 (file-truename file)
-                (file-truename (expand-file-name "packages/" user-emacs-directory))))
+                (file-truename (expand-file-name "lisp/" user-emacs-directory))))
               (package (+elisp--provided-package)))
     (run-at-time
      0 nil

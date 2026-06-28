@@ -12,13 +12,13 @@
                            (avy-goto-char-2-above . avy-order-closest))))
 
 (use-package avy-actions
-  :ensure (:type file :main "~/.emacs.d/packages/avy-actions.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/avy-actions.el")
   :after avy
   :demand t
   :config
   (setq avy-dispatch-alist
         (list
-         (cons ?m 'avy-action-mark-until-pt)
+         (cons ?\s 'avy-action-mark-until-pt)
          (cons ?w 'avy-action-kill-to-point)
          (cons ?, 'avy-action-embark)
          (cons ?' 'avy-action-embark-dwim)

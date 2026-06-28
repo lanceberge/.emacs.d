@@ -23,6 +23,8 @@
         ("<tab>" . #'yas-expand))
   :config
   (keymap-unset corfu-map "RET")
+  (keymap-unset corfu-map "C-a")
+  (keymap-unset corfu-map "C-e")
   (add-hook 'corfu-mode-hook
             (lambda ()
               (setq-local completion-styles '(flex basic)
@@ -102,7 +104,7 @@
                t)))
 
 (use-package esh-completion
-  :ensure (:type file :main "~/.emacs.d/packages/esh-completion.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/esh-completion.el")
   :hook (eshell-mode . +esh-completion-mode)
   :custom
   (+esh-completion-script (expand-file-name "list_completions.sh" user-emacs-directory)))

@@ -11,6 +11,11 @@
   (+consult-buffer--project-dwim "Agent" #'agent-shell-openai-start-codex nil arg))
 
 ;;;###autoload
+(defun +consult-buffer-project-eshell-new ()
+  (interactive)
+  (+consult-buffer-project-eshell 1))
+
+;;;###autoload
 (defun +consult-buffer-project-eshell (&optional arg)
   "Switch to a project eshell buffer, or create one with ARG."
   (interactive "P")

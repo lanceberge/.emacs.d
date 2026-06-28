@@ -6,7 +6,7 @@
         ("e" . #'eval-last-sexp)))
 
 (use-package +emacs-lisp-extensions
-  :ensure (:type file :main "~/.emacs.d/packages/emacs-lisp-extensions.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/emacs-lisp-extensions.el")
   :hook
   ((emacs-lisp-mode . +elisp--maybe-setup-new-file)
    (emacs-lisp-mode . +elisp-setup-elpaca-rebuild-after-save))

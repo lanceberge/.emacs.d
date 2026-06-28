@@ -1,28 +1,32 @@
 ;;; -*- lexical-binding: t -*-
 (use-package project
   :demand t
-  :hook
-  (eshell-mode . +insert-mode)
   :commands
   (project-switch-project project-prompter project-root)
   :custom
-  (project-switch-commands #'project-find-file)
+  (project-switch-use-entire-map t)
   (project-mode-line t)
   :bind
+  (:map project-prefix-map
+        (";" . #'consult-ripgrep)
+        ("," . #'consult-project-buffer)
+        ("'" . #'project-find-file))
   (:map +leader-map
+        ("SPC p" . #'project-other-window-command)
         ("r." . #'project-root-find-file)
+        ("pe" . #'flymake-show-project-diagnostics)
         ("'" . #'project-find-file)))
 
 (use-package project-compile
-  :ensure (:type file :main "~/.emacs.d/packages/project-compile.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/project-compile.el")
   :hook
   (savehist-mode . +project-compile-save-hist-mode)
   :bind
   (:map +x-map
         ("pc" . #'+project-compile)))
 
-(use-package project-extensions
-  :ensure (:type file :main "~/.emacs.d/packages/project-extensions.el")
+(use-package project-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/project-extras.el")
   :demand t
   :bind
   (:map +x-map
@@ -30,12 +34,13 @@
   (:map +leader-map
         ("SPC ;" . #'+project-switch-ripgrep)
         ("SPC '" . #'+project-switch)
-        ("SPC y" . #'+project-switch-eshell)
+        ("SPC ," . #'+project-switch-project-buffer)
+        ("SPC e" . #'+project-switch-eshell)
         ("pk" . #'+project-kill-buffers)
+        ("k" . #'+project-switch-project)
         ("j" . #'+project-other-project)
         ("k" . #'+project-visit-last-buffer)
         ("l" . #'+project-other-buffer)
-        ("pe" . #'flymake-show-project-diagnostics)
         ("pr" . #'+project-replace-regex)
         ("rk" . #'+project-reload-and-switch)
         ("rp" . #'+project-load-projects)

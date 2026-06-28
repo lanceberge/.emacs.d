@@ -142,14 +142,27 @@ MATCH is as in `org-map-entries'."
 (defun +org-project-consult--prompt-file ()
   "Prompt for an Org project file using Consult."
   (consult--read
-   (directory-files +org-project-directory t "\\.org$")
+   (+org-project-consult--file-candidates)
    :prompt "Select project file: "
    :category 'org-project-file
-   :require-match t
+   :require-match nil
    :sort nil
+   :lookup #'+org-project-consult--lookup-file
    :state (when +org-project-consult-preview-files
             (consult--file-preview))
    :history 'file-name-history))
+
+;;;###autoload
+(defun +org-project-consult--file-candidates ()
+  "Return Org project file candidates."
+  (directory-files +org-project-directory t "\\.org$"))
+
+;;;###autoload
+(defun +org-project-consult--lookup-file (selected candidates input _narrow)
+  "Return SELECTED Org project file or resolve INPUT as a new project file."
+  (if (member selected candidates)
+      selected
+    (expand-file-name (or selected input) +org-project-directory)))
 
 ;;;###autoload
 (defun +org-project-consult--store-embark-target (&rest args)

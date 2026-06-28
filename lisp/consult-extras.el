@@ -123,9 +123,8 @@ Otherwise, just call consult-yank-pop."
 (defun +consult-project-buffer (&optional initial)
   (interactive)
   (if (project-current nil)
-      (consult--with-project
-        (+consult--buffer consult-project-buffer-sources ?b initial))
-    (+consult--buffer consult-buffer-sources ?b initial)))
+      (call-interactively #'consult-project-buffer)
+    (call-interactively #'consult-buffer)))
 
 ;;;###autoload
 (defun +consult-find-todos ()
@@ -170,7 +169,28 @@ MATCH is as in `org-map-entries'."
       (user-error "No command is bound to %s"
                   key-sequence))
      ((commandp sym t)
-      (consult-ripgrep "~/.emacs.d" (symbol-name sym)))
+      (consult-ripgrep "~/.emacs.d" (format "defun %s" (symbol-name sym))))
+     (t
+      (user-error "%s is bound to %s which is not a command"
+                  (key-description key-sequence)
+                  sym)))))
+
+;;;###autoload
+(defun +consult-find-key-binding (key-sequence)
+  "Goto the key binding form for the command bound to KEY-SEQUENCE."
+  (interactive
+   (list (read-key-sequence "Press key: ")))
+  (let ((sym (key-binding key-sequence))
+        (last-key (substring (key-description key-sequence) -1)))
+    (cond
+     ((null sym)
+      (user-error "No command is bound to %s"
+                  key-sequence))
+     ((commandp sym t)
+      (consult-ripgrep "~/.emacs.d"
+                       (format "%s\" \\..*%s)"
+                               (regexp-quote last-key)
+                               (regexp-quote (symbol-name sym)))))
      (t
       (user-error "%s is bound to %s which is not a command"
                   (key-description key-sequence)
@@ -235,4 +255,4 @@ MATCH is as in `org-map-entries'."
                (car (nth (1+ idx) consult--narrow-keys))))
          (caar consult--narrow-keys))))))
 
-(provide 'consult-extensions)
+(provide 'consult-extras)

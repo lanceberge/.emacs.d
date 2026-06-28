@@ -5,13 +5,13 @@ description: Factor out emacs lisp to a custom package
 
 # Package
 
-Create or update a local Emacs Lisp package in `./packages/<name>.el`.
+Create or update a local Emacs Lisp package in `./lisp/<name>.el`.
 
 Use the current task context first. If the user refers to "this", "that", "what you just wrote", or similar wording, infer the package from the work already in progress. If the user gives a package name or behavior directly, use that.
 
 Keep the package small and focused:
 
-- Put the package file at `packages/<name>.el`.
+- Put the package file at `lisp/<name>.el`.
 - Prefer existing repo conventions over new structure.
 - Name custom functions and variables with a leading `+`.
 - All functions and variable names should be prefixed with `+<name>-`
@@ -20,16 +20,16 @@ Keep the package small and focused:
 - Put interactive/core commands above helper functions they call.
 - End the file with `(provide '<name>)`. The provide block should not include the "+" prefix
 - Have a use package block somewhere in the editor subdirectory, typically editor.el but if there is another file where this functionality makes sense, then put it there, for example:
-- If the package is requested to end in `-extensions`, e.g. `+consult-extensions`, then functions and variables should just be named `+consult-<function name>`. `-extensions` should be omitted from the names
+- If the package is requested to end in `-extras`, e.g. `+consult-extras`, then functions and variables should just be named `+consult-<function name>`. `-extras` should be omitted from the names
 
 ```
-(use-package consult-extensions
-  :ensure (:type file :main "~/.emacs.d/packages/consult-extensions.el")
+(use-package consult-extras
+  :ensure (:type file :main "~/.emacs.d/packages/consult-extras.el")
   :custom
   (consult-preview-excluded-buffers #'+consult-preview-tramp-excluded-p)
   :bind
   (:map +leader-map
-    ("ab" . #'+consult-extensions-example-function)))
+    ("ab" . #'+consult-extras-example-function)))
 ```
 
 - If there are hardcoded constants in the old code, create customizable variables with sensible defaults where applicable, but if there are already values configured, then have the use-package block set those values via :custom

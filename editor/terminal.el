@@ -73,6 +73,8 @@
   :defer 0.7
   :commands
   (eshell project-eshell eshell-command)
+  :hook
+  (eshell-mode . +insert-mode)
   :init
   (add-to-list 'display-buffer-alist
                '("\\`\\*Eshell Command Output\\*\\'"

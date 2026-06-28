@@ -1,4 +1,22 @@
 ;;; -*- lexical-binding: t -*-
+(use-package harpoon
+  :ensure nil
+  ;; :ensure (:type file :main "~/.emacs.d/lisp/harpoon.el")
+  :bind
+  (:map +leader-map
+        ("fh" . #'+consult-harpoon-bookmarks))
+  :init
+  (dotimes (i 10)
+    (let ((num (number-to-string i)))
+      (define-key +leader-map num
+                  `(lambda ()
+                     (interactive)
+                     (+harpoon-goto ,num)))
+      (define-key +leader-map (kbd (format "SPC %s" num))
+                  `(lambda ()
+                     (interactive)
+                     (+harpoon-bookmark ,num))))))
+
 ;;;###autoload
 (defun +harpoon-bookmark (n)
   "Take a number `n' and create a formatted project-local bookmark based on `n'"

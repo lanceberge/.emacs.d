@@ -1,4 +1,4 @@
-;;; project-extensions.el --- Project navigation helpers -*- lexical-binding: t -*-
+;;; project-extras.el --- Project navigation helpers -*- lexical-binding: t -*-
 
 (require 'project)
 
@@ -7,8 +7,18 @@
   (interactive)
   (let* ((dir (or dir (funcall project-prompter)))
          (default-directory dir)
-         (callback (or callback #'project-switch-project)))
+         (callback (or callback #'project-find-file)))
     (funcall callback dir)))
+
+;;;###autoload
+(defun +project-switch-project (command dir)
+  "Read COMMAND from `project-prefix-map', then switch to project DIR."
+  (interactive (list (project--switch-project-command)
+                     (funcall project-prompter)))
+  (project-remember-project (project-current t dir))
+  (let ((default-directory dir)
+        (project-current-directory-override dir))
+    (call-interactively command)))
 
 ;;;###autoload
 (defun +pull-repos ()
@@ -32,12 +42,18 @@
   (+project-switch nil #'eshell))
 
 ;;;###autoload
-(defun +project-other-buffer (n &optional project not-found-callback)
+(defun +project-switch-project-buffer ()
+  (interactive)
+  (require 'consult-extras)
+  (let ((project-switch-commands #'consult-project-buffer))
+    (call-interactively #'project-switch-project)))
+
+;;;###autoload
+(defun +project-other-buffer (n &optional project)
   "Switch to the N'th most recent open buffer in the same vc-root-dir as the current buffer.
 Recurse through the buffer-list, skipping the first value since that's the current buffer."
   (interactive "p")
-  (let ((current-buffer (current-buffer))
-        (project-root-dir
+  (let ((project-root-dir
          (when-let ((project (or project (project-current nil))))
            (expand-file-name
             (if (stringp project)
@@ -46,9 +62,7 @@ Recurse through the buffer-list, skipping the first value since that's the curre
         (target-index (1- (abs n)))) ; Convert to 0-based index
     (defun +switch-to-recent-buffer-helper (buffer-list remaining)
       (if (not buffer-list)
-          (if not-found-callback
-              (funcall not-found-callback)
-            (message "No other recent files open in buffers"))
+          (message "No other recent files open in buffers")
         (let* ((buffer (car buffer-list))
                (buffer-project-root-dir (with-current-buffer buffer
                                           (when (project-current nil)
@@ -66,12 +80,15 @@ Recurse through the buffer-list, skipping the first value since that's the curre
 (defun +project-kill-buffer ()
   "Kill the current buffer and switch to the most recent buffer in the same project."
   (interactive)
-  (let ((buffer (current-buffer))
-        (project-root-dir (when (project-current t)
-                            (expand-file-name (project-root (project-current t))))))
-    (+project-other-buffer 1 project-root-dir
-                           (lambda ()
-                             (switch-to-buffer (other-buffer buffer t))))
+  (let* ((buffer (current-buffer))
+         (project (project-current nil))
+         (project-root-dir (when project
+                             (expand-file-name (project-root project)))))
+    (if project-root-dir
+        (+project-other-buffer 1 project-root-dir)
+      (switch-to-buffer (other-buffer buffer t)))
+    (when (eq buffer (current-buffer))
+      (switch-to-buffer (other-buffer buffer t)))
     (unless (eq buffer (current-buffer))
       (kill-buffer buffer))))
 
@@ -80,7 +97,7 @@ Recurse through the buffer-list, skipping the first value since that's the curre
   "Switch to the last open buffer in a project at `DIR'."
   (interactive "p")
   (let ((dir (or dir (funcall project-prompter))))
-    (+project-other-buffer n dir (lambda () (project-switch-project dir)))))
+    (+project-other-buffer n dir)))
 
 ;;;###autoload
 (defun +project-other-project (n)
@@ -248,5 +265,5 @@ If FILE-PATTERN is provided (e.g. \"*.ex\"), only match files with that pattern.
    str
    t))
 
-(provide 'project-extensions)
-;;; project-extensions.el ends here
+(provide 'project-extras)
+;;; project-extras.el ends here

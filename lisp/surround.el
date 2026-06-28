@@ -1,4 +1,7 @@
 ;;; -*- lexical-binding: t -*-
+
+;; TODO replace w/ puni and electric pair
+
 (setq +surround-pairs '((?r . ("(" . ")"))
                         (?s . ("[" . "]"))
                         (?c . ("{" . "}"))

@@ -25,7 +25,7 @@
   (add-hook 'gptel-rewrite-directives-hook #'+gptel-rewrite-directive-from-agents-md))
 
 (use-package agent-lisp
-  :ensure (:type file :main "~/.emacs.d/packages/agent-lisp.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/agent-lisp.el")
   :commands
   (+agent-lisp-trace +agent-lisp-apropos +agent-lisp-eval-buffer +agent-lisp-function-source))
 

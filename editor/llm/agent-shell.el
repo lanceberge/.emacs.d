@@ -3,6 +3,8 @@
   :custom
   (agent-shell-show-config-icons nil)
   :bind
+  (:map +leader-map
+        ("na" . #'agent-shell-openai-start-codex))
   (:map +leader2-map
         ("sc" . #'agent-shell-send-dwim))
   :config
@@ -13,7 +15,7 @@
           "XDG_CONFIG_HOME=/home/lance/dotfiles/.config")))
 
 (use-package agent-shell-extensions
-  :ensure (:type file :main "~/.emacs.d/packages/agent-shell-extensions.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/agent-shell-extensions.el")
   :defer 0.3
   :hook (agent-shell-mode . +agent-shell-auto-rename-mode)
   :bind
@@ -36,7 +38,7 @@
             (execute . ("sudo *" "ssh *" "git *")))))))
 
 (use-package ace-link-agent-shell
-  :ensure (:type file :main "~/.emacs.d/packages/ace-link-agent-shell.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/ace-link-agent-shell.el")
   :hook (agent-shell-mode . +ace-link-agent-shell-mode)
   :bind
   (:map +ace-link-agent-shell-mode-map

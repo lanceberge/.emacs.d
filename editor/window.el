@@ -18,6 +18,16 @@
   ("M-o" . #'other-window)
   ("M-O" . #'other-window-previous))
 
+(use-package frame
+  :ensure nil
+  :bind
+  ("s-n" . #'make-frame)
+  (:map +leader2-map
+        ("fo" . #'other-frame)
+        ("fn" . #'make-frame)
+        ("ff" . #'select-frame-by-name)
+        ("fd" . #'delete-frame)))
+
 ;;;###autoload
 (defun other-window-previous ()
   (interactive)
@@ -33,7 +43,8 @@
   (:map +x-map
         ("0" . #'delete-window)
         ("2" . #'split-window-below)
-        ("3" . #'split-window-right)))
+        ("3" . #'split-window-right)
+        ("4" . #'other-window-prefix)))
 
 (use-package winner ; Undo and redo window configs
   :ensure nil
@@ -86,7 +97,7 @@
       name)))
 
 (use-package consult-tab-bar
-  :ensure (:type file :main "~/.emacs.d/packages/consult-tab.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-tab.el")
   :bind
   (:map +leader-map
         ("SPC t" . #'+consult-tab)))

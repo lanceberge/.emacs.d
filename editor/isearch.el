@@ -7,6 +7,7 @@
   (search-invisible nil)
   :bind
   (:map isearch-mode-map
+        ("M-P" . #'isearch-toggle-regexp)
         ("C-g" . #'isearch-cancel)
         ("C-<backspace>" . #'isearch-abort)
         ("C-;" . #'avy-isearch))
@@ -14,7 +15,7 @@
   (setq search-nonincremental-instead nil)) ; don't cancel isearches with searches
 
 (use-package isearch-extensions
-  :ensure (:type file :main "~/.emacs.d/packages/isearch-extensions.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/isearch-extensions.el")
   :bind
   (:map isearch-mode-map
         ("M-s l" . #'+consult-line)

@@ -22,6 +22,8 @@
   :custom
   (xref-show-xrefs-function #'consult-xref)
   (consult-narrow-key "C-SPC")
+  (consult-project-buffer-sources '(consult-source-project-buffer
+                                    consult-source-project-recent-file))
   :bind
   (:map +x-map
         ("b" . #'consult-buffer)
@@ -51,8 +53,8 @@
         ("C-;" . #'consult-ripgrep)
         ("pj" . #'consult-imenu-multi)))
 
-(use-package consult-extensions
-  :ensure (:type file :main "~/.emacs.d/packages/consult-extensions.el")
+(use-package consult-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-extras.el")
   :custom
   (consult-preview-excluded-buffers #'+consult-preview-tramp-excluded-p)
   :bind
@@ -69,6 +71,7 @@
         ("/" . #'+consult-line)
         ("bf" . #'consult-focus-lines)
         ("fk" . #'+consult-find-key)
+        ("fK" . #'+consult-find-key-binding)
         ("cy" . #'+consult-yank-or-replace)
         ("SPC k" . #'consult-keep-lines)
         ("fp" . #'+consult-find-package)
@@ -78,13 +81,14 @@
         ("c'" . #'+consult-project-file-here)))
 
 (use-package consult-buffer-extensions
-  :ensure (:type file :main "~/.emacs.d/packages/consult-buffer-extensions.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-buffer-extensions.el")
   :after consult
   :demand t
   :bind
   (:map +leader-map
+        ("ne" . #'+consult-buffer-project-eshell-new)
         ("ba" . #'+consult-buffer-agent-shell)
-        ("by" . #'+consult-buffer-project-eshell)))
+        ("be" . #'+consult-buffer-project-eshell)))
 
 (use-package consult-eglot
   :bind
@@ -114,16 +118,19 @@
            (define-key vertico-map (kbd (format "M-%d" idx))
                        `(lambda () (interactive)
                           (let ((vertico--index ,idx))
-                            (call-interactively #'vertico-exit)))))
+                            (call-interactively #'+vertico-send)))))
 
   (vertico-mode)
   (vertico-indexed-mode))
 
-;;;###autoload
-(defun +auto-create-missing-dirs ()
-  (let ((target-dir (file-name-directory buffer-file-name)))
-    (unless (file-exists-p target-dir)
-      (make-directory target-dir t))))
+(use-package vertico-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/vertico-extras.el")
+  :after vertico
+  :bind
+  (:map vertico-map
+        ("RET" . #'+vertico-exit)
+        ("M-O" . #'+vertico-toggle-other-window-exit)
+        ("M-N" . #'+vertico-toggle-new-window-exit)))
 
 (use-package marginalia
   :defer 0.4

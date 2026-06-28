@@ -9,6 +9,7 @@
 (declare-function TeX-narrow-to-group 'tex)
 (declare-function LaTeX-narrow-to-environment 'latex)
 
+;;;###autoload
 (defun narrow-or-widen-dwim (arg)
   "Widen if buffer is narrowed, narrow-dwim otherwise.
 Dwim means: region, org-src-block, org-subtree, or defun, whichever

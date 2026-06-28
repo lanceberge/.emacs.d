@@ -8,16 +8,12 @@
   (prefix-help-command 'embark-prefix-help-command)
   (embark-confirm-act-all nil)
   (embark-quit-after-action
-   '((find-file . t)
-     (consult-grep . t)
-     (consult-ripgrep . t)
-     (eshell . t)
-     (embark-insert . t)
-     (project-eshell . t)
-     (switch-to-buffer-other-window . t)
-     (t . nil)))
+   '((t . t)))
   :bind
   (:map +normal-mode-map
+        ("C-." . #'embark-act)
+        ("M-'" . #'embark-dwim))
+  (:map +insert-mode-map
         ("C-." . #'embark-act)
         ("M-'" . #'embark-dwim))
   (:map minibuffer-mode-map
@@ -39,6 +35,7 @@
         ("," . #'+consult-project-buffer)
         ("SPC '" . #'+project-switch)
         ("SPC ;" . #'+project-switch-ripgrep)
+        ("SPC ," . #'+project-switch-project-buffer)
         ("d" . #'consult-dir))
   (:map embark-become-help-map
         ("v" . #'helpful-variable)
@@ -70,10 +67,25 @@
   (setq embark-pre-action-hooks
         (cl-remove-if (lambda (hook)
                         (eq (car (cdr hook)) 'embark--confirm))
-                      embark-pre-action-hooks)))
+                      embark-pre-action-hooks))
+
+  ;; support showing embark actions in the keycast modeline
+  ;; https://github.com/oantolin/embark/wiki/Additional-Configuration#showing-embark-actions-keys-in-keycast-mode
+  (defun store-action-key+cmd (cmd)
+    (force-mode-line-update t)
+    (setq this-command cmd
+          keycast--this-command-keys (this-single-command-keys)
+          keycast--this-command-desc cmd))
+
+  (advice-add 'embark-keymap-prompter :filter-return #'store-action-key+cmd)
+
+  ;; version of keycast--update that accepts (and ignores) parameters
+  (defun force-keycast-update (&rest _) (keycast--update))
+
+  (advice-add 'embark-act :before #'force-keycast-update))
 
 (use-package embark-this-buffer
-  :ensure (:type file :main "~/.emacs.d/packages/embark-this-buffer.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/embark-this-buffer.el")
   :bind
   (:map +leader-map
         ("." . #'embark-on-this-buffer)))
@@ -132,29 +144,15 @@
         ("]" . #'end-of-buffer))
   :hook (after-init . beginend-global-mode))
 
+;; TODO idk why i thought i needed this
 ;; buffers restored from desktop.el initialize in fundamental-mode so this sets it correctly
+;; (add-hook 'window-configuration-change-hook '+restore-major-mode)
+
 ;;;###autoload
 (defun +restore-major-mode ()
   (when (and (eq major-mode 'fundamental-mode)
              (buffer-file-name))
     (set-auto-mode)))
-
-(use-package harpoon
-  :ensure (:type file :main "~/.emacs.d/packages/harpoon.el")
-  :bind
-  (:map +leader-map
-        ("fh" . #'+consult-harpoon-bookmarks))
-  :init
-  (dotimes (i 10)
-    (let ((num (number-to-string i)))
-      (define-key +leader-map num
-                  `(lambda ()
-                     (interactive)
-                     (+harpoon-goto ,num)))
-      (define-key +leader-map (kbd (format "SPC %s" num))
-                  `(lambda ()
-                     (interactive)
-                     (+harpoon-bookmark ,num))))))
 
 (use-package jinx
   ;; :disabled t
@@ -166,7 +164,7 @@
         ("M-=" . #'jinx-correct)))
 
 (use-package +surround
-  :ensure (:type file :main "~/.emacs.d/packages/surround.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/surround.el")
   :hook
   (org-mode . +setup-org-pairs)
   :bind
@@ -175,7 +173,7 @@
         ("S" . #'+surround)))
 
 (use-package +toggle-case
-  :ensure (:type file :main "~/.emacs.d/packages/toggle-case.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/toggle-case.el")
   :bind
   (:map +normal-mode-map
         ("~" . #'+toggle-region-or-number-dwim))
@@ -183,7 +181,7 @@
   (put 'upcase-region 'disabled nil))
 
 (use-package +text-extras
-  :ensure (:type file :main "~/.emacs.d/packages/text-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/text-extras.el")
   :bind
   (:map embark-region-map
         ("|" . #'pipe-region))
@@ -192,14 +190,14 @@
         ("u" . #'text-to-clipboard)))
 
 (use-package +increment-number
-  :ensure (:type file :main "~/.emacs.d/packages/increment-number.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/increment-number.el")
   :bind
   (:map +normal-mode-map
         ("M-`" . #'+increment-number-increment)
         ("M-~" . #'+increment-number-decrement)))
 
 (use-package +mark-forward-backward
-  :ensure (:type file :main "~/.emacs.d/packages/mark-forward-backward.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/mark-forward-backward.el")
   :bind
   (:repeat-map mark-backward-repeat-map
                ("-" . #'+mark-forward-backward-ring-pop)
@@ -254,18 +252,14 @@
       (call-interactively #'comment-dwim)
     (call-interactively #'comment-line)))
 
-(add-hook 'window-configuration-change-hook '+restore-major-mode)
-
 (use-package easy-kill
   :custom
   (easy-kill-alist
    `((?f word " ")
      (?s sexp "\n")
-     ;; (?l list "\n")
      (?d defun "\n\n")
      (?D defun-name " ")
-     (?l line "\n")
-     (?b buffer-file-name)))
+     (?l line "\n")))
   :bind
   (:map easy-kill-base-map
         ("SPC" . #'easy-kill-mark-region)
@@ -282,14 +276,30 @@
   (+insert-mode))
 
 (use-package +dot-repeat
-  :ensure (:type file :main "~/.emacs.d/packages/dot-repeat/dot-repeat.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/dot-repeat/dot-repeat.el")
   :hook (after-init . +dot-repeat-mode)
   :bind
   (:map +normal-mode-map
         ("." . #'+dot-repeat)))
 
 (use-package narrow-extras
-  :ensure (:type file :main "~/.emacs.d/packages/narrow-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/narrow-extras.el")
   :bind
   (:map +x-map
         ("n" . #'narrow-or-widen-dwim)))
+
+(use-package puni)
+
+(use-package puni-extensions
+  :ensure (:type file :main "~/.emacs.d/lisp/puni-extensions.el")
+  :bind
+  (:map +insert-mode-map
+        ("C-(" . #'+puni-slurp-or-barf-left)
+        ("C-)" . #'+puni-slurp-or-barf-right))
+  (:map +normal-mode-map
+        ("(" . +puni-slurp-or-barf-left)
+        (")" . +puni-slurp-or-barf-right)))
+
+(use-package visiting-buffer
+  :ensure (:type file :main "~/.emacs.d/lisp/visiting-buffer.el")
+  :demand t)

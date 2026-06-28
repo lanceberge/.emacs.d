@@ -2,7 +2,7 @@
 (use-package org-drill
   :bind
   (:map +leader-map
-        ("SPC od" . +org-drill-tag)
+        ;; ("SPC od" . +org-drill-tag)
         ("od" . #'+org-drill-file))
   (:map +leader3-map
         ("od" . #'org-drill))
