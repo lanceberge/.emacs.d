@@ -9,6 +9,30 @@
   (when (buffer-file-name)
     (bookmark-set (file-name-nondirectory (buffer-file-name)) nil)))
 
+;;;###autoload
+(defun +embark-this-buffer-move-to-window ()
+  "Move the current buffer to an ace-selected window."
+  (interactive)
+  (require 'ace-window)
+  (let ((aw-dispatch-when-more-than 2))
+    (+embark-this-buffer--ensure-dispatch-window)
+    (aw-move-window (aw-select " Ace - Move Buffer"))))
+
+;;;###autoload
+(defun +embark-this-buffer-open-in-new-window ()
+  "Open the current buffer in a newly-created window."
+  (interactive)
+  (let ((buffer (current-buffer)))
+    (select-window (+window-split-new))
+    (switch-to-buffer buffer)))
+
+;;;###autoload
+(defun +embark-this-buffer--ensure-dispatch-window ()
+  "Create a second window when ace-window would have no target choice."
+  (when (one-window-p)
+    (or (split-window-sensibly)
+        (split-window-right))))
+
 (defvar-keymap this-buffer-map
   :doc "Commands to act on current file or buffer."
   :parent embark-general-map
@@ -31,12 +55,17 @@
   "x" #'embark-open-externally         ; useful for PDFs
   "c" #'copy-file
   "k" #'kill-current-buffer
+  "N" #'+embark-this-buffer-open-in-new-window
+  "o" #'+embark-this-buffer-move-to-window
   "z" #'bury-buffer
   "q" #'quit-window
   "|" #'embark-shell-command-on-buffer
   "g" #'+revert-buffer
   "p" #'pwd
   "h" #'mark-whole-buffer)
+
+(keymap-set this-buffer-map "N" #'+embark-this-buffer-open-in-new-window)
+(keymap-set this-buffer-map "o" #'+embark-this-buffer-move-to-window)
 
 (cl-pushnew 'embark--allow-edit (alist-get 'write-file embark-target-injection-hooks))
 

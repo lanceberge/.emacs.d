@@ -5,6 +5,7 @@
   (minibuffer-setup . (lambda () (+insert-mode 1)))
   (minibuffer-setup . cursor-intangible-mode)
   :custom
+  (read-minibuffer-restore-windows nil)
   (enable-recursive-minibuffers t)
   (minibuffer-prompt-properties '(read-only t intangible t cursor-intangible t
                                             face minibuffer-prompt))
@@ -45,7 +46,7 @@
         ("fm" . #'consult-mark)
         ;; ("fh" . #'consult-man)
         ("SPC m" . #'consult-minor-mode-menu)
-        ("fe" . #'consult-flymake)
+        ("ff" . #'consult-flymake)
         ("fo" . #'consult-outline)
         ("f." . #'consult-fd)
         ("fl" . #'consult-goto-line)
@@ -111,8 +112,6 @@
         ("M-l" . #'vertico-directory-enter))
   :config
   ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
-  (add-to-list 'find-file-not-found-functions #'+auto-create-missing-dirs)
-
   (cl-loop for idx from 0 to 9
            do
            (define-key vertico-map (kbd (format "M-%d" idx))

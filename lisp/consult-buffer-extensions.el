@@ -11,9 +11,10 @@
   (+consult-buffer--project-dwim "Agent" #'agent-shell-openai-start-codex nil arg))
 
 ;;;###autoload
-(defun +consult-buffer-project-eshell-new ()
-  (interactive)
-  (+consult-buffer-project-eshell 1))
+(defun +consult-buffer-project-eshell-new (&optional arg)
+  (interactive "p")
+  (dotimes (_ arg)
+    (+consult-buffer-project-eshell 1)))
 
 ;;;###autoload
 (defun +consult-buffer-project-eshell (&optional arg)

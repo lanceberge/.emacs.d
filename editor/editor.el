@@ -8,7 +8,10 @@
   (prefix-help-command 'embark-prefix-help-command)
   (embark-confirm-act-all nil)
   (embark-quit-after-action
-   '((t . t)))
+   '(
+     (+find-file-new-window . nil)
+     (+switch-to-buffer-new-window . nil)
+     (t . t)))
   :bind
   (:map +normal-mode-map
         ("C-." . #'embark-act)
@@ -43,8 +46,14 @@
         ("k" . #'helpful-key))
   (:map embark-region-map
         ("s" . #'+project-replace-regex))
+  (:map embark-buffer-map
+        ("e" . #'project-eshell)
+        ("o" . #'+ace-window-switch-to-buffer)
+        ("N" . #'+switch-to-buffer-new-window))
   (:map embark-file-map
-        ("y" . #'project-eshell))
+        ("e" . #'project-eshell)
+        ("o" . #'+ace-window-find-file)
+        ("N" . #'+find-file-new-window))
   (:map embark-general-map
         (";" . #'consult-ripgrep)
         ("d" . #'embark-find-definition)
