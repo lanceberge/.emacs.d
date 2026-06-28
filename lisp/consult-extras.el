@@ -78,12 +78,6 @@ Otherwise, just call consult-yank-pop."
     (call-interactively #'consult-yank-pop)))
 
 ;;;###autoload
-(defun +consult-unfocus-lines ()
-  (interactive)
-  (let ((current-prefix-arg 1))
-    (call-interactively #'consult-focus-lines)))
-
-;;;###autoload
 (defun +consult-line ()
   (interactive)
   (call-interactively #'consult-line)
@@ -159,7 +153,7 @@ MATCH is as in `org-map-entries'."
      :lookup (apply-partially #'consult--lookup-prop 'org-marker))))
 
 ;;;###autoload
-(defun +consult-find-key (key-sequence)
+(defun +consult-find-bound-function (key-sequence)
   "Goto the definition of the command bound to `KEY-SEQUENCE'"
   (interactive
    (list (read-key-sequence "Press key: ")))
@@ -241,6 +235,7 @@ MATCH is as in `org-map-entries'."
              (unless (eq idx 0)
                (car (nth (1- idx) consult--narrow-keys))))
          (caar (last consult--narrow-keys)))))))
+
 (defun consult-narrow-cycle-forward ()
   "Cycle forward through the narrowing keys."
   (interactive)

@@ -5,7 +5,6 @@
   (minibuffer-setup . (lambda () (+insert-mode 1)))
   (minibuffer-setup . cursor-intangible-mode)
   :custom
-  (read-minibuffer-restore-windows nil)
   (enable-recursive-minibuffers t)
   (minibuffer-prompt-properties '(read-only t intangible t cursor-intangible t
                                             face minibuffer-prompt))
@@ -26,33 +25,37 @@
   (consult-project-buffer-sources '(consult-source-project-buffer
                                     consult-source-project-recent-file))
   :bind
-  (:map +x-map
+  ("M-g M-g" . #'consult-goto-line)
+  ("M-g i" . #'consult-imenu)
+  ("M-g M-i" . #'consult-imenu-multi)
+  ("M-g f" . #'consult-flymake)
+  ("M-g m" . #'consult-mark)
+  ("M-g M-m" . #'consult-global-mark)
+  (:map ctl-x-map
         ("b" . #'consult-buffer)
-        ("rl" . #'consult-register-load)
+        ("rb" . #'consult-bookmark)
+        ("rj" . #'consult-register-load)
         ("rs" . #'consult-register-store)
+        ("M-x" . #'consult-mode-command)
         (":" . #'consult-complex-command)
         ("'" . #'consult-recent-file))
-  (:map +normal-mode-map
-        ("M-g" . #'consult-goto-line))
   (:map minibuffer-mode-map
         ("M-r" . #'consult-history))
   (:map isearch-mode-map
         ("M-r" . #'consult-isearch-history))
+  (:map project-prefix-map
+        ("g" . #'consult-ripgrep)
+        ("i" . #'consult-imenu-multi))
+  (:map help-map
+        ("C-m" . #'consult-minor-mode-menu))
+  (:map search-map
+        ("g" . #'consult-ripgrep)
+        ("l" . #'consult-line))
   (:map +leader-map
-        ("M-x" . #'consult-mode-command)
-        ("fj" . #'consult-imenu)
-        ("pm" . #'consult-global-mark)
-        ("fb" . #'consult-bookmark)
-        ("fm" . #'consult-mark)
-        ;; ("fh" . #'consult-man)
-        ("SPC m" . #'consult-minor-mode-menu)
-        ("ff" . #'consult-flymake)
-        ("fo" . #'consult-outline)
-        ("f." . #'consult-fd)
-        ("fl" . #'consult-goto-line)
-        (";" . #'consult-ripgrep)
-        ("C-;" . #'consult-ripgrep)
-        ("pj" . #'consult-imenu-multi)))
+        ("bf" . #'consult-focus-lines)
+        ("bk" . #'consult-keep-lines)
+        ("fm" . #'consult-minor-mode-menu)
+        ("f." . #'consult-fd)))
 
 (use-package consult-extras
   :ensure (:type file :main "~/.emacs.d/lisp/consult-extras.el")
@@ -64,24 +67,21 @@
         ("M-y" . #'+consult-yank-or-replace))
   (:map +insert-mode-map
         ("M-q" . #'+consult-kmacro))
+  (:map project-prefix-map
+        ("b" . #'+consult-project-buffer))
+  (:map search-map
+        ("M-t" . #'+consult-find-todos)
+        ("t" . #'+consult-project-find-todos)
+        ("b" . #'+consult-project-buffer)
+        ("a" . #'+consult-org-agenda-todos)
+        (".g" . #'+consult-ripgrep-here)
+        (".f" . #'+consult-project-file-here))
   (:map +leader-map
-        ("," . #'+consult-project-buffer)
-        ("ft" . #'+consult-find-todos)
-        ("c;" . #'+consult-ripgrep-here)
-        ("SPC bf" . #'+consult-unfocus-lines)
-        ("/" . #'+consult-line)
-        ("bf" . #'consult-focus-lines)
-        ("fk" . #'+consult-find-key)
-        ("fK" . #'+consult-find-key-binding)
-        ("cy" . #'+consult-yank-or-replace)
-        ("SPC k" . #'consult-keep-lines)
-        ("fp" . #'+consult-find-package)
-        ("SPC /" . #'+consult-line-multi)
-        ("fa" . #'+consult-org-agenda-todos)
-        ("pt" . #'+consult-project-find-todos)
-        ("c'" . #'+consult-project-file-here)))
+        ("fk" . #'+consult-find-key-binding)
+        ("fK" . #'+consult-find-bound-function)
+        ("fp" . #'+consult-find-package)))
 
-(use-package consult-buffer-extensions
+(use-package consult-buffer-extras
   :ensure (:type file :main "~/.emacs.d/lisp/consult-buffer-extensions.el")
   :after consult
   :demand t
@@ -93,7 +93,7 @@
 
 (use-package consult-eglot
   :bind
-  (:map +leader-map
+  (:map search-map
         ("s" . #'consult-eglot-symbols)))
 
 (use-package vertico

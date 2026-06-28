@@ -32,13 +32,10 @@
         ("C-." . #'embark-act)
         ("M-'" . #'embark-dwim))
   (:map embark-become-file+buffer-map
-        ("k" . #'+project-switch)
+        ("k" . #'+project-switch-project)
         ("'" . #'project-find-file)
         (";" . #'consult-ripgrep)
         ("," . #'+consult-project-buffer)
-        ("SPC '" . #'+project-switch)
-        ("SPC ;" . #'+project-switch-ripgrep)
-        ("SPC ," . #'+project-switch-project-buffer)
         ("d" . #'consult-dir))
   (:map embark-become-help-map
         ("v" . #'helpful-variable)
@@ -96,6 +93,8 @@
 (use-package embark-this-buffer
   :ensure (:type file :main "~/.emacs.d/lisp/embark-this-buffer.el")
   :bind
+  (:map ctl-x-map
+        ("rb" . #'+bookmark-file))
   (:map +leader-map
         ("." . #'embark-on-this-buffer)))
 
@@ -167,8 +166,6 @@
   ;; :disabled t
   :hook ((prog-mode text-mode) . jinx-mode)
   :bind
-  (:map +leader-map
-        ("c=" . #'jinx-correct-all))
   (:map jinx-mode-map
         ("M-=" . #'jinx-correct)))
 
@@ -177,7 +174,6 @@
   :hook
   (org-mode . +setup-org-pairs)
   :bind
-  ("M-s M-s" . #'+surround)
   (:map +normal-mode-map
         ("S" . #'+surround)))
 
@@ -294,8 +290,9 @@
 (use-package narrow-extras
   :ensure (:type file :main "~/.emacs.d/lisp/narrow-extras.el")
   :bind
-  (:map +x-map
-        ("n" . #'narrow-or-widen-dwim)))
+  (:map ctl-x-map
+        ;; ("nn" . #'narrow-or-widen-dwim)
+        ))
 
 (use-package puni)
 

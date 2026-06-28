@@ -2,7 +2,7 @@
 (use-package elisp-mode
   :ensure nil
   :bind
-  (:map +x-map
+  (:map ctl-x-map
         ("e" . #'eval-last-sexp)))
 
 (use-package +emacs-lisp-extensions

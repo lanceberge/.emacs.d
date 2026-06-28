@@ -4,11 +4,12 @@
 (bind-key "c" +leader-map +motion-mode-map)
 (bind-key "c" +leader-map +sexp-mode-map)
 
-(bind-key "x" +x-map +normal-mode-map)
-(bind-key "x" +x-map +motion-mode-map)
-(bind-key "x" +x-map +sexp-mode-map)
+(bind-key "x" ctl-x-map +normal-mode-map)
+(bind-key "x" ctl-x-map +motion-mode-map)
+(bind-key "x" ctl-x-map +sexp-mode-map)
 
-(bind-key "r"  ctl-x-r-map +x-map)
+;; use the default M-s everywhere else
+(bind-key "s" search-map +normal-mode-map)
 
 (bind-key "C-'" +leader2-map)
 (bind-key "'" +leader2-map +normal-mode-map)
@@ -31,7 +32,7 @@
   (:map +leader-map
         ("h" . #'help-command)
         ("d" . #'duplicate-dwim)
-        ("q" . #'+server-edit)
+        ("q" . #'+server-edit) ;; TODO shitty keybind
         ("er" . #'+source-init-file))
   (:map +normal-mode-map
         ("[ SPC" . #'+insert-newlines-above)

@@ -2,7 +2,6 @@
 (defvar +leader-map (make-sparse-keymap))
 (defvar +leader2-map (make-sparse-keymap))
 (defvar +leader3-map (make-sparse-keymap))
-(defvar +x-map (make-sparse-keymap))
 
 (defvar mark-forward-keymap (make-sparse-keymap))
 (defvar mark-backward-keymap (make-sparse-keymap))

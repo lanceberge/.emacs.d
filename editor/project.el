@@ -8,42 +8,34 @@
   (project-mode-line t)
   :bind
   (:map project-prefix-map
-        (";" . #'consult-ripgrep)
-        ("," . #'consult-project-buffer)
-        ("'" . #'project-find-file))
+        ("p" . #'+project-switch-project)
+        ("'" . #'project-find-file)
+        ("o" . #'+project-other-buffer))
+  (:map search-map
+        ("f" . #'project-find-file)
+        ("M-f" . #'project-root-find-file))
   (:map +leader-map
-        ("SPC p" . #'project-other-window-command)
-        ("r." . #'project-root-find-file)
-        ("pe" . #'flymake-show-project-diagnostics)
-        ("'" . #'project-find-file)))
+        ("k" . #'project-switch-project)))
 
 (use-package project-compile
   :ensure (:type file :main "~/.emacs.d/lisp/project-compile.el")
   :hook
   (savehist-mode . +project-compile-save-hist-mode)
   :bind
-  (:map +x-map
+  (:map ctl-x-map
         ("pc" . #'+project-compile)))
 
 (use-package project-extras
   :ensure (:type file :main "~/.emacs.d/lisp/project-extras.el")
   :demand t
   :bind
-  (:map +x-map
+  (:map ctl-x-map
         ("k" . #'+project-kill-buffer))
   (:map +leader-map
-        ("SPC ;" . #'+project-switch-ripgrep)
-        ("SPC '" . #'+project-switch)
-        ("SPC ," . #'+project-switch-project-buffer)
-        ("SPC e" . #'+project-switch-eshell)
-        ("pk" . #'+project-kill-buffers)
         ("k" . #'+project-switch-project)
         ("j" . #'+project-other-project)
-        ("k" . #'+project-visit-last-buffer)
         ("l" . #'+project-other-buffer)
-        ("pr" . #'+project-replace-regex)
-        ("rk" . #'+project-reload-and-switch)
-        ("rp" . #'+project-load-projects)
+        ("rk" . #'+project-reload-and-switch) ;; TODO replace w/ project reload prefix
         ("bl" . #'+project-other-special-buffer-dwim)))
 
 ;; update zoxide history -- cli tool that memoizes visited dirs

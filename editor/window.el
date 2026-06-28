@@ -5,12 +5,8 @@
   (:repeat-map window-repeat-map
                ("p" . #'tab-bar-history-back)
                ("n" . #'tab-bar-history-forward))
-  (:map +x-map
-        ("0" . #'delete-window)
-        ("2" . #'split-window-below)
-        ("3" . #'split-window-right)
-        ("4" . #'other-window-prefix)
-        ("5" . #'+new-window-prefix)))
+  (:map ctl-x-map
+        ("6" . #'+new-window-prefix)))
 
 (use-package +other-window-scroll-repeat
   :ensure nil
@@ -20,7 +16,7 @@
                ("C-v" . #'scroll-other-window)
                ("v" . #'scroll-other-window)
                ("." . #'repeat))
-  (:map +x-map
+  (:map ctl-x-map
         ("w M-v" . #'scroll-other-window-down)
         ("w C-v" . #'scroll-other-window)
         ("wv" . #'scroll-other-window)))
@@ -227,17 +223,11 @@ the selected window when no minibuffer is active."
   (after-init . tab-bar-mode)
   (tab-bar-mode . tab-bar-history-mode)
   :bind
-  (:map +x-map
-        ("tt" . #'other-tab-prefix)
-        ("t0" . #'tab-bar-close-tab)
-        ("t1" . #'tab-bar-close-other-tabs)
-        ("t2" . #'tab-bar-new-tab)
-        ("tr" . #'tab-bar-rename-tab)
-        ("to" . #'tab-bar-switch-to-next-tab)
-        ("tO" . #'tab-bar-switch-to-prev-tab)
-        ("tj" . #'tab-bar-switch-to-recent-tab)
+  (:map ctl-x-map
+        ("to" . #'tab-bar-switch-to-recent-tab)
+        ("t[" . #'tab-bar-switch-to-prev-tab)
+        ("t]" . #'tab-bar-switch-to-next-tab)
         ("tf" . #'+consult-tab)
-        ("tp" . #'project-other-tab-command)
         ("1" . #'+toggle-tab-zoom))
   (:map +leader-map
         ("SPC t" . #'+other-tab-switch-project)
@@ -278,7 +268,7 @@ the selected window when no minibuffer is active."
 (use-package consult-tab-bar
   :ensure (:type file :main "~/.emacs.d/lisp/consult-tab.el")
   :bind
-  (:map +x-map
+  (:map ctl-x-map
         ("tf" . #'+consult-tab)))
 
 (use-package tab-bar-repeat
@@ -287,7 +277,7 @@ the selected window when no minibuffer is active."
   (:repeat-map window-repeat-map
                ("p" . #'tab-bar-history-back)
                ("n" . #'tab-bar-history-forward))
-  (:map +x-map
+  (:map ctl-x-map
         ("wp" . #'tab-bar-history-back)
         ("wn" . #'tab-bar-history-forward)))
 

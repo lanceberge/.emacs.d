@@ -163,19 +163,6 @@
 (when IS-LINUX
   (setq x-gtk-use-system-tooltips nil))
 
-(defvar +leader-map (make-sparse-keymap))
-(defvar +leader2-map (make-sparse-keymap))
-(defvar +leader3-map (make-sparse-keymap))
-(defvar +x-map (make-sparse-keymap))
-
-(defvar mark-forward-keymap (make-sparse-keymap))
-(defvar mark-backward-keymap (make-sparse-keymap))
-
-(defvar +normal-mode-map (make-sparse-keymap))
-(defvar +insert-mode-map (make-sparse-keymap))
-(defvar +motion-mode-map (make-sparse-keymap))
-(defvar +sexp-mode-map (make-keymap))
-
 (add-hook 'emacs-startup-hook
           (lambda ()
             "raise the garbage collection threshold to defer garbage collection
@@ -237,15 +224,11 @@
   :bind
   ("M-[" . #'+pop-to-mark)
   ("M-]" . #'+unpop-to-mark)
-  (:map +x-map
-        ("x" . #'exchange-point-and-mark)
+  (:map ctl-x-map
         ("TAB" . #'+indent-rigidly-dwim)
-        ("SPC" . #'rectangle-mark-mode)
-        ("h" . #'mark-whole-buffer)
         ("f" . #'find-file)
         ("j" . #'dired-jump)
-        ("," . #'consult-recent-file)
-        ("g" . #'magit-status))
+        ("," . #'consult-recent-file))
   (:map +insert-mode-map
         ("C-\\" . #'+sexp-mode)
         ("C-g" . #'+keyboard-quit-normal)
@@ -310,9 +293,8 @@
         ("F" . #'+mark-forward-word)
         ("N" . #'+mark-forward-line)
         ("P" . #'+mark-backward-line)
-        ("s" . #'isearch-forward)
         ("@" . #'mark-sexp)
-        ("r" . #'isearch-backward)
+        ;; ("r" . #'isearch-backward)
         ("g" . #'+keyboard-quit)
         ("/" . #'undo)
         ("h" . #'backward-char)
@@ -363,6 +345,9 @@
   ;;       ("t" . #'transpose-sexps)
   ;;       ("T" . #'transpose-sentences))
   )
+
+;; read modal before doing loading else
+(elpaca-wait)
 
 (let ((dirs '("~/.emacs.d/editor" "~/.emacs.d/lang")))
   (mapc (lambda (dir)

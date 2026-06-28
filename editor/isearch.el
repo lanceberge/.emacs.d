@@ -9,8 +9,10 @@
   (:map isearch-mode-map
         ("M-P" . #'isearch-toggle-regexp)
         ("C-g" . #'isearch-cancel)
-        ("C-<backspace>" . #'isearch-abort)
-        ("C-;" . #'avy-isearch))
+        ("C-<backspace>" . #'isearch-abort))
+  (:map search-map
+        (".")
+        (".s" . #'isearch-forward-symbol-at-point))
   :config
   (setq search-nonincremental-instead nil)) ; don't cancel isearches with searches
 
@@ -19,7 +21,5 @@
   :bind
   (:map isearch-mode-map
         ("M-s l" . #'+consult-line)
-        ("M-s L" . #'+consult-line-multi)
-        ("M-s ;" . #'+isearch-consult-ripgrep)
-        ("M-/" . #'+consult-line)
-        ("C-M-/" . #'+consult-line-multi)))
+        ("M-s M-l" . #'+consult-line-multi)
+        ("M-s g" . #'+isearch-consult-ripgrep)))

@@ -1,6 +1,6 @@
-;;; consult-buffer-extensions.el --- Consult buffer commands -*- lexical-binding: t -*-
+;;; consult-buffer-extras.el --- Consult buffer commands -*- lexical-binding: t -*-
 
-(require 'consult-extensions)
+(require 'consult-extras)
 (require 'project)
 (require 'seq)
 
@@ -143,5 +143,5 @@ BUFFERS may be nil."
       (funcall buffer)
     buffer))
 
-(provide 'consult-buffer-extensions)
-;;; consult-buffer-extensions.el ends here
+(provide 'consult-buffer-extras)
+;;; consult-buffer-extras.el ends here

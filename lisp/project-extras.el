@@ -3,21 +3,12 @@
 (require 'project)
 
 ;;;###autoload
-(defun +project-switch (&optional dir callback)
-  (interactive)
-  (let* ((dir (or dir (funcall project-prompter)))
-         (default-directory dir)
-         (callback (or callback #'project-find-file)))
-    (funcall callback dir)))
-
-;;;###autoload
 (defun +project-switch-project (command dir)
-  "Read COMMAND from `project-prefix-map', then switch to project DIR."
+  "Same as `project-switch-project' except reads the command first which for some reason I prefer."
   (interactive (list (project--switch-project-command)
                      (funcall project-prompter)))
   (project-remember-project (project-current t dir))
-  (let ((default-directory dir)
-        (project-current-directory-override dir))
+  (let ((project-current-directory-override dir))
     (call-interactively command)))
 
 ;;;###autoload
@@ -30,23 +21,6 @@
   (yas-reload-all)
   (org-roam-db-sync)
   (+source-init-file))
-
-;;;###autoload
-(defun +project-switch-ripgrep ()
-  (interactive)
-  (+project-switch nil #'consult-ripgrep))
-
-;;;###autoload
-(defun +project-switch-eshell ()
-  (interactive)
-  (+project-switch nil #'eshell))
-
-;;;###autoload
-(defun +project-switch-project-buffer ()
-  (interactive)
-  (require 'consult-extras)
-  (let ((project-switch-commands #'consult-project-buffer))
-    (call-interactively #'project-switch-project)))
 
 ;;;###autoload
 (defun +project-other-buffer (n &optional project)

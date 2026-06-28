@@ -36,33 +36,34 @@
 (defvar-keymap this-buffer-map
   :doc "Commands to act on current file or buffer."
   :parent embark-general-map
-  "RET" #'eval-buffer
-  "l" #'load-file
-  "e" #'eval-buffer
-  "r" #'rename-file
-  "d" #'delete-file
-  "w" #'+file-name-kill-ring-save
-  "W" #'write-file
-  "v r" #'vc-rename-file
-  "v d" #'vc-delete-file
-  "n" #'diff-buffer-with-file           ; n for new
-  "C-=" #'ediff-buffers
-  "=" #'apheleia-format-buffer
-  "b" #'+bookmark-file
-  "$" #'ispell
   "!" #'shell-command
+  "$" #'ispell
   "&" #'async-shell-command
-  "x" #'embark-open-externally         ; useful for PDFs
-  "c" #'copy-file
-  "k" #'kill-current-buffer
+  "=" #'apheleia-format-buffer
+  "C-=" #'ediff-buffers
   "N" #'+embark-this-buffer-open-in-new-window
-  "o" #'+embark-this-buffer-move-to-window
-  "z" #'bury-buffer
-  "q" #'quit-window
-  "|" #'embark-shell-command-on-buffer
+  "RET" #'eval-buffer
+  "W" #'write-file
+  "b" #'+bookmark-file
+  "c" #'copy-file
+  "d" #'delete-file
+  "e" #'eval-buffer
+  "f" #'consult-focus-lines
   "g" #'+revert-buffer
+  "h" #'mark-whole-buffer
+  "k" #'kill-current-buffer
+  "l" #'load-file
+  "n" #'diff-buffer-with-file           ; n for new
+  "o" #'+embark-this-buffer-move-to-window
   "p" #'pwd
-  "h" #'mark-whole-buffer)
+  "q" #'quit-window
+  "r" #'rename-file
+  "v d" #'vc-delete-file
+  "v r" #'vc-rename-file
+  "w" #'+file-name-kill-ring-save
+  "x" #'embark-open-externally         ; useful for PDFs
+  "z" #'bury-buffer
+  "|" #'embark-shell-command-on-buffer)
 
 (keymap-set this-buffer-map "N" #'+embark-this-buffer-open-in-new-window)
 (keymap-set this-buffer-map "o" #'+embark-this-buffer-move-to-window)

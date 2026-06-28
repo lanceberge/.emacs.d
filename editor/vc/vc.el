@@ -67,7 +67,10 @@
   :ensure nil
   :custom
   (vc-git-print-log-follow t)
-  (vc-git-diff-switches '("--histogram")))
+  (vc-git-diff-switches '("--histogram"))
+  :bind
+  (:map ctl-x-map
+        ("vr" . #'vc-revert)))
 
 (defun +magit-source-branch ()
   "Return the remote branch the current branch was branched off of.
@@ -165,11 +168,13 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
   (majutsu-post-refresh . majutsu-diff-hl-post-refresh)
-  ;; (+majutsu-post-new-hook . majutsu-diff-hl-post-refresh)
+  (+majutsu-post-new-hook . majutsu-diff-hl-post-refresh)
   :bind
-  (:map +leader-map
-        ("gr" . #'diff-hl-revert-hunk))
-
+  (:map ctl-x-map
+        ("vs" . #'diff-hl-show-hunk)
+        ("v[" . #'diff-hl-previous-hunk)
+        ("v]" . #'diff-hl-next-hunk)
+        ("vu" . #'diff-hl-revert-hunk))
   :config
   (global-diff-hl-mode))
 
