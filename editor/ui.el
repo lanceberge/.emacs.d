@@ -1,9 +1,7 @@
 ;;; -*- lexical-binding: t -*-
-;; don't restore frames with desktop
 (use-package frameset
   :ensure nil
-  :after desktop
-  :demand t
+  :defer 0.8
   :config
   (setq frameset-filter-alist
         (append '((background-color . :never)
@@ -130,5 +128,5 @@
         ("M-P" . #'+consult-theme-rotate-toggle-style)))
 
 (use-package theme-rotate-omarchy
-  :demand t
+  :defer 1.5
   :ensure (:type file :main "~/.emacs.d/lisp/theme-rotate-omarchy.el"))

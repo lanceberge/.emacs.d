@@ -112,7 +112,8 @@
                  +theme-rotate-current-style))
     (add-to-list 'desktop-globals-to-save var))
   (desktop-save-mode)
-  (desktop-read))
+  ;; (desktop-read)
+  )
 
 (use-package electric-pair-mode
   :ensure nil
@@ -162,8 +163,6 @@
 (use-package occur
   :ensure nil
   :bind
-  (:map occur-mode-map
-        ("i" . #'occur-edit-mode))
   (:map occur-edit-mode-map
         ([remap save-buffer] . #'occur-cease-edit)))
 
@@ -226,5 +225,5 @@
 (defun +indent-rigidly-dwim ()
   (interactive)
   (unless (region-active-p)
-    (+mark-whole-line))
-  (call-interactively #'indent-rigidly))
+    (call-interactively #'indent-rigidly))
+  (+mark-whole-lines 1))

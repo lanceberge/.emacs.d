@@ -19,7 +19,6 @@
     svelte-mode
     vue-mode) . eglot-ensure)
   :custom
-  (eldoc-echo-area-use-multiline-p nil)
   (eglot-sync-connect nil)
   (eglot-report-progress nil)
   (eglot-autoshutdown t)
@@ -69,13 +68,11 @@
     `(:typescript (:tsdk ,tsdk-path)
                   :vue (:hybridMode :json-false))))
 
-(when (featurep 'eldoc)
-  (unload-feature 'eldoc t)
-  (defvar global-eldoc-mode nil))
-
 (use-package eldoc
+  :ensure nil
   :hook (emacs-lisp-mode . eldoc-mode)
   :custom
+  (eldoc-echo-area-use-multiline-p nil)
   (eldoc-display-functions '(eldoc-display-in-echo-area))
   (eldoc-idle-delay 1)
   ;; https://www.reddit.com/r/emacs/comments/1lbo5jy/comment/myig4p7/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
@@ -168,9 +165,9 @@
   (:repeat-map flymake-repeat-map
                ("n" . #'flymake-goto-next-error)
                ("p" . #'flymake-goto-prev-error))
-  (:map +leader2-map
-        ("en" . #'flymake-goto-next-error)
-        ("ep" . #'flymake-goto-prev-error)))
+  (:map +normal-mode-map
+        ("]e" . #'flymake-goto-next-error)
+        ("[e" . #'flymake-goto-prev-error)))
 
 ;;;###autoload
 (defun +modal-flyover-on ()

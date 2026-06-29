@@ -1,4 +1,6 @@
 ;;; -*- lexical-binding: t -*-
+(require 'increment-number)
+
 ;;;###autoload
 (defun +toggle-region-or-number-dwim (&optional arg)
   (interactive "p")

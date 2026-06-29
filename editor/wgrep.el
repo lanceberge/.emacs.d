@@ -3,7 +3,7 @@
   :bind
   (:map grep-mode-map
         ("%" . #'+grep-wgrep-replace)
-        ("i" . #'wgrep-change-to-wgrep-mode))
+        ("e" . #'wgrep-change-to-wgrep-mode))
   (:map wgrep-mode-map
         ([remap save-buffer] . +wgrep-finish-edit)
         ([remap quit-window] . #'+wgrep-finish-edit)

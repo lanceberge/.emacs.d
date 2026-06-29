@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 (defvar +mark-forward-backward-ring nil
   "ring of (mark . point)")
 

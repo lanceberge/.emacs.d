@@ -16,7 +16,7 @@
 
 (use-package agent-shell-extensions
   :ensure (:type file :main "~/.emacs.d/lisp/agent-shell-extensions.el")
-  :defer 0.3
+  ;; :defer 0.3
   :hook (agent-shell-mode . +agent-shell-auto-rename-mode)
   :bind
   (:map +leader2-map

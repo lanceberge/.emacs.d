@@ -1,5 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 
+(require 'isearch)
+
 ;;;###autoload
 (defun +isearch-exit-at-start ()
   "Exit search at the beginning of the current match."

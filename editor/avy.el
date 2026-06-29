@@ -22,9 +22,7 @@
 
 (use-package avy-actions
   :ensure (:type file :main "~/.emacs.d/lisp/avy-actions.el")
-  :after avy
-  :demand t
-  :config
+  :init
   (setq avy-dispatch-alist
         (list
          (cons ?\s 'avy-action-mark-until-pt)

@@ -116,8 +116,10 @@ Otherwise, just call consult-yank-pop."
 ;;;###autoload
 (defun +consult-project-buffer (&optional initial)
   (interactive)
-  (if (project-current nil)
-      (call-interactively #'consult-project-buffer)
+  (if-let ((project (project-current nil)))
+      (if (project-buffers project)
+          (call-interactively #'consult-project-buffer)
+        (call-interactively #'project-find-file))
     (call-interactively #'consult-buffer)))
 
 ;;;###autoload

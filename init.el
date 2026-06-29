@@ -302,7 +302,7 @@
         ("L" . #'+right-expand)
         ("SPC" . #'set-mark-command)
         ("n" . #'next-line)
-        ("M" . #'+mark-whole-line)
+        ("M" . #'+mark-whole-lines)
         ("p" . #'previous-line)
         ("^" . #'delete-indentation)
         ("k" . #'+kill-line-dwim)
@@ -354,3 +354,6 @@
           (mapc 'load-file
                 (directory-files-recursively dir "\\.el$")))
         dirs))
+;; restore desktop after loading everything else
+(elpaca-wait)
+(desktop-read)

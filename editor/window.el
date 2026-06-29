@@ -24,13 +24,8 @@
 (use-package +window
   :ensure nil
   :bind
-  (:repeat-map buffer-repeat-map
-               ("n" . #'next-buffer)
-               ("p" . #'previous-buffer))
   (:map +leader-map
-        ("SPC l" . #'+other-buffer)
-        ("bn" . #'next-buffer)
-        ("bp" . #'previous-buffer)))
+        ("SPC l" . #'+other-buffer)))
 
 (use-package other-window
   :ensure nil
@@ -205,14 +200,14 @@ the selected window when no minibuffer is active."
   :custom
   (windresize-default-increment 3)
   :bind
-  (:map +leader-map
+  (:map ctl-x-map
         ("wr" . #'windresize))
   (:map windresize-map
         ("h" . #'windresize-left)
         ("l" . #'windresize-right)
-        ("k" . #'windresize-up)
-        ("j" . #'windresize-down)
-        (";" . #'windresize-exit)))
+        ("p" . #'windresize-up)
+        ("n" . #'windresize-down)
+        ("g" . #'windresize-exit)))
 
 (use-package tab-bar
   :ensure nil
@@ -223,6 +218,9 @@ the selected window when no minibuffer is active."
   (after-init . tab-bar-mode)
   (tab-bar-mode . tab-bar-history-mode)
   :bind
+  (:map +normal-mode-map
+        ("]t" . #'tab-bar-switch-to-next-tab)
+        ("[t" . #'tab-bar-switch-to-prev-tab))
   (:map ctl-x-map
         ("to" . #'tab-bar-switch-to-recent-tab)
         ("t[" . #'tab-bar-switch-to-prev-tab)

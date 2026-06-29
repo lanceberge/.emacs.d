@@ -1,4 +1,6 @@
 ;;; -*- lexical-binding: t -*-
+(require 'theme-rotate)
+
 (defvar +theme-rotate-omarchy-theme-map
   '(("aether" . (doom-miramare . dark))
     ("catppuccin" . (doom-palenight . dark))

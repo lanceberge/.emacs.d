@@ -34,7 +34,7 @@
   (interactive "P")
   (let ((arg (or arg tab-width)))
     (unless (region-active-p)
-      (+mark-whole-line))
+      (+mark-whole-lines 1))
     (dotimes (_ arg)
       (call-interactively #'indent-rigidly-left))))
 
@@ -43,7 +43,7 @@
   (interactive "P")
   (let ((arg (or arg tab-width)))
     (unless (region-active-p)
-      (+mark-whole-line))
+      (+mark-whole-lines 1))
     (dotimes (_ arg)
       (call-interactively #'indent-rigidly-right))))
 

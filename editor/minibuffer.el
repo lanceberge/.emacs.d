@@ -28,7 +28,7 @@
   ("M-g M-g" . #'consult-goto-line)
   ("M-g i" . #'consult-imenu)
   ("M-g M-i" . #'consult-imenu-multi)
-  ("M-g f" . #'consult-flymake)
+  ("M-g e" . #'consult-flymake)
   ("M-g m" . #'consult-mark)
   ("M-g M-m" . #'consult-global-mark)
   (:map ctl-x-map
@@ -38,24 +38,23 @@
         ("rs" . #'consult-register-store)
         ("M-x" . #'consult-mode-command)
         (":" . #'consult-complex-command)
-        ("'" . #'consult-recent-file))
+        ;; ("'" . #'consult-recent-file)
+        )
   (:map minibuffer-mode-map
         ("M-r" . #'consult-history))
   (:map isearch-mode-map
         ("M-r" . #'consult-isearch-history))
   (:map project-prefix-map
         ("g" . #'consult-ripgrep)
-        ("i" . #'consult-imenu-multi))
+        ("i" . #'consult-imenu-multi)
+        ("l" . #'consult-line-multi))
   (:map help-map
         ("C-m" . #'consult-minor-mode-menu))
   (:map search-map
         ("g" . #'consult-ripgrep)
-        ("l" . #'consult-line))
-  (:map +leader-map
-        ("bf" . #'consult-focus-lines)
-        ("bk" . #'consult-keep-lines)
-        ("fm" . #'consult-minor-mode-menu)
-        ("f." . #'consult-fd)))
+        ("r" . #'consult-recent-file)
+        ("l" . #'consult-line)
+        ("M-l" . #'consult-line-multi)))
 
 (use-package consult-extras
   :ensure (:type file :main "~/.emacs.d/lisp/consult-extras.el")
@@ -83,8 +82,6 @@
 
 (use-package consult-buffer-extras
   :ensure (:type file :main "~/.emacs.d/lisp/consult-buffer-extras.el")
-  :after consult
-  :demand t
   :bind
   (:map +leader-map
         ("ne" . #'+consult-buffer-project-eshell-new)
@@ -97,7 +94,7 @@
         ("s" . #'consult-eglot-symbols)))
 
 (use-package vertico
-  :defer 0.1
+  :demand t
   :custom
   (vertico-cycle t)
   (vertico-preselect 'first)
@@ -106,7 +103,6 @@
         ([remap kill-visual-line] . #'kill-line)
         ("C-k" . #'kill-line))
   (:map vertico-map
-        ("C-;" . #'vertico-quick-insert)
         ("M-h" . #'vertico-directory-up)
         ("M-P" . #'+consult-toggle-preview)
         ("M-l" . #'vertico-directory-enter))
@@ -117,7 +113,7 @@
            (define-key vertico-map (kbd (format "M-%d" idx))
                        `(lambda () (interactive)
                           (let ((vertico--index ,idx))
-                            (call-interactively #'+vertico-send)))))
+                            (call-interactively #'vertico-exit)))))
 
   (vertico-mode)
   (vertico-indexed-mode))
@@ -132,7 +128,7 @@
         ("M-N" . #'+vertico-toggle-new-window-exit)))
 
 (use-package marginalia
-  :defer 0.4
+  :defer 0.6
   :bind
   :config
   (marginalia-mode)

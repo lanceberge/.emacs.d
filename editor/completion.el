@@ -23,8 +23,8 @@
         ("<tab>" . #'yas-expand))
   :config
   (keymap-unset corfu-map "RET")
-  (keymap-unset corfu-map "C-a")
-  (keymap-unset corfu-map "C-e")
+  (keymap-unset corfu-map "<remap> <move-beginning-of-line>")
+  (keymap-unset corfu-map "<remap> <move-end-of-line>")
   (add-hook 'corfu-mode-hook
             (lambda ()
               (setq-local completion-styles '(flex basic)

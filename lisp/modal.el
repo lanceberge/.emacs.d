@@ -316,19 +316,19 @@ ARGS provides a `:name' atom."
   (forward-char arg))
 
 ;;;###autoload
-(defun +mark-whole-line (&optional arg)
+(defun +mark-whole-lines (arg)
   "Select the current line."
-  (interactive "P")
-  (let ((arg (or arg 1)))
-    (if (region-active-p)
-        (progn
-          (next-line arg)
-          (beginning-of-visual-line))
-      (beginning-of-visual-line)
-      (set-mark (point))
-      (next-line arg)
-      (beginning-of-visual-line)
-      (activate-mark))))
+  (interactive "p")
+  (if (region-active-p)
+      (progn
+        (forward-line arg)
+        (beginning-of-visual-line))
+    (push (copy-marker (point)) mark-ring)
+    (beginning-of-visual-line)
+    (set-mark (point))
+    (forward-line arg)
+    (beginning-of-visual-line)
+    (activate-mark)))
 
 ;;;###autoload
 (defun +open-below (arg)

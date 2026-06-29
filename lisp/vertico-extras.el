@@ -1,4 +1,6 @@
 ;;; -*- lexical-binding: t -*-
+(require 'vertico)
+
 (defvar +vertico-window-exit-prefix nil
   "Window display prefix to apply on the next `vertico-exit'.")
 (make-variable-buffer-local '+vertico-window-exit-prefix)

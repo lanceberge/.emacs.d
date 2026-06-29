@@ -4,55 +4,38 @@
 
 ;;;###autoload
 (defun +project-switch-project (command dir)
-  "Same as `project-switch-project' except reads the command first which for some reason I prefer."
-  (interactive (list (project--switch-project-command)
-                     (funcall project-prompter)))
+  "Same as `project-switch-project' except reads the command first,
+which for some reason I prefer."
+  (interactive
+   (let ((command (+project-switch-project-command-or-quit)))
+     (list command (funcall project-prompter))))
   (project-remember-project (project-current t dir))
   (let ((project-current-directory-override dir))
     (call-interactively command)))
 
 ;;;###autoload
-(defun +pull-repos ()
-  (interactive)
-  (let ((pull-repos-cmd "~/dotfiles/bin/pull_repos"))
-    (if (file-exists-p pull-repos-cmd)
-        (shell-command pull-repos-cmd)
-      (message "pull_repos doesn't exist")))
-  (yas-reload-all)
-  (org-roam-db-sync)
-  (+source-init-file))
-
-;;;###autoload
 (defun +project-other-buffer (n &optional project)
-  "Switch to the N'th most recent open buffer in the same vc-root-dir as the current buffer.
-Recurse through the buffer-list, skipping the first value since that's the current buffer."
+  "Switch to the N'th most recent file-visiting buffer in PROJECT."
   (interactive "p")
-  (let ((project-root-dir
-         (when-let ((project (or project (project-current nil))))
-           (expand-file-name
-            (if (stringp project)
-                project
-              (project-root project)))))
-        (target-index (1- (abs n)))) ; Convert to 0-based index
-    (defun +switch-to-recent-buffer-helper (buffer-list remaining)
-      (if (not buffer-list)
-          (message "No other recent files open in buffers")
-        (let* ((buffer (car buffer-list))
-               (buffer-project-root-dir (with-current-buffer buffer
-                                          (when (project-current nil)
-                                            (expand-file-name (project-root (project-current nil)))))))
-          (if (and (buffer-file-name buffer)
-                   (or (not project-root-dir)
-                       (string= project-root-dir buffer-project-root-dir)))
-              (if (eq remaining 0)
-                  (switch-to-buffer buffer)
-                (+switch-to-recent-buffer-helper (cdr buffer-list) (1- remaining)))
-            (+switch-to-recent-buffer-helper (cdr buffer-list) remaining)))))
-    (+switch-to-recent-buffer-helper (cdr (buffer-list)) target-index)))
+  (let* ((project (cond
+                   ((stringp project) (project-current t project))
+                   (project)
+                   ((project-current nil))))
+         (buffers (and project
+                       (seq-remove
+                        (lambda (buffer)
+                          (or (eq buffer (current-buffer))
+                              (not (buffer-file-name buffer))))
+                        (project-buffers project))))
+         (buffer (nth (1- (abs n)) buffers)))
+    (if buffer
+        (switch-to-buffer buffer)
+      (call-interactively #'project-find-file))))
 
 ;;;###autoload
 (defun +project-kill-buffer ()
-  "Kill the current buffer and switch to the most recent buffer in the same project."
+  "Kill the current buffer and switch to the most
+recent buffer in the same project."
   (interactive)
   (let* ((buffer (current-buffer))
          (project (project-current nil))
@@ -74,28 +57,38 @@ Recurse through the buffer-list, skipping the first value since that's the curre
     (+project-other-buffer n dir)))
 
 ;;;###autoload
-(defun +project-other-project (n)
-  "Switch to the buffer in the last open project"
-  (interactive "p")
-  (let ((current-buffer (current-buffer))
-        (project-root-dir (when-let ((project (project-current nil)))
-                            (expand-file-name (project-root project))))
-        (target-index (1- (abs n)))) ; Convert to 0-based index
-    (defun +switch-to-recent-buffer-helper (buffer-list remaining)
-      (if (not buffer-list)
-          (message "No other recent files open in buffers")
-        (let* ((buffer (car buffer-list))
-               (buffer-project-root-dir (with-current-buffer buffer
-                                          (when (project-current nil)
-                                            (expand-file-name (project-root (project-current nil)))))))
-          (if (and (buffer-file-name buffer)
-                   (or (not project-root-dir)
-                       (not (string= project-root-dir buffer-project-root-dir))))
-              (if (eq remaining 0)
-                  (switch-to-buffer buffer)
-                (+switch-to-recent-buffer-helper (cdr buffer-list) (1- remaining)))
-            (+switch-to-recent-buffer-helper (cdr buffer-list) remaining)))))
-    (+switch-to-recent-buffer-helper (cdr (buffer-list)) target-index)))
+(defun +project-other-project-command (command dir)
+  "Run a project command in the most recently opened other project."
+  (interactive
+   (let* ((dir (+project-last-opened-other-project-root))
+          (command (+project-switch-project-command-or-quit dir)))
+     (list command dir)))
+  (project-remember-project (project-current t dir))
+  (let ((project-current-directory-override dir))
+    (call-interactively command)))
+
+;;;###autoload
+(defun +project-switch-project-command-or-quit (&optional dir)
+  "Read a project command for DIR, quitting immediately on quit commands."
+  (let ((command (project--switch-project-command dir)))
+    (when (memq command '(keyboard-quit keyboard-escape-quit))
+      (keyboard-quit))
+    command))
+
+;;;###autoload
+(defun +project-last-opened-other-project-root ()
+  "Return the most recently remembered project root other than the current one."
+  (project--ensure-read-project-list)
+  (let* ((current (when-let ((project (project-current nil)))
+                    (file-truename (project-root project))))
+         (dir (seq-find
+               (lambda (root)
+                 (not (and current
+                           (string= (file-truename root) current))))
+               (project-known-project-roots))))
+    (unless dir
+      (user-error "No other known project"))
+    dir))
 
 ;;;###autoload
 (defun +project-other-special-buffer-dwim (arg)
@@ -110,22 +103,16 @@ Recurse through the buffer-list, skipping the first value since that's the curre
   "Switch to the most recent buffer with the same vc-root-dir. Unlike `+project-other-buffer',
 this function allows special buffers."
   (interactive)
-  (let ((current-buffer (current-buffer))
-        (project-root-dir (when (project-current t)
-                            (expand-file-name (project-root (project-current t))))))
-    (defun +switch-to-recent-buffer-helper (buffer-list)
-      (if (not buffer-list)
-          (message "No other recent files open in buffers")
-        (let* ((buffer (car buffer-list))
-               (buffer-project-root-dir (with-current-buffer buffer
-                                          (when (project-current nil)
-                                            (expand-file-name (project-root (project-current nil)))))))
-          (if (and (not (buffer-file-name buffer))
-                   (string= project-root-dir buffer-project-root-dir)
-                   (not (string-prefix-p " *Minibuf-" (buffer-name buffer))))
-              (switch-to-buffer buffer)
-            (+switch-to-recent-buffer-helper (cdr buffer-list))))))
-    (+switch-to-recent-buffer-helper (cdr (buffer-list)))))
+  (let* ((project (project-current t))
+         (buffer (seq-find
+                  (lambda (buffer)
+                    (and (not (eq buffer (current-buffer)))
+                         (not (buffer-file-name buffer))
+                         (not (string-prefix-p " *Minibuf-" (buffer-name buffer)))))
+                  (project-buffers project))))
+    (if buffer
+        (switch-to-buffer buffer)
+      (call-interactively #'project-find-file))))
 
 
 ;;;###autoload
@@ -200,6 +187,7 @@ this function allows special buffers."
         (when (file-directory-p subdir)
           (project-remember-projects-under subdir))))))
 
+;; TODO
 ;;;###autoload
 (defun +project-replace-regex (search-regex replace-string &optional file-pattern)
   "Perform a replacement on all git files of SEARCH-REGEX to REPLACE-STRING.

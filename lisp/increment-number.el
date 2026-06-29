@@ -2,8 +2,7 @@
 ;;;###autoload
 (defun +increment-number--number-at-point-bounds ()
   (save-excursion
-    (let ((original-point (point))
-          (found-bounds))
+    (let ((found-bounds))
       (while
           (let ((char (char-after (point))))
             (if (and (>= char ?0) (<= char ?9))
@@ -63,4 +62,4 @@
   (let ((decrement (or decrement 1)))
     (+increment-number-increment (- decrement))))
 
-(provide '+increment-number)
+(provide 'increment-number)

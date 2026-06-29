@@ -36,12 +36,8 @@
         ("x" . #'magit-discard)
         ("V" . #'set-mark-command))
   (:map +leader-map
-        ;; ("gd" . #'magit-file-delete)
         ("gb" . #'magit-branch-or-checkout)
-        ("SPC gf" . #'magit-fetch)
-        ("SPC gb" . #'magit-branch-and-checkout)
         ("gc" . #'magit-branch-spinoff)
-        ;; ("gnf" . #'magit-commit-fixup)
         ("gi" . #'magit-init)
         ("gl" . #'magit-log-head)
         ("SPC gl" . #'magit-log)
@@ -170,6 +166,9 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
   (majutsu-post-refresh . majutsu-diff-hl-post-refresh)
   (+majutsu-post-new-hook . majutsu-diff-hl-post-refresh)
   :bind
+  (:map +normal-mode-map
+        ("[h" . #'diff-hl-previous-hunk)
+        ("]h" . #'diff-hl-previous-hunk))
   (:map ctl-x-map
         ("vs" . #'diff-hl-show-hunk)
         ("v[" . #'diff-hl-previous-hunk)
@@ -177,11 +176,6 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
         ("vu" . #'diff-hl-revert-hunk))
   :config
   (global-diff-hl-mode))
-
-(use-package embark-diff-hl
-  :ensure (:type file :main "~/.emacs.d/lisp/embark-diff-hl.el")
-  :after (embark diff-hl)
-  :demand t)
 
 (use-package git-link
   :custom

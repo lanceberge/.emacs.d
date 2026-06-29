@@ -1,5 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 ;; https://karthinks.com/software/avy-can-do-anything/
+(require 'embark)
+(require 'avy)
+
 ;;;###autoload
 (defun avy-action-embark (pt)
   "Perform an embark action on the avy target and move the point to it"

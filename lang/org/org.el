@@ -3,9 +3,9 @@
   :defer 2.0
   :init
   (+modal-bind +leader-map org-mode-hook
-               ("ia" . #'outline-toggle-children)
-               ("in" . #'outline-next-heading)
-               ("ip" . #'outline-previous-heading)
+               ("i TAB" . #'outline-toggle-children)
+               ("in" . #'org-next-visible-heading)
+               ("ip" . #'org-previous-visible-heading)
                ("ir" . #'outline-show-all)
                ("im" . #'outline-hide-sublevels))
   :custom
@@ -57,8 +57,6 @@
 
   (+modal-create-insert-function org-meta-return)
   (+modal-create-insert-function org-insert-todo-heading)
-
-
 
   (add-to-list 'org-babel-default-header-args
                '(:eval . "never-export"))

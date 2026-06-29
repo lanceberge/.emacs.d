@@ -5,11 +5,11 @@
   (:map ctl-x-map
         ("e" . #'eval-last-sexp)))
 
-(use-package +emacs-lisp-extensions
+(use-package emacs-lisp-extensions
   :ensure (:type file :main "~/.emacs.d/lisp/emacs-lisp-extensions.el")
   :hook
   ((emacs-lisp-mode . +elisp--maybe-setup-new-file)
-   (emacs-lisp-mode . +elisp-setup-elpaca-rebuild-after-save))
+   (emacs-lisp-mode . +emacs-lisp-mode))
   :bind
   (:map emacs-lisp-mode-map
         ([remap save-buffer] . +elisp-validate-balanced-parens)))

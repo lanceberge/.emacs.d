@@ -26,23 +26,20 @@
         ("M-m" . #'embark-become)
         ("M-e" . #'embark-export))
   (:map embark-symbol-map
-        ("s" . #'+project-replace-regex)
         ("h" . #'helpful-symbol))
   (:map +motion-mode-map
         ("C-." . #'embark-act)
         ("M-'" . #'embark-dwim))
   (:map embark-become-file+buffer-map
         ("k" . #'+project-switch-project)
-        ("'" . #'project-find-file)
-        (";" . #'consult-ripgrep)
-        ("," . #'+consult-project-buffer)
-        ("d" . #'consult-dir))
+        ("f" . #'project-find-file)
+        ("d" . #'project-find-dir)
+        ("g" . #'consult-ripgrep)
+        ("b" . #'+consult-project-buffer))
   (:map embark-become-help-map
         ("v" . #'helpful-variable)
         ("f" . #'helpful-function)
         ("k" . #'helpful-key))
-  (:map embark-region-map
-        ("s" . #'+project-replace-regex))
   (:map embark-buffer-map
         ("e" . #'project-eshell)
         ("o" . #'+ace-window-switch-to-buffer)
@@ -52,10 +49,11 @@
         ("o" . #'+ace-window-find-file)
         ("N" . #'+find-file-new-window))
   (:map embark-general-map
-        (";" . #'consult-ripgrep)
         ("d" . #'embark-find-definition)
-        ("/" . #'consult-line)
-        ("g" . #'goolge-this-word))
+        ("g" . #'goolge-this-word)
+        ;; TODO doesn't really work well in some of the other embark maps
+        ("sl" . #'consult-line)
+        ("sr" . #'consult-ripgrep))
   (:map embark-collect-mode-map
         ("F" . #'consult-focus-lines))
   (:map embark-identifier-map
@@ -90,13 +88,40 @@
 
   (advice-add 'embark-act :before #'force-keycast-update))
 
-(use-package embark-this-buffer
-  :ensure (:type file :main "~/.emacs.d/lisp/embark-this-buffer.el")
+(use-package this-buffer
+  :ensure (:type file :main "~/.emacs.d/lisp/this-buffer.el")
   :bind
   (:map ctl-x-map
         ("rb" . #'+bookmark-file))
   (:map +leader-map
-        ("." . #'embark-on-this-buffer)))
+        (".!" . #'shell-command)
+        (".$" . #'ispell)
+        (".&" . #'async-shell-command)
+        (".=" . #'apheleia-format-buffer)
+        (". C-=" . #'ediff-buffers)
+        (".N" . #'+this-buffer-open-in-new-window)
+        (". RET" . #'eval-buffer)
+        (".W" . #'write-file)
+        (".b" . #'+bookmark-file)
+        (".c" . #'copy-file)
+        (".d" . #'delete-file)
+        (".e" . #'eval-buffer)
+        (".f" . #'consult-focus-lines)
+        (".g" . #'+revert-buffer)
+        (".h" . #'mark-whole-buffer)
+        (".k" . #'consult-keep-lines)
+        (".l" . #'load-file)
+        (".n" . #'diff-buffer-with-file)
+        (".o" . #'+this-buffer-move-to-window)
+        (".p" . #'pwd)
+        (".q" . #'quit-window)
+        (".r" . #'rename-file)
+        (".v d" . #'vc-delete-file)
+        (".v r" . #'vc-rename-file)
+        (".w" . #'+file-name-kill-ring-save)
+        (".x" . #'+this-buffer-open-externally)
+        (".z" . #'bury-buffer)
+        (".|" . #'+this-buffer-shell-command-on-buffer)))
 
 ;;;###autoload
 (defun +embark-select ()
@@ -152,9 +177,8 @@
         ("]" . #'end-of-buffer))
   :hook (after-init . beginend-global-mode))
 
-;; TODO idk why i thought i needed this
 ;; buffers restored from desktop.el initialize in fundamental-mode so this sets it correctly
-;; (add-hook 'window-configuration-change-hook '+restore-major-mode)
+(add-hook 'window-configuration-change-hook '+restore-major-mode)
 
 ;;;###autoload
 (defun +restore-major-mode ()
@@ -194,7 +218,7 @@
   (:map +leader-map
         ("u" . #'text-to-clipboard)))
 
-(use-package +increment-number
+(use-package increment-number
   :ensure (:type file :main "~/.emacs.d/lisp/increment-number.el")
   :bind
   (:map +normal-mode-map
@@ -220,8 +244,7 @@
         ("p" . #'+mark-backward-paragraph)
         ("d" . #'+mark-backward-sexp)
         ("s" . #'+mark-backward-sentence)
-        ("w" . #'+mark-backward-word)
-        ("b" . #'+mark-backward-buffer)))
+        ("w" . #'+mark-backward-word)))
 
 (use-package +mark-backward
   :ensure nil
@@ -239,8 +262,7 @@
         ("p" . #'+mark-forward-paragraph)
         ("w" . #'+mark-forward-word)
         ("d" . #'+mark-forward-sexp)
-        ("s" . #'+mark-forward-sentence)
-        ("b" . #'+mark-forward-buffer)))
+        ("s" . #'+mark-forward-sentence)))
 
 (use-package newcomment
   :ensure nil
@@ -291,8 +313,7 @@
   :ensure (:type file :main "~/.emacs.d/lisp/narrow-extras.el")
   :bind
   (:map ctl-x-map
-        ;; ("nn" . #'narrow-or-widen-dwim)
-        ))
+        ("n" . #'narrow-or-widen-dwim)))
 
 (use-package puni)
 

@@ -1,5 +1,11 @@
 ;;; embark-diff-hl.el --- Embark actions for diff-hl hunks -*- lexical-binding: t; -*-
 
+(use-package embark-diff-hl
+  :ensure (:type file :main "~/.emacs.d/lisp/embark-diff-hl.el")
+  :after (embark diff-hl)
+  :demand t)
+
+
 (require 'embark)
 (require 'diff-hl)
 

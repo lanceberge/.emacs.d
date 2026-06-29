@@ -7,9 +7,11 @@
   (project-switch-use-entire-map t)
   (project-mode-line t)
   :bind
+  (:map ctl-x-map
+        ("d" . #'project-find-dir))
   (:map project-prefix-map
+        ("C-g" . #'keyboard-quit)
         ("p" . #'+project-switch-project)
-        ("'" . #'project-find-file)
         ("o" . #'+project-other-buffer))
   (:map search-map
         ("f" . #'project-find-file)
@@ -22,18 +24,18 @@
   :hook
   (savehist-mode . +project-compile-save-hist-mode)
   :bind
-  (:map ctl-x-map
-        ("pc" . #'+project-compile)))
+  (:map project-prefix-map
+        ("c" . #'+project-compile)))
 
 (use-package project-extras
   :ensure (:type file :main "~/.emacs.d/lisp/project-extras.el")
-  :demand t
   :bind
   (:map ctl-x-map
+        ("pj" . #'+project-other-project-command)
         ("k" . #'+project-kill-buffer))
   (:map +leader-map
         ("k" . #'+project-switch-project)
-        ("j" . #'+project-other-project)
+        ("j" . #'+project-other-project-command)
         ("l" . #'+project-other-buffer)
         ("rk" . #'+project-reload-and-switch) ;; TODO replace w/ project reload prefix
         ("bl" . #'+project-other-special-buffer-dwim)))
