@@ -132,15 +132,15 @@
   :config
   (setq ediff-diff-options ""))
 
-(use-package outline-mode
-  :ensure nil
-  :bind
-  (:map +leader-map
-        ("oa" . #'outline-toggle-children)
-        ("oj" . #'outline-next-heading)
-        ("ok" . #'outline-previous-heading)
-        ("or" . #'outline-show-all)
-        ("om" . #'outline-hide-sublevels)))
+;; (use-package outline-mode
+;;   :ensure nil
+;;   :bind
+;;   (:map +leader-map
+;;         ("oa" . #'outline-toggle-children)
+;;         ("oj" . #'outline-next-heading)
+;;         ("ok" . #'outline-previous-heading)
+;;         ("or" . #'outline-show-all)
+;;         ("om" . #'outline-hide-sublevels)))
 
 (use-package repeat
   :ensure nil
@@ -207,8 +207,8 @@
   :ensure nil
   :after modal
   :config
-  (+modal-bind +motion-mode ibuffer-mode-hook
-               "x" #'ibuffer-do-kill-on-deletion-marks))
+  (+modal-bind +motion-mode-map ibuffer-mode-hook
+               ("x" . #'ibuffer-do-kill-on-deletion-marks)))
 
 (use-package subword-mode ;; enable `word' based commands to tread camel case text as separate words
   :ensure nil

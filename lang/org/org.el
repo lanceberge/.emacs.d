@@ -1,8 +1,13 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org
   :defer 2.0
-  :hook
-  (org-mode . (lambda () (setq-local tab-width 2)))
+  :init
+  (+modal-bind +leader-map org-mode-hook
+               ("ia" . #'outline-toggle-children)
+               ("in" . #'outline-next-heading)
+               ("ip" . #'outline-previous-heading)
+               ("ir" . #'outline-show-all)
+               ("im" . #'outline-hide-sublevels))
   :custom
   (org-directory "~/org")
   (org-list-allow-alphabetical t)
@@ -52,6 +57,8 @@
 
   (+modal-create-insert-function org-meta-return)
   (+modal-create-insert-function org-insert-todo-heading)
+
+
 
   (add-to-list 'org-babel-default-header-args
                '(:eval . "never-export"))

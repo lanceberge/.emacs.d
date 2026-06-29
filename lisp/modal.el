@@ -24,28 +24,47 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
 
 ;;; Mode-specific overrides
 
-(defmacro +modal-bind (modal-mode hook &rest bindings)
-  "Override MODAL-MODE keys in buffers where HOOK runs.
-BINDINGS are alternating KEY DEF pairs.  Creates a buffer-local
-keymap that inherits from MODAL-MODE's base map with the given
-overrides applied via `minor-mode-overriding-map-alist'."
-  (let ((fn (intern (format "+modal--override-%s-for-%s"
-                            (symbol-name modal-mode)
-                            (symbol-name hook))))
-        (map-var (intern (format "%s-map" (symbol-name modal-mode))))
-        (binding-forms '()))
-    (while bindings
-      (push `(define-key map ,(pop bindings) ,(pop bindings)) binding-forms))
-    (setq binding-forms (nreverse binding-forms))
-    `(progn
-       (defun ,fn ()
-         (let ((map (make-sparse-keymap)))
-           (set-keymap-parent map ,map-var)
-           ,@binding-forms
-           (setq-local minor-mode-overriding-map-alist
-                       (cons (cons ',modal-mode map)
-                             minor-mode-overriding-map-alist))))
-       (add-hook ',hook #',fn))))
+(defmacro +modal-bind (keymap hook &rest bindings)
+  "Override KEYMAP keys in buffers where HOOK runs.
+BINDINGS are alist entries of the form (KEY . DEF)."
+  (let ((binding-forms
+         (mapcar
+          (lambda (binding)
+            `(define-key ,keymap
+                         ,(if (stringp (car binding))
+                              `(kbd ,(car binding))
+                            (car binding))
+                         ,(cdr binding)))
+          bindings)))
+    `(add-hook ',hook
+               (lambda ()
+                 (let ((original-keymap ,keymap))
+                   (setq-local ,keymap (copy-keymap original-keymap))
+                   ,@binding-forms
+                   (dolist (entry minor-mode-map-alist)
+                     (let ((mode (car entry))
+                           (mode-map (cdr entry))
+                           keys)
+                       (when (keymapp mode-map)
+                         (map-keymap
+                          (lambda (key definition)
+                            (when (eq definition original-keymap)
+                              (push key keys)))
+                          mode-map)
+                         (when (or (eq mode-map original-keymap)
+                                   keys)
+                           (let ((mode-map-copy
+                                  (if (eq mode-map original-keymap)
+                                      ,keymap
+                                    (copy-keymap mode-map))))
+                             (dolist (key keys)
+                               (define-key mode-map-copy (vector key) ,keymap))
+                             (setq-local minor-mode-overriding-map-alist
+                                         (cons
+                                          (cons mode mode-map-copy)
+                                          (assq-delete-all
+                                           mode
+                                           minor-mode-overriding-map-alist)))))))))))))
 
 (defmacro +modal-create-mode-switching-function (function &rest args)
   "Create a command wrapping FUNCTION and switching modes afterward.

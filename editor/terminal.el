@@ -74,7 +74,7 @@
   :commands
   (eshell project-eshell eshell-command)
   :hook
-  (eshell-mode . +insert-mode)
+  (eshell-mode . (lambda () (+insert-mode 1)))
   :init
   (add-to-list 'display-buffer-alist
                '("\\`\\*Eshell Command Output\\*\\'"

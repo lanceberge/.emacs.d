@@ -1,6 +1,7 @@
 ;;; consult-buffer-extras.el --- Consult buffer commands -*- lexical-binding: t -*-
 
 (require 'consult-extras)
+(require 'modal)
 (require 'project)
 (require 'seq)
 

@@ -52,8 +52,8 @@
         ("gs" . #'+magit-diff-source)
         ("ge" . #'+magit-ediff-source))
   :config
-  (+modal-bind +motion-mode magit-status-mode-hook
-               "c" #'magit-commit)
+  (+modal-bind +motion-mode-map magit-status-mode-hook
+               ("c" . #'magit-commit))
 
   (cl-loop for n from 1 to 9
            do (let ((key (number-to-string n))
@@ -126,8 +126,8 @@ unless a nonzero and non-negative prefix is provided."
   (:map +leader-map
         ("gt" . #'git-timemachine))
   :config
-  (+modal-bind +motion-mode git-timemachine-mode-hook
-               "q" #'git-timemachine-quit))
+  (+modal-bind +motion-mode-map git-timemachine-mode-hook
+               ("q" . #'git-timemachine-quit)))
 
 (defun +git-timemachine-setup ()
   "Set up motion mode for git-timemachine."

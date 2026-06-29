@@ -17,10 +17,10 @@
   ((elixir-ts-mode elixir-mode) . +elixir--maybe-setup-new-file)
   ((elixir-ts-mode elixir-mode) . #'+elixir--maybe-setup-new-file)
   :config
-  (+modal-bind +insert-mode elixir-web-mode-hook
-               ">" #'+elixir-web-maybe-close-tag
-               [remap newline] #'+elixir-web-newline
-               [remap +comment-dwim] #'+elixir-web-comment))
+  (+modal-bind +insert-mode-map elixir-web-mode-hook
+               (">" . #'+elixir-web-maybe-close-tag)
+               ([remap newline] . #'+elixir-web-newline)
+               ([remap +comment-dwim] . #'+elixir-web-comment)))
 
 (use-package typescript-mode
   :mode

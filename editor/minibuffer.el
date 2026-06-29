@@ -82,7 +82,7 @@
         ("fp" . #'+consult-find-package)))
 
 (use-package consult-buffer-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/consult-buffer-extensions.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-buffer-extras.el")
   :after consult
   :demand t
   :bind

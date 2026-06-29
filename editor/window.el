@@ -171,7 +171,7 @@ the selected window when no minibuffer is active."
   (emacs-startup . switchy-window-minor-mode)
   :bind
   (:map ctl-x-map
-        ("wo" . #'switchy-window)))
+        ("wj" . #'switchy-window)))
 
 ;;;###autoload
 (defun +switchy-window-other-window ()
