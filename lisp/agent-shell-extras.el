@@ -1,4 +1,4 @@
-;;; agent-shell-extensions.el --- Extensions for agent-shell -*- lexical-binding: t -*-
+;;; agent-shell-extras.el --- Extensions for agent-shell -*- lexical-binding: t -*-
 
 (require 'agent-shell)
 (require 'cl-lib)
@@ -317,5 +317,5 @@ as literal path prefixes."
     ("edit" 'write)
     ("execute" 'execute)))
 
-(provide 'agent-shell-extensions)
-;;; agent-shell-extensions.el ends here
+(provide 'agent-shell-extras)
+;;; agent-shell-extras.el ends here

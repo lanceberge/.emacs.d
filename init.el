@@ -135,7 +135,8 @@
  indent-tabs-mode nil ; tabs are converted to spaces
  word-wrap t
  truncate-lines t
- fill-column 80)
+ fill-column 80
+ next-line-add-newlines t)
 
 (blink-cursor-mode -1)
 
@@ -318,33 +319,12 @@
         ("W" . #'kill-ring-save)
         ("}" . #'forward-paragraph)
         ("{" . #'backward-paragraph)
-        ("<escape>" . #'keyboard-quit))
-  ;; TODO figure out what to do with this
-  ;; (:map +sexp-mode-map
-  ;;       ("h" . #'backward-paragraph)
-  ;;       ("l" . #'backward-paragraph)
-  ;;       ("n" . #'forward-sentence)
-  ;;       ("p" . #'backward-sentence)
-  ;;       ("q" . #'+save-and-exit)
-  ;;       ("f" . #'forward-sexp)
-  ;;       ("b" . #'backward-sexp)
-  ;;       ("i" . #'+insert-mode)
-  ;;       ("o" . #'+expand-region)
-  ;;       ("O" . #'+expand-region-2)
-  ;;       ("g" . #'+sexp-mode-quit)
-  ;;       ("x" . #'+join-line)
-  ;;       ("d" . #'kill-sexp)
-  ;;       ("DEL" . #'backward-kill-sexp)
-  ;;       ("a" . #'back-to-indentation)
-  ;;       ("e" . #'end-of-line)
-  ;;       ("s" . #'+kill-line-or-region)
-  ;;       ("j" . #'next-line)
-  ;;       ("k" . #'previous-line)
-  ;;       ("u" . #'undo)
-  ;;       ("r" . #'undo-redo)
-  ;;       ("t" . #'transpose-sexps)
-  ;;       ("T" . #'transpose-sentences))
-  )
+        ("<escape>" . #'keyboard-quit)
+        ("\\f" . #'forward-sexp)
+        ("\\b" . #'backward-sexp)
+        ("\\d" . #'kill-sexp)
+        ("\\ <backspace>" . #'backward-kill-sexp)
+        ("\\t" . #'transpose-sexps)))
 
 ;; read modal before doing loading else
 (elpaca-wait)
@@ -354,6 +334,7 @@
           (mapc 'load-file
                 (directory-files-recursively dir "\\.el$")))
         dirs))
+
 ;; restore desktop after loading everything else
 (elpaca-wait)
 (desktop-read)

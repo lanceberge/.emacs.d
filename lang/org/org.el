@@ -63,8 +63,8 @@
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
   (plist-put org-format-latex-options :scale 1.75))
 
-(use-package org-extensions
-  :ensure (:type file :main "~/.emacs.d/lisp/org-extensions.el")
+(use-package org-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/org-extras.el")
   :after org
   :custom
   (+org-directory "~/org/")

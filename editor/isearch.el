@@ -16,8 +16,8 @@
   :config
   (setq search-nonincremental-instead nil)) ; don't cancel isearches with searches
 
-(use-package isearch-extensions
-  :ensure (:type file :main "~/.emacs.d/lisp/isearch-extensions.el")
+(use-package isearch-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/isearch-extras.el")
   :bind
   (:map isearch-mode-map
         ("M-s l" . #'+consult-line)

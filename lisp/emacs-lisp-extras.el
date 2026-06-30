@@ -111,4 +111,4 @@
   (goto-char (point-max))
   (insert "\n"))
 
-(provide 'emacs-lisp-extensions)
+(provide 'emacs-lisp-extras)

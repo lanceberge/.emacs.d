@@ -80,24 +80,6 @@
 
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 
-(use-package scala-mode
-  :disabled t
-  :interpreter ("scala" . scala-mode)
-  :config
-  (setenv "JAVA_HOME" "/usr/lib/jvm/java-17-openjdk-amd64"))
-
-(use-package sbt-mode
-  :disabled t
-  :commands sbt-start sbt-command
-  :config
-  ;; https://github.com/ensime/emacs-sbt-mode/issues/31
-  (substitute-key-definition
-   'minibuffer-complete-word
-   'self-insert-command
-   minibuffer-local-completion-map)
-  ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
-  (setq sbt:program-options '("-Dsbt.supershell=false")))
-
 (use-package nxml-mode
   :ensure nil
   :custom
