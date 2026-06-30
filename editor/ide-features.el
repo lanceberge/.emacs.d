@@ -163,8 +163,8 @@
   (flymake-show-diagnostics-at-end-of-line nil)
   :bind
   (:repeat-map flymake-repeat-map
-               ("n" . #'flymake-goto-next-error)
-               ("p" . #'flymake-goto-prev-error))
+               ("]" . #'flymake-goto-next-error)
+               ("[" . #'flymake-goto-prev-error))
   (:map +normal-mode-map
         ("]e" . #'flymake-goto-next-error)
         ("[e" . #'flymake-goto-prev-error)))

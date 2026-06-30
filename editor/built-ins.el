@@ -145,6 +145,8 @@
 
 (use-package repeat
   :ensure nil
+  :custom
+  (repeat-check-key nil)
   :hook (after-init . repeat-mode))
 
 (use-package grep
@@ -186,7 +188,6 @@
         ("H" . #'indent-rigidly-left-to-tab-stop)
         ("l" . #'indent-rigidly-right)
         ("L" . #'indent-rigidly-right-to-tab-stop)))
-
 
 (use-package compile
   :ensure nil

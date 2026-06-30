@@ -2,9 +2,6 @@
 (use-package window
   :ensure nil
   :bind
-  (:repeat-map window-repeat-map
-               ("p" . #'tab-bar-history-back)
-               ("n" . #'tab-bar-history-forward))
   (:map ctl-x-map
         ("6" . #'+new-window-prefix)))
 
@@ -31,7 +28,9 @@
   :ensure nil
   :bind
   ("M-o" . #'other-window)
-  ("M-O" . #'+other-window-previous))
+  ("M-O" . #'+other-window-previous)
+  :config
+  (setq other-window-repeat-map nil))
 
 (advice-add 'other-window :before
             (defun other-window-split-if-single (&rest _)
@@ -42,7 +41,6 @@
 (defun +other-window-previous ()
   (interactive)
   (if (one-window-p) (split-window-sensibly)
-    (setq repeat-map 'other-window-repeat-map)
     (other-window -1)))
 
 (use-package ace-window
@@ -188,13 +186,14 @@ the selected window when no minibuffer is active."
 (setq other-window-scroll-default #'+switchy-window-other-window)
 
 (use-package winner ; Undo and redo window configs
+  :disabled t ;; using tab bar history instead
   :ensure nil
   :hook
   (emacs-startup . winner-mode)
   :bind
   (:repeat-map winner-repeat-map
-               ("p" . #'winner-undo)
-               ("n" . #'winner-redo)))
+               ("]" . #'winner-redo)
+               ("[" . #'winner-undo)))
 
 (use-package windresize
   :custom
@@ -218,6 +217,9 @@ the selected window when no minibuffer is active."
   (after-init . tab-bar-mode)
   (tab-bar-mode . tab-bar-history-mode)
   :bind
+  (:repeat-map +tab-bar-repeat-map
+               ("]" . #'tab-bar-switch-to-next-tab)
+               ("[" . #'tab-bar-switch-to-prev-tab))
   (:map +normal-mode-map
         ("]t" . #'tab-bar-switch-to-next-tab)
         ("[t" . #'tab-bar-switch-to-prev-tab))
@@ -273,11 +275,13 @@ the selected window when no minibuffer is active."
   :ensure nil
   :bind
   (:repeat-map window-repeat-map
-               ("p" . #'tab-bar-history-back)
-               ("n" . #'tab-bar-history-forward))
-  (:map ctl-x-map
-        ("wp" . #'tab-bar-history-back)
-        ("wn" . #'tab-bar-history-forward)))
+               ("[" . #'tab-bar-history-back)
+               ("]" . #'tab-bar-history-forward)
+               :exit
+               ("1" . #'+toggle-tab-zoom))
+  (:map +normal-mode-map
+        ("[w" . #'tab-bar-history-back)
+        ("]w" . #'tab-bar-history-forward)))
 
 ;;;###autoload
 (defun +revert-buffer ()

@@ -81,8 +81,8 @@
   (setq-local indent-bars-no-descend-string nil
               indent-bars-no-descend-lists nil
               indent-bars-spacing-override 2
-              indent-bars--display-function #'+indent-bars--display-heex-only
               indent-bars--display-blank-lines-function #'+indent-bars--display-heex-blank-lines-only)
+  indent-bars--display-function #'+indent-bars--display-heex-only
   (indent-bars-mode 1))
 
 (use-package indent-bars
@@ -110,13 +110,14 @@
   (+theme-rotate-current-style 'dark)
   :bind
   (:repeat-map +theme-rotate-repeat-map
-               ("n" . #'+theme-rotate-rotate)
-               ("l" . #'+theme-rotate-toggle-dark-light)
-               ("p" . #'+theme-rotate-prev))
-  (:map +leader2-map
-        ("tn" . #'+theme-rotate-rotate)
-        ("tj" . #'+theme-rotate-toggle-dark-light)
-        ("tp" . #'+theme-rotate-prev)))
+               ("]" . #'+theme-rotate-rotate)
+               ("t" . #'+theme-rotate-toggle-dark-light)
+               ("[" . #'+theme-rotate-prev))
+  (:map +normal-mode-map
+        ("]T" . #'+theme-rotate-rotate)
+        ("[T" . #'+theme-rotate-prev))
+  (:map +leader-map
+        ("tt" . #'+theme-rotate-toggle-dark-light)))
 
 (use-package consult-theme-rotate
   :ensure (:type file :main "~/.emacs.d/lisp/consult-theme-rotate.el")

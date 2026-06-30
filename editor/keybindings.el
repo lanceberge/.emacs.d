@@ -16,9 +16,6 @@
 (bind-key "'" +leader2-map +motion-mode-map)
 (bind-key "'" +leader2-map +sexp-mode-map)
 
-(bind-key "[" mark-backward-keymap +normal-mode-map)
-(bind-key "]" mark-forward-keymap +normal-mode-map)
-
 (bind-key "[" mark-backward-keymap +sexp-mode-map)
 (bind-key "]" mark-forward-keymap +sexp-mode-map)
 
