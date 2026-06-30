@@ -1,4 +1,4 @@
-;;; org-timer-extensions.el --- Org timer logging helpers -*- lexical-binding: t -*-
+;;; org-timer-extras.el --- Org timer logging helpers -*- lexical-binding: t -*-
 
 (require 'org-timer)
 
@@ -97,5 +97,5 @@
    (+ (org-timer-hms-to-secs first)
       (org-timer-hms-to-secs second))))
 
-(provide 'org-timer-extensions)
-;;; org-timer-extensions.el ends here
+(provide 'org-timer-extras)
+;;; org-timer-extras.el ends here

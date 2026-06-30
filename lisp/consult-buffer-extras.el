@@ -55,7 +55,7 @@ call CREATE-FN."
              ((null (cdr project-matches))
               (consult--buffer-action (car project-matches)))
              (t
-              (+consult-project-buffer initial)))))))))
+              (+consult--buffer consult-project-buffer-sources ?b initial)))))))))
 
 ;;;###autoload
 (defun +consult-buffer-dwim

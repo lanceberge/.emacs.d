@@ -77,6 +77,7 @@
 
 ;;;###autoload
 (defun +indent-bars-elixir-heex-mode ()
+  (require 'indent-bars)
   "Enable `indent-bars-mode' only for HEEx content inside Elixir ~H sigils."
   (setq-local indent-bars-no-descend-string nil
               indent-bars-no-descend-lists nil

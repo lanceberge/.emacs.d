@@ -17,17 +17,7 @@ which for some reason I prefer."
 (defun +project-other-buffer (n &optional project)
   "Switch to the N'th most recent file-visiting buffer in PROJECT."
   (interactive "p")
-  (let* ((project (cond
-                   ((stringp project) (project-current t project))
-                   (project)
-                   ((project-current nil))))
-         (buffers (and project
-                       (seq-remove
-                        (lambda (buffer)
-                          (or (eq buffer (current-buffer))
-                              (not (buffer-file-name buffer))))
-                        (project-buffers project))))
-         (buffer (nth (1- (abs n)) buffers)))
+  (let ((buffer (+project-other-buffer-buffer n project)))
     (if buffer
         (switch-to-buffer buffer)
       (call-interactively #'project-find-file))))
@@ -41,13 +31,27 @@ recent buffer in the same project."
          (project (project-current nil))
          (project-root-dir (when project
                              (expand-file-name (project-root project)))))
-    (if project-root-dir
-        (+project-other-buffer 1 project-root-dir)
-      (switch-to-buffer (other-buffer buffer t)))
-    (when (eq buffer (current-buffer))
-      (switch-to-buffer (other-buffer buffer t)))
-    (unless (eq buffer (current-buffer))
-      (kill-buffer buffer))))
+    (if-let ((other-buffer (and project-root-dir
+                                (+project-other-buffer-buffer 1 project-root-dir))))
+        (progn
+          (switch-to-buffer other-buffer)
+          (kill-buffer buffer))
+      (kill-current-buffer))))
+
+;;;###autoload
+(defun +project-other-buffer-buffer (n &optional project)
+  "Return the N'th most recent file-visiting buffer in PROJECT."
+  (let* ((project (cond
+                   ((stringp project) (project-current t project))
+                   (project)
+                   ((project-current nil))))
+         (buffers (and project
+                       (seq-remove
+                        (lambda (buffer)
+                          (or (eq buffer (current-buffer))
+                              (not (buffer-file-name buffer))))
+                        (project-buffers project)))))
+    (nth (1- (abs n)) buffers)))
 
 ;;;###autoload
 (defun +project-visit-last-buffer (n &optional dir)

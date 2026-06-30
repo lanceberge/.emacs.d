@@ -1,6 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 
 (require 'consult)
+(require 'project)
+(require 'isearch-extras)
 
 ;;;###autoload
 (defun +consult-project-file-source (dir &optional name)
@@ -118,7 +120,8 @@ Otherwise, just call consult-yank-pop."
   (interactive)
   (if-let ((project (project-current nil)))
       (if (project-buffers project)
-          (call-interactively #'consult-project-buffer)
+          (consult--with-project
+            (+consult--buffer consult-project-buffer-sources ?b initial))
         (call-interactively #'project-find-file))
     (call-interactively #'consult-buffer)))
 
@@ -220,36 +223,17 @@ MATCH is as in `org-map-entries'."
   (interactive)
   (consult-ripgrep (project-root (project-current t)) "TODO"))
 
-(define-key consult-narrow-map (kbd "C-h") #'consult-narrow-cycle-backward)
-(define-key consult-narrow-map (kbd "C-l") #'consult-narrow-cycle-forward)
-
-;; https://github.com/minad/consult/wiki#cycle-through-narrowing-keys
-(defun consult-narrow-cycle-backward ()
-  "Cycle backward through the narrowing keys."
+;;;###autoload
+(defun +consult-narrow-help ()
+  "Show prefix help for `consult-narrow-key'."
   (interactive)
-  (let ((consult--narrow-keys (plist-get consult--narrow-config :keys)))
-    (when consult--narrow-keys
-      (consult-narrow
-       (if consult--narrow
-           (let ((idx (seq-position
-                       consult--narrow-keys
-                       (assq consult--narrow consult--narrow-keys))))
-             (unless (eq idx 0)
-               (car (nth (1- idx) consult--narrow-keys))))
-         (caar (last consult--narrow-keys)))))))
-
-(defun consult-narrow-cycle-forward ()
-  "Cycle forward through the narrowing keys."
-  (interactive)
-  (let ((consult--narrow-keys (plist-get consult--narrow-config :keys)))
-    (when consult--narrow-keys
-      (consult-narrow
-       (if consult--narrow
-           (let ((idx (seq-position
-                       consult--narrow-keys
-                       (assq consult--narrow consult--narrow-keys))))
-             (unless (eq idx (1- (length consult--narrow-keys)))
-               (car (nth (1+ idx) consult--narrow-keys))))
-         (caar consult--narrow-keys))))))
+  (consult--require-minibuffer)
+  (unless consult-narrow-key
+    (user-error "`consult-narrow-key' is not configured"))
+  (setq unread-command-events
+        (append (listify-key-sequence
+                 (vconcat (consult--key-parse consult-narrow-key)
+                          (kbd "C-h")))
+                unread-command-events)))
 
 (provide 'consult-extras)

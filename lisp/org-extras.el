@@ -1,4 +1,4 @@
-;;; org-extensions.el --- Org editing helpers -*- lexical-binding: t -*-
+;;; org-extras.el --- Org editing helpers -*- lexical-binding: t -*-
 
 (require 'org)
 (require 'project)
@@ -63,5 +63,5 @@
          (when filetags
            (split-string (cadr filetags) ":" t "\\s-*")))))
 
-(provide 'org-extensions)
-;;; org-extensions.el ends here
+(provide 'org-extras)
+;;; org-extras.el ends here

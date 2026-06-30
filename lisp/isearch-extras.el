@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 
 (require 'isearch)
+(require 'consult)
 
 ;;;###autoload
 (defun +isearch-exit-at-start ()
@@ -40,4 +41,4 @@
       (call-interactively #'abort-recursive-edit))
   (call-interactively #'keyboard-quit))
 
-(provide 'isearch-extensions)
+(provide 'isearch-extras)

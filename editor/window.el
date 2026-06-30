@@ -259,16 +259,6 @@ the selected window when no minibuffer is active."
 
 (setq other-window-scroll-default #'+switchy-window-other-window)
 
-(use-package winner ; Undo and redo window configs
-  :disabled t ;; using tab bar history instead
-  :ensure nil
-  :hook
-  (emacs-startup . winner-mode)
-  :bind
-  (:repeat-map winner-repeat-map
-               ("]" . #'winner-redo)
-               ("[" . #'winner-undo)))
-
 (use-package windresize
   :custom
   (windresize-default-increment 3)

@@ -29,7 +29,6 @@
   (:map +leader-map
         ("h" . #'help-command)
         ("d" . #'duplicate-dwim)
-        ("q" . #'+server-edit) ;; TODO shitty keybind
         ("er" . #'+source-init-file))
   (:map +normal-mode-map
         ("[ SPC" . #'+insert-newlines-above)

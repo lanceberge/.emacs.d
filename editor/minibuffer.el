@@ -21,16 +21,18 @@
   :defer 0.2
   :custom
   (xref-show-xrefs-function #'consult-xref)
-  (consult-narrow-key "C-SPC")
+  (xref-show-definitions-function #'consult-xref)
+  (consult-narrow-key "C->")
   (consult-project-buffer-sources '(consult-source-project-buffer
                                     consult-source-project-recent-file))
   :bind
-  ("M-g M-g" . #'consult-goto-line)
-  ("M-g i" . #'consult-imenu)
-  ("M-g M-i" . #'consult-imenu-multi)
-  ("M-g e" . #'consult-flymake)
-  ("M-g m" . #'consult-mark)
-  ("M-g M-m" . #'consult-global-mark)
+  (:map goto-map
+        ("M-g" . #'consult-goto-line)
+        ("i" . #'consult-imenu)
+        ("M-i" . #'consult-imenu-multi)
+        ("e" . #'consult-flymake)
+        ("m" . #'consult-mark)
+        ("M-m" . #'consult-global-mark))
   (:map ctl-x-map
         ("b" . #'consult-buffer)
         ("rb" . #'consult-bookmark)
@@ -54,7 +56,10 @@
         ("g" . #'consult-ripgrep)
         ("r" . #'consult-recent-file)
         ("l" . #'consult-line)
-        ("M-l" . #'consult-line-multi)))
+        ("M-l" . #'consult-line-multi))
+  :config
+  (advice-add #'register-preview :override #'consult-register-window)
+  (setq register-preview-delay 0.5))
 
 (use-package consult-extras
   :ensure (:type file :main "~/.emacs.d/lisp/consult-extras.el")
@@ -68,6 +73,8 @@
         ("M-q" . #'+consult-kmacro))
   (:map project-prefix-map
         ("b" . #'+consult-project-buffer))
+  (:map consult-narrow-map
+        ("C-h" . #'+consult-narrow-help))
   (:map search-map
         ("M-t" . #'+consult-find-todos)
         ("t" . #'+consult-project-find-todos)
@@ -103,6 +110,7 @@
         ([remap kill-visual-line] . #'kill-line)
         ("C-k" . #'kill-line))
   (:map vertico-map
+        ("C-;" . #'vertico-quick-exit)
         ("M-h" . #'vertico-directory-up)
         ("M-P" . #'+consult-toggle-preview)
         ("M-l" . #'vertico-directory-enter))
@@ -116,6 +124,7 @@
                             (call-interactively #'vertico-exit)))))
 
   (vertico-mode)
+  (vertico-multiform-mode)
   (vertico-indexed-mode))
 
 (use-package vertico-extras
@@ -140,5 +149,17 @@
 
 (use-package vertico-posframe
   :after vertico
+  :custom
+  (vertico-multiform-categories
+   '((consult-location buffer (:not posframe))
+     (consult-grep buffer (:not posframe))
+     (imenu buffer (:not posframe))
+     (t posframe)))
+  (vertico-multiform-commands
+   '((consult-line buffer (:not posframe))
+     (consult-ripgrep buffer (:not posframe))
+     (consult-git-grep buffer (:not posframe))
+     (consult-grep buffer (:not posframe))))
+  (vertico-posframe-fallback-mode #'vertico-buffer-mode)
   :init
   (vertico-posframe-mode))

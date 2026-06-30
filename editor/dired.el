@@ -12,6 +12,8 @@
   (dired-vc-rename-file t)
   :hook (dired-mode . dired-hide-details-mode)
   :bind
+  (:map search-map
+        (".d" . #'dired))
   (:map dired-mode-map
         ("i" . +dired-maybe-insert-subdir)
         ("e" . #'dired-toggle-read-only)

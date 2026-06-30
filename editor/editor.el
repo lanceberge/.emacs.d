@@ -27,7 +27,8 @@
         ("M-," . #'+embark-select)
         ("M-a" . #'embark-act-all)
         ("M-m" . #'embark-become)
-        ("M-e" . #'embark-export))
+        ("M-e" . #'embark-export)
+        ("C-c C-c" . #'embark-collect))
   (:map embark-symbol-map
         ("h" . #'helpful-symbol))
   (:map +motion-mode-map
@@ -165,21 +166,6 @@
                 (exec-path-from-shell-initialize)
                 (setq exec-path (append exec-path '("/home/labergeron/miniconda3/bin" "~/go/bin")))))))
 
-(use-package ace-link
-  :bind
-  (:map text-mode-map
-        ("M-i" . #'ace-link))
-  (:map helpful-mode-map
-        ("M-i" . #'ace-link)))
-
-(use-package beginend
-  :disabled t
-  :bind
-  (:map +leader-map
-        ("[" . #'beginning-of-buffer)
-        ("]" . #'end-of-buffer))
-  :hook (after-init . beginend-global-mode))
-
 ;; buffers restored from desktop.el initialize in fundamental-mode so this sets it correctly
 (add-hook 'window-configuration-change-hook '+restore-major-mode)
 
@@ -283,8 +269,8 @@
   (:map +normal-mode-map
         ("\\r" . #'puni-raise)))
 
-(use-package puni-extensions
-  :ensure (:type file :main "~/.emacs.d/lisp/puni-extensions.el")
+(use-package puni-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/puni-extras.el")
   :bind
   (:map +insert-mode-map
         ("C-(" . #'+puni-slurp-or-barf-left)

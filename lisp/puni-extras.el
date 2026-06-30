@@ -75,4 +75,4 @@
   (concat (apply #'string +puni-open-chars)
           (apply #'string +puni-close-chars)))
 
-(provide 'puni-extensions)
+(provide 'puni-extras)
