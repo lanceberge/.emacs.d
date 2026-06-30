@@ -70,12 +70,19 @@
 ;;;###autoload
 (defun +ace-window-find-file (file)
   "Open FILE in an ace-selected window."
-  (interactive "FFind file: ")
+  (interactive
+   (let ((from-minibuffer (active-minibuffer-window)))
+     (when from-minibuffer
+       (+window-preserve-minibuffer-windows))
+     (let ((read-minibuffer-restore-windows
+            (if from-minibuffer nil read-minibuffer-restore-windows)))
+       (list (read-file-name "Find file: ")))))
   (require 'ace-window)
   (let ((aw-dispatch-when-more-than 2))
     (+ace-window--ensure-dispatch-window)
     (select-window (aw-select " Ace - Find File"))
-    (find-file file)))
+    (find-file file)
+    (+window-preserve-minibuffer-windows)))
 
 ;;;###autoload
 (defun +ace-window-switch-to-buffer (buffer)
@@ -90,20 +97,87 @@
 ;;;###autoload
 (defun +find-file-new-window (file)
   "Open FILE in a newly-created window."
+  (interactive
+   (let ((from-minibuffer (active-minibuffer-window)))
+     (when from-minibuffer
+       (+window-preserve-minibuffer-windows))
+     (let ((read-minibuffer-restore-windows
+            (if from-minibuffer nil read-minibuffer-restore-windows)))
+       (list (read-file-name "Find file: ")))))
+  (set-window-buffer (+window-split-new) (find-file-noselect file))
+  (+window-preserve-minibuffer-windows))
+
+;;;###autoload
+(defun +find-file-new-largest-window (file)
+  "Open FILE in a new window split from the largest visible window."
   (interactive "FFind file: ")
-  (set-window-buffer (+window-split-new) (find-file-noselect file)))
+  (set-window-buffer
+   (+window-split-new (+window-largest-visible-window))
+   (find-file-noselect file))
+  (+window-preserve-minibuffer-windows))
+
+;;;###autoload
+(defun +find-file-new-largest-window-action (file)
+  "Open Embark file target FILE in a new split from the largest window."
+  (+find-file-new-largest-window file))
 
 ;;;###autoload
 (defun +switch-to-buffer-new-window (buffer)
   "Open BUFFER in a newly-created window."
   (interactive "BSwitch to buffer: ")
-  (set-window-buffer (+window-split-new) (get-buffer-create buffer)))
+  (set-window-buffer (+window-split-new) (get-buffer-create buffer))
+  (+window-preserve-minibuffer-windows))
+
+;;;###autoload
+(defun +switch-to-buffer-new-window-action (buffer)
+  "Open Embark buffer target BUFFER in a split from the largest window."
+  (set-window-buffer
+   (+window-split-new (+window-largest-visible-window))
+   (get-buffer-create buffer))
+  (+window-preserve-minibuffer-windows))
+
+(defvar-local +window--preserved-minibuffer-window-state nil
+  "Window state to restore after the current minibuffer exits.")
+
+;;;###autoload
+(defun +window-preserve-minibuffer-windows ()
+  "Keep window changes made while reading from the active minibuffer."
+  (when-let ((window (active-minibuffer-window)))
+    (with-current-buffer (window-buffer window)
+      (setq-local read-minibuffer-restore-windows nil)
+      (setq-local +window--preserved-minibuffer-window-state
+                  (cons (window-frame window)
+                        (window-state-get
+                         (frame-root-window (window-frame window))
+                         t)))
+      (add-hook 'minibuffer-exit-hook
+                #'+window--restore-preserved-minibuffer-windows nil t))))
+
+;;;###autoload
+(defun +window--restore-preserved-minibuffer-windows ()
+  "Restore `+window--preserved-minibuffer-window-state' after minibuffer exit."
+  (when-let ((state +window--preserved-minibuffer-window-state))
+    (run-at-time 0 nil #'+window--restore-frame-window-state
+                 (car state)
+                 (cdr state))))
+
+;;;###autoload
+(defun +window--restore-frame-window-state (frame state)
+  "Restore FRAME's root window STATE when FRAME is still live."
+  (when (frame-live-p frame)
+    (with-selected-frame frame
+      (window-state-put state (frame-root-window frame) 'safe))))
 
 ;;;###autoload
 (defun +ace-window--ensure-dispatch-window ()
   "Create a second window when ace-window would have no target choice."
   (when (= (length (window-list nil 'no-minibuf)) 1)
     (+window-split-new)))
+
+;;;###autoload
+(defun +window-largest-visible-window ()
+  "Return the largest visible non-minibuffer window on the selected frame."
+  (get-largest-window nil nil nil t))
 
 ;;;###autoload
 (defun +window-split-new (&optional window)
@@ -208,6 +282,16 @@ the selected window when no minibuffer is active."
         ("n" . #'windresize-down)
         ("g" . #'windresize-exit)))
 
+(use-package tab-bar-repeat
+  :ensure nil
+  :bind
+  (:repeat-map +tab-bar-repeat-map
+               ("]" . #'tab-bar-switch-to-next-tab)
+               ("[" . #'tab-bar-switch-to-prev-tab))
+  (:map +normal-mode-map
+        ("]t" . #'tab-bar-switch-to-next-tab)
+        ("[t" . #'tab-bar-switch-to-prev-tab)))
+
 (use-package tab-bar
   :ensure nil
   :custom
@@ -217,12 +301,6 @@ the selected window when no minibuffer is active."
   (after-init . tab-bar-mode)
   (tab-bar-mode . tab-bar-history-mode)
   :bind
-  (:repeat-map +tab-bar-repeat-map
-               ("]" . #'tab-bar-switch-to-next-tab)
-               ("[" . #'tab-bar-switch-to-prev-tab))
-  (:map +normal-mode-map
-        ("]t" . #'tab-bar-switch-to-next-tab)
-        ("[t" . #'tab-bar-switch-to-prev-tab))
   (:map ctl-x-map
         ("to" . #'tab-bar-switch-to-recent-tab)
         ("t[" . #'tab-bar-switch-to-prev-tab)

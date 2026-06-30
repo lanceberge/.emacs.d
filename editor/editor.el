@@ -9,8 +9,11 @@
   (embark-confirm-act-all nil)
   (embark-quit-after-action
    '(
-     (+find-file-new-window . nil)
-     (+switch-to-buffer-new-window . nil)
+     ;; (+find-file-new-window . nil)
+     ;; (+find-file-new-largest-window . nil)
+     ;; (+find-file-new-largest-window-action . nil)
+     ;; (+switch-to-buffer-new-window . nil)
+     ;; (+switch-to-buffer-new-window-action . nil)
      (t . t)))
   :bind
   (:map +normal-mode-map
@@ -43,11 +46,11 @@
   (:map embark-buffer-map
         ("e" . #'project-eshell)
         ("o" . #'+ace-window-switch-to-buffer)
-        ("N" . #'+switch-to-buffer-new-window))
+        ("N" . #'+switch-to-buffer-new-window-action))
   (:map embark-file-map
         ("e" . #'project-eshell)
         ("o" . #'+ace-window-find-file)
-        ("N" . #'+find-file-new-window))
+        ("N" . #'+find-file-new-largest-window-action))
   (:map embark-general-map
         ("d" . #'embark-find-definition)
         ("g" . #'goolge-this-word)
@@ -187,7 +190,6 @@
     (set-auto-mode)))
 
 (use-package jinx
-  ;; :disabled t
   :hook ((prog-mode text-mode) . jinx-mode)
   :bind
   (:map jinx-mode-map
@@ -224,45 +226,6 @@
   (:map +normal-mode-map
         ("M-`" . #'+increment-number-increment)
         ("M-~" . #'+increment-number-decrement)))
-
-(use-package +mark-forward-backward
-  :ensure (:type file :main "~/.emacs.d/lisp/mark-forward-backward.el")
-  :bind
-  (:repeat-map mark-backward-repeat-map
-               ("-" . #'+mark-forward-backward-ring-pop)
-               ("." . #'repeat)
-               ("s" . #'+mark-backward-sentence )
-               ("p" . #'+mark-backward-paragraph)
-               ("w" . #'+mark-backward-word)
-               ("d" . #'+mark-backward-sexp)
-               :exit
-               ("g" . (lambda () (interactive))))
-  (:map +normal-mode-map
-        ("B" . #'+mark-backward-word))
-
-  (:map mark-backward-keymap
-        ("p" . #'+mark-backward-paragraph)
-        ("d" . #'+mark-backward-sexp)
-        ("s" . #'+mark-backward-sentence)
-        ("w" . #'+mark-backward-word)))
-
-(use-package +mark-backward
-  :ensure nil
-  :bind
-  (:repeat-map mark-forward-repeat-map
-               ("-" . #'+mark-forward-backward-ring-pop)
-               ("." . #'repeat)
-               ("s" . #'+mark-forward-sentence )
-               ("p" . #'+mark-forward-paragraph)
-               ("w" . #'+mark-forward-word)
-               ("d" . #'+mark-forward-sexp)
-               :exit
-               ("g" . (lambda () (interactive))))
-  (:map mark-forward-keymap
-        ("p" . #'+mark-forward-paragraph)
-        ("w" . #'+mark-forward-word)
-        ("d" . #'+mark-forward-sexp)
-        ("s" . #'+mark-forward-sentence)))
 
 (use-package newcomment
   :ensure nil
@@ -315,7 +278,10 @@
   (:map ctl-x-map
         ("n" . #'narrow-or-widen-dwim)))
 
-(use-package puni)
+(use-package puni
+  :bind
+  (:map +normal-mode-map
+        ("\\r" . #'puni-raise)))
 
 (use-package puni-extensions
   :ensure (:type file :main "~/.emacs.d/lisp/puni-extensions.el")
@@ -330,3 +296,16 @@
 (use-package visiting-buffer
   :ensure (:type file :main "~/.emacs.d/lisp/visiting-buffer.el")
   :demand t)
+
+(use-package completion-preview
+  :disabled t
+  :ensure nil
+  :hook ((prog-mode text-mode) . completion-preview-mode)
+  :custom
+  (completion-preview-minimum-symbol-length 2)
+  (completion-preview-idle-delay 0.3)
+  :bind
+  (:map completion-preview-active-mode-map
+        ("TAB" . nil)
+        ("<tab>" . nil)
+        ("C-y" . #'completion-preview-insert)))
