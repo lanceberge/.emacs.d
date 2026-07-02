@@ -2,12 +2,12 @@
 (use-package org
   :defer 2.0
   :init
-  (+modal-bind +leader-map org-mode-hook
-               ("i TAB" . #'outline-toggle-children)
-               ("in" . #'org-next-visible-heading)
-               ("ip" . #'org-previous-visible-heading)
-               ("ir" . #'outline-show-all)
-               ("im" . #'outline-hide-sublevels))
+  (+modal-bind '+leader-map 'org-mode-hook
+               '(("i TAB" . outline-toggle-children)
+                 ("in" . org-next-visible-heading)
+                 ("ip" . org-previous-visible-heading)
+                 ("ir" . outline-show-all)
+                 ("im" . outline-hide-sublevels)))
   :custom
   (org-directory "~/org")
   (org-list-allow-alphabetical t)

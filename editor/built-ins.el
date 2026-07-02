@@ -208,8 +208,8 @@
   :ensure nil
   :after modal
   :config
-  (+modal-bind +motion-mode-map ibuffer-mode-hook
-               ("x" . #'ibuffer-do-kill-on-deletion-marks)))
+  (+modal-bind '+motion-mode '+motion-mode-map 'ibuffer-mode-hook
+               '(("x" . ibuffer-do-kill-on-deletion-marks))))
 
 (use-package subword-mode ;; enable `word' based commands to tread camel case text as separate words
   :ensure nil

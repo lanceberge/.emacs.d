@@ -20,8 +20,8 @@
         ("x" . #'dired-do-flagged-delete)
         ("-" . #'dired-up-directory))
   :config
-  (+modal-bind +motion-mode-map dired-mode-hook
-               ("x" . #'dired-do-flagged-delete)))
+  (+modal-bind '+motion-mode '+motion-mode-map 'dired-mode-hook
+               '(("x" . dired-do-flagged-delete))))
 
 ;;;###autoload
 (defun +dired-maybe-insert-subdir ()

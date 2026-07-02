@@ -24,47 +24,80 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
 
 ;;; Mode-specific overrides
 
-(defmacro +modal-bind (keymap hook &rest bindings)
-  "Override KEYMAP keys in buffers where HOOK runs.
+;;;###autoload
+(defun +modal-bind (target keymap-or-hook hook-or-bindings &optional bindings)
+  "Override TARGET keys in buffers where HOOK runs.
+TARGET is either a modal minor mode command or a prefix map symbol.
 BINDINGS are alist entries of the form (KEY . DEF)."
-  (let ((binding-forms
-         (mapcar
-          (lambda (binding)
-            `(define-key ,keymap
-                         ,(if (stringp (car binding))
-                              `(kbd ,(car binding))
-                            (car binding))
-                         ,(cdr binding)))
-          bindings)))
-    `(add-hook ',hook
-               (lambda ()
-                 (let ((original-keymap ,keymap))
-                   (setq-local ,keymap (copy-keymap original-keymap))
-                   ,@binding-forms
-                   (dolist (entry minor-mode-map-alist)
-                     (let ((mode (car entry))
-                           (mode-map (cdr entry))
-                           keys)
-                       (when (keymapp mode-map)
-                         (map-keymap
-                          (lambda (key definition)
-                            (when (eq definition original-keymap)
-                              (push key keys)))
-                          mode-map)
-                         (when (or (eq mode-map original-keymap)
-                                   keys)
-                           (let ((mode-map-copy
-                                  (if (eq mode-map original-keymap)
-                                      ,keymap
-                                    (copy-keymap mode-map))))
-                             (dolist (key keys)
-                               (define-key mode-map-copy (vector key) ,keymap))
-                             (setq-local minor-mode-overriding-map-alist
-                                         (cons
-                                          (cons mode mode-map-copy)
-                                          (assq-delete-all
-                                           mode
-                                           minor-mode-overriding-map-alist)))))))))))))
+  (cond
+   ((and (boundp target)
+         (keymapp (symbol-value target)))
+    (+modal--prefix-bind target keymap-or-hook hook-or-bindings))
+   ((commandp target)
+    (+modal--command-bind target keymap-or-hook hook-or-bindings bindings))
+   (t
+    (error "Expected modal command or prefix map symbol: %S" target))))
+
+;;;###autoload
+(defun +modal--command-bind (mode keymap hook bindings)
+  "Override MODE keys from KEYMAP in buffers where HOOK runs.
+BINDINGS are alist entries of the form (KEY . DEF)."
+  (unless (and (boundp keymap)
+               (keymapp (symbol-value keymap)))
+    (error "Expected keymap symbol: %S" keymap))
+  (add-hook hook
+            (lambda ()
+              (let ((map (make-sparse-keymap)))
+                (set-keymap-parent map (symbol-value keymap))
+                (+modal--define-bindings map bindings)
+                (setq-local minor-mode-overriding-map-alist
+                            (cons
+                             (cons mode map)
+                             (assq-delete-all
+                              mode
+                              minor-mode-overriding-map-alist)))))))
+
+;;;###autoload
+(defun +modal--prefix-bind (prefix-map hook bindings)
+  "Override PREFIX-MAP keys in modal maps for buffers where HOOK runs.
+BINDINGS are alist entries of the form (KEY . DEF)."
+  (add-hook hook
+            (lambda ()
+              (let ((prefix-map-value (symbol-value prefix-map))
+                    (map (make-sparse-keymap)))
+                (set-keymap-parent map (symbol-value prefix-map))
+                (+modal--define-bindings map bindings)
+                (dolist (entry minor-mode-map-alist)
+                  (let ((mode (car entry))
+                        (mode-map (cdr entry))
+                        keys)
+                    (when (keymapp mode-map)
+                      (map-keymap
+                       (lambda (key definition)
+                         (when (eq definition prefix-map-value)
+                           (push key keys)))
+                       mode-map)
+                      (when keys
+                        (let ((mode-map-copy (copy-keymap mode-map)))
+                          (dolist (key keys)
+                            (define-key mode-map-copy (vector key) map))
+                          (setq-local minor-mode-overriding-map-alist
+                                      (cons
+                                       (cons mode mode-map-copy)
+                                       (assq-delete-all
+                                        mode
+                                        minor-mode-overriding-map-alist))))))))))))
+
+;;;###autoload
+(defun +modal--define-bindings (map bindings)
+  "Define BINDINGS in MAP.
+BINDINGS are alist entries of the form (KEY . DEF)."
+  (dolist (binding bindings)
+    (define-key map
+                (if (stringp (car binding))
+                    (kbd (car binding))
+                  (car binding))
+                (cdr binding))))
 
 (defmacro +modal-create-mode-switching-function (function &rest args)
   "Create a command wrapping FUNCTION and switching modes afterward.
