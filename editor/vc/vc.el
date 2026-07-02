@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package consult-vc
-  :ensure (:type file :main "~/.emacs.d/lisp/consult-vc.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-vc.el" :files ("consult-vc.el"))
   :bind
   (:map +leader2-map
         ("gf" . #'+vc-modified-files)

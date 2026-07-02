@@ -62,7 +62,7 @@
   (setq register-preview-delay 0.5))
 
 (use-package consult-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/consult-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-extras.el" :files ("consult-extras.el"))
   :custom
   (consult-preview-excluded-buffers #'+consult-preview-tramp-excluded-p)
   :bind
@@ -88,12 +88,13 @@
         ("fp" . #'+consult-find-package)))
 
 (use-package consult-buffer-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/consult-buffer-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-buffer-extras.el" :files ("consult-buffer-extras.el"))
+  :after project
   :bind
+  (:map project-prefix-map
+        ("e" . #'+consult-buffer-project-eshell))
   (:map +leader-map
-        ("ne" . #'+consult-buffer-project-eshell-new)
-        ("ba" . #'+consult-buffer-agent-shell)
-        ("be" . #'+consult-buffer-project-eshell)))
+        ("ba" . #'+consult-buffer-agent-shell)))
 
 (use-package consult-eglot
   :bind
@@ -128,7 +129,7 @@
   (vertico-indexed-mode))
 
 (use-package vertico-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/vertico-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/vertico-extras.el" :files ("vertico-extras.el"))
   :after vertico
   :bind
   (:map vertico-map

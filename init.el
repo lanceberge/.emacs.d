@@ -219,7 +219,7 @@
        (server-start)))))
 
 (use-package modal
-  :ensure (:type file :main "~/.emacs.d/lisp/modal.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/modal.el" :files ("modal.el"))
   :demand t
   :hook (org-mode . +modal-org-mode)
   :bind

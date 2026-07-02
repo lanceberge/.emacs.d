@@ -6,12 +6,6 @@
 (require 'seq)
 
 ;;;###autoload
-(defun +consult-buffer-agent-shell (&optional arg)
-  "Switch to an agent shell buffer, or create one with ARG."
-  (interactive "P")
-  (+consult-buffer--project-dwim "Agent" #'agent-shell-openai-start-codex nil arg))
-
-;;;###autoload
 (defun +consult-buffer-project-eshell-new (&optional arg)
   (interactive "p")
   (dotimes (_ arg)

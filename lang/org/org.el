@@ -64,7 +64,7 @@
   (plist-put org-format-latex-options :scale 1.75))
 
 (use-package org-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/org-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/org-extras.el" :files ("org-extras.el"))
   :after org
   :custom
   (+org-directory "~/org/")
@@ -76,7 +76,7 @@
         ("of" . #'+org-find-file)))
 
 (use-package org-project
-  :ensure (:type file :main "~/.emacs.d/lisp/org-project/org-project.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/org-project/org-project.el" :files ("org-project.el"))
   :hook
   (savehist-mode . +org-project-savehist-mode)
   :config
@@ -91,7 +91,7 @@
         ("onr" . #'+org-project-reset-project-file-for-current-project)))
 
 (use-package org-project-consult
-  :ensure (:type file :main "~/.emacs.d/lisp/org-project/org-project-consult.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/org-project/org-project-consult.el" :files ("org-project-consult.el"))
   :custom
   (+org-project-consult-preview-files nil)
   :config

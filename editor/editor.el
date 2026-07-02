@@ -54,7 +54,6 @@
         ("N" . #'+find-file-new-largest-window-action))
   (:map embark-general-map
         ("d" . #'embark-find-definition)
-        ("g" . #'goolge-this-word)
         ;; TODO doesn't really work well in some of the other embark maps
         ("sl" . #'consult-line)
         ("sr" . #'consult-ripgrep))
@@ -93,7 +92,7 @@
   (advice-add 'embark-act :before #'force-keycast-update))
 
 (use-package this-buffer
-  :ensure (:type file :main "~/.emacs.d/lisp/this-buffer.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/this-buffer.el" :files ("this-buffer.el"))
   :bind
   (:map ctl-x-map
         ("rb" . #'+bookmark-file))
@@ -182,7 +181,7 @@
         ("M-=" . #'jinx-correct)))
 
 (use-package +surround
-  :ensure (:type file :main "~/.emacs.d/lisp/surround.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/surround.el" :files ("surround.el"))
   :hook
   (org-mode . +setup-org-pairs)
   :bind
@@ -190,7 +189,7 @@
         ("S" . #'+surround)))
 
 (use-package +toggle-case
-  :ensure (:type file :main "~/.emacs.d/lisp/toggle-case.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/toggle-case.el" :files ("toggle-case.el"))
   :bind
   (:map +normal-mode-map
         ("~" . #'+toggle-region-or-number-dwim))
@@ -198,7 +197,7 @@
   (put 'upcase-region 'disabled nil))
 
 (use-package +text-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/text-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/text-extras.el" :files ("text-extras.el"))
   :bind
   (:map embark-region-map
         ("|" . #'pipe-region))
@@ -207,7 +206,7 @@
         ("u" . #'text-to-clipboard)))
 
 (use-package increment-number
-  :ensure (:type file :main "~/.emacs.d/lisp/increment-number.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/increment-number.el" :files ("increment-number.el"))
   :bind
   (:map +normal-mode-map
         ("M-`" . #'+increment-number-increment)
@@ -252,14 +251,14 @@
   (+insert-mode))
 
 (use-package +dot-repeat
-  :ensure (:type file :main "~/.emacs.d/lisp/dot-repeat/dot-repeat.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/dot-repeat/dot-repeat.el" :files ("dot-repeat.el"))
   :hook (after-init . +dot-repeat-mode)
   :bind
   (:map +normal-mode-map
         ("." . #'+dot-repeat)))
 
 (use-package narrow-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/narrow-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/narrow-extras.el" :files ("narrow-extras.el"))
   :bind
   (:map ctl-x-map
         ("n" . #'narrow-or-widen-dwim)))
@@ -270,7 +269,7 @@
         ("\\r" . #'puni-raise)))
 
 (use-package puni-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/puni-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/puni-extras.el" :files ("puni-extras.el"))
   :bind
   (:map +insert-mode-map
         ("C-(" . #'+puni-slurp-or-barf-left)
@@ -280,7 +279,7 @@
         (")" . +puni-slurp-or-barf-right)))
 
 (use-package visiting-buffer
-  :ensure (:type file :main "~/.emacs.d/lisp/visiting-buffer.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/visiting-buffer.el" :files ("visiting-buffer.el"))
   :demand t)
 
 (use-package completion-preview

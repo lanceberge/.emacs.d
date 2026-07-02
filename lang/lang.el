@@ -11,7 +11,7 @@
 
 (use-package elixir-web
   :after modal
-  :ensure (:type file :main "~/.emacs.d/lisp/elixir-web.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/elixir-web.el" :files ("elixir-web.el"))
   :hook
   ((elixir-ts-mode elixir-mode) . +elixir-web-maybe-enable)
   ((elixir-ts-mode elixir-mode) . +elixir--maybe-setup-new-file)

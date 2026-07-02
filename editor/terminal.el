@@ -71,14 +71,15 @@
 (use-package eshell
   :ensure nil
   :defer 0.7
-  :commands
-  (eshell project-eshell eshell-command)
   :hook
   (eshell-mode . (lambda () (+insert-mode 1)))
   :init
   (add-to-list 'display-buffer-alist
                '("\\`\\*Eshell Command Output\\*\\'"
                  (+eshell-command-output-display-buffer)))
+  :bind
+  (:map +leader-map
+        ("ne" . #'eshell))
   :config
   (add-to-list 'eshell-modules-list 'eshell-elecslash)
   (add-to-list 'eshell-modules-list 'eshell-xtra)
@@ -110,7 +111,9 @@
         ("C-M-i" . #'completion-at-point)
         ([remap consult-imenu] . #'consult-outline))
   (:map eshell-hist-mode-map
-        ("M-r" . #'cape-history)))
+        ("M-r" . #'cape-history))
+  :config
+  (keymap-unset eshell-hist-mode-map "M-s"))
 
 (use-package em-cmpl
   :ensure nil
@@ -162,7 +165,8 @@ Without REGEXP, choose from recentf directories using `completing-read'."
   "Navigate to a project selected by `project-prompter' in Eshell."
   (require 'project)
   (eshell/cd (funcall project-prompter))
-  (rename-buffer (project-prefixed-buffer-name "eshell") t))
+  (rename-buffer (project-prefixed-buffer-name "eshell") t)
+  nil)
 
 ;;;###autoload
 (defun +eshell-recentf-directories ()

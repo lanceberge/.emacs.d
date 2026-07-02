@@ -57,6 +57,11 @@ basename of the current VC root."
 
 (use-package vc-jj)
 
+(use-package ediff-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/ediff-extras.el" :files ("ediff-extras.el"))
+  :custom
+  (+ediff-conflict-files-function #'+jj-conflicted-files))
+
 (defvar +jj-post-squash-hook nil
   "Hook run after `+jj-squash' finishes.")
 

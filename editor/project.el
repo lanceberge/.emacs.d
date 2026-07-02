@@ -7,20 +7,19 @@
   (project-switch-use-entire-map t)
   (project-mode-line t)
   :bind
-  (:map ctl-x-map
-        ("d" . #'project-find-dir))
   (:map project-prefix-map
         ("C-g" . #'keyboard-quit)
         ("p" . #'+project-switch-project)
         ("o" . #'+project-other-buffer))
   (:map search-map
         ("f" . #'project-find-file)
+        ("d" . #'project-find-dir)
         ("M-f" . #'project-root-find-file))
   (:map +leader-map
         ("k" . #'project-switch-project)))
 
 (use-package project-compile
-  :ensure (:type file :main "~/.emacs.d/lisp/project-compile.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/project-compile.el" :files ("project-compile.el"))
   :hook
   (savehist-mode . +project-compile-save-hist-mode)
   :bind
@@ -28,7 +27,7 @@
         ("c" . #'+project-compile)))
 
 (use-package project-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/project-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/project-extras.el" :files ("project-extras.el"))
   :bind
   (:map ctl-x-map
         ("pj" . #'+project-other-project-command)

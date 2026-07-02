@@ -12,7 +12,7 @@
 ;;;###autoload
 (defun +esh-completion-mode ()
   "Enable Bash completion candidates in Eshell."
-  (add-hook 'completion-at-point-functions #'+esh-completion-capf nil t))
+  (add-hook 'completion-at-point-functions #'+esh-completion-capf 50 t))
 
 ;;;###autoload
 (defun +esh-completion-capf ()

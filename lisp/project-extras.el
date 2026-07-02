@@ -81,17 +81,21 @@ recent buffer in the same project."
 
 ;;;###autoload
 (defun +project-last-opened-other-project-root ()
-  "Return the most recently remembered project root other than the current one."
-  (project--ensure-read-project-list)
+  "Return the project root for the most recent buffer in another project."
   (let* ((current (when-let ((project (project-current nil)))
                     (file-truename (project-root project))))
-         (dir (seq-find
-               (lambda (root)
-                 (not (and current
-                           (string= (file-truename root) current))))
-               (project-known-project-roots))))
+         (dir (seq-some
+               (lambda (buffer)
+                 (when-let* (((buffer-file-name buffer))
+                             (root (with-current-buffer buffer
+                                     (when-let ((project (project-current nil)))
+                                       (expand-file-name (project-root project)))))
+                             ((or (not current)
+                                  (not (string= (file-truename root) current)))))
+                   root))
+               (cdr (buffer-list)))))
     (unless dir
-      (user-error "No other known project"))
+      (user-error "No other project buffer"))
     dir))
 
 ;;;###autoload

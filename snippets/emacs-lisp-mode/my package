@@ -1,4 +1,4 @@
 # key: pkg-my
 # name: my package
 # --
-:ensure (:type file :main "~/.emacs.d/lisp/$0")
+:ensure (:type file :main "~/.emacs.d/lisp/$1" :files ("$1"))$0

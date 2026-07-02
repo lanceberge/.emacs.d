@@ -104,7 +104,7 @@
                t)))
 
 (use-package esh-completion
-  :ensure (:type file :main "~/.emacs.d/lisp/esh-completion.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/esh-completion.el" :files ("esh-completion.el"))
   :hook (eshell-mode . +esh-completion-mode)
   :custom
   (+esh-completion-script (expand-file-name "list_completions.sh" user-emacs-directory)))

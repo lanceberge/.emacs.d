@@ -21,7 +21,7 @@
     (avy-isearch)))
 
 (use-package avy-actions
-  :ensure (:type file :main "~/.emacs.d/lisp/avy-actions.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/avy-actions.el" :files ("avy-actions.el"))
   :init
   (setq avy-dispatch-alist
         (list

@@ -97,7 +97,7 @@
 (use-package doom-themes)
 
 (use-package theme-rotate
-  :ensure (:type file :main "~/.emacs.d/lisp/theme-rotate.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/theme-rotate.el" :files ("theme-rotate.el"))
   :hook (emacs-startup . +theme-rotate-load-current-theme)
   :custom
   (+theme-rotate-dark-themes
@@ -121,7 +121,7 @@
         ("tt" . #'+theme-rotate-toggle-dark-light)))
 
 (use-package consult-theme-rotate
-  :ensure (:type file :main "~/.emacs.d/lisp/consult-theme-rotate.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-theme-rotate.el" :files ("consult-theme-rotate.el"))
   :after (consult theme-rotate)
   :bind
   (:map +leader2-map
@@ -131,4 +131,4 @@
 
 (use-package theme-rotate-omarchy
   :defer 1.5
-  :ensure (:type file :main "~/.emacs.d/lisp/theme-rotate-omarchy.el"))
+  :ensure (:type file :main "~/.emacs.d/lisp/theme-rotate-omarchy.el" :files ("theme-rotate-omarchy.el")))

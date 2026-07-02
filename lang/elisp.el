@@ -6,7 +6,7 @@
         ("e" . #'eval-last-sexp)))
 
 (use-package emacs-lisp-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/emacs-lisp-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/emacs-lisp-extras.el" :files ("emacs-lisp-extras.el"))
   :hook
   ((emacs-lisp-mode . +elisp--maybe-setup-new-file)
    (emacs-lisp-mode . +emacs-lisp-mode))

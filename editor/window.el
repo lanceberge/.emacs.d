@@ -334,7 +334,7 @@ the selected window when no minibuffer is active."
     (delete-other-windows)))
 
 (use-package consult-tab-bar
-  :ensure (:type file :main "~/.emacs.d/lisp/consult-tab.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-tab.el" :files ("consult-tab.el"))
   :bind
   (:map ctl-x-map
         ("tf" . #'+consult-tab)))

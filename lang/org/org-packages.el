@@ -100,7 +100,7 @@
   :ensure nil)
 
 (use-package org-timer-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/org-timer-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/org-timer-extras.el" :files ("org-timer-extras.el"))
   :custom
   (+org-timer-log-file "~/org-roam/Time_Log.org")
   :bind

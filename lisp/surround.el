@@ -2,11 +2,12 @@
 
 ;; TODO replace w/ puni and electric pair
 
-(setq +surround-pairs '((?r . ("(" . ")"))
-                        (?s . ("[" . "]"))
-                        (?c . ("{" . "}"))
-                        (?< . ("<" . ">"))
-                        (?g . ("\"" . "\""))))
+(require 'expand-region)
+(defvar +surround-pairs '((?r . ("(" . ")"))
+                          (?s . ("[" . "]"))
+                          (?c . ("{" . "}"))
+                          (?< . ("<" . ">"))
+                          (?g . ("\"" . "\""))))
 
 ;;;###autoload
 (defun +setup-org-pairs ()
@@ -38,8 +39,7 @@
         (goto-char end)
         (insert close-string)
         (goto-char start)
-        (insert open-string)
-        (keyboard-quit)))))
+        (insert open-string)))))
 
 ;;;###autoload
 (defun +surround-change (char)
@@ -58,8 +58,7 @@
         (insert close-string)
         (goto-char start)
         (delete-char 1)
-        (insert open-string)
-        (keyboard-quit)))))
+        (insert open-string)))))
 
 ;;;###autoload
 (defun +surround-delete ()
@@ -73,8 +72,7 @@
         (backward-char 1)
         (delete-char 1)
         (goto-char start)
-        (delete-char 1)
-        (keyboard-quit)))))
+        (delete-char 1)))))
 
 ;;;###autoload
 (defun +surround--get-pairs (char)
