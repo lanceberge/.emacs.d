@@ -125,12 +125,20 @@
               (setq-local electric-pair-pairs
                           (append electric-pair-pairs '((?< . ?>)))))))
 
+(use-package ediff-conflicts
+  :ensure (:type file :main "~/.emacs.d/lisp/ediff-conflicts.el")
+  :custom
+  (+ediff-conflicts-files-function #'+jj-conflicted-files))
+
 (use-package ediff
   :defer t
   :ensure nil
+  :after ediff-conflicts
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain)
   (ediff-split-window-function #'split-window-horizontally)
+  :hook
+  (ediff-startup . +ediff-select-first-difference)
   :config
   (setq ediff-diff-options ""))
 

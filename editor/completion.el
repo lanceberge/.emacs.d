@@ -71,6 +71,7 @@
 (defun +elisp-completion-mode ()
   (setq-local completion-at-point-functions
               (list
+               #'cape-file
                #'elisp-completion-at-point
                #'cape-dabbrev
                t)))

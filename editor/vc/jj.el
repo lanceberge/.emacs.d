@@ -12,6 +12,7 @@
         ("jr" . #'majutsu-rebase)
         ("jm" . #'+jj-describe)
         ("jd" . #'majutsu-diff-dwim)
+        ("jE" . #'+ediff-conflicts)
         ("jl" . #'majutsu-log)
         ("ju" . #'majutsu-undo)
         ("jp" . #'majutsu-git-push)
@@ -57,13 +58,20 @@ basename of the current VC root."
 
 (use-package vc-jj)
 
-(use-package ediff-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/ediff-extras.el" :files ("ediff-extras.el"))
-  :custom
-  (+ediff-conflict-files-function #'+jj-conflicted-files))
-
 (defvar +jj-post-squash-hook nil
   "Hook run after `+jj-squash' finishes.")
+
+;;;###autoload
+(defun +jj-conflicted-files ()
+  "Return absolute paths to files with jj conflicts."
+  (let* ((root (+jj-root))
+         (default-directory root)
+         (lines (+jj-lines "resolve" "--list")))
+    (or (mapcar (lambda (file)
+                  (expand-file-name file root))
+                (delq nil
+                      (mapcar #'+jj--parse-conflict-line lines)))
+        (+jj-conflicted-files-with-markers))))
 
 ;;;###autoload
 (defun +jj-describe (message)
@@ -133,3 +141,51 @@ URL defaults to the system clipboard contents."
                         (shell-quote-argument target)))))
     (let ((default-directory (file-name-as-directory target)))
       (call-interactively #'project-find-file))))
+
+;;;###autoload
+(defun +jj--parse-conflict-line (line)
+  "Return the file path from a `jj resolve --list' LINE."
+  (when (string-match
+         "[ \t]+[0-9]+-sided conflict\\(?: including .*\\)?\\(?:\r\\)?\\'"
+         line)
+    (string-trim-right (substring line 0 (match-beginning 0)))))
+
+;;;###autoload
+(defun +jj-conflicted-files-with-markers ()
+  "Return jj-controlled files containing conflict markers."
+  (let* ((root (+jj-root))
+         (default-directory root)
+         (files (+jj-lines "file" "list")))
+    (mapcar (lambda (file)
+              (expand-file-name file root))
+            (+jj--files-with-conflict-markers files))))
+
+;;;###autoload
+(defun +jj--files-with-conflict-markers (files)
+  "Return relative FILES containing conflict start markers."
+  (when files
+    (with-temp-buffer
+      (let ((status (apply #'process-file
+                           "rg" nil t nil
+                           "--files-with-matches"
+                           "--no-messages"
+                           "--" "^<<<<<<<" files)))
+        (if (memq status '(0 1))
+            (split-string (buffer-string) "\n" t)
+          nil)))))
+
+;;;###autoload
+(defun +jj-root ()
+  "Return the current jj repository root."
+  (or (vc-root-dir)
+      (locate-dominating-file default-directory ".jj")
+      (user-error "Not in a jj repository")))
+
+;;;###autoload
+(defun +jj-lines (&rest args)
+  "Run jj with ARGS and return output lines."
+  (with-temp-buffer
+    (let ((status (apply #'process-file "jj" nil t nil "--no-pager" args)))
+      (if (zerop status)
+          (split-string (buffer-string) "\n" t)
+        nil))))
