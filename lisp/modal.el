@@ -280,14 +280,8 @@ ARGS provides a `:name' atom."
                     end-of-line
                     beginning-of-visual-line
                     back-to-indentation
-                    +mark-forward-word
-                    +mark-backward-word
                     kill-word
                     kill-region
-                    +mark-forward-char
-                    +mark-backward-char
-                    +mark-forward-line
-                    +mark-backward-line
                     next-line
                     previous-line
                     backward-kill-word

@@ -8,6 +8,7 @@
 (bind-key "x" ctl-x-map +motion-mode-map)
 (bind-key "x" ctl-x-map +sexp-mode-map)
 
+(bind-key "h" help-map +leader-map)
 ;; use the default M-s everywhere else
 (bind-key "s" search-map +normal-mode-map)
 
@@ -27,7 +28,7 @@
   :ensure nil
   :bind
   (:map +leader-map
-        ("h" . #'help-command)
+        ;; ("h" . #'help-command)
         ("d" . #'duplicate-dwim)
         ("er" . #'+source-init-file))
   (:map +normal-mode-map

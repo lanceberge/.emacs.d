@@ -18,7 +18,7 @@
 (defun +esh-completion-capf ()
   "Complete the current Eshell token using Bash completions."
   (let* ((line-start (save-excursion
-                       (eshell-bol)
+                       (beginning-of-line)
                        (point)))
          (line-end (save-excursion
                      (end-of-line)

@@ -305,7 +305,7 @@ the selected window when no minibuffer is active."
 (defun +other-tab-switch-project ()
   (interactive)
   (other-tab-prefix)
-  (+project-switch-project-buffer))
+  (call-interactively #'+project-other-project-command))
 
 ;;;###autoload
 (defun +tab-bar-tab-name-project ()

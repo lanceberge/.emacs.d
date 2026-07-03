@@ -137,14 +137,13 @@
 (use-package helpful ; better help menu
   :defer 0.7
   :bind
-  (:map +leader-map
-        ("hk" . #'helpful-key))
-  (:map +normal-mode-map
-        ([remap describe-command] . helpful-command)
-        ([remap describe-key] . helpful-key)
-        ([remap describe-variable] . helpful-variable)
-        ([remap describe-function] . helpful-function)
-        ([remap describe-symbol] . helpful-symbol)))
+  (:map help-map
+        ("x" . helpful-command)
+        ("C-h")
+        ("k" . #'helpful-key)
+        ("v" . #'helpful-variable)
+        ("f" . #'helpful-function)
+        ("s" . #'helpful-symbol)))
 
 (add-hook 'after-init-hook
           (lambda ()
@@ -264,42 +263,49 @@
         ("n" . #'narrow-or-widen-dwim)))
 
 (use-package puni
+  :init
+  (+modal-create-insert-function puni-kill-line)
+  (+modal-create-insert-function puni-forward-delete-char)
+  (+modal-create-insert-function puni-forward-kill-word)
+  (+modal-create-insert-function puni-backward-kill-word)
   :bind
   (:map +normal-mode-map
         ("C-k" . #'+modal-puni-kill-line-insert)
         ("C-d" . #'+modal-puni-forward-delete-char-insert)
         ("C-w" . #'+modal-puni-kill-region-insert)
         ("M-d" . #'+modal-puni-forward-kill-word-insert)
-        ("C-<backspace>" . #'+modal-puni-backward-kill-word-insert)
         ("M-<backspace>" . #'+modal-puni-backward-kill-word-insert)
-        ("S-<backspace>" . #'puni-backward-kill-word)
         ("d" . #'puni-forward-delete-char)
         ("D" . #'puni-forward-kill-word)
-        ("w" . #'puni-kill-region)
         ("\\f" . #'puni-forward-sexp)
         ("\\b" . #'puni-backward-sexp)
         ("\\r" . #'puni-raise)
-        ([remap +kill-line-dwim] . #'+puni-kill-line-dwim)
-        ([remap +kill-line-or-region] . #'puni-kill-region)
+        ([remap +modal-kill-line-insert] . #'+modal-puni-kill-line-insert)
         ([remap +modal-kill-line-insert] . #'+modal-puni-kill-line-insert)
         ([remap +modal-kill-region-insert] . #'+modal-puni-kill-region-insert))
-  :config
-  (+modal-create-insert-function puni-kill-line)
-  (+modal-create-insert-function puni-kill-region)
-  (+modal-create-insert-function puni-forward-delete-char)
-  (+modal-create-insert-function puni-forward-kill-word)
-  (+modal-create-insert-function puni-backward-kill-word))
+  (:map +insert-mode-map
+        ("C-k" . #'puni-kill-line)
+        ("C-d" . #'puni-forward-delete-char)
+        ("M-d" . #'+modal-puni-forward-kill-word-insert)
+        ("M-<backspace>" . #'+modal-puni-backward-kill-word-insert)
+        ("<backspace>" . #'puni-backward-delete-char)))
 
 (use-package puni-extras
   :ensure (:type file :main "~/.emacs.d/lisp/puni-extras.el" :files ("puni-extras.el"))
   :bind
   (:map +insert-mode-map
         ("C-(" . #'+puni-slurp-or-barf-left)
-        ("C-)" . #'+puni-slurp-or-barf-right))
+        ("C-)" . #'+puni-slurp-or-barf-right)
+        ("C-w" . #'+puni-soft-kill-region))
   (:map +normal-mode-map
         ("k" . #'+puni-kill-line-dwim)
-        ("(" . +puni-slurp-or-barf-left)
-        (")" . +puni-slurp-or-barf-right)))
+        ("w" . #'+puni-soft-kill-region)
+        ("C-w" . #'+modal-puni-soft-kill-region-insert)
+        ("(" . #'+puni-slurp-or-barf-left)
+        (")" . #'+puni-slurp-or-barf-right)
+        ([remap +kill-line-dwim] . #'+puni-kill-line-dwim))
+  :config
+  (+modal-create-insert-function +puni-soft-kill-region))
 
 (use-package visiting-buffer
   :ensure (:type file :main "~/.emacs.d/lisp/visiting-buffer.el" :files ("visiting-buffer.el"))
@@ -317,3 +323,32 @@
         ("TAB" . nil)
         ("<tab>" . nil)
         ("C-y" . #'completion-preview-insert)))
+
+(use-package mark-forward-backward
+  :ensure (:type file :main "~/.emacs.d/lisp/mark-forward-backward.el" :files ("mark-forward-backward.el"))
+  :init
+  (dolist (function '(+mark-forward-char
+                      +mark-backward-char
+                      +mark-forward-line
+                      +mark-forward-word
+                      +mark-backward-word))
+    (eval `(+modal-create-insert-function ,function)))
+  :bind
+  (:map +insert-mode-map
+        ("M-F" . #'+mark-forward-word)
+        ("M-B" . #'+mark-backward-word)
+        ("C-S-p" . #'+mark-backward-line)
+        ("C-S-f" . #'+mark-forward-char)
+        ("C-S-b" . #'+mark-backward-char)
+        ("C-S-n" . #'+mark-forward-line))
+  (:map +normal-mode-map
+        ("C-S-f" . #'+modal-mark-forward-char-insert)
+        ("C-S-b" . #'+modal-mark-backward-char-insert)
+        ("C-S-n" . #'+modal-mark-forward-line-insert)
+        ("C-S-p" . #'+modal-mark-backward-line-insert)
+        ("M-F" . #'+modal-mark-forward-word-insert)
+        ("M-B" . #'+modal-mark-backward-word-insert)
+        ("F" . #'+mark-forward-word)
+        ("B" . #'+mark-backward-word)
+        ("N" . #'+mark-forward-line)
+        ("P" . #'+mark-backward-line)))

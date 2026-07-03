@@ -126,7 +126,7 @@
                           (append electric-pair-pairs '((?< . ?>)))))))
 
 (use-package ediff-conflicts
-  :ensure (:type file :main "~/.emacs.d/lisp/ediff-conflicts.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/ediff-conflicts.el" :files ("ediff-conflicts.el"))
   :custom
   (+ediff-conflicts-files-function #'+jj-conflicted-files))
 

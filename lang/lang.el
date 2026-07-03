@@ -4,7 +4,13 @@
   (:map elixir-mode-map
         ([remap apheleia-format-buffer] . #'+elixir-format-buffer)))
 
+;;;###autoload
+(defun +elixir-ts-use-syntax-sexp ()
+  "Use syntax-table sexp movement in `elixir-ts-mode'."
+  (setq-local forward-sexp-function nil))
+
 (use-package elixir-ts-mode
+  :hook (elixir-ts-mode . +elixir-ts-use-syntax-sexp)
   :bind
   (:map elixir-ts-mode-map
         ([remap apheleia-format-buffer] . #'+elixir-format-buffer)))
