@@ -17,14 +17,24 @@
   (corfu-quit-at-boundary nil)
   (corfu-scroll-margin 5)
   (completion-ignore-case t)
-  :bind
-  (:map corfu-map
-        ("C-y" . #'corfu-insert)
-        ("<tab>" . #'yas-expand))
   :config
-  (keymap-unset corfu-map "RET")
-  (keymap-unset corfu-map "<remap> <move-beginning-of-line>")
-  (keymap-unset corfu-map "<remap> <move-end-of-line>")
+  ;; the defaults are too opinionated for me
+  (setq corfu-map
+        (define-keymap
+          "<remap> <beginning-of-buffer>" #'corfu-first
+          "<remap> <end-of-buffer>" #'corfu-last
+          "<remap> <completion-at-point>" #'corfu-complete
+          "<remap> <keyboard-escape-quit>" #'corfu-reset
+          "M-n" #'corfu-next
+          "M-p" #'corfu-previous
+          "C-g" #'corfu-quit
+          "C-y" #'corfu-insert
+          "M-y" #'corfu-complete
+          "M-TAB" #'corfu-expand
+          "M-." 'corfu-info-location
+          "M-h" 'corfu-info-documentation
+          "M-SPC" #'corfu-insert-separator))
+
   (add-hook 'corfu-mode-hook
             (lambda ()
               (setq-local completion-styles '(flex basic)
