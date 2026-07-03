@@ -30,8 +30,6 @@
   (:repeat-map undo-repeat-map
                :exit
                ("f" . #'vundo))
-  (:map +leader-map
-        ("fu" . #'vundo))
   (:map vundo-mode-map
         ("q" . #'vundo-quit)))
 

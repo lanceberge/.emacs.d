@@ -79,6 +79,7 @@
                  (+eshell-command-output-display-buffer)))
   :bind
   (:map +leader-map
+        ("!" . #'eshell-command)
         ("ne" . #'eshell))
   :config
   (add-to-list 'eshell-modules-list 'eshell-elecslash)

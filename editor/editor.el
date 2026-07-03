@@ -52,11 +52,6 @@
         ("e" . #'project-eshell)
         ("o" . #'+ace-window-find-file)
         ("N" . #'+find-file-new-largest-window-action))
-  (:map embark-general-map
-        ("d" . #'embark-find-definition)
-        ;; TODO doesn't really work well in some of the other embark maps
-        ("sl" . #'consult-line)
-        ("sr" . #'consult-ripgrep))
   (:map embark-collect-mode-map
         ("F" . #'consult-focus-lines))
   (:map embark-identifier-map
@@ -89,7 +84,20 @@
   ;; version of keycast--update that accepts (and ignores) parameters
   (defun force-keycast-update (&rest _) (keycast--update))
 
-  (advice-add 'embark-act :before #'force-keycast-update))
+  (advice-add 'embark-act :before #'force-keycast-update)
+
+  (defvar-keymap +embark-priority-map
+    :doc "Embark bindings that take precedence over target-specific maps."
+    "s l" #'consult-line
+    "s g" #'consult-ripgrep)
+
+  (advice-remove #'embark--action-keymap #'+embark-apply-priority-map)
+  (advice-add #'embark--action-keymap :filter-return #'+embark-apply-priority-map))
+
+;;;###autoload
+(defun +embark-apply-priority-map (keymap)
+  "Compose `+embark-priority-map' before the Embark action KEYMAP."
+  (make-composed-keymap +embark-priority-map keymap))
 
 (use-package this-buffer
   :ensure (:type file :main "~/.emacs.d/lisp/this-buffer.el" :files ("this-buffer.el"))
@@ -299,7 +307,7 @@
         ("C-w" . #'+puni-soft-kill-region))
   (:map +normal-mode-map
         ("k" . #'+puni-kill-line-dwim)
-        ("w" . #'+puni-soft-kill-region)
+        ("w" . #'puni-kill-region)
         ("C-w" . #'+modal-puni-soft-kill-region-insert)
         ("(" . #'+puni-slurp-or-barf-left)
         (")" . #'+puni-slurp-or-barf-right)
@@ -352,3 +360,7 @@
         ("B" . #'+mark-backward-word)
         ("N" . #'+mark-forward-line)
         ("P" . #'+mark-backward-line)))
+
+(use-package editor-lisp
+  :ensure (:type file :main "~/.emacs.d/lisp/editor-lisp.el" :files ("editor-lisp.el"))
+  :demand t)

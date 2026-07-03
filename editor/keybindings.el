@@ -30,7 +30,7 @@
   (:map +leader-map
         ;; ("h" . #'help-command)
         ("d" . #'duplicate-dwim)
-        ("er" . #'+source-init-file))
+        ("ri" . #'+source-init-file))
   (:map +normal-mode-map
         ("[ SPC" . #'+insert-newlines-above)
         ("] SPC" . #'+insert-newlines-below)))
@@ -42,6 +42,7 @@
 
 (use-package keyfreq
   :hook (emacs-startup . keyfreq-mode)
+  :commands (+keyfreq-show)
   :config
   (setq keyfreq-excluded-commands
         '(self-insert-command
@@ -55,10 +56,7 @@
           undefined
           mouse-set-point
           org-self-insert-command))
-  (keyfreq-autosave-mode)
-  :bind
-  (:map +leader-map
-        ("SPC hk" . #'+keyfreq-show)))
+  (keyfreq-autosave-mode))
 
 ;;;###autoload
 (defun +keyfreq-show (&optional arg)

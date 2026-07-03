@@ -76,16 +76,15 @@
   (:map consult-narrow-map
         ("C-h" . #'+consult-narrow-help))
   (:map search-map
-        ("M-t" . #'+consult-find-todos)
-        ("t" . #'+consult-project-find-todos)
+        ("t" . #'+consult-find-todos)
+        ("M-t" . #'+consult-project-find-todos)
         ("b" . #'+consult-project-buffer)
         ("a" . #'+consult-org-agenda-todos)
         (".g" . #'+consult-ripgrep-here)
-        (".f" . #'+consult-project-file-here))
-  (:map +leader-map
-        ("fk" . #'+consult-find-key-binding)
-        ("fK" . #'+consult-find-bound-function)
-        ("fp" . #'+consult-find-package)))
+        (".f" . #'+consult-project-file-here)
+        ("k" . #'+consult-find-key-binding)
+        ("p" . #'+consult-find-package)
+        ("K" . #'+consult-find-bound-function)))
 
 (use-package consult-buffer-extras
   :ensure (:type file :main "~/.emacs.d/lisp/consult-buffer-extras.el" :files ("consult-buffer-extras.el"))

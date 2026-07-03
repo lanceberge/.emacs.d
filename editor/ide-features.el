@@ -27,8 +27,8 @@
   :bind
   (:map +leader-map
         ("te" . #'+eglot-toggle-debug))
-  (:map +leader2-map
-        ("er" . #'eglot-reconnect))
+  (:map +leader-map
+        ("re" . #'eglot-reconnect))
   :config
   (setq eglot-sync-connect 3) ; Wait longer for connection
 

@@ -36,8 +36,8 @@
         ("k" . #'+project-switch-project)
         ("j" . #'+project-other-project-command)
         ("l" . #'+project-other-buffer)
-        ("rk" . #'+project-reload-and-switch) ;; TODO replace w/ project reload prefix
-        ("bl" . #'+project-other-special-buffer-dwim)))
+        ("rp" . #'+project-reload-and-switch)
+        ("bo" . #'+project-other-special-buffer-dwim)))
 
 ;; update zoxide history -- cli tool that memoizes visited dirs
 ;;;###autoload

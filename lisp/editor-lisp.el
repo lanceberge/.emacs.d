@@ -1,6 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(require 'cl)
-
 ;;;###autoload
 (defun read-file-contents (file-path)
   "Read the contents of FILE-PATH and return it as a string."
@@ -84,7 +82,6 @@
       (goto-char (or start (point)))
       (while (re-search-forward matcher (or end (point-max)) t)
         (replace-match (cdr (assoc-string (match-string 0) alist)))))))
-
 
 ;;;###autoload
 (defun +rectangle-mode (&optional arg)
@@ -232,3 +229,5 @@
              (root (project-root project))
              (file (buffer-file-name)))
     (file-relative-name file root)))
+
+(provide 'editor-lisp)

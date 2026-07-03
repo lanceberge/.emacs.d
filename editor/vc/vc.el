@@ -2,9 +2,9 @@
 (use-package consult-vc
   :ensure (:type file :main "~/.emacs.d/lisp/consult-vc.el" :files ("consult-vc.el"))
   :bind
-  (:map +leader2-map
-        ("gf" . #'+vc-modified-files)
-        ("gh" . #'+vc-modified-hunks)))
+  (:map search-map
+        ("vf" . #'+vc-modified-files)
+        ("vh" . #'+vc-modified-hunks)))
 
 (use-package magit
   :after modal
@@ -39,8 +39,7 @@
         ("gb" . #'magit-branch-or-checkout)
         ("gc" . #'magit-branch-spinoff)
         ("gi" . #'magit-init)
-        ("gl" . #'magit-log-head)
-        ("SPC gl" . #'magit-log)
+        ("glh" . #'magit-log-head)
         ("gf" . #'magit-find-file)
         ("gm" . #'+magit-find-current-file-on-default-branch)
         ("gw" . #'magit-worktree)
@@ -181,8 +180,8 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
   :custom
   (git-link-use-commit t)
   :bind
-  (:map +leader2-map
-        ("gl" . #'git-link)))
+  (:map +leader-map
+        ("gll" . #'git-link)))
 
 ;;;###autoload
 (defun +magit-find-current-file-on-default-branch ()

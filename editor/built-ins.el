@@ -43,7 +43,7 @@
   (confirm-nonexistent-file-or-buffer nil)
   :bind
   (:map +leader-map
-        ("re" . #'+restart-emacs))
+        ("rr" . #'+restart-emacs))
   (:map +normal-mode-map
         ("q" . save-buffer)))
 
@@ -111,9 +111,7 @@
                  +theme-rotate-light-theme-index
                  +theme-rotate-current-style))
     (add-to-list 'desktop-globals-to-save var))
-  (desktop-save-mode)
-  ;; (desktop-read)
-  )
+  (desktop-save-mode))
 
 (use-package electric-pair-mode
   :ensure nil

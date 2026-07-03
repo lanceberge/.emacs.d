@@ -125,8 +125,6 @@
   :ensure (:type file :main "~/.emacs.d/lisp/consult-theme-rotate.el" :files ("consult-theme-rotate.el"))
   :after (consult theme-rotate)
   :bind
-  (:map +leader2-map
-        ("tf" . #'+consult-theme-rotate))
   (:map +consult-theme-rotate-minibuffer-mode-map
         ("M-P" . #'+consult-theme-rotate-toggle-style)))
 

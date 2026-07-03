@@ -239,7 +239,9 @@
         ("C-x C-s" . #'+save-buffer-normal))
   (:map +motion-mode-map
         ("q" . #'quit-window)
-        ("g" . #'+keyboard-quit))
+        ("g" . #'+keyboard-quit)
+        ("{" . #'backward-paragraph)
+        ("}" . #'forward-paragraph))
   (:map +normal-mode-map
         ("i" . #'+insert-mode)
 

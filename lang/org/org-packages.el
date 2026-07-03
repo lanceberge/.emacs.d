@@ -26,8 +26,7 @@
   :bind
   (:map org-agenda-mode-map
         ("g" . ace-link))
-  (:map +leader2-map
-        ("ot" . #'org-todo-list)
+  (:map +leader-map
         ("oa" . #'org-agenda)))
 
 (use-package org-habit

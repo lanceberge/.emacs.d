@@ -2,6 +2,7 @@
 ;; https://karthinks.com/software/avy-can-do-anything/
 (require 'embark)
 (require 'avy)
+(require 'editor-lisp)
 
 ;;;###autoload
 (defun avy-action-embark (pt)
@@ -81,7 +82,7 @@
     (when (or full-line-region (not region-active))
       (beginning-of-line))
     (yank)
-    (previous-line)
+    (forward-line)
     (forward-char column)))
 
 ;;;###autoload
@@ -91,10 +92,10 @@
         (target-line (progn (goto-char pt) (line-number-at-pos))))
     (cond
      ((> target-line current-line)
-      (goto-line (1+ target-line))
+      (forward-line (1+ target-line))
       (transpose-lines (- current-line target-line)))
      ((< target-line current-line)
-      (goto-line (1+ target-line))
+      (forward-line (1+ target-line))
       (transpose-lines (- current-line target-line 1)))
      (t nil))))
 

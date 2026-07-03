@@ -64,8 +64,8 @@
      (?T aw-transpose-frame "Transpose Frame")
      (?? aw-show-dispatch-help)))
   :bind
-  (:map +leader-map
-        ("fw" . #'ace-window)))
+  (:map ctl-x-map
+        ("wf" . #'ace-window)))
 
 ;;;###autoload
 (defun +ace-window-find-file (file)
@@ -225,12 +225,7 @@ the selected window when no minibuffer is active."
 (use-package frame
   :ensure nil
   :bind
-  ("s-n" . #'make-frame)
-  (:map +leader2-map
-        ("fo" . #'other-frame)
-        ("fn" . #'make-frame)
-        ("ff" . #'select-frame-by-name)
-        ("fd" . #'delete-frame)))
+  ("s-n" . #'make-frame))
 
 ;; switch to the "other window" which is the last window you spent more than `switchy-window-delay' on
 (use-package switchy-window
@@ -292,13 +287,13 @@ the selected window when no minibuffer is active."
   (tab-bar-mode . tab-bar-history-mode)
   :bind
   (:map ctl-x-map
+        ("pt" . #'+other-tab-switch-project)
         ("to" . #'tab-bar-switch-to-recent-tab)
         ("t[" . #'tab-bar-switch-to-prev-tab)
         ("t]" . #'tab-bar-switch-to-next-tab)
         ("tf" . #'+consult-tab)
         ("1" . #'+toggle-tab-zoom))
   (:map +leader-map
-        ("SPC t" . #'+other-tab-switch-project)
         ("nt" . #'tab-bar-new-tab)))
 
 ;;;###autoload

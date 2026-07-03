@@ -161,7 +161,7 @@ this function allows special buffers."
 (defun +project-reload-and-switch ()
   (interactive)
   (+project-load-projects)
-  (+project-visit-last-buffer 1))
+  (call-interactively #'+project-switch-project))
 
 ;;;###autoload
 (defun +kill-zombie-buffers ()
