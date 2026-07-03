@@ -113,7 +113,8 @@
   (:repeat-map +theme-rotate-repeat-map
                ("]" . #'+theme-rotate-rotate)
                ("t" . #'+theme-rotate-toggle-dark-light)
-               ("[" . #'+theme-rotate-prev))
+               ("[" . #'+theme-rotate-prev)
+               ("f" . #'+consult-theme-rotate))
   (:map +normal-mode-map
         ("]T" . #'+theme-rotate-rotate)
         ("[T" . #'+theme-rotate-prev))
@@ -132,3 +133,6 @@
 (use-package theme-rotate-omarchy
   :defer 1.5
   :ensure (:type file :main "~/.emacs.d/lisp/theme-rotate-omarchy.el" :files ("theme-rotate-omarchy.el")))
+
+;; ef-dream, orange, ef-melissa-light, ef-arbutus
+(use-package ef-themes)

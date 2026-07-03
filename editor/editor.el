@@ -266,7 +266,29 @@
 (use-package puni
   :bind
   (:map +normal-mode-map
-        ("\\r" . #'puni-raise)))
+        ("C-k" . #'+modal-puni-kill-line-insert)
+        ("C-d" . #'+modal-puni-forward-delete-char-insert)
+        ("C-w" . #'+modal-puni-kill-region-insert)
+        ("M-d" . #'+modal-puni-forward-kill-word-insert)
+        ("C-<backspace>" . #'+modal-puni-backward-kill-word-insert)
+        ("M-<backspace>" . #'+modal-puni-backward-kill-word-insert)
+        ("S-<backspace>" . #'puni-backward-kill-word)
+        ("d" . #'puni-forward-delete-char)
+        ("D" . #'puni-forward-kill-word)
+        ("w" . #'puni-kill-region)
+        ("\\f" . #'puni-forward-sexp)
+        ("\\b" . #'puni-backward-sexp)
+        ("\\r" . #'puni-raise)
+        ([remap +kill-line-dwim] . #'+puni-kill-line-dwim)
+        ([remap +kill-line-or-region] . #'puni-kill-region)
+        ([remap +modal-kill-line-insert] . #'+modal-puni-kill-line-insert)
+        ([remap +modal-kill-region-insert] . #'+modal-puni-kill-region-insert))
+  :config
+  (+modal-create-insert-function puni-kill-line)
+  (+modal-create-insert-function puni-kill-region)
+  (+modal-create-insert-function puni-forward-delete-char)
+  (+modal-create-insert-function puni-forward-kill-word)
+  (+modal-create-insert-function puni-backward-kill-word))
 
 (use-package puni-extras
   :ensure (:type file :main "~/.emacs.d/lisp/puni-extras.el" :files ("puni-extras.el"))
@@ -275,6 +297,7 @@
         ("C-(" . #'+puni-slurp-or-barf-left)
         ("C-)" . #'+puni-slurp-or-barf-right))
   (:map +normal-mode-map
+        ("k" . #'+puni-kill-line-dwim)
         ("(" . +puni-slurp-or-barf-left)
         (")" . +puni-slurp-or-barf-right)))
 
