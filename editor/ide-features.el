@@ -131,7 +131,25 @@
   :custom
   (xref-prompt-for-identifier nil)
   (xref-show-xrefs-function #'consult-xref)
-  (xref-show-definitions-function #'xref-show-definitions-completing-read))
+  (xref-show-definitions-function #'xref-show-definitions-completing-read)
+  :bind
+  (:map xref--xref-buffer-mode-map
+        ("%" . #'+xref-replace))
+  (:map xref-edit-mode-map
+        ([remap save-buffer] . #'+xref-finish-edit)))
+
+;;;###autoload
+(defun +xref-replace ()
+  (interactive)
+  (xref-change-to-xref-edit-mode)
+  (call-interactively #'+replace))
+
+;;;###autoload
+(defun +xref-finish-edit ()
+  (interactive)
+  (xref-edit-save-changes)
+  (+motion-mode 1)
+  (project-save-some-buffers t))
 
 (use-package jsonrpc
   :config
@@ -165,9 +183,10 @@
   (:repeat-map flymake-repeat-map
                ("]" . #'flymake-goto-next-error)
                ("[" . #'flymake-goto-prev-error))
-  (:map +normal-mode-map
-        ("]e" . #'flymake-goto-next-error)
-        ("[e" . #'flymake-goto-prev-error)))
+  (:map +forward-map
+        ("e" . #'flymake-goto-next-error))
+  (:map +backward-map
+        ("e" . #'flymake-goto-prev-error)))
 
 ;;;###autoload
 (defun +modal-flyover-on ()

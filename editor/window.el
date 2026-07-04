@@ -272,10 +272,12 @@ the selected window when no minibuffer is active."
   :bind
   (:repeat-map +tab-bar-repeat-map
                ("]" . #'tab-bar-switch-to-next-tab)
+               ("0" . #'tab-bar-close-tab)
                ("[" . #'tab-bar-switch-to-prev-tab))
-  (:map +normal-mode-map
-        ("]t" . #'tab-bar-switch-to-next-tab)
-        ("[t" . #'tab-bar-switch-to-prev-tab)))
+  (:map +forward-map
+        ("t" . #'tab-bar-switch-to-next-tab))
+  (:map +backward-map
+        ("t" . #'tab-bar-switch-to-prev-tab)))
 
 (use-package tab-bar
   :ensure nil
@@ -342,9 +344,10 @@ the selected window when no minibuffer is active."
                ("]" . #'tab-bar-history-forward)
                :exit
                ("1" . #'+toggle-tab-zoom))
-  (:map +normal-mode-map
-        ("[w" . #'tab-bar-history-back)
-        ("]w" . #'tab-bar-history-forward)))
+  (:map +backward-map
+        ("w" . #'tab-bar-history-back))
+  (:map +forward-map
+        ("w" . #'tab-bar-history-forward)))
 
 ;;;###autoload
 (defun +revert-buffer ()

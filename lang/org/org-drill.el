@@ -27,5 +27,6 @@
   "Review the current file or prompt org drill files if this isn't one."
   (interactive)
   (unless (+org--has-filetag-p "Drill")
+    ;; TODO replace w/ non org-roam
     (+org-roam-find-drill-files))
   (org-drill 'file nil nil nil))

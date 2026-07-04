@@ -10,7 +10,6 @@
   (:map +leader-map
         ("yi" . #'yas-insert-snippet)
         ("yn" . #'yas-new-snippet)
-        ("yf" . #'yas-visit-snippet-file)
         ("yl" . #'yas-describe-tables)
         ("yr" . #'yas-reload-all))
   (:map yas-keymap
@@ -24,6 +23,12 @@
   (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "kill-buffer")
   (yas--remove-template-by-uuid (yas--table-get-create 'elixir-mode) "do")
   (yas--remove-template-by-uuid (yas--table-get-create 'emacs-lisp-mode) "defun"))
+
+(use-package consult-yasnippet
+  :after (consult yasnippet)
+  :bind
+  (:map +leader-map
+        ("yf" . #'consult-yasnippet-visit-snippet-file)))
 
 ;;;###autoload
 (defun +yas-expand-snippet (snippet-name)

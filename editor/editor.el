@@ -122,7 +122,7 @@
         (".h" . #'mark-whole-buffer)
         (".k" . #'consult-keep-lines)
         (".l" . #'load-file)
-        (".n" . #'diff-buffer-with-file)
+        (".n" . #'+this-buffer-diff-with-file)
         (".o" . #'+this-buffer-move-to-window)
         (".p" . #'pwd)
         (".q" . #'quit-window)
@@ -187,14 +187,6 @@
   (:map jinx-mode-map
         ("M-=" . #'jinx-correct)))
 
-(use-package +surround
-  :ensure (:type file :main "~/.emacs.d/lisp/surround.el" :files ("surround.el"))
-  :hook
-  (org-mode . +setup-org-pairs)
-  :bind
-  (:map +normal-mode-map
-        ("S" . #'+surround)))
-
 (use-package +toggle-case
   :ensure (:type file :main "~/.emacs.d/lisp/toggle-case.el" :files ("toggle-case.el"))
   :bind
@@ -257,13 +249,6 @@
   (call-interactively #'easy-kill-region)
   (+insert-mode))
 
-(use-package +dot-repeat
-  :ensure (:type file :main "~/.emacs.d/lisp/dot-repeat/dot-repeat.el" :files ("dot-repeat.el"))
-  :hook (after-init . +dot-repeat-mode)
-  :bind
-  (:map +normal-mode-map
-        ("." . #'+dot-repeat)))
-
 (use-package narrow-extras
   :ensure (:type file :main "~/.emacs.d/lisp/narrow-extras.el" :files ("narrow-extras.el"))
   :bind
@@ -288,12 +273,16 @@
   (+modal-create-insert-function puni-kill-region)
   (+modal-create-insert-function puni-forward-kill-word)
   (+modal-create-insert-function puni-backward-kill-word)
+  (+modal-create-insert-function puni-backward-kill-line)
   :bind
   (:map +normal-mode-map
         ("\\f" . #'puni-forward-sexp)
         ("\\b" . #'puni-backward-sexp)
         ("\\T" . #'puni-convolute)
-        ("\\r" . #'puni-raise))
+        ("\\r" . #'puni-raise)
+        ("S" . #'puni-squeeze)
+        ("K" . #'puni-backward-kill-line)
+        ("C-S-k" . #'+modal-puni-backward-kill-line-insert))
   (:map +puni-mode-map
         ([remap mark-sexp] . #'puni-mark-sexp-at-point)
         ([remap +modal-kill-line-insert] . #'+modal-puni-kill-line-insert)
@@ -340,19 +329,6 @@
   :ensure (:type file :main "~/.emacs.d/lisp/visiting-buffer.el" :files ("visiting-buffer.el"))
   :demand t)
 
-(use-package completion-preview
-  :disabled t
-  :ensure nil
-  :hook ((prog-mode text-mode) . completion-preview-mode)
-  :custom
-  (completion-preview-minimum-symbol-length 2)
-  (completion-preview-idle-delay 0.3)
-  :bind
-  (:map completion-preview-active-mode-map
-        ("TAB" . nil)
-        ("<tab>" . nil)
-        ("C-y" . #'completion-preview-insert)))
-
 (use-package mark-forward-backward
   :ensure (:type file :main "~/.emacs.d/lisp/mark-forward-backward.el" :files ("mark-forward-backward.el"))
   :init
@@ -385,3 +361,18 @@
 (use-package editor-lisp
   :ensure (:type file :main "~/.emacs.d/lisp/editor-lisp.el" :files ("editor-lisp.el"))
   :demand t)
+
+;;;###autoload
+(defun +kill-whitespace-ignore (orig-fn string &rest args)
+  "https://stackoverflow.com/questions/12102554/emacs-skip-whitespace-kills"
+  (let* (
+         (string-raw (substring-no-properties string))
+         (space-p (not (string-match-p "[^ \t\n\r]" string-raw))))
+
+    (cond
+     ((not space-p)
+      (apply orig-fn string args))
+     (t
+      (message "skipped whitespace kill")))))
+
+(advice-add 'kill-new :around #'+kill-whitespace-ignore)

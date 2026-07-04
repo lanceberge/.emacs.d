@@ -5,7 +5,7 @@
 (require 'editor-lisp)
 
 ;;;###autoload
-(defun avy-action-embark (pt)
+(defun avy-action-embark-act (pt)
   "Perform an embark action on the avy target and move the point to it"
   (goto-char pt)
   (embark-act))
@@ -98,5 +98,11 @@
       (forward-line (1+ target-line))
       (transpose-lines (- current-line target-line 1)))
      (t nil))))
+
+;;;###autoload
+(defun +avy-jump-dwim ()
+  (interactive)
+  (call-interactively #'avy-goto-char-2)
+  (embark-dwim))
 
 (provide 'avy-actions)

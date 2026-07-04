@@ -2,6 +2,7 @@
 
 (require 'compile)
 (require 'project)
+(require 'savehist)
 
 (defvar +project-compile-histories nil
   "Compile command histories keyed by expanded project root.")

@@ -310,6 +310,7 @@ ARGS provides a `:name' atom."
                     previous-line
                     backward-kill-word
                     zap-up-to-char
+                    kill-sexp
                     +start-of-region-or-backward-char
                     +end-of-region-or-forward-char
                     end-of-buffer))

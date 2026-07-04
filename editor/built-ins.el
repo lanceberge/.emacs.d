@@ -6,20 +6,7 @@
   :custom
   (idle-update-delay 1.0) ; slow down how often emacs updates its ui
   (kill-do-not-save-duplicates t) ; no duplicates in kill ring
-  (indent-tabs-mode nil)
-  :bind
-  ("M-T" . #'transpose-paragraphs)
-  (:map +normal-mode-map
-        ("RET" . #'newline)
-        ("S-<return>" . #'insert-newline-above-dwim))
-  (:map prog-mode-map
-        ("C-g" . #'+keyboard-quit))
-  (:map +normal-mode-map
-        ("C-g" . #'+keyboard-quit))
-  (:map text-mode-map
-        ("C-g" . #'+keyboard-quit))
-  (:map +leader-map
-        ("bs" . #'+scratch-buffer)))
+  (indent-tabs-mode nil))
 
 ;;;###autoload
 (defun +scratch-buffer ()
@@ -224,10 +211,15 @@
 
 (use-package view-mode
   :ensure nil
-  :hook (read-only-mode . view-mode)
+  :custom
+  (view-read-only t)
   :bind
   (:map view-mode-map
-        ("v" . #'View-scroll-page-forward)))
+        ("v" . #'View-scroll-page-forward)
+        ("p")
+        ("n")
+        ("<")
+        (">")))
 
 ;;;###autoload
 (defun +indent-rigidly-dwim ()
@@ -235,3 +227,11 @@
   (unless (region-active-p)
     (call-interactively #'indent-rigidly))
   (+mark-whole-lines 1))
+
+(use-package rect
+  :ensure nil
+  :bind
+  (:map rectangle-mark-mode-map
+        ("w" . #'kill-rectangle)
+        ("i" . #'string-insert-rectangle)
+        ([remap +change] . #'replace-rectangle)))

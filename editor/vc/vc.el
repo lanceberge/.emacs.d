@@ -128,9 +128,6 @@ unless a nonzero and non-negative prefix is provided."
   "Set up motion mode for git-timemachine."
   (+motion-mode 1))
 
-(defvar +majutsu-post-new-hook nil
-  "Hook run after `majutsu-new' finishes.")
-
 (declare-function majutsu-toplevel "majutsu-jj")
 (declare-function diff-hl-update "diff-hl")
 (defvar diff-hl-disable-on-remote)
@@ -163,18 +160,31 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
   (majutsu-post-refresh . majutsu-diff-hl-post-refresh)
-  (+majutsu-post-new-hook . majutsu-diff-hl-post-refresh)
+  (+jj-post-new-hook . majutsu-diff-hl-post-refresh)
   :bind
-  (:map +normal-mode-map
-        ("[h" . #'diff-hl-previous-hunk)
-        ("]h" . #'diff-hl-previous-hunk))
+  (:map +backward-map
+        ("h" . #'+diff-hl-previous-hunk))
+  (:map +forward-map
+        ("h" . #'+diff-hl-next-hunk))
   (:map ctl-x-map
         ("vs" . #'diff-hl-show-hunk)
-        ("v[" . #'diff-hl-previous-hunk)
-        ("v]" . #'diff-hl-next-hunk)
+        ("v[" . #'+diff-hl-previous-hunk)
+        ("v]" . #'+diff-hl-next-hunk)
         ("vu" . #'diff-hl-revert-hunk))
   :config
   (global-diff-hl-mode))
+
+;;;###autoload
+(defun +diff-hl-previous-hunk ()
+  (interactive)
+  (push-mark)
+  (diff-hl-previous-hunk))
+
+;;;###autoload
+(defun +diff-hl-next-hunk ()
+  (interactive)
+  (push-mark)
+  (diff-hl-next-hunk))
 
 (use-package git-link
   :custom

@@ -1,4 +1,10 @@
 ;;; -*- lexical-binding: t -*-
+(use-package +dot-repeat
+  :ensure (:type file :main "~/.emacs.d/lisp/dot-repeat/dot-repeat.el" :files ("dot-repeat.el"))
+  :hook (after-init . +dot-repeat-mode)
+  :bind
+  (:map +normal-mode-map
+        ("." . #'+dot-repeat)))
 
 (defgroup +dot-repeat nil
   "Repeat modal editing changes."

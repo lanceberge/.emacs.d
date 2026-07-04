@@ -1,4 +1,16 @@
 ;;; -*- lexical-binding: t -*-
+(use-package completion-preview
+  :disabled t
+  :ensure nil
+  :hook ((prog-mode text-mode) . completion-preview-mode)
+  :custom
+  (completion-preview-minimum-symbol-length 2)
+  (completion-preview-idle-delay 0.3)
+  :bind
+  (:map completion-preview-active-mode-map
+        ("TAB" . nil)
+        ("<tab>" . nil)
+        ("C-y" . #'completion-preview-insert)))
 
 (use-package scala-mode
   :disabled t

@@ -6,9 +6,10 @@
   :bind
   (:map smerge-basic-map
         ("n" . #'+smerge-vc-next-conflict))
-  (:map +normal-mode-map
-        ("]m" . #'+smerge-vc-next-conflict)
-        ("[m" . #'smerge-prev))
+  (:map +forward-map
+        ("m" . #'+smerge-vc-next-conflict))
+  (:map +backward-map
+        ("m" . #'smerge-prev))
   :config
   (dolist (func '(smerge-keep-current smerge-keep-upper smerge-keep-lower smerge-keep-all))
     (advice-add func :after #'+save-buffer-advice))

@@ -1,8 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 (bind-key "C-c" +leader-map)
-(bind-key "c" +leader-map +normal-mode-map)
-(bind-key "c" +leader-map +motion-mode-map)
-(bind-key "c" +leader-map +sexp-mode-map)
+(bind-key "SPC" +leader-map +normal-mode-map)
+(bind-key "SPC" +leader-map +motion-mode-map)
+(bind-key "SPC" +leader-map +sexp-mode-map)
 
 (bind-key "x" ctl-x-map +normal-mode-map)
 (bind-key "x" ctl-x-map +motion-mode-map)
@@ -12,32 +12,34 @@
 ;; use the default M-s everywhere else
 (bind-key "s" search-map +normal-mode-map)
 
-(bind-key "C-'" +leader2-map)
-(bind-key "'" +leader2-map +normal-mode-map)
-(bind-key "'" +leader2-map +motion-mode-map)
-(bind-key "'" +leader2-map +sexp-mode-map)
+(bind-key "[" +backward-map +normal-mode-map)
+(bind-key "]" +forward-map +normal-mode-map)
+(bind-key "[" +backward-map +motion-mode-map)
+(bind-key "]" +forward-map +motion-mode-map)
 
-(bind-key "[" mark-backward-keymap +sexp-mode-map)
-(bind-key "]" mark-forward-keymap +sexp-mode-map)
-
-(bind-key "`" +leader3-map +motion-mode-map)
-(bind-key "`" +leader3-map +normal-mode-map)
-(bind-key "`" +leader3-map +sexp-mode-map)
+;; (bind-key "C-'" +leader2-map)
+;; (bind-key "'" +leader2-map +normal-mode-map)
+;; (bind-key "'" +leader2-map +motion-mode-map)
+;; (bind-key "'" +leader2-map +sexp-mode-map)
 
 (use-package +keybindings
   :ensure nil
   :bind
+  ("M-T" . #'transpose-paragraphs)
   ("M-[" . #'+pop-to-mark)
   ("M-]" . #'+unpop-to-mark)
   (:map ctl-x-map
         ("TAB" . #'+indent-rigidly-dwim)
         ("f" . #'find-file)
-        ("j" . #'dired-jump)
-        ("," . #'consult-recent-file))
+        ("j" . #'dired-jump))
   (:map +leader-map
-        ;; ("h" . #'help-command)
+        ("bs" . #'+scratch-buffer)
         ("d" . #'duplicate-dwim)
         ("ri" . #'+source-init-file))
+  (:map prog-mode-map
+        ("C-g" . #'+keyboard-quit))
+  (:map text-mode-map
+        ("C-g" . #'+keyboard-quit))
   (:map +insert-mode-map
         ("C-\\" . #'+sexp-mode)
         ("C-g" . #'+keyboard-quit-normal)
@@ -51,13 +53,17 @@
   (:map +normal-mode-map
         ("i" . #'+insert-mode)
 
+        ("RET" . #'newline)
+        ("S-<return>" . #'insert-newline-above-dwim)
+        ("C-g" . #'+keyboard-quit)
+
         ("M-{" . #'+backward-global-mark)
         ("M-}" . #'+forward-global-mark)
+
         ;; Enter insert mode with default emacs keys
         ("C-a" . #'+modal-beginning-of-visual-line-insert)
         ("C-e" . #'+modal-end-of-line-insert)
         ("M-m" . #'+modal-back-to-indentation-insert)
-
         ("M-f" . #'+modal-forward-word-insert)
         ("M-b" . #'+modal-backward-word-insert)
         ("C-k" . #'+modal-kill-line-insert)
@@ -98,7 +104,7 @@
         ("h" . #'backward-char)
         ("H" . #'+left-expand)
         ("L" . #'+right-expand)
-        ("SPC" . #'set-mark-command)
+        ;; ("SPC" . #'set-mark-command)
         ("n" . #'next-line)
         ("M" . #'+mark-whole-lines)
         ("p" . #'previous-line)
@@ -120,9 +126,11 @@
         ("\\b" . #'backward-sexp)
         ("\\k" . #'kill-sexp)
         ("\\ <backspace>" . #'backward-kill-sexp)
-        ("\\t" . #'transpose-sexps)
-        ("[ SPC" . #'+insert-newlines-above)
-        ("] SPC" . #'+insert-newlines-below)))
+        ("\\t" . #'transpose-sexps))
+  (:map +backward-map
+        ("SPC" . #'+insert-newlines-above))
+  (:map +forward-map
+        ("SPC" . #'+insert-newlines-below)))
 
 (define-derived-mode keyfreq-show-mode special-mode "KeyFreq"
   "Major mode for displaying key frequency statistics."
@@ -170,14 +178,6 @@
 
   (dolist (event '("<mouse-event>" "<mouse-movement>" "<mouse-2>" "<drag-mouse-1>" "<wheel-up>" "<wheel-down>" "<double-wheel-up>" "<double-wheel-down>" "<triple-wheel-up>" "<triple-wheel-down>" "<wheel-left>" "<wheel-right>" handle-select-window mouse-set-point  mouse-drag-region))
     (add-to-list 'keycast-substitute-alist `(,event nil nil))))
-
-(use-package rect
-  :ensure nil
-  :bind
-  (:map rectangle-mark-mode-map
-        ("w" . #'kill-rectangle)
-        ("i" . #'string-insert-rectangle)
-        ([remap +change] . #'replace-rectangle)))
 
 ;;;###autoload
 (defun +key-chord-define-keymap (keymap keys prefix-keymap)

@@ -1,6 +1,9 @@
 ;;  this-buffer.el --- Actions for this buffer   -*- lexical-binding: t; -*-
 ;; https://github.com/oantolin/emacs-config/blob/4d19cbcf2bfa72f8a362243b40ce4a12b7a71b69/experiments/embark-this-buffer.el
 
+(require 'ace-window)
+(require 'editor-lisp)
+
 ;;;###autoload
 (defun +bookmark-file ()
   (interactive)
@@ -44,5 +47,10 @@
   (when (one-window-p)
     (or (split-window-sensibly)
         (split-window-right))))
+
+;;;###autoload
+(defun +this-buffer-diff-with-file ()
+  (interactive)
+  (diff-buffer-with-file (current-buffer)))
 
 (provide 'this-buffer)

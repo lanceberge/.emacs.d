@@ -21,3 +21,8 @@
 
 (use-package edebug
   :ensure nil)
+
+(use-package elisp-demos ;; help menus for example usages of elisp functions
+  :unless IS-WORK
+  :init
+  (advice-add 'helpful-update :after #'elisp-demos-advice-helpful-update))

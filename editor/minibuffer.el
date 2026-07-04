@@ -27,6 +27,7 @@
                                     consult-source-project-recent-file))
   :bind
   (:map goto-map
+        ("g" . #'consult-goto-line)
         ("M-g" . #'consult-goto-line)
         ("i" . #'consult-imenu)
         ("M-i" . #'consult-imenu-multi)
@@ -72,7 +73,7 @@
   (:map +insert-mode-map
         ("M-q" . #'+consult-kmacro))
   (:map project-prefix-map
-        ("b" . #'+consult-project-buffer))
+        ("b" . #'consult-project-buffer))
   (:map consult-narrow-map
         ("C-h" . #'+consult-narrow-help))
   (:map search-map

@@ -113,6 +113,8 @@
       remote-file-name-inhibit-locks t
       remote-file-name-inhibit-auto-save-visited t)
 
+(defvar IS-WORK nil)
+
 ;; Path
 (when IS-MAC
   (dolist (path '("/opt/homebrew/opt/llvm/bin/"
@@ -225,6 +227,9 @@
   :bind
   (:map search-map
         ("." . nil)))
+
+(defvar +forward-map (make-sparse-keymap))
+(defvar +backward-map (make-sparse-keymap))
 
 ;; read modal before doing loading else
 (elpaca-wait)

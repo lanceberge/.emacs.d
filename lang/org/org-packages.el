@@ -92,21 +92,11 @@
   (org-journal-dir "~/org/journal")
   (org-journal-file-format "%m%d%Y")
   :bind
-  (:map +leader3-map
+  (:map +leader-map
         ("oj" . #'org-journal-new-entry)))
 
 (use-package org-timer
   :ensure nil)
-
-(use-package org-timer-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/org-timer-extras.el" :files ("org-timer-extras.el"))
-  :custom
-  (+org-timer-log-file "~/org-roam/Time_Log.org")
-  :bind
-  (:map +leader-map
-        ("ot" . #'+org-timer-toggle)
-        ;; ("SPC ot" . #'+org-timer-open-file)
-        ))
 
 (use-package ob ; org babel
   :ensure nil

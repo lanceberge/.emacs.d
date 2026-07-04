@@ -11,6 +11,7 @@ emacsclient -e '(+agent-lisp-eval-buffer "/abs/path/to/file.el")'
 - If you encounter changes you didn't make, assume the user made them and wants to keep them. Do not undo them
 - Avoid advice wherever possible in favor of hooks/custom modes or commands
 - Do not guess at the purpose/format of any functions or variables. Read docs and evaluate elisp to validate assumptions
+- Do not guess at solutions. If the best solution you have involves a substantial amount of custom lisp, read the web to find something cleaner before proceeding
 
 ## Look up documentation using `emacsclient`
 

@@ -1,4 +1,11 @@
 ;;; -*- lexical-binding: t -*-
+(use-package +surround
+  :ensure (:type file :main "~/.emacs.d/lisp/surround.el" :files ("surround.el"))
+  :hook
+  (org-mode . +setup-org-pairs)
+  :bind
+  (:map +normal-mode-map
+        ("S" . #'+surround)))
 
 ;; TODO replace w/ puni and electric pair
 

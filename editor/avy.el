@@ -27,7 +27,7 @@
         (list
          (cons ?\s 'avy-action-mark-until-pt)
          (cons ?w 'avy-action-kill-to-point)
-         (cons ?, 'avy-action-embark)
+         (cons ?. 'avy-action-embark-act)
          (cons ?' 'avy-action-embark-dwim)
 
          (cons ?p 'avy-action-yank-move)
@@ -38,4 +38,9 @@
          (cons ?t 'avy-action-move-line-or-region-stay)
          (cons ?T 'avy-action-move-line-or-region-move)
 
-         (cons ?x 'avy-action-kill-whole-lines))))
+         (cons ?x 'avy-action-kill-whole-lines)))
+  :bind
+  (:map +normal-mode-map
+        ("C-:" . #'+avy-jump-dwim))
+  (:map +motion-mode-map
+        ("C-:" . #'+avy-jump-dwim)))

@@ -3,16 +3,27 @@
 (require 'isearch)
 (require 'consult)
 
+(defvar +isearch--exit-at-end nil
+  "When non-nil, `+isearch-exit-at-start' should not move point.")
+
 ;;;###autoload
 (defun +isearch-exit-at-start ()
   "Exit search at the beginning of the current match."
   (unless (or isearch-mode-end-hook-quit
               (bound-and-true-p isearch-suspended)
+              +isearch--exit-at-end
               (not isearch-forward)
               (not isearch-other-end)
               (and (boundp 'avy-command)
                    (eq avy-command 'avy-isearch)))
     (goto-char isearch-other-end)))
+
+;;;###autoload
+(defun +isearch-exit-at-end ()
+  "Exit search at the end of the current match."
+  (interactive)
+  (let ((+isearch--exit-at-end t))
+    (isearch-done)))
 
 ;;;###autoload
 (defun +isearch-consult-ripgrep ()

@@ -2,6 +2,13 @@
 
 ;;; Code:
 
+(use-package ace-link-agent-shell
+  :ensure (:type file :main "~/.emacs.d/lisp/ace-link-agent-shell.el" :files ("ace-link-agent-shell.el"))
+  :hook (agent-shell-mode . +ace-link-agent-shell-mode)
+  :bind
+  (:map +ace-link-agent-shell-mode-map
+        ("M-i" . #'ace-link)))
+
 (require 'ace-link)
 (require 'seq)
 

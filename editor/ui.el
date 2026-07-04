@@ -101,12 +101,12 @@
   :hook (emacs-startup . +theme-rotate-load-current-theme)
   :custom
   (+theme-rotate-dark-themes
-   '(gruvbox-dark-hard kanagawa-wave doom-badger doom-oceanic-next
+   '(gruvbox-dark-hard kanagawa-wave doom-badger ef-dream
                        doom-tomorrow-night doom-spacegrey doom-tokyo-night
                        doom-palenight doom-Iosvkem doom-one doom-dark+
                        doom-monokai-octagon))
   (+theme-rotate-light-themes
-   '(tango kanagawa-paper doom-nord-light doom-oksolar-light
+   '(tango kanagawa-paper ef-orange ef-eagle ef-melissa-light doom-nord-light doom-oksolar-light
            doom-solarized-light tsdh-light doom-opera-light))
   (+theme-rotate-current-style 'dark)
   :bind
@@ -115,9 +115,10 @@
                ("t" . #'+theme-rotate-toggle-dark-light)
                ("[" . #'+theme-rotate-prev)
                ("f" . #'+consult-theme-rotate))
-  (:map +normal-mode-map
-        ("]T" . #'+theme-rotate-rotate)
-        ("[T" . #'+theme-rotate-prev))
+  (:map +forward-map
+        ("T" . #'+theme-rotate-rotate))
+  (:map +backward-map
+        ("T" . #'+theme-rotate-prev))
   (:map +leader-map
         ("tt" . #'+theme-rotate-toggle-dark-light)))
 

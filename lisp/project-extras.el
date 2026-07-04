@@ -94,9 +94,8 @@ recent buffer in the same project."
                                   (not (string= (file-truename root) current)))))
                    root))
                (cdr (buffer-list)))))
-    (unless dir
-      (user-error "No other project buffer"))
-    dir))
+    (or dir
+        (funcall project-prompter))))
 
 ;;;###autoload
 (defun +project-other-special-buffer-dwim (arg)
