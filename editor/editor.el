@@ -270,50 +270,70 @@
   (:map ctl-x-map
         ("n" . #'narrow-or-widen-dwim)))
 
+(defvar +puni-mode-map (make-sparse-keymap)
+  "Keymap for `+puni-mode'.")
+
+;;;###autoload
+(define-minor-mode +puni-mode
+  "Use puni commands for editing operations."
+  :lighter " Puni"
+  :keymap +puni-mode-map)
+
 (use-package puni
+  :hook (prog-mode . +puni-mode)
   :init
   (+modal-create-insert-function puni-kill-line)
   (+modal-create-insert-function puni-forward-delete-char)
+  (+modal-create-insert-function puni-kill-region)
   (+modal-create-insert-function puni-forward-kill-word)
   (+modal-create-insert-function puni-backward-kill-word)
   :bind
   (:map +normal-mode-map
-        ("C-k" . #'+modal-puni-kill-line-insert)
-        ("C-d" . #'+modal-puni-forward-delete-char-insert)
-        ("C-w" . #'+modal-puni-kill-region-insert)
-        ("M-d" . #'+modal-puni-forward-kill-word-insert)
-        ("M-<backspace>" . #'+modal-puni-backward-kill-word-insert)
-        ("d" . #'puni-forward-delete-char)
-        ("D" . #'puni-forward-kill-word)
         ("\\f" . #'puni-forward-sexp)
         ("\\b" . #'puni-backward-sexp)
-        ("\\r" . #'puni-raise)
+        ("\\T" . #'puni-convolute)
+        ("\\r" . #'puni-raise))
+  (:map +puni-mode-map
+        ([remap mark-sexp] . #'puni-mark-sexp-at-point)
         ([remap +modal-kill-line-insert] . #'+modal-puni-kill-line-insert)
-        ([remap +modal-kill-line-insert] . #'+modal-puni-kill-line-insert)
-        ([remap +modal-kill-region-insert] . #'+modal-puni-kill-region-insert))
-  (:map +insert-mode-map
-        ("C-k" . #'puni-kill-line)
-        ("C-d" . #'puni-forward-delete-char)
-        ("M-d" . #'+modal-puni-forward-kill-word-insert)
-        ("M-<backspace>" . #'+modal-puni-backward-kill-word-insert)
-        ("<backspace>" . #'puni-backward-delete-char)))
+        ([remap +modal-delete-char-insert] . #'+modal-puni-forward-delete-char-insert)
+        ([remap +modal-kill-word-insert] . #'+modal-puni-forward-kill-word-insert)
+        ([remap +modal-backward-kill-word-insert] . #'+modal-puni-backward-kill-word-insert)
+        ([remap kill-line] . #'puni-kill-line)
+        ([remap delete-char] . #'puni-forward-delete-char)
+        ([remap kill-region] . #'puni-kill-region)
+        ([remap kill-word] . #'puni-forward-kill-word)
+        ([remap backward-kill-word] . #'puni-backward-kill-word)
+        ([remap backward-delete-char-untabify] . #'puni-backward-delete-char)))
+
+(use-package puni-repeat
+  :ensure nil
+  :bind
+  (:repeat-map +puni-repeat-map
+               ("." . #'repeat))
+  (:map +normal-mode-map
+        ("\\l" . #'puni-slurp-forward)
+        ("\\h" . #'puni-slurp-backward)
+        ("\\H" . #'puni-barf-forward)
+        ("\\L" . #'puni-barf-backward))
+  :config
+  (require 'puni))
 
 (use-package puni-extras
   :ensure (:type file :main "~/.emacs.d/lisp/puni-extras.el" :files ("puni-extras.el"))
+  :init
+  (+modal-create-insert-function +puni-kill-region-or-inner-sexp)
+  (+modal-create-insert-function +puni-kill-region-or-outer-sexp)
+  (+modal-create-insert-function +puni-soft-kill-region)
   :bind
-  (:map +insert-mode-map
-        ("C-(" . #'+puni-slurp-or-barf-left)
-        ("C-)" . #'+puni-slurp-or-barf-right)
-        ("C-w" . #'+puni-soft-kill-region))
   (:map +normal-mode-map
-        ("k" . #'+puni-kill-line-dwim)
-        ("w" . #'puni-kill-region)
-        ("C-w" . #'+modal-puni-soft-kill-region-insert)
-        ("(" . #'+puni-slurp-or-barf-left)
-        (")" . #'+puni-slurp-or-barf-right)
-        ([remap +kill-line-dwim] . #'+puni-kill-line-dwim))
-  :config
-  (+modal-create-insert-function +puni-soft-kill-region))
+        ("C-w" . #'+modal-puni-kill-region-or-inner-sexp-insert)
+        ("C-W" . #'+modal-puni-kill-region-or-outer-sexp-insert)
+        ("w" . #'+puni-kill-region-or-inner-sexp)
+        ("W" . #'+puni-kill-region-or-outer-sexp))
+  (:map +puni-mode-map
+        ([remap +kill-line-dwim] . #'+puni-kill-line-dwim)
+        ([remap +kill-line-dwim] . #'+puni-kill-line-dwim)))
 
 (use-package visiting-buffer
   :ensure (:type file :main "~/.emacs.d/lisp/visiting-buffer.el" :files ("visiting-buffer.el"))

@@ -27,16 +27,20 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
 ;;;###autoload
 (defun +modal-bind (target keymap-or-hook hook-or-bindings &optional bindings)
   "Override TARGET keys in buffers where HOOK runs.
-TARGET is either a modal minor mode command or a prefix map symbol.
+TARGET is either a modal mode map, modal minor mode command, or prefix map symbol.
 BINDINGS are alist entries of the form (KEY . DEF)."
-  (cond
-   ((and (boundp target)
-         (keymapp (symbol-value target)))
-    (+modal--prefix-bind target keymap-or-hook hook-or-bindings))
-   ((commandp target)
-    (+modal--command-bind target keymap-or-hook hook-or-bindings bindings))
-   (t
-    (error "Expected modal command or prefix map symbol: %S" target))))
+  (let ((mode (+modal--mode-for-map target)))
+    (cond
+     (mode
+      (+modal--command-bind mode target keymap-or-hook hook-or-bindings))
+     ((and (boundp target)
+           (keymapp (symbol-value target)))
+      (+modal--prefix-bind target keymap-or-hook hook-or-bindings))
+     ((commandp target)
+      (+modal--command-bind target keymap-or-hook hook-or-bindings bindings))
+     (t
+      (error "Expected modal mode map, modal command, or prefix map symbol: %S"
+             target)))))
 
 ;;;###autoload
 (defun +modal--command-bind (mode keymap hook bindings)
@@ -48,14 +52,18 @@ BINDINGS are alist entries of the form (KEY . DEF)."
   (add-hook hook
             (lambda ()
               (let ((map (make-sparse-keymap)))
-                (set-keymap-parent map (symbol-value keymap))
+                (set-keymap-parent
+                 map
+                 (or (cdr (assq mode minor-mode-overriding-map-alist))
+                     (symbol-value keymap)))
                 (+modal--define-bindings map bindings)
                 (setq-local minor-mode-overriding-map-alist
                             (cons
                              (cons mode map)
                              (assq-delete-all
                               mode
-                              minor-mode-overriding-map-alist)))))))
+                              minor-mode-overriding-map-alist)))))
+            t))
 
 ;;;###autoload
 (defun +modal--prefix-bind (prefix-map hook bindings)
@@ -78,7 +86,10 @@ BINDINGS are alist entries of the form (KEY . DEF)."
                            (push key keys)))
                        mode-map)
                       (when keys
-                        (let ((mode-map-copy (copy-keymap mode-map)))
+                        (let ((mode-map-copy
+                               (copy-keymap
+                                (or (cdr (assq mode minor-mode-overriding-map-alist))
+                                    mode-map))))
                           (dolist (key keys)
                             (define-key mode-map-copy (vector key) map))
                           (setq-local minor-mode-overriding-map-alist
@@ -86,7 +97,20 @@ BINDINGS are alist entries of the form (KEY . DEF)."
                                        (cons mode mode-map-copy)
                                        (assq-delete-all
                                         mode
-                                        minor-mode-overriding-map-alist))))))))))))
+                                        minor-mode-overriding-map-alist))))))))))
+            t))
+
+;;;###autoload
+(defun +modal--mode-for-map (keymap)
+  "Return the modal command derived from KEYMAP, or nil."
+  (when (and (symbolp keymap)
+             (boundp keymap)
+             (keymapp (symbol-value keymap)))
+    (let* ((name (symbol-name keymap))
+           (mode-name (and (string-suffix-p "-map" name)
+                           (substring name 0 (- (length "-map")))))
+           (mode (and mode-name (intern-soft mode-name))))
+      (and (commandp mode) mode))))
 
 ;;;###autoload
 (defun +modal--define-bindings (map bindings)

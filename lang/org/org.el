@@ -7,7 +7,10 @@
                  ("in" . org-next-visible-heading)
                  ("ip" . org-previous-visible-heading)
                  ("ir" . outline-show-all)
-                 ("im" . outline-hide-sublevels)))
+                 ("im" . outline-hide-sublevels)
+                 ("il" . org-toggle-link-display)))
+  (+modal-bind '+normal-mode-map 'org-mode-hook
+               '(([remap +puni-kill-line-dwim] . org-kill-line)))
   :custom
   (org-directory "~/org")
   (org-list-allow-alphabetical t)
