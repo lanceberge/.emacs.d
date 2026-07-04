@@ -6,14 +6,19 @@
   "Extensions for puni."
   :group 'editing)
 
+(defcustom +puni-extras-default-kill-region-command #'kill-region
+  "Command used by puni extras commands to kill the active region."
+  :type 'function
+  :group '+puni)
+
 ;;;###autoload
 (defun +puni-kill-region-or-outer-sexp (arg)
   (interactive "p")
   (if (region-active-p)
-      (call-interactively #'kill-region)
+      (call-interactively +puni-extras-default-kill-region-command)
     (dotimes (_ arg)
       (puni-mark-sexp-at-point))
-    (call-interactively #'kill-region)))
+    (call-interactively +puni-extras-default-kill-region-command)))
 
 ;;;###autoload
 (defun +puni-kill-region-or-inner-sexp (arg)
@@ -21,10 +26,10 @@
 Otherwise mark the inner block of the sexp at point and kill it."
   (interactive "p")
   (if (region-active-p)
-      (call-interactively #'kill-region)
+      (call-interactively +puni-extras-default-kill-region-command)
     (dotimes (_ arg)
       (puni-mark-sexp-at-point))
-    (call-interactively #'kill-region)))
+    (call-interactively +puni-extras-default-kill-region-command)))
 
 ;;;###autoload
 (defun +puni-soft-kill-region ()
@@ -37,7 +42,7 @@ Otherwise mark the inner block of the sexp at point and kill it."
              (region-beginning)
              (region-end)
              'strict-sexp
-             'within
+             'beyond
              'kill)
       (user-error "No balanced expression to kill"))
     (goto-char final-point)))

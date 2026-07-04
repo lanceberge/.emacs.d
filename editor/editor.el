@@ -277,7 +277,8 @@
 (define-minor-mode +puni-mode
   "Use puni commands for editing operations."
   :lighter " Puni"
-  :keymap +puni-mode-map)
+  :keymap +puni-mode-map
+  (setq-local +puni-extras-default-kill-region-command #'+puni-soft-kill-region))
 
 (use-package puni
   :hook (prog-mode . +puni-mode)
