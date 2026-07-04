@@ -2,6 +2,8 @@
 
 (require 'org)
 (require 'project)
+(require 'org-agenda)
+(require 'org-ql)
 
 (defgroup +org nil
   "Org editing extensions."
@@ -37,19 +39,19 @@
     (project-find-file-in nil (list org-dir) pr)))
 
 
-;;;###autoload
-(defun +org-metaleft-dwim (arg)
-  (interactive "P")
-  (if (not (region-active-p))
-      (org-metaleft arg)
-    (+drag-stuff-left-dwim (if (full-line-region-p) 2 arg))))
-
-;;;###autoload
-(defun +org-metaright-dwim (arg)
-  (interactive "P")
-  (if (not (region-active-p))
-      (org-metaright arg)
-    (+drag-stuff-right-dwim (if (full-line-region-p) 2 arg))))
+;; ;;;###autoload
+;; (defun +org-metaleft-dwim (arg)
+;;   (interactive "P")
+;;   (if (not (region-active-p))
+;;       (org-metaleft arg)
+;;     (+drag-stuff-left-dwim (if (full-line-region-p) 2 arg))))
+;;
+;; ;;;###autoload
+;; (defun +org-metaright-dwim (arg)
+;;   (interactive "P")
+;;   (if (not (region-active-p))
+;;       (org-metaright arg)
+;;     (+drag-stuff-right-dwim (if (full-line-region-p) 2 arg))))
 
 ;;;###autoload
 (defun +org--has-filetag-p (tag)
@@ -62,6 +64,29 @@
        (let ((filetags (car (org-collect-keywords '("FILETAGS")))))
          (when filetags
            (split-string (cadr filetags) ":" t "\\s-*")))))
+
+;;;###autoload
+(defun +org-agenda-save-all-org-buffers ()
+  "Save Org buffers and refresh the current or visible agenda."
+  (interactive)
+  (org-save-all-org-buffers)
+  (if (derived-mode-p 'org-agenda-mode)
+      (org-agenda-redo)
+    (org-agenda-maybe-redo)))
+
+;;;###autoload
+(defun +org-blocked-by-open-todos-in-file (change-plist)
+  "Block done transitions while inherited BLOCKED_BY_OPEN_TODOS_IN has open TODOs."
+  (if-let* ((file (org-entry-get nil "BLOCKED_BY_OPEN_TODOS_IN" t))
+            (state (plist-get change-plist :to))
+            (_done (or (eq state 'done)
+                       (member state org-done-keywords)))
+            (_open-todos (org-ql-select file '(todo) :action '(point))))
+      (progn
+        (setq org-block-entry-blocking
+              (format "open TODOs in %s" (abbreviate-file-name file)))
+        nil)
+    t))
 
 (provide 'org-extras)
 ;;; org-extras.el ends here

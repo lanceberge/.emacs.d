@@ -23,6 +23,13 @@
   (org-export-backends '(html latex md))
   (org-special-ctrl-a t)
   (org-latex-listings 'minted) ; syntax-highlighted code blocks
+  (org-todo-keywords '((sequence
+                        "TODO"
+                        "IN PROGRESS(i!)"
+                        "BLOCKED(b@)"
+                        "|"
+                        "DONE(d!)"
+                        "CANCELED(c@)")))
   ;; (org-latex-packages-alist '(("margin=0.5in" "geometry" nil) (nil "minted" "color")))
   (org-latex-pdf-process ; required to use minted
    '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
@@ -75,6 +82,8 @@
   (:map org-mode-map
         ([remap next-line] . #'+org-down)
         ([remap previous-line] . #'+org-up))
+  (:map org-agenda-mode-map
+        ([remap org-save-all-org-buffers] . #'+org-agenda-save-all-org-buffers))
   (:map +leader-map
         ("of" . #'+org-find-file)))
 

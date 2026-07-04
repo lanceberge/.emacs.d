@@ -1,4 +1,8 @@
 ;;; -*- lexical-binding: t -*-
+(use-package org-ql
+  :after org
+  :demand t)
+
 (use-package org-agenda
   :ensure nil
   :defer 0.8
@@ -7,6 +11,11 @@
   (org-agenda-start-on-weekday nil) ; start on today
   (org-agenda-tags-column 0)
   (org-agenda-files '("~/org/projects"))
+  (org-agenda-todo-ignore-deadlines 'future)
+  (org-agenda-todo-ignore-scheduled 'future)
+  (org-agenda-inhibit-startup t)
+  (org-agenda-dim-blocked-tasks 'invisible)
+  (org-enforce-todo-dependencies t)
   (org-agenda-custom-commands
    '(("w" "Work"
       ((tags-todo "Work"))
@@ -27,7 +36,9 @@
   (:map org-agenda-mode-map
         ("g" . ace-link))
   (:map +leader-map
-        ("oa" . #'org-agenda)))
+        ("oa" . #'org-agenda))
+  :config
+  (add-hook 'org-blocker-hook #'+org-blocked-by-open-todos-in-file))
 
 (use-package org-habit
   :ensure nil
@@ -146,3 +157,30 @@
   (org-mode . org-appear-mode)
   :custom
   (org-appear-autolinks t))
+
+(use-package org-super-agenda
+  :after org-agenda
+  :demand t
+  :custom
+  (org-super-agenda-groups
+   '((:name "Priority A"
+            :priority "A"
+            :order 0)
+     (:name "Habits"
+            :habit t
+            :order 1)
+     (:name "Active Projects"
+            :tag "Project"
+            :order 3)
+     (:name "Life"
+            :and (:tag "Project" :tag "Todo")
+            :order 5)
+     (:name "Low Priority"
+            :priority "C"
+            :order 90)
+     (:auto-category t
+                     :order 99)))
+  :config
+  (require 'org-habit)
+  (unless org-super-agenda-mode
+    (org-super-agenda-mode 1)))
