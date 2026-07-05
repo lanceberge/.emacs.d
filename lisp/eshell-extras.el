@@ -1,38 +1,10 @@
-;;; -*- lexical-binding: t -*-
-(use-package tramp ; access remote files within emacs
-  :ensure nil)
+;;; eshell-extras.el --- Extra Eshell helpers -*- lexical-binding: t; -*-
 
-;;;###autoload
-(defun +tramp--list-ssh-hosts ()
-  "Return host aliases from ~/.ssh/config."
-  (let ((config (expand-file-name "~/.ssh/config"))
-        hosts)
-    (when (file-readable-p config)
-      (with-temp-buffer
-        (insert-file-contents config)
-        (goto-char (point-min))
-        (while (re-search-forward "^Host \\(.*\\)$" nil t)
-          (push (match-string 1) hosts))))
-    (nreverse hosts)))
-
-;;;###autoload
-(defun +tramp-find-file ()
-  "Pick a host from ~/.ssh/config and run `find-file' rooted there via TRAMP."
-  (interactive)
-  (let* ((host (completing-read "SSH host: " (+tramp--list-ssh-hosts) nil t))
-         (default-directory (format "/ssh:%s:" host)))
-    (call-interactively #'find-file)))
-
-(use-package eat
-  :hook
-  (eat-eshell-exec . +eat-eshell-use-modal-cursor)
-  (eshell-first-time-mode . eat-eshell-mode))
-
-;;;###autoload
-(defun +eat-eshell-use-modal-cursor ()
-  "Leave Eshell cursor shape under modal state control."
-  (when (bound-and-true-p eat-terminal)
-    (eat-term-set-parameter eat-terminal 'set-cursor-function #'ignore)))
+(require 'cl-lib)
+(require 'esh-io)
+(require 'project)
+(require 'recentf)
+(require 'eshell)
 
 ;;;###autoload
 (defun +eshell-command-output-quit ()
@@ -58,7 +30,7 @@
   "Move to Eshell input after a `consult-outline' jump."
   (when (derived-mode-p 'eshell-mode)
     (end-of-line)
-    (eshell-bol)
+    (beginning-of-line)
     (when (fboundp '+insert-mode)
       (+insert-mode 1))))
 
@@ -68,59 +40,24 @@
   (setq-local outline-regexp eshell-prompt-regexp)
   (add-hook 'consult-after-jump-hook #'+eshell-outline-after-jump nil t))
 
-(use-package eshell
-  :ensure nil
-  :defer 0.7
-  :hook
-  (eshell-mode . (lambda () (+insert-mode 1)))
-  :init
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Eshell Command Output\\*\\'"
-                 (+eshell-command-output-display-buffer)))
-  :bind
-  (:map +leader-map
-        ("!" . #'eshell-command)
-        ("ne" . #'eshell))
-  :config
-  (add-to-list 'eshell-modules-list 'eshell-elecslash)
-  (add-to-list 'eshell-modules-list 'eshell-xtra)
-  (add-hook 'eshell-mode-hook #'+eshell-outline-setup))
-
 ;;;###autoload
 (defun +eshell-expand-less-pipe (beg end)
-  "Rewrite literal \"| less\" pipes in Eshell input to \"*| less\"."
+  "Rewrite literal \"|less\" or \"| less\" pipes in Eshell input to \"*| less\"."
   (let ((end-marker (copy-marker end)))
     (save-excursion
       (goto-char beg)
-      (while (search-forward "| less" end-marker t)
+      (while (re-search-forward "|[[:space:]]*less\\_>" end-marker t)
         (unless (eq (char-before (match-beginning 0)) ?*)
           (replace-match "*| less" t t))))))
 
-(use-package esh-mode
-  :ensure nil
-  :after eshell
-  :bind
-  :config
-  (add-to-list 'eshell-expand-input-functions #'+eshell-expand-less-pipe)
-  (add-to-list 'eshell-expand-input-functions #'eshell-expand-history-references))
-
-(use-package em-hist
-  :ensure nil
-  :after eshell
-  :bind
-  (:map eshell-mode-map
-        ("C-M-i" . #'completion-at-point)
-        ([remap consult-imenu] . #'consult-outline))
-  (:map eshell-hist-mode-map
-        ("M-r" . #'cape-history))
-  :config
-  (keymap-unset eshell-hist-mode-map "M-s"))
-
-(use-package em-cmpl
-  :ensure nil
-  :bind
-  (:map eshell-cmpl-mode-map
-        ("C-M-i" . #'completion-at-point)))
+;;;###autoload
+(defun +eshell-expand-pipe-space (beg end)
+  "Rewrite \"|COMMAND\" pipes in Eshell input to \"| COMMAND\"."
+  (let ((end-marker (copy-marker end)))
+    (save-excursion
+      (goto-char beg)
+      (while (re-search-forward "|\\([^[:space:]|&]\\)" end-marker t)
+        (replace-match "| \\1" t)))))
 
 ;;;###autoload
 (define-derived-mode +eshell-alias-mode fundamental-mode "Eshell Alias"
@@ -128,11 +65,17 @@
   (require 'eshell)
   (add-hook 'after-save-hook #'eshell-read-aliases-list nil t))
 
-(with-eval-after-load 'no-littering
-  (setq eshell-aliases-file (expand-file-name "eshell-aliases" user-emacs-directory))
-  (add-to-list 'auto-mode-alist
-               (cons (concat "\\`" (regexp-quote eshell-aliases-file) "\\'")
-                     #'+eshell-alias-mode)))
+;;;###autoload
+(defun eshell/e (&rest files)
+  "Open FILES in another window."
+  (mapc #'find-file-other-window (flatten-tree files))
+  nil)
+
+(cl-defmethod eshell-get-target :after ((raw-target buffer) &optional _mode)
+  "Display buffer redirection targets in another window."
+  (display-buffer raw-target '((display-buffer-reuse-window
+                                display-buffer-pop-up-window)
+                               (inhibit-same-window . t))))
 
 ;;;###autoload
 (defun eshell/rg (&rest args)
@@ -184,3 +127,5 @@ Without REGEXP, choose from recentf directories using `completing-read'."
                      (abbreviate-file-name
                       (file-name-as-directory dir))))
                  recentf-list))))
+
+(provide 'eshell-extras)

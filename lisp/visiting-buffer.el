@@ -30,9 +30,8 @@ Intended as :after advice for `rename-file'."
 (defun visiting-buffer-kill (file &optional _trash)
   "Kill buffer visiting FILE.
 Intended as :after advice for `delete-file'."
-  (when (called-interactively-p 'any)
-    (when-let* ((buffer (get-file-buffer file)))
-      (kill-buffer buffer))))
+  (when-let* ((buffer (get-file-buffer file)))
+    (kill-buffer buffer)))
 
 (dolist (fn '(delete-file vc-delete-file))
   (advice-add fn :after 'visiting-buffer-kill))
