@@ -18,6 +18,7 @@
      ("https://irreal.org/blog/?feed=rss2" emacs)
      ("https://karthinks.com/software/index.xml" emacs)
      ("https://protesilaos.com/codelog.xml" emacs)
+     ("https://emacsair.me/feed.xml" emacs)
 
      ("https://feeds.feedburner.com/martinkl" systems must-read)
      ("https://aphyr.com/posts.atom" systems)

@@ -18,7 +18,7 @@
         ("C-g" . #'abort-minibuffers)))
 
 (use-package consult
-  :defer 0.2
+  :defer 1.5
   :custom
   (xref-show-xrefs-function #'consult-xref)
   (xref-show-definitions-function #'consult-xref)

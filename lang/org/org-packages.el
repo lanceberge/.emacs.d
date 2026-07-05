@@ -5,7 +5,7 @@
 
 (use-package org-agenda
   :ensure nil
-  :defer 0.8
+  :defer 2.0
   :custom
   (org-agenda-span 14)              ; show 14 days
   (org-agenda-start-on-weekday nil) ; start on today
@@ -34,7 +34,7 @@
       ((org-agenda-sorting-strategy '(priority-down))))))
   :bind
   (:map org-agenda-mode-map
-        ("g" . ace-link))
+        ([remap org-save-all-org-buffers] . #'+org-agenda-save-all-org-buffers))
   (:map +leader-map
         ("oa" . #'org-agenda))
   :config

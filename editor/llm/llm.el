@@ -12,11 +12,10 @@
         ([remap org-insert-heading-respect-content] . #'+gptel-send)
         ([remap gptel-send] . #'+gptel-send)
         ("S-<return>" . #'newline))
-  :bind
-  (:map +leader2-map
-        ("gt" . +gptel-project)
-        ("sc" . #'+gptel-project-add-context)
-        ("s'" . #'+gptel-project-clear-buffer))
+  (:map +leader-map
+        ("ag" . #'+gptel-project))
+  (:map project-prefix-map
+        ("ag" . #'gptel))
   :config
   (setq
    gptel-backend (gptel-make-anthropic "Claude"

@@ -1,7 +1,5 @@
 ;;; org-project.el --- Org capture helpers for tracking projects -*- lexical-binding: t -*-
 
-;; TODO combine this with org timer
-
 (require 'org)
 (require 'org-capture)
 (require 'org-refile)
@@ -360,17 +358,6 @@ for a TODO."
           (unless (bolp) (insert "\n"))
           (insert (format "** %s" date)))))
     (org-back-to-heading t)))
-
-;;;###autoload
-(define-minor-mode +org-project-savehist-mode
-  "Persist Org project file mappings with `savehist'."
-  :global t
-  (if +org-project-savehist-mode
-      (add-to-list 'savehist-additional-variables
-                   '+org-project--project-files-for-dir)
-    (setq savehist-additional-variables
-          (delq '+org-project--project-files-for-dir
-                savehist-additional-variables))))
 
 (provide 'org-project)
 ;;; org-project.el ends here

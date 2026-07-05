@@ -2,7 +2,7 @@
 (use-package dired
   :ensure nil
   :after modal
-  :defer 1.0
+  :defer 3.5
   :custom
   (dired-auto-revert-buffer)
   (dired-recursive-copies 'always)

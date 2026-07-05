@@ -101,13 +101,12 @@
   :hook (emacs-startup . +theme-rotate-load-current-theme)
   :custom
   (+theme-rotate-dark-themes
-   '(gruvbox-dark-hard kanagawa-wave doom-badger ef-dream
-                       doom-tomorrow-night doom-spacegrey doom-tokyo-night
-                       doom-palenight doom-Iosvkem doom-one doom-dark+
-                       doom-monokai-octagon))
+   '(gruvbox-dark-hard kanagawa-wave ef-dream
+                       doom-tomorrow-night ef-elea-dark doom-spacegrey
+                       doom-dark+))
   (+theme-rotate-light-themes
-   '(tango kanagawa-paper ef-orange ef-eagle ef-melissa-light doom-nord-light doom-oksolar-light
-           doom-solarized-light tsdh-light doom-opera-light))
+   '(kanagawa-paper ef-melissa-light ef-eagle ef-orange tango doom-oksolar-light
+                    doom-solarized-light doom-opera-light))
   (+theme-rotate-current-style 'dark)
   :bind
   (:repeat-map +theme-rotate-repeat-map
@@ -130,7 +129,7 @@
         ("M-P" . #'+consult-theme-rotate-toggle-style)))
 
 (use-package theme-rotate-omarchy
-  :defer 1.5
+  :defer 5.0
   :ensure (:type file :main "~/.emacs.d/lisp/theme-rotate-omarchy.el" :files ("theme-rotate-omarchy.el")))
 
 ;; ef-dream, orange, ef-melissa-light, ef-arbutus

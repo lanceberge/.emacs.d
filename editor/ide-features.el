@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package eglot
-  :defer 1.4
+  :defer 3.0
   :commands (eglot-shutdown)
   :hook
   ((go-mode

@@ -2,12 +2,14 @@
 (use-package agent-shell
   :custom
   (agent-shell-show-config-icons nil)
+  (agent-shell-preferred-agent-config 'codex)
   :commands (agent-shell-openai-start-codex)
   :bind
+  (:map project-prefix-map
+        ("aa" . #'agent-shell))
   (:map +leader-map
-        ("na" . #'agent-shell-openai-start-codex))
-  (:map +leader2-map
-        ("sc" . #'agent-shell-send-dwim))
+        ("aa" . #'agent-shell)
+        ("ac" . #'agent-shell-send-dwim))
   :config
   (require 'agent-shell-openai)
   (setq agent-shell-openai-codex-acp-command

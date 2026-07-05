@@ -8,7 +8,7 @@
 
 (use-package magit
   :after modal
-  :defer 1.0
+  :defer 8.0
   :custom
   (magit-save-repository-buffers nil)
   (magit-no-confirm '(stage-all-changes amend-published))
@@ -58,7 +58,7 @@
   (setq magit-auto-revert-mode nil))
 
 (use-package vc
-  :defer 0.2
+  :defer 1.0
   :ensure nil
   :custom
   (vc-git-print-log-follow t)
@@ -154,7 +154,8 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
                 (diff-hl-update)))))))))
 
 (use-package diff-hl
-  :defer 0.5
+  :disabled t
+  :defer 5.0
   :hook
   (dired-mode . diff-hl-dired-mode)
   (magit-pre-refresh . diff-hl-magit-pre-refresh)

@@ -143,7 +143,6 @@
     (vertico-next)))
 
 (use-package helpful ; better help menu
-  :defer 0.7
   :bind
   (:map help-map
         ("x" . helpful-command)

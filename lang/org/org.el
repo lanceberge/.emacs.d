@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org
-  :defer 2.0
+  :defer 4.0
   :init
   (+modal-bind '+leader-map 'org-mode-hook
                '(("i TAB" . outline-toggle-children)
@@ -82,25 +82,20 @@
   (:map org-mode-map
         ([remap next-line] . #'+org-down)
         ([remap previous-line] . #'+org-up))
-  (:map org-agenda-mode-map
-        ([remap org-save-all-org-buffers] . #'+org-agenda-save-all-org-buffers))
   (:map +leader-map
         ("of" . #'+org-find-file)))
 
 (use-package org-project
   :ensure (:type file :main "~/.emacs.d/lisp/org-project/org-project.el" :files ("org-project.el"))
-  :hook
-  (savehist-mode . +org-project-savehist-mode)
-  :config
-  (require 'org-project-consult)
-  (when (bound-and-true-p savehist-mode)
-    (+org-project-savehist-mode 1))
   :bind
   (:map +leader-map
         ("ont" . #'+org-project-add-todo)
         ("ond" . #'+org-project-mark-done)
         ("onx" . #'+org-project-add-done)
-        ("onr" . #'+org-project-reset-project-file-for-current-project)))
+        ("onr" . #'+org-project-reset-project-file-for-current-project))
+  :config
+  (add-to-list 'savehist-additional-variables
+               '+org-project--project-files-for-dir))
 
 (use-package org-project-consult
   :ensure (:type file :main "~/.emacs.d/lisp/org-project/org-project-consult.el" :files ("org-project-consult.el"))

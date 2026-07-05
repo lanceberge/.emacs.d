@@ -46,7 +46,7 @@
 
 (use-package eshell
   :ensure nil
-  :defer 0.7
+  :defer 4.0
   :hook
   (eshell-mode . (lambda () (+insert-mode 1)))
   :init

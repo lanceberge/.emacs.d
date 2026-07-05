@@ -242,4 +242,5 @@
 
 ;; restore desktop after loading everything else
 (elpaca-wait)
-(desktop-read)
+(when (bound-and-true-p desktop-save-mode)
+  (desktop-read))

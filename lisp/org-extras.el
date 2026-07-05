@@ -2,7 +2,6 @@
 
 (require 'org)
 (require 'project)
-(require 'org-agenda)
 (require 'org-ql)
 
 (defgroup +org nil
