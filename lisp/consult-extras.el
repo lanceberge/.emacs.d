@@ -1,8 +1,14 @@
 ;;; -*- lexical-binding: t -*-
 
 (require 'consult)
+(require 'cl-lib)
 (require 'project)
 (require 'isearch-extras)
+(require 'grep-extras)
+
+(declare-function embark-export "embark")
+(declare-function embark-export-dired "embark")
+(defvar embark-exporters-alist)
 
 ;;;###autoload
 (defun +consult-project-file-source (dir &optional name)
@@ -99,6 +105,35 @@ Otherwise, just call consult-yank-pop."
 (defun +consult-ripgrep-here ()
   (interactive)
   (consult-ripgrep default-directory nil))
+
+;;;###autoload
+(defun +consult-grep-export-dired ()
+  "Export current Consult grep candidates to a Dired buffer."
+  (interactive)
+  (let ((embark-exporters-alist
+         (cons '(consult-grep . +consult-grep--export-dired)
+               embark-exporters-alist)))
+    (embark-export)))
+
+;;;###autoload
+(defun +consult-grep--export-dired (candidates)
+  "Create a Dired buffer for files from Consult grep CANDIDATES."
+  (let ((files (delete-dups
+                (delq nil
+                      (mapcar #'+consult-grep--candidate-file candidates)))))
+    (if files
+        (+grep-embark-export-dired-unique files)
+      (user-error "No files in grep candidates"))))
+
+;;;###autoload
+(defun +consult-grep--candidate-file (candidate)
+  "Return the file path from a Consult grep CANDIDATE."
+  (when (stringp candidate)
+    (when-let ((file (or (get-text-property 0 'consult--prefix-group candidate)
+                         (when-let ((file-end (next-single-property-change
+                                               0 'face candidate)))
+                           (substring-no-properties candidate 0 file-end)))))
+      (expand-file-name file))))
 
 ;;;###autoload
 (defun +consult--buffer (&optional sources initial-narrow initial)

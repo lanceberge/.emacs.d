@@ -24,7 +24,7 @@ Keep the package small and focused:
 
 ```
 (use-package consult-extras
-  :ensure (:type file :main "~/.emacs.d/packages/consult-extras.el")
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-extras.el" :files "~/.emacs.d/lisp/consult-extras.el")
   :custom
   (consult-preview-excluded-buffers #'+consult-preview-tramp-excluded-p)
   :bind

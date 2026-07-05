@@ -150,6 +150,13 @@
         (";" . #'compile-goto-error)
         ("q" . #'quit-window)))
 
+(use-package grep-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/grep-extras.el" :files ("grep-extras.el"))
+  :after grep
+  :demand t
+  :config
+  (keymap-set grep-mode-map "d" #'+grep-export-dired))
+
 (use-package menu-bar
   :ensure nil
   :bind

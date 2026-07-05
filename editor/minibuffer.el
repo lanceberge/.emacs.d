@@ -76,6 +76,8 @@
         ("b" . #'consult-project-buffer))
   (:map consult-narrow-map
         ("C-h" . #'+consult-narrow-help))
+  (:map vertico-map
+        ("M-D" . #'+consult-grep-export-dired))
   (:map search-map
         ("t" . #'+consult-find-todos)
         ("M-t" . #'+consult-project-find-todos)
