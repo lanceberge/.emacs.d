@@ -9,11 +9,11 @@
   (embark-confirm-act-all nil)
   (embark-quit-after-action
    '(
-     ;; (+find-file-new-window . nil)
-     ;; (+find-file-new-largest-window . nil)
-     ;; (+find-file-new-largest-window-action . nil)
-     ;; (+switch-to-buffer-new-window . nil)
-     ;; (+switch-to-buffer-new-window-action . nil)
+     ;; (+window-find-file-new . nil)
+     ;; (+window-find-file-new-largest . nil)
+     ;; (+window-find-file-new-largest-action . nil)
+     ;; (+window-switch-to-buffer-new . nil)
+     ;; (+window-switch-to-buffer-new-action . nil)
      (t . t)))
   :bind
   (:map +normal-mode-map
@@ -46,12 +46,12 @@
         ("k" . #'helpful-key))
   (:map embark-buffer-map
         ("e" . #'project-eshell)
-        ("o" . #'+ace-window-switch-to-buffer)
-        ("N" . #'+switch-to-buffer-new-window-action))
+        ("o" . #'+window-ace-switch-to-buffer)
+        ("N" . #'+window-switch-to-buffer-new-action))
   (:map embark-file-map
         ("e" . #'project-eshell)
-        ("o" . #'+ace-window-find-file)
-        ("N" . #'+find-file-new-largest-window-action))
+        ("o" . #'+window-ace-find-file)
+        ("N" . #'+window-find-file-new-largest-action))
   (:map embark-collect-mode-map
         ("F" . #'consult-focus-lines))
   (:map embark-identifier-map
@@ -118,7 +118,7 @@
         (".d" . #'delete-file)
         (".e" . #'eval-buffer)
         (".f" . #'consult-focus-lines)
-        (".g" . #'+revert-buffer)
+        (".g" . #'+window-revert-buffer)
         (".h" . #'mark-whole-buffer)
         (".k" . #'consult-keep-lines)
         (".l" . #'load-file)

@@ -80,7 +80,7 @@
         ("M-z" . #'+modal-zap-up-to-char-insert)
 
         ("X" . #'exchange-point-and-mark)
-        ("s-u" . #'+revert-buffer)
+        ("s-u" . #'+window-revert-buffer)
         ("S-<backspace>" . #'backward-kill-word)
         ("R" . #'+replace-char)
         ("<" . #'beginning-of-buffer)

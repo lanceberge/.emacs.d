@@ -20,7 +20,7 @@
 
 ;;;###autoload
 (defun +vertico-toggle-new-window-exit ()
-  "Toggle `+new-window-prefix' for the next `vertico-exit'."
+  "Toggle `+window-new-prefix' for the next `vertico-exit'."
   (interactive)
   (+vertico-toggle-window-exit-prefix 'new-window))
 
@@ -41,7 +41,7 @@
   "Apply the pending Vertico window exit prefix."
   (pcase +vertico-window-exit-prefix
     ('other-window (other-window-prefix))
-    ('new-window (+new-window-prefix)))
+    ('new-window (+window-new-prefix)))
   (setq +vertico-window-exit-prefix nil))
 
 ;;;###autoload
