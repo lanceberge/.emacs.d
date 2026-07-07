@@ -30,6 +30,13 @@ Nil means signal an error.  `prompt' means ask before creating a tab.
                  (const :tag "Auto" auto))
   :group '+project-tab)
 
+(defcustom +project-tab-other-project-missing-command nil
+  "Command called when there is no other tab in the current project.
+Nil means signal an error."
+  :type '(choice (const :tag "Signal an error" nil)
+                 (function :tag "Command"))
+  :group '+project-tab)
+
 (defcustom +tab-bar-next-create-command #'tab-new
   "Command called by `+project-tab-next' when creating a tab."
   :type 'function
@@ -80,8 +87,10 @@ The following commands are available:
 (defun +project-tab-other-project-command ()
   "Switch to the most recently used other project tab and read a project command."
   (interactive)
-  (+project-tab--select-other)
-  (+project-tab--call-project-command))
+  (let ((dir (when (project-current nil)
+               (project-root (project-current t)))))
+    (when (+project-tab--select-other)
+      (+project-tab--call-project-command dir))))
 
 ;;;###autoload
 (defun +project-tab-next-project-command (&optional arg)
@@ -143,15 +152,26 @@ When CREATE is non-nil, create a new tab if no existing project tab is found."
   "Switch to the most recently used other tab in the current project."
   (if (+project-tab--current-prefix)
       (if-let ((tab (seq-find #'+project-tab--tab-p
-                              (cdr (tab-bar--tabs-recent)))))
-          (tab-bar-select-tab (1+ (tab-bar--tab-index tab)))
-        (user-error "No other tabs for current project"))
+                              (tab-bar--tabs-recent))))
+          (progn
+            (tab-bar-select-tab (1+ (tab-bar--tab-index tab)))
+            t)
+        (+project-tab--handle-missing-other))
     (tab-bar-switch-to-recent-tab)))
 
 ;;;###autoload
-(defun +project-tab--call-project-command ()
-  "Read and run a project command for the selected tab's project."
-  (let* ((dir (project-root (project-current t)))
+(defun +project-tab--handle-missing-other ()
+  "Handle a missing other tab for the current project."
+  (if +project-tab-other-project-missing-command
+      (progn
+        (funcall +project-tab-other-project-missing-command)
+        nil)
+    (user-error "No other tabs for current project")))
+
+;;;###autoload
+(defun +project-tab--call-project-command (&optional dir)
+  "Read and run a project command for DIR or the selected tab's project."
+  (let* ((dir (or dir (project-root (project-current t))))
          (default-directory (file-name-as-directory dir))
          (project-current-directory-override dir)
          (command (project--switch-project-command dir)))
@@ -236,11 +256,21 @@ PREFIX defaults to the current project prefix."
 
 ;;;###autoload
 (defun +project-tab--current-prefix ()
-  "Return the tab name prefix for the current project, or nil."
-  (when-let ((project (project-current nil)))
-    (concat (file-name-nondirectory
-             (directory-file-name (project-root project)))
-            ":")))
+  "Return the tab name prefix for the current project tab, or nil."
+  (or (+project-tab--current-tab-prefix)
+      (when-let ((project (project-current nil)))
+        (concat (file-name-nondirectory
+                 (directory-file-name (project-root project)))
+                ":"))))
+
+;;;###autoload
+(defun +project-tab--current-tab-prefix ()
+  "Return the project prefix from the current tab name, or nil."
+  (when-let* ((tab (tab-bar--current-tab-find))
+              (name (alist-get 'name tab))
+              (index (string-search ":" name))
+              ((not (zerop index))))
+    (substring name 0 (1+ index))))
 
 ;;;###autoload
 (defun +project-tab--current-tab-p (tab)

@@ -14,6 +14,7 @@
   :ensure (:type file :main "~/.emacs.d/lisp/project-tab.el" :files ("project-tab.el"))
   :custom
   (tab-bar-tab-name-function #'+project-tab-name-tab-function)
+  (+project-tab-other-project-missing-command #'+project-tab-new-project-command)
   :bind
   (:map project-prefix-map
         ("[" . #'+project-tab-prev-project-command)
@@ -22,7 +23,8 @@
         ("j" . #'+project-tab-switch-other-project-command)
         ("p" . #'+project-tab-switch-project-command))
   (:map ctl-x-map
-        ("tn" . #'+project-tab-new-project-command))
+        ("tn" . #'+project-tab-new-project-command)
+        ("to" . #'+project-tab-other-project-command))
   (:map +leader-map
         ("k" . #'+project-tab-switch-project-command)
         ("j" . #'+project-tab-switch-other-project-command))
