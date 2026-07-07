@@ -59,5 +59,4 @@
         ("k" . #'+tabspace-kill-buffer-dwim))
   (:map +leader-map
         ("l" . #'+tabspace-other-buffer-dwim)
-        ;; ("bo" . #'+tabspace-other-special-buffer-dwim)
-        ))
+        ("bo" . #'+tabspace-other-special-buffer-dwim)))
