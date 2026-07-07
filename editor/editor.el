@@ -266,7 +266,7 @@
   (setq-local +puni-extras-default-kill-region-command #'+puni-soft-kill-region))
 
 (use-package puni
-  :hook (prog-mode . +puni-mode)
+  :hook ((prog-mode nxml-mode) . +puni-mode)
   :init
   (+modal-create-insert-function puni-kill-line)
   (+modal-create-insert-function puni-forward-delete-char)

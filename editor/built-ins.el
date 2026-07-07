@@ -275,8 +275,8 @@
 (defun +indent-rigidly-dwim ()
   (interactive)
   (unless (region-active-p)
-    (call-interactively #'indent-rigidly))
-  (+mark-whole-lines 1))
+    (+mark-whole-lines 1))
+  (call-interactively #'indent-rigidly))
 
 (use-package rect
   :ensure nil

@@ -22,7 +22,7 @@
   :ensure (:type file :main "~/.emacs.d/lisp/window-extras.el" :files ("window-extras.el"))
   :bind
   (:map +leader-map
-        ("SPC l" . #'+window-other-buffer))
+        ("bo" . #'+other-buffer))
   :config
   (advice-add 'other-window :before #'+window-split-if-single)
   (setq other-window-scroll-default #'+window-switchy-other-window))

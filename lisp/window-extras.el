@@ -196,7 +196,7 @@ the selected window when no minibuffer is active."
   (revert-buffer t t))
 
 ;;;###autoload
-(defun +window-other-buffer ()
+(defun +other-buffer ()
   "Switch to the most recently selected other buffer."
   (interactive)
   (switch-to-buffer (other-buffer)))
