@@ -9,8 +9,7 @@
   :bind
   (:map project-prefix-map
         ("C-g" . #'keyboard-quit)
-        ("p" . #'+project-switch-project)
-        ("o" . #'+project-other-buffer))
+        ("o" . #'keyboard-quit))
   (:map search-map
         ("f" . #'project-find-file)
         ("d" . #'project-find-dir)
@@ -33,8 +32,6 @@
         ("pj" . #'+project-other-project-command)
         ("k" . #'+project-kill-buffer))
   (:map +leader-map
-        ("k" . #'+project-switch-project)
-        ("j" . #'+project-other-project-command)
         ("l" . #'+project-other-buffer)
         ("rp" . #'+project-reload-and-switch)
         ("bo" . #'+project-other-special-buffer-dwim)))

@@ -177,28 +177,8 @@ the selected window when no minibuffer is active."
     target))
 
 ;;;###autoload
-(defun +window-other-tab-switch-project ()
-  "Switch project in another tab."
-  (interactive)
-  (other-tab-prefix)
-  (call-interactively #'+project-other-project-command))
-
-;;;###autoload
-(defun +window-tab-bar-tab-name-project ()
-  "Generate tab name as PROJECT:BUFFER from the selected window's buffer."
-  (let* ((win (or (minibuffer-selected-window)
-                  (and (window-minibuffer-p) (get-mru-window))))
-         (buf (window-buffer win))
-         (name (buffer-name buf))
-         (project (with-current-buffer buf (project-current))))
-    (if project
-        (format "%s:%s"
-                (file-name-nondirectory
-                 (directory-file-name (project-root project)))
-                name)
-      name)))
-
-;;;###autoload
+;; TODO this should be improved. it should save the window config for the other buffers when you call it.
+;; this enables you to swap buffers without undoing them - only undo the other unzoomed tabs
 (defun +window-toggle-tab-zoom ()
   "Delete other windows in frame if any, or restore previous window config."
   (interactive)

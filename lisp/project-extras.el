@@ -163,21 +163,9 @@ this function allows special buffers."
   (call-interactively #'+project-switch-project))
 
 ;;;###autoload
-(defun +kill-zombie-buffers ()
-  (interactive)
-  (let ((buffers-killed 0))
-    (dolist (buffer (buffer-list))
-      (let ((file-name (buffer-file-name buffer)))
-        (when (and file-name (not (file-exists-p file-name)))
-          (kill-buffer buffer)
-          (setq buffers-killed (+ 1 buffers-killed)))))
-    (message "Killed %d non-existent file buffer(s)." buffers-killed)))
-
-;;;###autoload
 (defun +project-load-projects ()
   (interactive)
   (project-forget-zombie-projects)
-  (+kill-zombie-buffers)
   ;; dirs to remember
   (dolist (dir '("~/.emacs.d/" "~/.config/nixos" "~/dotfiles/" ))
     (when (file-directory-p dir)

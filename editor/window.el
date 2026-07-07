@@ -86,56 +86,6 @@
         ("n" . #'windresize-down)
         ("g" . #'windresize-exit)))
 
-(use-package tab-bar-repeat
-  :ensure nil
-  :bind
-  (:repeat-map +tab-bar-repeat-map
-               ("]" . #'tab-bar-switch-to-next-tab)
-               ("0" . #'tab-bar-close-tab)
-               ("[" . #'tab-bar-switch-to-prev-tab))
-  (:map +forward-map
-        ("t" . #'tab-bar-switch-to-next-tab))
-  (:map +backward-map
-        ("t" . #'tab-bar-switch-to-prev-tab)))
-
-(use-package tab-bar
-  :ensure nil
-  :custom
-  (tab-bar-show nil)
-  (tab-bar-tab-name-function #'+window-tab-bar-tab-name-project)
-  :hook
-  (after-init . tab-bar-mode)
-  (tab-bar-mode . tab-bar-history-mode)
-  :bind
-  (:map ctl-x-map
-        ("pt" . #'+window-other-tab-switch-project)
-        ("to" . #'tab-bar-switch-to-recent-tab)
-        ("t[" . #'tab-bar-switch-to-prev-tab)
-        ("t]" . #'tab-bar-switch-to-next-tab)
-        ("tf" . #'+consult-tab)
-        ("1" . #'+window-toggle-tab-zoom))
-  (:map +leader-map
-        ("nt" . #'tab-bar-new-tab)))
-
-(use-package consult-tab-bar
-  :ensure (:type file :main "~/.emacs.d/lisp/consult-tab.el" :files ("consult-tab.el"))
-  :bind
-  (:map ctl-x-map
-        ("tf" . #'+consult-tab)))
-
-(use-package tab-bar-repeat
-  :ensure nil
-  :bind
-  (:repeat-map window-repeat-map
-               ("[" . #'tab-bar-history-back)
-               ("]" . #'tab-bar-history-forward)
-               :exit
-               ("1" . #'+window-toggle-tab-zoom))
-  (:map +backward-map
-        ("w" . #'tab-bar-history-back))
-  (:map +forward-map
-        ("w" . #'tab-bar-history-forward)))
-
 (use-package pulsar
   :hook
   (window-buffer-change-functions . +window-pulsar-pulse-line-no-minibuffer))
