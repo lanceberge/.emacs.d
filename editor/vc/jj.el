@@ -4,7 +4,8 @@
   :ensure (:type file :main "~/.emacs.d/lisp/jj-extras.el" :files ("jj-extras.el"))
   :init
   (setq majutsu-workspace-add-command #'+jj-workspace-after-add
-        majutsu-workspace-add-dir #'+jj-workspace-add-dir)
+        majutsu-workspace-add-dir #'+jj-workspace-add-dir
+        majutsu-workspace-forget-command #'+majutsu-forget-command)
   :bind
   (:map +normal-mode-map
         ("ji" . #'+jj-init)
@@ -12,6 +13,19 @@
         ("jn" . #'+jj-new)
         ("jm" . #'+jj-describe)
         ("js" . #'+jj-squash)))
+
+;;;###autoload
+(defun +majutsu-forget-command (directory)
+  (let ((project-root (file-name-as-directory
+                       (expand-file-name directory))))
+    (when-let* (((and (fboundp 'project-current)
+                      (fboundp 'project-kill-buffers)))
+                (project (project-current nil project-root)))
+      (project-kill-buffers t project))
+    (when (fboundp 'project-forget-project)
+      (project-forget-project project-root))
+    (when (file-directory-p project-root)
+      (delete-directory project-root t))))
 
 (use-package majutsu
   :ensure (:host github :repo "lanceberge/majutsu")

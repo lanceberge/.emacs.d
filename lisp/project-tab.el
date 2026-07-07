@@ -4,6 +4,7 @@
 (require 'project)
 (require 'repeat)
 (require 'seq)
+(require 'subr-x)
 (require 'tab-bar)
 
 (autoload '+project-last-opened-other-project-root "project-extras" nil nil)
@@ -63,13 +64,14 @@ Nil means signal an error."
   (tab-bar-new-tab arg))
 
 ;;;###autoload
-(defun +project-tab-new-project-command ()
-  "Run a project command, displaying the resulting buffer in a new tab.
+(defun +project-tab-new-project-command (&optional dir)
+  "Run a project command for DIR, displaying the resulting buffer in a new tab.
+DIR defaults to the current project root.
 The following commands are available:
 \\{project-prefix-map}"
   (interactive)
   (tab-bar-new-tab)
-  (+project-tab--call-project-command))
+  (+project-tab--call-project-command dir))
 
 ;;;###autoload
 (defun +project-tab-switch-project-command (dir)
@@ -140,12 +142,22 @@ When CREATE is non-nil, create a new tab if no existing project tab is found."
         (tab-bar-new-tab)))))
 
 ;;;###autoload
-;; TODO update this to account for workspaces
 (defun +project-tab-project-prefix (dir)
   "Return the tab name prefix for project DIR."
-  (concat (file-name-nondirectory
-           (directory-file-name (project-root (project-current t dir))))
-          ":"))
+  (concat (+project-tab-project-name dir) ":"))
+
+;;;###autoload
+(defun +project-tab-project-name (dir)
+  "Return the display name for DIR's project."
+  (let* ((root (directory-file-name
+                (abbreviate-file-name
+                 (project-root (project-current t dir))))))
+    (if (string-prefix-p "~/" root)
+        (let ((parts (split-string (substring root 2) "/" t)))
+          (if (= (length parts) 1)
+              (concat "~/" (car parts))
+            (string-join (last parts 2) "/")))
+      (string-join (last (split-string root "/" t) 2) "/"))))
 
 ;;;###autoload
 (defun +project-tab--select-other ()
@@ -259,9 +271,7 @@ PREFIX defaults to the current project prefix."
   "Return the tab name prefix for the current project tab, or nil."
   (or (+project-tab--current-tab-prefix)
       (when-let ((project (project-current nil)))
-        (concat (file-name-nondirectory
-                 (directory-file-name (project-root project)))
-                ":"))))
+        (+project-tab-project-prefix (project-root project)))))
 
 ;;;###autoload
 (defun +project-tab--current-tab-prefix ()
@@ -287,25 +297,8 @@ PREFIX defaults to the current project prefix."
          (name (buffer-name buf))
          (project (with-current-buffer buf (project-current))))
     (if project
-        (format "%s:%s"
-                (file-name-nondirectory
-                 (directory-file-name (project-root project)))
-                name)
-      name)))
-
-
-;;;###autoload
-(defun +project-tab-name-tab-function ()
-  "Generate tab name as PROJECT:BUFFER from the selected window's buffer."
-  (let* ((win (or (minibuffer-selected-window)
-                  (and (window-minibuffer-p) (get-mru-window))))
-         (buf (window-buffer win))
-         (name (buffer-name buf))
-         (project (with-current-buffer buf (project-current))))
-    (if project
-        (format "%s:%s"
-                (file-name-nondirectory
-                 (directory-file-name (project-root project)))
+        (format "%s%s"
+                (+project-tab-project-prefix (project-root project))
                 name)
       name)))
 

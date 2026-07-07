@@ -1,13 +1,14 @@
 ;;; jj-extras.el --- Jujutsu helpers -*- lexical-binding: t -*-
 
 (require 'project)
-(require 'project-extras)
 (require 'subr-x)
 (require 'transient)
 (require 'vc)
 
 (declare-function eshell-command "eshell" (command &optional to-current-buffer))
 (declare-function majutsu-new "majutsu-new")
+
+(autoload '+project-tab-new-project-command "project-tab" nil t)
 
 (defgroup +jj nil
   "Jujutsu extensions."
@@ -55,7 +56,7 @@ The command is run asynchronously from the new workspace root."
         (eshell-command (concat +jj-workspace-elixir-setup-command " &"))))
     (let ((default-directory root)
           (project-current-directory-override root))
-      (call-interactively (+project-switch-project-command-or-quit root)))))
+      (+project-tab-new-project-command root))))
 
 ;;;###autoload
 (defun +jj-workspace-add-dir ()

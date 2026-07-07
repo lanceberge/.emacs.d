@@ -160,8 +160,9 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
   (dired-mode . diff-hl-dired-mode)
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
-  (majutsu-post-refresh . majutsu-diff-hl-post-refresh)
-  (+jj-post-new-hook . majutsu-diff-hl-post-refresh)
+  ;; TODO fix this shit
+  ;; (majutsu-post-refresh . +majutsu-diff-hl-post-refresh)
+  (+jj-post-new-hook . +majutsu-diff-hl-post-refresh)
   :bind
   (:map +backward-map
         ("h" . #'+diff-hl-previous-hunk))
