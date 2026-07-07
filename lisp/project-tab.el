@@ -246,6 +246,23 @@ PREFIX defaults to the current project prefix."
 (defun +project-tab--current-tab-p (tab)
   "Return non-nil when TAB is the current tab."
   (eq (car tab) 'current-tab))
+;;;###autoload
+
+;;;###autoload
+(defun +project-tab-name-tab-function ()
+  "Generate tab name as PROJECT:BUFFER from the selected window's buffer."
+  (let* ((win (or (minibuffer-selected-window)
+                  (and (window-minibuffer-p) (get-mru-window))))
+         (buf (window-buffer win))
+         (name (buffer-name buf))
+         (project (with-current-buffer buf (project-current))))
+    (if project
+        (format "%s:%s"
+                (file-name-nondirectory
+                 (directory-file-name (project-root project)))
+                name)
+      name)))
+
 
 ;;;###autoload
 (defun +project-tab-name-tab-function ()

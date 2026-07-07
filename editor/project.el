@@ -25,16 +25,12 @@
   (:map project-prefix-map
         ("c" . #'+project-compile)))
 
+;; TODO remove some of this
 (use-package project-extras
   :ensure (:type file :main "~/.emacs.d/lisp/project-extras.el" :files ("project-extras.el"))
   :bind
-  (:map ctl-x-map
-        ("pj" . #'+project-other-project-command)
-        ("k" . #'+project-kill-buffer))
   (:map +leader-map
-        ("l" . #'+project-other-buffer)
-        ("rp" . #'+project-reload-and-switch)
-        ("bo" . #'+project-other-special-buffer-dwim)))
+        ("rp" . #'+project-reload-and-switch)))
 
 ;; update zoxide history -- cli tool that memoizes visited dirs
 ;;;###autoload

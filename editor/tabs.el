@@ -44,22 +44,17 @@
         ("tF" . #'+consult-tab)
         ("tf" . #'+consult-project-tab-find)))
 
-(with-eval-after-load 'consult
-  ;; hide full buffer list (still available with "b" prefix)
-  ;; (plist-put consult-source-buffer :hidden t)
-  ;; (plist-put consult-source-buffer :default nil)
-  ;; set consult-workspace buffer list
-  (defvar consult--source-workspace
-    (list :name     "Workspace Buffers"
-          :narrow   ?w
-          :history  'buffer-name-history
-          :category 'buffer
-          :state    #'consult--buffer-state
-          :default  t
-          :items    (lambda () (consult--buffer-query
-                                :predicate #'tabspaces--local-buffer-p
-                                :sort 'visibility
-                                :as #'buffer-name)))
+(use-package tabspaces
+  :hook
+  (tab-bar-mode . tabspaces-mode))
 
-    "Set workspace buffer list for consult-buffer.")
-  (add-to-list 'consult-buffer-sources 'consult--source-workspace))
+(use-package tabspace-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/tabspace-extras.el" :files ("tabspace-extras.el"))
+  :after tabspaces
+  :demand t
+  :bind
+  (:map ctl-x-map
+        ("k" . #'+tabspace-kill-buffer-dwim))
+  (:map +leader-map
+        ("l" . #'+tabspace-other-buffer-dwim)
+        ("bo" . #'+tabspace-other-special-buffer-dwim)))
