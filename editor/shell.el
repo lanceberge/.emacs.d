@@ -31,6 +31,28 @@
   (+insert-mode 1)
   (eat-self-input 1 ?\t))
 
+;;;###autoload
+(defun +eat--record-shell-command-in-line-history (encoded-command)
+  "Record Eat shell integration ENCODED-COMMAND in line input history."
+  (when-let* ((command (ignore-errors
+                         (decode-coding-string
+                          (base64-decode-string encoded-command)
+                          locale-coding-system))))
+    (+eat--add-to-line-input-history command)))
+
+;;;###autoload
+(defun +eat--add-to-line-input-history (command)
+  "Add COMMAND to Eat's line input history for the current buffer."
+  (unless (or (string-empty-p command)
+              (and (ring-p eat--line-input-ring)
+                   (not (ring-empty-p eat--line-input-ring))
+                   (equal command (ring-ref eat--line-input-ring 0))))
+    (unless eat--line-input-ring
+      (setq eat--line-input-ring
+            (make-ring eat-line-input-ring-size)))
+    (ring-insert eat--line-input-ring command)
+    (eat--line-reset-input-ring-vars)))
+
 (use-package eat
   :custom
   (eat-enable-auto-line-mode t)
@@ -44,7 +66,13 @@
   (eshell-first-time-mode . eat-eshell-mode)
   :bind
   (:map eat-line-mode-map
-        ("TAB" . +eat-semi-char-tab)))
+        ("TAB" . +eat-semi-char-tab)
+        ("M-r" . #'consult-history))
+  :config
+  (advice-add 'eat--set-cmd
+              :before #'+eat--record-shell-command-in-line-history)
+  (add-to-list 'consult-mode-histories
+               '(eat-mode eat--line-input-ring eat--line-input-ring-index)))
 
 ;;;###autoload
 (defun +eat-eshell-use-modal-cursor ()

@@ -52,6 +52,8 @@
         ("P" . #'majutsu-git-push)
         ("m" . #'majutsu-describe))
   (:map majutsu-diff-mode-map
-        ("P" . #'majutsu-git-push)))
+        ("P" . #'majutsu-git-push))
+  :config
+  (require 'majutsu-git))
 
 (use-package vc-jj)

@@ -13,7 +13,6 @@
         ([remap save-buffer] . #'kill-current-buffer))
   (:map minibuffer-mode-map
         ([remap newline] . #'exit-minibuffer)
-        ([remap insert-newline-indent] . #'exit-minibuffer)
         ([remap +keyboard-quit-normal] . #'abort-minibuffers)
         ("C-g" . #'abort-minibuffers)))
 

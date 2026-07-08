@@ -151,13 +151,24 @@ When CREATE is non-nil, create a new tab if no existing project tab is found."
   "Return the display name for DIR's project."
   (let* ((root (directory-file-name
                 (abbreviate-file-name
-                 (project-root (project-current t dir))))))
-    (if (string-prefix-p "~/" root)
-        (let ((parts (split-string (substring root 2) "/" t)))
-          (if (= (length parts) 1)
-              (concat "~/" (car parts))
-            (string-join (last parts 2) "/")))
-      (string-join (last (split-string root "/" t) 2) "/"))))
+                 (project-root (project-current t dir)))))
+         (remote-end (and (file-remote-p root)
+                          (string-search ":" root (1+ (string-search ":" root 1)))))
+         (remote-name (when remote-end
+                        (substring root 1 (1+ remote-end))))
+         (local-root (if remote-end
+                         (substring root (1+ remote-end))
+                       root))
+         (project-name
+          (if (string-prefix-p "~/" local-root)
+              (let ((parts (split-string (substring local-root 2) "/" t)))
+                (if (= (length parts) 1)
+                    (concat "~/" (car parts))
+                  (string-join (last parts 2) "/")))
+            (string-join (last (split-string local-root "/" t) 2) "/"))))
+    (if remote-name
+        (concat remote-name project-name)
+      project-name)))
 
 ;;;###autoload
 (defun +project-tab--select-other ()
@@ -269,9 +280,9 @@ PREFIX defaults to the current project prefix."
 ;;;###autoload
 (defun +project-tab--current-prefix ()
   "Return the tab name prefix for the current project tab, or nil."
-  (or (+project-tab--current-tab-prefix)
-      (when-let ((project (project-current nil)))
-        (+project-tab-project-prefix (project-root project)))))
+  (or (when-let ((project (project-current nil)))
+        (+project-tab-project-prefix (project-root project)))
+      (+project-tab--current-tab-prefix)))
 
 ;;;###autoload
 (defun +project-tab--current-tab-prefix ()

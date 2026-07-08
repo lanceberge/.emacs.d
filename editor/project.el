@@ -6,6 +6,7 @@
   :custom
   (project-switch-use-entire-map t)
   (project-mode-line t)
+  (project-vc-ignores '("*.zip"))
   :bind
   (:map project-prefix-map
         ("C-g" . #'keyboard-quit)

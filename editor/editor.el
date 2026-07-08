@@ -45,12 +45,12 @@
         ("f" . #'helpful-function)
         ("k" . #'helpful-key))
   (:map embark-buffer-map
-        ("e" . #'project-eshell)
+        ("e" . #'eshell)
         ("o" . #'+window-ace-switch-to-buffer)
         ("N" . #'+window-switch-to-buffer-new-action)
         ("TAB k" . #'tabspaces-remove-buffer))
   (:map embark-file-map
-        ("e" . #'project-eshell)
+        ("e" . #'eshell)
         ("o" . #'+window-ace-find-file)
         ("N" . #'+window-find-file-new-largest-action))
   (:map embark-collect-mode-map

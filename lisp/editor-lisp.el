@@ -84,13 +84,6 @@
         (replace-match (cdr (assoc-string (match-string 0) alist)))))))
 
 ;;;###autoload
-(defun +rectangle-mode (&optional arg)
-  (interactive "p")
-  (rectangle-mark-mode)
-  (forward-char)
-  (next-line (- arg 1)))
-
-;;;###autoload
 (defun +insert-newlines-above (arg)
   (interactive "p")
   ;; save excursion didn't work if point is at line-beginning-position
@@ -107,13 +100,6 @@
     (end-of-line)
     (dotimes (_ arg)
       (newline))))
-
-;;;###autoload
-(defun insert-newline-indent ()
-  (interactive)
-  (save-excursion
-    (newline)
-    (indent-for-tab-command)))
 
 ;;;###autoload
 (defun +server-edit ()
