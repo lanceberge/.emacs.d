@@ -2,6 +2,8 @@
 
 (require 'project)
 (require 'project-extras)
+(require 'project-tab)
+(require 'cl-lib)
 (require 'consult)
 (require 'tabspaces)
 
@@ -41,15 +43,17 @@ exists."
 
 ;;;###autoload
 (defun +tabspace-kill-buffer-dwim ()
-  "Kill the current buffer and switch to the most recent project tabspace buffer."
+  "Kill or remove the current buffer, then switch to a recent project buffer.
+Kill the buffer when it only belongs to the current tabspace.  Otherwise remove
+it from the current tabspace."
   (interactive)
   (let* ((buffer (current-buffer)))
     (if-let ((other-buffer (+tabspace-other-buffer 1)))
         (progn
           (switch-to-buffer other-buffer)
-          (tabspaces-remove-buffer buffer))
+          (+tabspace-kill-or-remove-buffer buffer))
       (switch-to-buffer (+project-other-buffer-buffer 1))
-      (tabspaces-remove-buffer buffer))))
+      (+tabspace-kill-or-remove-buffer buffer))))
 
 ;;;###autoload
 (defun +tabspace-other-buffer-in-project (n &optional project)
@@ -71,6 +75,29 @@ exists."
           (or (eq buffer (current-buffer))
               (not (buffer-file-name buffer))))
         (+tabspace-local-buffer-list))))
+
+;;;###autoload
+(defun +tabspace-kill-or-remove-buffer (buffer)
+  "Kill BUFFER if it belongs only to this tabspace, otherwise remove it."
+  (if (+tabspace-buffer-in-other-tabspace-p buffer)
+      (tabspaces-remove-buffer buffer)
+    (kill-buffer buffer)))
+
+;;;###autoload
+(defun +tabspace-buffer-in-other-tabspace-p (buffer)
+  "Return non-nil when BUFFER belongs to another tabspace."
+  (or (member (buffer-name buffer) tabspaces-include-buffers)
+      (let* ((tabs (funcall tab-bar-tabs-function))
+             (current-index (tab-bar--current-tab-index tabs))
+             (prefix (+project-tab--current-prefix)))
+        (cl-loop for tab in tabs
+                 for index from 0
+                 unless (= index current-index)
+                 thereis
+                 (and (or (not prefix)
+                          (+project-tab--tab-p tab prefix))
+                      (cl-loop for tab-buffer in (tabspaces--buffer-list nil index)
+                               thereis (eq tab-buffer buffer)))))))
 
 ;;;###autoload
 (defun +tabspace-other-special-buffer-buffer ()
