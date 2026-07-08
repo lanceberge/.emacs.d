@@ -6,13 +6,7 @@
         ("M-p" . #'+drag-stuff-up))
   (:map prog-mode-map
         ("M-n" . #'+drag-stuff-down)
-        ("M-p" . #'+drag-stuff-up))
-  ;; (:map +normal-mode-map
-  ;;       ("M-H" . #'+drag-stuff-word-left)
-  ;;       ("M-L" . #'+drag-stuff-word-right)
-  ;;       ("M-h" . #'+drag-stuff-left-dwim)
-  ;;       ("M-l" . #'+drag-stuff-right-dwim))
-  )
+        ("M-p" . #'+drag-stuff-up)))
 
 ;;;###autoload
 (defun +drag-stuff-up ()

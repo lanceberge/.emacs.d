@@ -10,6 +10,20 @@
   (:map ctl-x-map
         ("1" . #'+window-toggle-tab-zoom)))
 
+(use-package tab-bar-history
+  :ensure nil
+  :bind
+  (:repeat-map tab-bar-history-repeat
+               ("." . #'repeat)
+               ("[" . #'tab-bar-history-back)
+               ("]" . #'tab-bar-history-forward)
+               :exit
+               ("1" . #'delete-other-windows))
+  (:map +forward-map
+        ("w" . #'tab-bar-history-forward))
+  (:map +backward-map
+        ("w" . #'tab-bar-history-back)))
+
 (use-package project-tab
   :ensure (:type file :main "~/.emacs.d/lisp/project-tab.el" :files ("project-tab.el"))
   :custom

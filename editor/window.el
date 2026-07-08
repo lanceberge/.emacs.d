@@ -27,11 +27,11 @@
 (use-package other-window
   :ensure nil
   :bind
-  ("M-o" . #'other-window)
-  ("M-O" . #'+window-other-previous)
-  :config
-  (setq other-window-repeat-map nil))
+  (:map +global-map
+        ("M-o" . #'other-window)
+        ("M-O" . #'+window-other-previous)))
 
+(setq other-window-repeat-map nil)
 (use-package ace-window
   :hook
   (emacs-startup . ace-window-display-mode)

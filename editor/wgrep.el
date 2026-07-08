@@ -18,7 +18,7 @@
 ;;;###autoload
 (defun +wgrep-finish-edit ()
   (interactive)
-  (xref-edit-save-changes)
+  (wgrep-finish-edit)
   (project-save-some-buffers t)
   (+motion-mode 1))
 

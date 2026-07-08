@@ -19,16 +19,14 @@
   (interactive "p")
   (previous-line arg)
   (when (eolp)
-    (org-end-of-line))
-  (deactivate-mark))
+    (org-end-of-line)))
 
 ;;;###autoload
 (defun +org-down (&optional arg)
   (interactive "p")
   (next-line arg)
   (when (eolp)
-    (org-end-of-line))
-  (deactivate-mark))
+    (org-end-of-line)))
 
 ;;;###autoload
 (defun +org-find-file ()
@@ -36,21 +34,6 @@
   (let* ((org-dir (expand-file-name +org-directory))
          (pr (cons 'transient org-dir)))
     (project-find-file-in nil (list org-dir) pr)))
-
-
-;; ;;;###autoload
-;; (defun +org-metaleft-dwim (arg)
-;;   (interactive "P")
-;;   (if (not (region-active-p))
-;;       (org-metaleft arg)
-;;     (+drag-stuff-left-dwim (if (full-line-region-p) 2 arg))))
-;;
-;; ;;;###autoload
-;; (defun +org-metaright-dwim (arg)
-;;   (interactive "P")
-;;   (if (not (region-active-p))
-;;       (org-metaright arg)
-;;     (+drag-stuff-right-dwim (if (full-line-region-p) 2 arg))))
 
 ;;;###autoload
 (defun +org--has-filetag-p (tag)

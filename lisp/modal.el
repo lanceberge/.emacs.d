@@ -249,7 +249,7 @@ ARGS provides a `:name' atom."
   "Determine what modal state the current buffer should be in."
   (cond
    (+modal-desired-state +modal-desired-state)
-   ((or (minibufferp) (derived-mode-p 'eshell-mode 'eat-mode)) 'insert)
+   ((or (minibufferp) (derived-mode-p 'eshell-mode 'eat-mode 'ghostel-mode 'agent-shell-mode)) 'insert)
    ((derived-mode-p 'special-mode 'dired-mode 'magit-mode 'org-agenda-mode
                     'help-mode 'Info-mode 'compilation-mode
                     'diff-mode 'package-menu-mode
@@ -297,6 +297,7 @@ ARGS provides a `:name' atom."
 ;;; Insert entries
 (dolist (function '(+kill-line
                     delete-char
+                    backward-delete-char
                     forward-char
                     backward-char
                     forward-word
@@ -350,6 +351,19 @@ ARGS provides a `:name' atom."
     (forward-char (or arg 1))))
 
 ;;; Modal Utils
+;;;###autoload
+(defun +modal-mark-end-of-line (arg)
+  (interactive "p")
+  (unless (region-active-p)
+    (set-mark (point)))
+  (end-of-line arg))
+
+;;;###autoload
+(defun +modal-mark-beginning-of-line (arg)
+  (interactive "p")
+  (unless (region-active-p)
+    (set-mark (point)))
+  (beginning-of-line arg))
 
 ;;;###autoload
 (defun +left-expand (arg)

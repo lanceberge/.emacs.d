@@ -14,7 +14,7 @@
      ;; (+window-find-file-new-largest-action . nil)
      ;; (+window-switch-to-buffer-new . nil)
      ;; (+window-switch-to-buffer-new-action . nil)
-     (t . t)))
+     (t . nil)))
   :bind
   (:map +normal-mode-map
         ("C-." . #'embark-act)
@@ -35,11 +35,11 @@
         ("C-." . #'embark-act)
         ("M-'" . #'embark-dwim))
   (:map embark-become-file+buffer-map
-        ("k" . #'+project-switch-project)
+        ("k" . #'project-switch-project)
         ("f" . #'project-find-file)
         ("d" . #'project-find-dir)
         ("g" . #'consult-ripgrep)
-        ("b" . #'+consult-project-buffer))
+        ("b" . #'consult-buffer))
   (:map embark-become-help-map
         ("v" . #'helpful-variable)
         ("f" . #'helpful-function)
@@ -271,7 +271,7 @@
   (setq-local +puni-extras-default-kill-region-command #'+puni-soft-kill-region))
 
 (use-package puni
-  :hook ((prog-mode nxml-mode) . +puni-mode)
+  :hook ((prog-mode nxml-mode yaml-gotmpl-mode) . +puni-mode)
   :init
   (+modal-create-insert-function puni-kill-line)
   (+modal-create-insert-function puni-forward-delete-char)
@@ -339,6 +339,7 @@
   :init
   (dolist (function '(+mark-forward-char
                       +mark-backward-char
+                      +mark-backward-line
                       +mark-forward-line
                       +mark-forward-word
                       +mark-backward-word))

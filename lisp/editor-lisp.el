@@ -65,24 +65,6 @@
           (exchange-point-and-mark))
     (user-error "region is not active")))
 
-;; https://stackoverflow.com/questions/2588277/how-can-i-swap-or-replace-multiple-strings-in-code-at-the-same-time
-;;;###autoload
-(defun parallel-replace (plist &optional start end)
-  (interactive
-   `(,(cl-loop with input = (read-from-minibuffer "Replace: ")
-               with limit = (length input)
-               for (item . index) = (read-from-string input 0)
-               then (read-from-string input index)
-               collect (prin1-to-string item t) until (<= limit index))
-     ,@(if (use-region-p) `(,(region-beginning) ,(region-end)))))
-  (let* ((alist (cl-loop for (key val . tail) on plist by #'cddr
-                         collect (cons key val)))
-         (matcher (regexp-opt (mapcar #'car alist) 'words)))
-    (save-excursion
-      (goto-char (or start (point)))
-      (while (re-search-forward matcher (or end (point-max)) t)
-        (replace-match (cdr (assoc-string (match-string 0) alist)))))))
-
 ;;;###autoload
 (defun +insert-newlines-above (arg)
   (interactive "p")

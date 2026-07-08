@@ -2,7 +2,7 @@
 
 ;;;###autoload
 (define-minor-mode +user-lisp-mode
-  "Enable local behavior for Lisp files in `user-emacs-directory'."
+  "Enable local behavior for files in `user-emacs-directory'/lisp."
   :lighter " User-Lisp"
   (if +user-lisp-mode
       (progn

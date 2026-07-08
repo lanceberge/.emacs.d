@@ -2,6 +2,7 @@
 ;;;###autoload
 ;; TODO hook to renaming .ex files
 ;; TODO rename functional component function names as well
+;; TODO use xref for this
 (defun +elixir-rename-module ()
   (interactive)
   (let* ((current-module-name (+elixir--current-module-name))

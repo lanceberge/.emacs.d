@@ -86,10 +86,10 @@ Embedded HEEx uses the package-provided sexp behavior."
 (use-package yaml-mode)
 
 ;;;###autoload
-(define-derived-mode gotmpl-mode yaml-mode "GoTmpl"
+(define-derived-mode yaml-gotmpl-mode yaml-mode "GoTmpl"
   :syntax-table yaml-mode-syntax-table)
 
-(add-to-list 'auto-mode-alist '("\\.gotmpl\\'" . gotmpl-mode))
+(add-to-list 'auto-mode-alist '("\\.yaml.gotmpl\\'" . yaml-gotmpl-mode))
 
 (use-package yaml-imenu
   :if (executable-find "ruby")
@@ -97,7 +97,7 @@ Embedded HEEx uses the package-provided sexp behavior."
   (yaml-imenu-enable)
   (remove-hook 'yaml-ts-mode-hook 'yaml-set-imenu-generic-expression)
   (add-hook 'yaml-ts-mode-hook 'yaml-imenu-activate t)
-  (add-hook 'gotmpl-mode-hook 'yaml-imenu-activate t))
+  (add-hook 'yaml-gotmpl-mode-hook 'yaml-imenu-activate t))
 
 (use-package dockerfile-mode)
 

@@ -1,8 +1,8 @@
 ;;; -*- lexical-binding: t -*-
-(bind-key "C-c" +leader-map)
 (bind-key "SPC" +leader-map +normal-mode-map)
 (bind-key "SPC" +leader-map +motion-mode-map)
 (bind-key "SPC" +leader-map +sexp-mode-map)
+(bind-key "C-c" +leader-map +insert-mode-map)
 
 (bind-key "x" ctl-x-map +normal-mode-map)
 (bind-key "x" ctl-x-map +motion-mode-map)
@@ -22,6 +22,13 @@
 ;; (bind-key "'" +leader2-map +motion-mode-map)
 ;; (bind-key "'" +leader2-map +sexp-mode-map)
 
+;;;###autoload
+(defun +keybindings-C-c ()
+  (interactive)
+  (setq unread-command-events
+        (append (listify-key-sequence (kbd "C-c"))
+                unread-command-events)))
+
 (use-package +keybindings
   :ensure nil
   :bind
@@ -35,7 +42,8 @@
   (:map +leader-map
         ("bs" . #'+scratch-buffer)
         ("d" . #'duplicate-dwim)
-        ("ri" . #'+source-init-file))
+        ("ri" . #'+source-init-file)
+        ("c" . #'+keybindings-C-c))
   (:map prog-mode-map
         ("C-g" . #'+keyboard-quit))
   (:map text-mode-map
@@ -74,6 +82,7 @@
         ("C-w" . #'+modal-kill-region-insert)
         ("M-d" . #'+modal-kill-word-insert)
         ("M-<backspace>" . #'+modal-backward-kill-word-insert)
+        ("C-<backspace>" . #'+modal-backward-delete-char-insert)
         ("C-n" . #'+modal-next-line-insert)
         ("C-p" . #'+modal-previous-line-insert)
         ("M->" . #'+modal-end-of-buffer-insert)
@@ -107,6 +116,8 @@
         ;; ("SPC" . #'set-mark-command)
         ("n" . #'next-line)
         ("M" . #'+mark-whole-lines)
+        ("E" . #'+modal-mark-end-of-line)
+        ("A" . #'+modal-mark-beginning-of-line)
         ("p" . #'previous-line)
         ("^" . #'delete-indentation)
         ("k" . #'+kill-line-dwim)
@@ -118,7 +129,7 @@
         ("T" . #'transpose-words)
         ("?" . #'undo-redo)
         ("D" . #'kill-word)
-        ("w" . #'+kill-line-or-region)
+        ("w" . #'kill-region)
         ("}" . #'forward-paragraph)
         ("{" . #'backward-paragraph)
         ("<escape>" . #'keyboard-quit)

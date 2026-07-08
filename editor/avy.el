@@ -41,6 +41,6 @@
          (cons ?x 'avy-action-kill-whole-lines)))
   :bind
   (:map +normal-mode-map
-        ("C-:" . #'+avy-jump-dwim))
+        ("M-j" . #'+avy-jump-dwim))
   (:map +motion-mode-map
-        ("C-:" . #'+avy-jump-dwim)))
+        ("M-j" . #'+avy-jump-dwim)))

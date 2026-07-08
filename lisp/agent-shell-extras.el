@@ -24,6 +24,26 @@
      (agent-shell))))
 
 ;;;###autoload
+(defun +agent-shell-accept ()
+  "Accept the latest agent-shell permission prompt."
+  (interactive)
+  (when (agent-shell-jump-to-latest-permission-button-row)
+    (execute-kbd-macro "y")))
+
+;;;###autoload
+(defun +agent-shell-decline ()
+  "Decline the latest agent-shell permission prompt."
+  (interactive)
+  (when (agent-shell-jump-to-latest-permission-button-row)
+    (execute-kbd-macro (+agent-shell--decline-key))))
+
+;;;###autoload
+(defun +agent-shell--decline-key ()
+  "Return the key sequence for declining a permission prompt."
+  (or (where-is-internal 'agent-shell-interrupt agent-shell-mode-map t)
+      "n"))
+
+;;;###autoload
 (defun +agent-shell-send-region-with-prompt (prompt &optional arg)
   "Send agent-shell DWIM context with PROMPT without focusing the shell.
 
@@ -312,10 +332,30 @@ as literal path prefixes."
 (defun +agent-shell--match-command-p (subject patterns)
   "Return non-nil if SUBJECT (a command string) matches any glob in PATTERNS."
   (when (stringp subject)
-    (seq-some (lambda (pattern)
-                (string-match-p (+agent-shell--glob-to-regexp pattern)
-                                subject))
-              patterns)))
+    (seq-some (lambda (candidate)
+                (seq-some (lambda (pattern)
+                            (string-match-p (+agent-shell--glob-to-regexp pattern)
+                                            candidate))
+                          patterns))
+              (+agent-shell--command-subjects subject))))
+
+;;;###autoload
+(defun +agent-shell--command-subjects (subject)
+  "Return command strings to check for permission matching from SUBJECT."
+  (delq nil (list subject (+agent-shell--unwrap-shell-command subject))))
+
+;;;###autoload
+(defun +agent-shell--unwrap-shell-command (subject)
+  "Return the inner command when SUBJECT is a zsh or bash command wrapper."
+  (let* ((parts (ignore-errors (split-string-and-unquote subject)))
+         (shell (and parts (file-name-nondirectory (car parts)))))
+    (when (member shell '("zsh" "bash"))
+      (cond
+       ((member (cadr parts) '("-c" "-lc" "-cl"))
+        (nth 2 parts))
+       ((and (equal (cadr parts) "-l")
+             (equal (nth 2 parts) "-c"))
+        (nth 3 parts))))))
 
 ;;;###autoload
 (defun +agent-shell--permission-rule-kind (acp-kind)

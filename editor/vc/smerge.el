@@ -6,6 +6,8 @@
   :bind
   (:map smerge-basic-map
         ("n" . #'+smerge-vc-next-conflict))
+  (:map project-prefix-map
+        ("m" . #'+smerge-vc-next-conflict))
   (:map +forward-map
         ("m" . #'+smerge-vc-next-conflict))
   (:map +backward-map

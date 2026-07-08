@@ -89,7 +89,7 @@
 (use-package indent-bars
   :hook
   (elixir-web-mode . +indent-bars-elixir-heex-mode)
-  ((nxml-mode web-mode yaml-mode yaml-ts-mode) . indent-bars-mode))
+  ((nxml-mode web-mode yaml-mode yaml-ts-mode yaml-gotmpl-mode) . indent-bars-mode))
 
 (use-package kanagawa-themes
   :ensure (:host github :repo "lanceberge/kanagawa-emacs"))

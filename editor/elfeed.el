@@ -19,7 +19,7 @@
      ("https://karthinks.com/software/index.xml" emacs)
      ("https://protesilaos.com/codelog.xml" emacs)
      ("https://emacsair.me/feed.xml" emacs)
-
+     ("https://www.matem.unam.mx/~omar/apropos-emacs.xml" emacs)
      ("https://feeds.feedburner.com/martinkl" systems must-read)
      ("https://aphyr.com/posts.atom" systems)
      ("https://brooker.co.za/blog/rss.xml" systems must-read)

@@ -127,16 +127,6 @@
   :config
   (setq ediff-diff-options ""))
 
-;; (use-package outline-mode
-;;   :ensure nil
-;;   :bind
-;;   (:map +leader-map
-;;         ("oa" . #'outline-toggle-children)
-;;         ("oj" . #'outline-next-heading)
-;;         ("ok" . #'outline-previous-heading)
-;;         ("or" . #'outline-show-all)
-;;         ("om" . #'outline-hide-sublevels)))
-
 (use-package repeat
   :ensure nil
   :custom

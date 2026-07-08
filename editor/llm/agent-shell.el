@@ -3,6 +3,7 @@
   :custom
   (agent-shell-show-config-icons nil)
   (agent-shell-preferred-agent-config 'codex)
+  (agent-shell-header-style nil)
   :commands (agent-shell-openai-start-codex)
   :bind
   (:map project-prefix-map
@@ -10,6 +11,8 @@
   (:map +leader-map
         ("aa" . #'agent-shell-new-shell)
         ("ac" . #'agent-shell-send-dwim))
+  (:map agent-shell-mode-map
+        ("C-c C-l" . #'agent-shell-clear-buffer))
   :config
   (require 'agent-shell-openai)
   (setq agent-shell-openai-codex-acp-command
@@ -27,6 +30,9 @@
         ("st" . #'+agent-shell-toggle-dwim)
         ("sp" . #'+agent-shell-send-region-with-prompt))
   :config
+  (+modal-bind '+normal-mode-map 'agent-shell-mode-hook
+               '(("Y" . +agent-shell-accept)
+                 ("N" . +agent-shell-decline)))
   (setq agent-shell-permission-responder-function
         (+agent-shell-make-permission
          '((allow

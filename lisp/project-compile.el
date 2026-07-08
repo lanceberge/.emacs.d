@@ -1,4 +1,4 @@
-;;; project-compile.el --- Project compile history helpers -*- lexical-binding: t -*-
+;;; project-compile.el --- Save compile histories local to the current project -*- lexical-binding: t -*-
 
 (require 'compile)
 (require 'project)

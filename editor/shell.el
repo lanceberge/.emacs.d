@@ -25,7 +25,8 @@
 
 ;;;###autoload
 (defun +eat-semi-char-tab ()
-  "Switch Eat to semi-char mode and send a tab input event."
+  "Switch Eat to semi-char mode and send a tab input event.
+I use this to tab-complete in eat buffers with bash completions instead of `completion-at-point'."
   (interactive)
   (eat-semi-char-mode)
   (+insert-mode 1)
@@ -76,7 +77,6 @@
 
 ;;;###autoload
 (defun +eat-eshell-use-modal-cursor ()
-  "Leave Eshell cursor shape under modal state control."
   (when (bound-and-true-p eat-terminal)
     (eat-term-set-parameter eat-terminal 'set-cursor-function #'ignore)))
 
@@ -91,6 +91,8 @@
   (add-to-list 'eshell-expand-input-functions #'eshell-expand-history-references))
 
 (use-package eshell
+  :custom
+  (eshell-prefer-lisp-functions t)
   :ensure nil
   :defer 4.0
   :init

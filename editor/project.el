@@ -19,6 +19,7 @@
   (:map +leader-map
         ("k" . #'project-switch-project)))
 
+;; save project-local compile histories
 (use-package project-compile
   :ensure (:type file :main "~/.emacs.d/lisp/project-compile.el" :files ("project-compile.el"))
   :hook
@@ -33,16 +34,3 @@
   :bind
   (:map +leader-map
         ("rp" . #'+project-reload-and-switch)))
-
-;; update zoxide history -- cli tool that memoizes visited dirs
-;;;###autoload
-(defun +zoxide-add-current-directory ()
-  (when-let ((dir (or (and buffer-file-name
-                           (file-name-directory buffer-file-name))
-                      (and (derived-mode-p 'dired-mode)
-                           default-directory))))
-    (call-process "zoxide" nil nil nil "add" dir)))
-
-(when (executable-find "zoxide")
-  (add-hook 'find-file-hook #'+zoxide-add-current-directory)
-  (add-hook 'dired-mode-hook #'+zoxide-add-current-directory))

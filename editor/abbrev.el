@@ -68,7 +68,11 @@
       ("test" "@Test")))
 
   (defvar java-ts-mode-abbrev-table)
-  (setq java-ts-mode-abbrev-table java-mode-abbrev-table))
+  (setq java-ts-mode-abbrev-table java-mode-abbrev-table)
+
+  (define-abbrev-table 'emacs-lisp-mode-abbrev-table
+    '(
+      ("ci" "call-interactively #'"))))
 
 ;;;###autoload
 (defun +expand-abbrev-or-dabbrev ()

@@ -82,6 +82,8 @@
   (setq-local completion-at-point-functions
               (list
                #'cape-file
+               #'yasnippet-capf
+               (cape-capf-super #'elisp-completion-at-point #'cape-dabbrev)
                #'elisp-completion-at-point
                #'cape-dabbrev
                t)))

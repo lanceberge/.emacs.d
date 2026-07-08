@@ -60,46 +60,22 @@ for the pop up buffer."
 (define-minor-mode text-to-clipboard-minor-mode
   "Minor mode binding a key to quit window and copy buffer to clipboard.")
 
-(declare-function org-edit-src-code 'org-src)
-(declare-function org-edit-src-exit 'org-src)
-(declare-function TeX-narrow-to-group 'tex)
-(declare-function LaTeX-narrow-to-environment 'latex)
-
-(defun narrow-or-widen-dwim (p)
-  "Widen if buffer is narrowed, narrow-dwim otherwise.
-Dwim means: region, org-src-block, org-subtree, or defun,
-whichever applies first. Narrowing to org-src-block actually
-calls `org-edit-src-code'.
-
-With prefix P, don't widen, just narrow even if buffer is
-already narrowed."
-  (interactive "P")
-  (declare (interactive-only))
-  (cond ((and (buffer-narrowed-p) (not p)) (widen))
-        ((and (bound-and-true-p org-src-mode) (not p))
-         (org-edit-src-exit))
-        ((region-active-p)
-         (narrow-to-region (region-beginning) (region-end)))
-        ((derived-mode-p 'org-mode)
-         (or (ignore-errors (org-edit-src-code))
-             (ignore-errors (org-narrow-to-block))
-             (org-narrow-to-subtree)))
-        ((derived-mode-p 'latex-mode)
-         (LaTeX-narrow-to-environment))
-        ((derived-mode-p 'tex-mode)
-         (TeX-narrow-to-group))
-        (t (narrow-to-defun))))
-
-(defun narrow-to-point ()
-  "Narrow to point, useful for yanking a rectangle."
-  (interactive)
-  (narrow-to-region (point) (point)))
-
-(defun narrow-to-sexp ()
-  "Narrow to sexp containing point."
-  (interactive)
-  (narrow-to-region
-   (save-excursion (up-list -1 t t) (point))
-   (save-excursion (up-list +1 t t) (point))))
+;; https://stackoverflow.com/questions/2588277/how-can-i-swap-or-replace-multiple-strings-in-code-at-the-same-time
+;;;###autoload
+(defun parallel-replace (plist &optional start end)
+  (interactive
+   `(,(cl-loop with input = (read-from-minibuffer "Replace: ")
+               with limit = (length input)
+               for (item . index) = (read-from-string input 0)
+               then (read-from-string input index)
+               collect (prin1-to-string item t) until (<= limit index))
+     ,@(if (use-region-p) `(,(region-beginning) ,(region-end)))))
+  (let* ((alist (cl-loop for (key val . tail) on plist by #'cddr
+                         collect (cons key val)))
+         (matcher (regexp-opt (mapcar #'car alist) 'words)))
+    (save-excursion
+      (goto-char (or start (point)))
+      (while (re-search-forward matcher (or end (point-max)) t)
+        (replace-match (cdr (assoc-string (match-string 0) alist)))))))
 
 (provide '+text-extras)

@@ -55,6 +55,7 @@ Nil means signal an error."
   "[" #'+project-tab-prev
   "0" #'tab-bar-close-tab
   "o" #'+project-tab-other-project
+  "p" #'project-prefix-or-any-command
   "n" #'+project-tab-new-project-command)
 
 ;;;###autoload
@@ -297,7 +298,6 @@ PREFIX defaults to the current project prefix."
 (defun +project-tab--current-tab-p (tab)
   "Return non-nil when TAB is the current tab."
   (eq (car tab) 'current-tab))
-;;;###autoload
 
 ;;;###autoload
 (defun +project-tab-name-tab-function ()
