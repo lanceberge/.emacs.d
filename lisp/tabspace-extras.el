@@ -7,6 +7,22 @@
 (require 'consult)
 (require 'tabspaces)
 
+(defgroup +tabspace nil
+  "Tabspace-aware navigation helpers."
+  :group 'convenience)
+
+(defcustom +tabspace-switch-buffer-predicate
+  #'+tabspace-switch-buffer-default-predicate
+  "Predicate for `+tabspace-other-bufffer' commands."
+  :type 'function
+  :group '+tabspace)
+
+(defcustom +tabspace-switch-special-buffer-predicate
+  #'+tabspace-switch-special-buffer-default-predicate
+  "Predicate for `+tabspace-other-special-buffer' commands."
+  :type 'function
+  :group '+tabspace)
+
 ;;;###autoload
 (defun +tabspace-other-project-buffer-dwim (n &optional project)
   "Switch to the N'th most recent file-visiting buffer in PROJECT's tabspace.
@@ -58,30 +74,36 @@ it from the current tabspace."
 ;;;###autoload
 (defun +tabspace-other-buffer-in-project (n &optional project)
   "Return the N'th most recent file-visiting buffer in PROJECT's tabspace."
-  (let ((project (+tabspace-project project)))
-    (nth (1- (abs n))
-         (seq-remove
-          (lambda (buffer)
-            (or (eq buffer (current-buffer))
-                (not (buffer-file-name buffer))
-                (not (+tabspace-buffer-in-project-p buffer project))))
-          (+tabspace-local-buffer-list)))))
+  (let ((project (+tabspace-project project))
+        (index (max 0 (1- (abs n)))))
+    (cl-loop for buffer in (+tabspace-local-buffer-list)
+             unless (or (eq buffer (current-buffer))
+                        (not (funcall +tabspace-switch-buffer-predicate buffer))
+                        (not (+tabspace-buffer-in-project-p buffer project)))
+             if (zerop index)
+             return buffer
+             else do (cl-decf index))))
 
+;;;###autoload
 (defun +tabspace-other-buffer (n)
   "Return the N'th most recent file-visiting buffer in PROJECT's tabspace."
-  (nth (1- (abs n))
-       (seq-remove
-        (lambda (buffer)
-          (or (eq buffer (current-buffer))
-              (not (buffer-file-name buffer))))
-        (+tabspace-local-buffer-list))))
+  (let ((index (max 0 (1- (abs n)))))
+    (cl-loop for buffer in (+tabspace-local-buffer-list)
+             unless (or (eq buffer (current-buffer))
+                        (not (funcall +tabspace-switch-buffer-predicate buffer)))
+             if (zerop index)
+             return buffer
+             else do (cl-decf index))))
 
 ;;;###autoload
 (defun +tabspace-kill-or-remove-buffer (buffer)
-  "Kill BUFFER if it belongs only to this tabspace, otherwise remove it."
+  "Kill BUFFER if it belongs only to this tabspace, otherwise remove it.
+When called interactively, use the current buffer."
+  (interactive (list (current-buffer)))
   (if (+tabspace-buffer-in-other-tabspace-p buffer)
       (tabspaces-remove-buffer buffer)
-    (kill-buffer buffer)))
+    (kill-buffer buffer)
+    (message "Killed buffer")))
 
 ;;;###autoload
 (defun +tabspace-buffer-in-other-tabspace-p (buffer)
@@ -105,9 +127,22 @@ it from the current tabspace."
   (seq-find
    (lambda (buffer)
      (and (not (eq buffer (current-buffer)))
-          (not (buffer-file-name buffer))
-          (not (string-prefix-p " *Minibuf-" (buffer-name buffer)))))
+          (funcall +tabspace-switch-special-buffer-predicate buffer)))
    (+tabspace-local-buffer-list)))
+
+;;;###autoload
+(defun +tabspace-switch-buffer-default-predicate (buffer)
+  "Return non-nil when BUFFER should be used by regular tabspace commands."
+  (with-current-buffer buffer
+    (or buffer-file-name
+        (derived-mode-p 'eshell-mode 'eat-mode))))
+
+;;;###autoload
+(defun +tabspace-switch-special-buffer-default-predicate (buffer)
+  "Return non-nil when BUFFER should be used by special tabspace commands."
+  (with-current-buffer buffer
+    (and (not buffer-file-name)
+         (not (string-prefix-p " " (buffer-name buffer))))))
 
 ;;;###autoload
 (defun +tabspace-local-buffer-list ()

@@ -48,7 +48,7 @@
         ("e" . #'eshell)
         ("o" . #'+window-ace-switch-to-buffer)
         ("N" . #'+window-switch-to-buffer-new-action)
-        ("TAB k" . #'tabspaces-remove-buffer))
+        ("TAB k" . #'+tabspace-kill-or-remove-buffer))
   (:map embark-file-map
         ("e" . #'eshell)
         ("o" . #'+window-ace-find-file)
