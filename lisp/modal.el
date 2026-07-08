@@ -249,7 +249,7 @@ ARGS provides a `:name' atom."
   "Determine what modal state the current buffer should be in."
   (cond
    (+modal-desired-state +modal-desired-state)
-   ((or (minibufferp) (derived-mode-p 'eshell-mode)) 'insert)
+   ((or (minibufferp) (derived-mode-p 'eshell-mode 'eat-mode)) 'insert)
    ((derived-mode-p 'special-mode 'dired-mode 'magit-mode 'org-agenda-mode
                     'help-mode 'Info-mode 'compilation-mode
                     'diff-mode 'package-menu-mode

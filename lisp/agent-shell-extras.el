@@ -177,10 +177,10 @@ an existing shell."
   (let* ((old-name (buffer-name shell-buffer))
          (viewport-buffer (+agent-shell--viewport-buffer-for-name old-name)))
     (with-current-buffer shell-buffer
-      (rename-buffer
+      (shell-maker-set-buffer-name
+       shell-buffer
        (generate-new-buffer-name
-        (format "%s -- %s" (+agent-shell--buffer-prefix old-name) title))
-       t))
+        (format "%s -- %s" (+agent-shell--buffer-prefix old-name) title))))
     (when (buffer-live-p viewport-buffer)
       (with-current-buffer viewport-buffer
         (rename-buffer
@@ -268,7 +268,9 @@ The returned function is suitable for
 (defun +agent-shell--permission-subject (tool-call rule-kind)
   "Extract the subject (path or command) from TOOL-CALL for RULE-KIND."
   (pcase rule-kind
-    ('execute (or (map-elt tool-call :command)
+    ('execute (or (agent-shell--tool-call-command-to-string
+                   (map-elt (map-elt tool-call :raw-input) 'command))
+                  (map-elt tool-call :command)
                   (map-elt tool-call :title)))
     ((or 'read 'write)
      (let ((raw-input (map-elt tool-call :raw-input)))

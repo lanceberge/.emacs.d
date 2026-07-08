@@ -5,11 +5,12 @@
 
 ;;;###autoload
 (defun +agent-lisp-eval-buffer (file-name)
-  "Revert and evaluate the Emacs Lisp buffer visiting FILE-NAME."
+  "Evaluate the Emacs Lisp buffer visiting FILE-NAME."
   (with-current-buffer (or (get-file-buffer file-name)
                            (find-file-noselect file-name))
-    (revert-buffer t t t)
     (eval-buffer)
+    (when (fboundp 'elpaca-wait)
+      (elpaca-wait))
     "ok"))
 
 ;;;###autoload

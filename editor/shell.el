@@ -23,10 +23,28 @@
          (default-directory (format "/ssh:%s:" host)))
     (call-interactively #'find-file)))
 
+;;;###autoload
+(defun +eat-semi-char-tab ()
+  "Switch Eat to semi-char mode and send a tab input event."
+  (interactive)
+  (eat-semi-char-mode)
+  (+insert-mode 1)
+  (eat-self-input 1 ?\t))
+
 (use-package eat
+  :custom
+  (eat-enable-auto-line-mode t)
+  (eat-tramp-shells '(("docker" . "/bin/bash")
+                      ("ssh" . "/bin/bash")
+                      ("scp" . "/bin/bash")
+                      ("sshx" . "/bin/bash")
+                      ("rsync" . "/bin/bash")))
   :hook
   (eat-eshell-exec . +eat-eshell-use-modal-cursor)
-  (eshell-first-time-mode . eat-eshell-mode))
+  (eshell-first-time-mode . eat-eshell-mode)
+  :bind
+  (:map eat-line-mode-map
+        ("TAB" . +eat-semi-char-tab)))
 
 ;;;###autoload
 (defun +eat-eshell-use-modal-cursor ()
@@ -47,8 +65,6 @@
 (use-package eshell
   :ensure nil
   :defer 4.0
-  :hook
-  (eshell-mode . (lambda () (+insert-mode 1)))
   :init
   (add-to-list 'display-buffer-alist
                '("\\`\\*Eshell Command Output\\*\\'"

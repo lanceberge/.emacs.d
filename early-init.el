@@ -133,6 +133,7 @@
                 " "
                 (:eval (if (fboundp '+modal--mode-line-indicator) (+modal--mode-line-indicator) ""))
                 "   "
+                mode-line-process
                 (:eval (if (fboundp 'project-mode-line-format) (project-mode-line-format) ""))
                 "   "
                 mode-line-buffer-identification ; buffer name

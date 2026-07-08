@@ -63,6 +63,10 @@
   :config
   (add-to-list 'embark-around-action-hooks
                '(pipe-region embark--mark-target))
+  (add-to-list 'embark-around-action-hooks
+               '(eat embark--cd))
+  (add-to-list 'embark-around-action-hooks
+               '(eat-project embark--cd))
   (add-to-list 'embark-target-injection-hooks
                '(pipe-region embark--ignore-target))
 
@@ -88,9 +92,10 @@
   (advice-add 'embark-act :before #'force-keycast-update)
 
   (defvar-keymap +embark-priority-map
-    :doc "Embark bindings that take precedence over target-specific maps."
-    "s l" #'consult-line
-    "s g" #'consult-ripgrep)
+    :doc "Embark bindings that take precedence over target-specific maps.")
+  (keymap-set embark-buffer-map "p" project-prefix-map)
+  (keymap-set embark-file-map "p" project-prefix-map)
+  (keymap-set +embark-priority-map "s" search-map)
 
   (advice-remove #'embark--action-keymap #'+embark-apply-priority-map)
   (advice-add #'embark--action-keymap :filter-return #'+embark-apply-priority-map))

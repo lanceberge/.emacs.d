@@ -6,9 +6,9 @@
   :commands (agent-shell-openai-start-codex)
   :bind
   (:map project-prefix-map
-        ("aa" . #'agent-shell))
+        ("aa" . #'agent-shell-new-shell))
   (:map +leader-map
-        ("aa" . #'agent-shell)
+        ("aa" . #'agent-shell-new-shell)
         ("ac" . #'agent-shell-send-dwim))
   :config
   (require 'agent-shell-openai)
@@ -34,6 +34,7 @@
                      "~/src/*" "~/code/*"))
             (write . ("~/.notifier/" "/tmp/" "/"))
             (execute . ("jj status" "jj diff*" "jj show*" "jj log*"
+                        "rg" "rg *"
                         "emacsclient *"
                         "git checkout *" "git status *" "git diff *"
                         "git log*" "git show*" "git branch*"

@@ -9,7 +9,8 @@
   :bind
   (:map project-prefix-map
         ("C-g" . #'keyboard-quit)
-        ("o" . #'keyboard-quit))
+        ("o" . #'keyboard-quit)
+        ("s" . #'eat-project))
   (:map search-map
         ("f" . #'project-find-file)
         ("d" . #'project-find-dir)

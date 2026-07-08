@@ -56,6 +56,7 @@
   :demand t
   :bind
   (:map ctl-x-map
+        ("K" . #'kill-current-buffer)
         ("k" . #'+tabspace-kill-buffer-dwim))
   (:map +leader-map
         ("l" . #'+tabspace-other-buffer-dwim)
