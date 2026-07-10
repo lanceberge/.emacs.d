@@ -158,6 +158,83 @@ Prompt for and remember an Org project file when none is remembered."
                   candidates)))))
 
 ;;;###autoload
+(defun +org-project--consult-project-todo (project-file)
+  "Prompt for an unfinished TODO heading in PROJECT-FILE and return its marker."
+  (require 'consult)
+  (require 'consult-org)
+  (let ((project-file (expand-file-name project-file)))
+    (with-current-buffer (find-file-noselect project-file)
+      (unless (derived-mode-p 'org-mode)
+        (org-mode))
+      (org-with-wide-buffer
+       (let ((candidates (+org-project--consult-project-todo-candidates)))
+         (unless candidates
+           (user-error "No unfinished TODO headings found in %s" project-file))
+         (consult--read
+          candidates
+          :prompt "Select TODO: "
+          :category 'org-heading
+          :sort nil
+          :require-match t
+          :history '(:input consult-org--history)
+          :state (consult--jump-preview)
+          :annotate #'consult-org--annotate
+          :lookup (apply-partially #'consult--lookup-prop 'org-marker)))))))
+
+;;;###autoload
+(defun +org-project--consult-project-todo-candidates ()
+  "Return Consult heading candidates for unfinished TODOs in the current buffer."
+  (seq-filter
+   #'+org-project--consult-project-todo-candidate-p
+   (consult-org--headings nil nil 'file)))
+
+;;;###autoload
+(defun +org-project--consult-project-todo-candidate-p (candidate)
+  "Return non-nil when CANDIDATE is an unfinished TODO heading."
+  (let ((todo (cadr (get-text-property 0 'consult-org--heading candidate))))
+    (and todo (not (member todo org-done-keywords)))))
+
+;;;###autoload
+(defun +org-project--subtree-text (marker)
+  "Return the full Org subtree at MARKER as plain text."
+  (with-current-buffer (marker-buffer marker)
+    (org-with-wide-buffer
+     (goto-char marker)
+     (org-back-to-heading t)
+     (buffer-substring-no-properties
+      (point)
+      (save-excursion
+        (org-end-of-subtree t t))))))
+
+;;;###autoload
+(defun +org-project--prepare-subtree-edit-capture (marker)
+  "Delete the subtree at MARKER and leave point at its former position."
+  (let ((buffer (marker-buffer marker))
+        (position (marker-position marker)))
+    (unless buffer
+      (user-error "Marker has no buffer"))
+    (set-buffer buffer)
+    (org-with-wide-buffer
+     (goto-char position)
+     (org-back-to-heading t)
+     (setq position (point))
+     (delete-region
+      (point)
+      (save-excursion
+        (org-end-of-subtree t t)))
+     (goto-char position)
+     (org-capture-put :insert-here t))))
+
+;;;###autoload
+(defun +org-project--restore-subtree-edit-capture (buffer position subtree)
+  "Restore SUBTREE in BUFFER at POSITION when an edit capture aborts."
+  (when org-note-abort
+    (with-current-buffer buffer
+      (org-with-wide-buffer
+       (goto-char position)
+       (insert subtree)))))
+
+;;;###autoload
 (defun +org-project--goto-done-date-heading ()
   "Move point to today's date heading under `* Done', creating headings as needed."
   (let ((date (format-time-string "%-m/%-d/%Y")))
@@ -290,6 +367,34 @@ Prompt for and remember an Org project file when none is remembered."
   "Capture a DONE heading under the current project's Done entry."
   (interactive)
   (+org-project-add-done (funcall +org-project-obtain-project-function)))
+
+;;;###autoload
+(defun +org-project-edit-todo (&optional project-file marker)
+  "Edit a TODO subtree from PROJECT-FILE in an Org capture buffer.
+
+When MARKER is non-nil, edit the subtree at MARKER instead of prompting
+for a TODO heading."
+  (interactive)
+  (let* ((project-file (or project-file
+                           (unless marker
+                             (funcall +org-project-prompt-function))))
+         (marker (or marker
+                     (+org-project--consult-project-todo project-file)))
+         (original-marker (copy-marker marker t))
+         (original-buffer (marker-buffer original-marker))
+         (original-position (marker-position original-marker))
+         (subtree (+org-project--subtree-text original-marker))
+         (org-capture-templates
+          `(("p" "project edit todo" plain
+             (function ,(lambda ()
+                          (+org-project--prepare-subtree-edit-capture
+                           original-marker)))
+             "%i%?"
+             :after-finalize ,(lambda ()
+                                (+org-project--restore-subtree-edit-capture
+                                 original-buffer original-position subtree)))))
+         (org-capture-initial subtree))
+    (org-capture nil "p")))
 
 ;;;###autoload
 (defun +org-project-mark-done (&optional marker project-file)

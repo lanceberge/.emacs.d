@@ -110,8 +110,8 @@ MATCH is as in `org-map-entries'."
 
 ;;;###autoload
 (cl-defun +org-project-consult--at-marked-heading (&rest args
-                                                        &key run target
-                                                        &allow-other-keys)
+                                                         &key run target
+                                                         &allow-other-keys)
   "Run Embark action at TARGET when TARGET carries an Org marker."
   (if (and target (get-text-property 0 'org-marker target))
       (apply #'embark-org--at-heading args)
@@ -126,6 +126,7 @@ MATCH is as in `org-map-entries'."
 (defvar-keymap +org-project-consult-file-map
   :doc "Embark actions for Org project files."
   "t" #'+org-project-consult-add-todo
+  "e" #'+org-project-edit-todo
   "T" #'+org-project-consult-add-todo-for-current-project)
 
 (defvar-keymap +org-project-consult-heading-map

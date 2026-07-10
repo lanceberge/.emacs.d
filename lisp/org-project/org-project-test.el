@@ -3,6 +3,45 @@
 (require 'ert)
 (require 'org)
 (require 'org-project)
+(require 'seq)
+
+(ert-deftest +org-project-edit-todo-does-not-duplicate-subtree-on-capture-load ()
+  "Editing a TODO should replace the original subtree as capture loads."
+  (let* ((contents "* Tasks\n** TODO stuff\n\n- a\n- b\n")
+         (file (make-temp-file "org-project-edit" nil ".org" contents))
+         capture-buffer)
+    (unwind-protect
+        (with-current-buffer (find-file-noselect file)
+          (org-mode)
+          (goto-char (point-min))
+          (re-search-forward "^\\*\\* TODO stuff")
+          (+org-project-edit-todo file (copy-marker (line-beginning-position) t))
+          (setq capture-buffer
+                (seq-find
+                 (lambda (buffer)
+                   (string-prefix-p
+                    (format "CAPTURE-%s" (file-name-nondirectory file))
+                    (buffer-name buffer)))
+                 (buffer-list)))
+          (org-with-wide-buffer
+           (let ((buffer-text (buffer-substring-no-properties
+                               (point-min)
+                               (point-max))))
+             (should (= 1 (how-many "^\\*\\* TODO stuff" (point-min) (point-max))))
+             (should (= 1 (how-many "^- a" (point-min) (point-max))))
+             (should (= 1 (how-many "^- b" (point-min) (point-max))))
+             (should (string-match-p "\\`\\* Tasks\n\\*\\* TODO stuff\n\n- a\n- b\n+\\'"
+                                     buffer-text)))))
+      (when (buffer-live-p capture-buffer)
+        (with-current-buffer capture-buffer
+          (let ((kill-buffer-query-functions nil))
+            (ignore-errors
+              (org-capture-kill)))))
+      (when-let ((buffer (find-buffer-visiting file)))
+        (with-current-buffer buffer
+          (set-buffer-modified-p nil))
+        (kill-buffer buffer))
+      (delete-file file))))
 
 (ert-deftest +org-project-mark-done-refiles-under-created-date-before-next-heading ()
   "Marking done should create today's Done date and move a later heading under it."

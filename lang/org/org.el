@@ -92,6 +92,7 @@
         ("ont" . #'+org-project-add-todo)
         ("ond" . #'+org-project-mark-done)
         ("onx" . #'+org-project-add-done)
+        ("one" . #'+org-project-edit-todo)
         ("onr" . #'+org-project-reset-project-file-for-current-project))
   :config
   (add-to-list 'savehist-additional-variables
