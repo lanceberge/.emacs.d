@@ -135,7 +135,7 @@ When called interactively, use the current buffer."
   "Return non-nil when BUFFER should be used by regular tabspace commands."
   (with-current-buffer buffer
     (or buffer-file-name
-        (derived-mode-p 'eshell-mode 'eat-mode 'gptel-mode 'agent-shell-mode))))
+        (derived-mode-p 'eshell-mode 'eat-mode 'gptel-mode 'agent-shell-mode 'eca-chat-mode))))
 
 ;;;###autoload
 (defun +tabspace-switch-special-buffer-default-predicate (buffer)

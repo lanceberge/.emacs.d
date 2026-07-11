@@ -93,3 +93,10 @@
                "#+begin_src %s\n%s\n#+end_src")
               (t "%s%s"))))
         (insert (format src-pattern code-buffer-language content))))))
+
+(use-package eca
+  :custom
+  (eca-chat-use-side-window nil)
+  :bind
+  (:map +leader-map
+        ("ae" . #'eca)))
