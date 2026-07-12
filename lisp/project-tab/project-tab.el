@@ -6,8 +6,7 @@
 (require 'seq)
 (require 'subr-x)
 (require 'tab-bar)
-
-(autoload '+project-last-opened-other-project-root "project-extras" nil nil)
+(require 'project-extras)
 
 (defgroup +project-tab nil
   "Project-scoped tab commands."
@@ -78,7 +77,7 @@ The following commands are available:
          (prefix (+project-tab-project-prefix dir)))
     (tab-bar-new-tab)
     (+project-tab--pin-current-prefix prefix)
-    (+project-tab--call-project-command dir)))
+    (+project-call-project-command dir)))
 
 ;;;###autoload
 (defun +project-tab-switch-project-command (dir)
@@ -99,21 +98,21 @@ The following commands are available:
   (let ((dir (when (project-current nil)
                (project-root (project-current t)))))
     (when (+project-tab--select-other)
-      (+project-tab--call-project-command dir))))
+      (+project-call-project-command dir))))
 
 ;;;###autoload
 (defun +project-tab-next-project-command (&optional arg)
   "Switch to the next project tab, then read a project command."
   (interactive "p")
   (+project-tab-next arg)
-  (+project-tab--call-project-command))
+  (+project-call-project-command))
 
 ;;;###autoload
 (defun +project-tab-prev-project-command (&optional arg)
   "Switch to the previous project tab, then read a project command."
   (interactive "p")
   (+project-tab-prev arg)
-  (+project-tab--call-project-command))
+  (+project-call-project-command))
 
 ;;;###autoload
 (defun +project-tab-next (&optional arg)
@@ -135,6 +134,12 @@ With no current project, fall back to `tab-bar-switch-to-prev-tab'."
 With no current project, fall back to `tab-bar-switch-to-recent-tab'."
   (interactive)
   (+project-tab--select-other))
+
+;;;###autoload
+(defun +project-tab-reload-and-switch-project ()
+  (interactive)
+  (+project-load-projects)
+  (call-interactively #'+project-tab-switch-project-command))
 
 ;;;###autoload
 (defun +project-tab-switch-to-project (dir &optional create)
@@ -200,27 +205,11 @@ When CREATE is non-nil, create a new tab if no existing project tab is found."
     (user-error "No other tabs for current project")))
 
 ;;;###autoload
-(defun +project-tab--call-project-command (&optional dir)
-  "Read and run a project command for DIR or the selected tab's project."
-  (let* ((dir (or dir (project-root (project-current t))))
-         (default-directory (file-name-as-directory dir))
-         (project-current-directory-override dir)
-         (command (project--switch-project-command dir)))
-    (when (memq command '(keyboard-quit keyboard-escape-quit))
-      (keyboard-quit))
-    (call-interactively command)))
-
-;;;###autoload
 (defun +project-tab--switch-to-project-and-command (dir)
   "Switch to DIR's project tab, creating one if needed, then dispatch a command."
   (project-remember-project (project-current t dir))
   (+project-tab-switch-to-project dir t)
-  (let ((default-directory (file-name-as-directory dir))
-        (project-current-directory-override dir)
-        (command (project--switch-project-command dir)))
-    (when (memq command '(keyboard-quit keyboard-escape-quit))
-      (keyboard-quit))
-    (call-interactively command)))
+  (+project-call-project-command))
 
 ;;;###autoload
 (defun +project-tab--pin-current-prefix (prefix)

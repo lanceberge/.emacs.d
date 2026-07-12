@@ -1,89 +1,23 @@
 ;;; project-extras.el --- Project navigation helpers -*- lexical-binding: t -*-
-
 (require 'project)
 
 ;;;###autoload
-(defun +project-switch-project (command dir)
-  "Same as `project-switch-project' except reads the command first,
-which for some reason I prefer."
-  (interactive
-   (let ((command (+project-switch-project-command-or-quit)))
-     (list command (funcall project-prompter))))
-  (project-remember-project (project-current t dir))
-  (let ((project-current-directory-override dir))
-    (call-interactively command)))
-
-;;;###autoload
-(defun +project-other-buffer (n &optional project)
-  "Switch to the N'th most recent file-visiting buffer in PROJECT."
-  (interactive "p")
-  (let ((buffer (+project-other-buffer-buffer n project)))
-    (if buffer
-        (switch-to-buffer buffer)
-      (call-interactively #'project-find-file))))
-
-;;;###autoload
-(defun +project-kill-buffer ()
-  "Kill the current buffer and switch to the most
-recent buffer in the same project."
-  (interactive)
-  (let* ((buffer (current-buffer))
-         (project (project-current nil))
-         (project-root-dir (when project
-                             (expand-file-name (project-root project)))))
-    (if-let ((other-buffer (and project-root-dir
-                                (+project-other-buffer-buffer 1 project-root-dir))))
-        (progn
-          (switch-to-buffer other-buffer)
-          (kill-buffer buffer))
-      (kill-current-buffer))))
-
-;;;###autoload
-(defun +project-other-buffer-buffer (n &optional project)
-  "Return the N'th most recent file-visiting buffer in PROJECT."
-  (let* ((project (cond
-                   ((stringp project) (project-current t project))
-                   (project)
-                   ((project-current nil))))
-         (buffers (and project
-                       (seq-remove
-                        (lambda (buffer)
-                          (or (eq buffer (current-buffer))
-                              (not (buffer-file-name buffer))))
-                        (project-buffers project)))))
-    (nth (1- (abs n)) buffers)))
-
-;;;###autoload
-(defun +project-visit-last-buffer (n &optional dir)
-  "Switch to the last open buffer in a project at `DIR'."
-  (interactive "p")
-  (let ((dir (or dir (funcall project-prompter))))
-    (+project-other-buffer n dir)))
-
-;;;###autoload
-(defun +project-other-project-command (command dir)
-  "Run a project command in the most recently opened other project."
-  (interactive
-   (let* ((dir (+project-last-opened-other-project-root))
-          (command (+project-switch-project-command-or-quit dir)))
-     (list command dir)))
-  (project-remember-project (project-current t dir))
-  (let ((project-current-directory-override dir))
-    (call-interactively command)))
-
-;;;###autoload
-(defun +project-switch-project-command-or-quit (&optional dir)
-  "Read a project command for DIR, quitting immediately on quit commands."
-  (let ((command (project--switch-project-command dir)))
+(defun +project-call-project-command (&optional dir)
+  "Read and run a project command for DIR or the selected tab's project."
+  (let* ((dir (or dir (project-root (project-current t))))
+         (default-directory (file-name-as-directory dir))
+         (project-current-directory-override dir)
+         (command (project--switch-project-command dir)))
     (when (memq command '(keyboard-quit keyboard-escape-quit))
       (keyboard-quit))
-    command))
+    (call-interactively command)))
 
 ;;;###autoload
 (defun +project-last-opened-other-project-root ()
   "Return the most recently remembered project root other than the current one."
   (let* ((current (when-let ((project (project-current nil)))
                     (expand-file-name (project-root project))))
+         ;; TODO short-circuit early
          (dir (seq-find
                (lambda (root)
                  (or (not current)
@@ -91,31 +25,6 @@ recent buffer in the same project."
                (project-known-project-roots))))
     (or dir
         (funcall project-prompter))))
-
-;;;###autoload
-(defun +project-other-special-buffer-dwim (arg)
-  "If this is a special buffer, switch to the last real buffer. Otherwise, switch to the last special buffer."
-  (interactive "p")
-  (if (buffer-file-name (current-buffer))
-      (+project-other-special-buffer)
-    (+project-other-buffer arg)))
-
-;;;###autoload
-(defun +project-other-special-buffer ()
-  "Switch to the most recent buffer with the same vc-root-dir. Unlike `+project-other-buffer',
-this function allows special buffers."
-  (interactive)
-  (let* ((project (project-current t))
-         (buffer (seq-find
-                  (lambda (buffer)
-                    (and (not (eq buffer (current-buffer)))
-                         (not (buffer-file-name buffer))
-                         (not (string-prefix-p " *Minibuf-" (buffer-name buffer)))))
-                  (project-buffers project))))
-    (if buffer
-        (switch-to-buffer buffer)
-      (call-interactively #'project-find-file))))
-
 
 ;;;###autoload
 (defun +tmux-sessionizer-current-directory ()
@@ -152,12 +61,6 @@ this function allows special buffers."
       (message "Opening tmux session for %s" target-dir))))
 
 ;;;###autoload
-(defun +project-reload-and-switch ()
-  (interactive)
-  (+project-load-projects)
-  (call-interactively #'+project-switch-project))
-
-;;;###autoload
 (defun +project-load-projects ()
   (interactive)
   (project-forget-zombie-projects)
@@ -177,7 +80,7 @@ this function allows special buffers."
         (when (file-directory-p subdir)
           (project-remember-projects-under subdir))))))
 
-;; TODO
+;; TODO think of something better than this
 ;;;###autoload
 (defun +project-replace-regex (search-regex replace-string &optional file-pattern)
   "Perform a replacement on all git files of SEARCH-REGEX to REPLACE-STRING.

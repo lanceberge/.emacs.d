@@ -25,7 +25,7 @@
         ("w" . #'tab-bar-history-back)))
 
 (use-package project-tab
-  :ensure (:type file :main "~/.emacs.d/lisp/project-tab.el" :files ("project-tab.el"))
+  :ensure (:type file :main "~/.emacs.d/lisp/project-tab/project-tab.el" :files ("project-tab.el"))
   :custom
   (tab-bar-tab-name-function #'+project-tab-name-tab-function)
   (+project-tab-other-project-missing-command #'+project-tab-new-project-command)
@@ -40,6 +40,7 @@
         ("tn" . #'+project-tab-new-project-command)
         ("to" . #'+project-tab-other-project-command))
   (:map +leader-map
+        ("rp" . #'+project-tab-reload-and-switch-project)
         ("k" . #'+project-tab-switch-project-command)
         ("j" . #'+project-tab-switch-other-project-command))
   (:map +forward-map
@@ -47,14 +48,8 @@
   (:map +backward-map
         ("t" . #'+project-tab-prev)))
 
-;;;###autoload
-(defun +project-reload-and-switch ()
-  (interactive)
-  (+project-load-projects)
-  (call-interactively #'+project-switch-project))
-
 (use-package consult-project-tab
-  :ensure (:type file :main "~/.emacs.d/lisp/consult-project-tab.el" :files ("consult-project-tab.el"))
+  :ensure (:type file :main "~/.emacs.d/lisp/project-tab/consult-project-tab.el" :files ("consult-project-tab.el"))
   :bind
   (:map ctl-x-map
         ("tF" . #'+consult-tab)
