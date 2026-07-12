@@ -6,11 +6,8 @@
   (agent-shell-header-style nil)
   :commands (agent-shell-openai-start-codex)
   :bind
-  (:map project-prefix-map
-        ("aa" . #'agent-shell-new-shell))
-  (:map +leader-map
-        ("aa" . #'agent-shell-new-shell)
-        ("ac" . #'agent-shell-send-dwim))
+  (:map +llm-map
+        ("a" . #'agent-shell-new-shell))
   (:map agent-shell-mode-map
         ("C-c C-l" . #'agent-shell-clear-buffer))
   :config
@@ -25,10 +22,6 @@
   :ensure (:type file :main "~/.emacs.d/lisp/agent-shell-extras.el" :files ("agent-shell-extras.el"))
   ;; :defer 0.3
   :hook (agent-shell-mode . +agent-shell-auto-rename-mode)
-  :bind
-  (:map +leader2-map
-        ("st" . #'+agent-shell-toggle-dwim)
-        ("sp" . #'+agent-shell-send-region-with-prompt))
   :config
   (+modal-bind '+normal-mode-map 'agent-shell-mode-hook
                '(("Y" . +agent-shell-accept)

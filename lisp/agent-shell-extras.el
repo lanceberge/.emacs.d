@@ -15,15 +15,6 @@
   (+consult-buffer--project-dwim "Agent" #'agent-shell-openai-start-codex nil arg))
 
 ;;;###autoload
-(defun +agent-shell-toggle-dwim ()
-  "Toggle agent shell display, starting one if none exists."
-  (interactive)
-  (condition-case nil
-      (agent-shell-toggle)
-    (user-error
-     (agent-shell))))
-
-;;;###autoload
 (defun +agent-shell-accept ()
   "Accept the latest agent-shell permission prompt."
   (interactive)
@@ -117,13 +108,6 @@ an existing shell."
       (agent-shell-viewport--show-buffer :shell-buffer shell-buffer))))
 
 ;;;###autoload
-(defun +agent-shell--toggle-shell-window (shell-buffer)
-  "Toggle the window for SHELL-BUFFER."
-  (if-let ((window (get-buffer-window shell-buffer)))
-      (quit-restore-window window 'bury)
-    (agent-shell--display-buffer shell-buffer)))
-
-;;;###autoload
 (defun +agent-shell--format-region-prompt (prompt context)
   "Return PROMPT combined with CONTEXT."
   (let ((prompt (string-trim prompt)))
@@ -212,14 +196,6 @@ an existing shell."
 (defun +agent-shell--clean-first-prompt-title (title)
   "Clean TITLE returned by `claude -p'."
   (string-trim (substring-no-properties title)))
-;; (let ((title (substring-no-properties title)))
-;; (setq title (replace-regexp-in-string "\e\\[[?0-9;]*[a-zA-Z]" "" title))
-;; (setq title (replace-regexp-in-string "\\[\\?[0-9;]*[a-zA-Z]" "" title))
-;; (setq title (string-trim title))
-;; (setq title (replace-regexp-in-string "\\`Title:[ \t]*" "" title))
-;; (setq title (replace-regexp-in-string "[\n\r\t ]+" " " title))
-;; (setq title (replace-regexp-in-string "\\`[\"'`]+\\|[\"'`.!?:;]+\\'" "" title))
-;; (truncate-string-to-width (string-trim title) 48 nil nil "...")))
 
 ;;;###autoload
 (defun +agent-shell--fallback-first-prompt-title (prompt)

@@ -21,6 +21,4 @@
   :bind
   (:map isearch-mode-map
         ("C-<return>" . #'+isearch-exit-at-end)
-        ("M-s l" . #'+consult-line)
-        ("M-s M-l" . #'+consult-line-multi)
         ("M-s g" . #'+isearch-consult-ripgrep)))

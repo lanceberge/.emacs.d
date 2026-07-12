@@ -1,7 +1,6 @@
 ;;; tabspace-extras.el --- Tabspace-aware navigation helpers -*- lexical-binding: t -*-
 
 (require 'project)
-(require 'project-extras)
 (require 'project-tab)
 (require 'cl-lib)
 (require 'consult)
@@ -24,20 +23,11 @@
   :group '+tabspace)
 
 ;;;###autoload
-(defun +tabspace-other-project-buffer-dwim (n &optional project)
-  "Switch to the N'th most recent file-visiting buffer in PROJECT's tabspace.
-Fall back to `+project-other-buffer' when no matching local buffer exists."
-  (interactive "p")
-  (if-let ((buffer (+tabspace-other-buffer-in-project n project)))
-      (switch-to-buffer buffer)
-    (+project-other-buffer n project)))
-
-;;;###autoload
 (defun +tabspace-other-buffer-dwim (n)
   (interactive "p")
   (if-let ((buffer (+tabspace-other-buffer n)))
       (switch-to-buffer buffer)
-    (+project-other-buffer n (project-root (project-current nil)))))
+    (user-error "No other buffers in tabspace")))
 
 ;;;###autoload
 (defun +tabspace-other-special-buffer-dwim (arg)
@@ -55,7 +45,7 @@ exists."
   (interactive)
   (if-let ((buffer (+tabspace-other-special-buffer-buffer)))
       (switch-to-buffer buffer)
-    (call-interactively #'+project-other-special-buffer)))
+    (+tabspace-other-buffer-dwim 1)))
 
 ;;;###autoload
 (defun +tabspace-kill-buffer-dwim ()
@@ -65,24 +55,9 @@ it from the current tabspace."
   (interactive)
   (let* ((buffer (current-buffer)))
     (if-let ((other-buffer (+tabspace-other-buffer 1)))
-        (progn
-          (switch-to-buffer other-buffer)
-          (+tabspace-kill-or-remove-buffer buffer))
-      (switch-to-buffer (+project-other-buffer-buffer 1))
-      (+tabspace-kill-or-remove-buffer buffer))))
-
-;;;###autoload
-(defun +tabspace-other-buffer-in-project (n &optional project)
-  "Return the N'th most recent file-visiting buffer in PROJECT's tabspace."
-  (let ((project (+tabspace-project project))
-        (index (max 0 (1- (abs n)))))
-    (cl-loop for buffer in (+tabspace-local-buffer-list)
-             unless (or (eq buffer (current-buffer))
-                        (not (funcall +tabspace-switch-buffer-predicate buffer))
-                        (not (+tabspace-buffer-in-project-p buffer project)))
-             if (zerop index)
-             return buffer
-             else do (cl-decf index))))
+        (switch-to-buffer other-buffer)
+      (scratch-buffer))
+    (+tabspace-kill-or-remove-buffer buffer)))
 
 ;;;###autoload
 (defun +tabspace-other-buffer (n)

@@ -16,8 +16,8 @@
         ("f" . #'project-find-file)
         ("d" . #'project-find-dir)
         ("M-f" . #'project-root-find-file))
-  (:map +leader-map
-        ("k" . #'project-switch-project)))
+  :config
+  (bind-key "a" +llm-map project-prefix-map))
 
 ;; save project-local compile histories
 (use-package project-compile

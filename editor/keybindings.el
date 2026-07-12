@@ -11,6 +11,7 @@
 (bind-key "h" help-map +leader-map)
 ;; use the default M-s everywhere else
 (bind-key "s" search-map +normal-mode-map)
+(bind-key "a" +llm-map +leader-map)
 
 (bind-key "[" +backward-map +normal-mode-map)
 (bind-key "]" +forward-map +normal-mode-map)

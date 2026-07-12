@@ -40,22 +40,26 @@
         ("rj" . #'consult-register-load)
         ("rs" . #'consult-register-store)
         ("M-x" . #'consult-mode-command)
-        (":" . #'consult-complex-command)
-        ;; ("'" . #'consult-recent-file)
-        )
+        (":" . #'consult-complex-command))
   (:map minibuffer-mode-map
         ("M-r" . #'consult-history))
   (:map isearch-mode-map
         ("M-r" . #'consult-isearch-history))
   (:map project-prefix-map
         ("g" . #'consult-ripgrep)
+        ("b" . #'consult-project-buffer)
         ("i" . #'consult-imenu-multi)
         ("l" . #'consult-line-multi))
   (:map help-map
+        ("i" . #'consult-info)
         ("C-m" . #'consult-minor-mode-menu))
+  (:map isearch-mode-map
+        ("M-s l" . #'consult-line)
+        ("M-s M-l" . #'consult-line-multi))
   (:map search-map
         ("g" . #'consult-ripgrep)
         ("r" . #'consult-recent-file)
+        ("b" . #'consult-project-buffer)
         ("l" . #'consult-line)
         ("M-l" . #'consult-line-multi))
   :config
@@ -72,8 +76,6 @@
         ("M-y" . #'+consult-yank-or-replace))
   (:map +insert-mode-map
         ("M-q" . #'+consult-kmacro))
-  (:map project-prefix-map
-        ("b" . #'consult-project-buffer))
   (:map consult-narrow-map
         ("C-h" . #'+consult-narrow-help))
   (:map vertico-map
@@ -81,7 +83,6 @@
   (:map search-map
         ("t" . #'+consult-find-todos)
         ("M-t" . #'+consult-project-find-todos)
-        ("b" . #'+consult-project-buffer)
         ("a" . #'+consult-org-agenda-todos)
         (".g" . #'+consult-ripgrep-here)
         (".f" . #'+consult-project-file-here)

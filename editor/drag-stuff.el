@@ -10,88 +10,23 @@
 
 ;;;###autoload
 (defun +drag-stuff-up ()
+  "Same as `drag-stuff-up' except if point is at the beginning of the next line,
+and a region is active, only drag a single line. This is useful when marking full
+lines using C-a C-SPC C-n. (or `+mark-whole-lines')."
   (interactive)
-  (call-interactively #'drag-stuff-up))
+  (if (and (region-active-p) (bolp))
+      (progn
+        (backward-char 1)
+        (call-interactively #'drag-stuff-up)
+        (forward-char 1))
+    (call-interactively #'drag-stuff-up)))
 
 ;;;###autoload
 (defun +drag-stuff-down ()
   (interactive)
-  (call-interactively #'drag-stuff-down))
-
-;;;###autoload
-(defun +drag-stuff-left-dwim (arg)
-  (interactive "P")
-  (let ((deactivate-mark nil))
-    (if (full-line-region-p)
-        (+indent-left (or arg tab-width))
-      (let ((arg (min (- (region-beginning) (beginning-of-indentation-position)) (or arg 1))))
-        (unless (eq arg 0)
-          (+drag-stuff--horizontal arg #'drag-stuff-left))))))
-
-;;;###autoload
-(defun +drag-stuff-right-dwim (arg)
-  (interactive "P")
-  (let ((deactivate-mark nil))
-    (if (full-line-region-p)
-        (+indent-right (or arg tab-width))
-      (let ((arg (min (- (line-end-position) (region-end)) (or arg 1))))
-        (unless (eq arg 0)
-          (+drag-stuff--horizontal arg #'drag-stuff-right))))))
-
-;;;###autoload
-(defun +drag-stuff--horizontal (&optional arg drag-stuff-function)
-  (let ((region-active (region-active-p)))
-    (unless region-active
-      (set-mark (point))
-      (forward-char)
-      (activate-mark))
-    (funcall drag-stuff-function arg)
-    (unless region-active
-      (deactivate-mark)
-      (backward-char))))
-
-;;;###autoload
-(defun +drag-stuff--word (&optional arg left)
-  "Drag region one word right or left if `left' is set"
-  (require 'drag-stuff)
-  (let ((orig-point-at-beginning (eq (point) (region-beginning)))
-        (orig-region-active (region-active-p))
-        (move-word-point-function (if left #'+backward-word-no-wrap-point #'+forward-word-no-wrap-point))
-        (drag-stuff-function (if left #'drag-stuff-region-left #'drag-stuff-region-right)))
-    (unless orig-region-active
-      (set-mark (point))
-      (forward-char)
-      (activate-mark))
-    (if left
-        (goto-start-of-region)
-      (goto-end-of-region))
-    (dotimes (_ arg)
-      (let* ((current-point (point))
-             (moved-word-point (funcall move-word-point-function))
-             (drag-stuff-arg (abs (- current-point moved-word-point))))
-        (unless (eq drag-stuff-arg 0)
-          (funcall drag-stuff-function drag-stuff-arg))))
-    ;; restore point to beginning/end of the region
-    (if orig-point-at-beginning
-        (when (> (point (region-beginning))
-                 (exchange-point-and-mark)))
-      (when (< (point) (region-end))
-        (exchange-point-and-mark)))))
-
-;;;###autoload
-(defun +forward-word-no-wrap-point ()
-  (min (save-excursion (forward-word) (point)) (line-end-position)))
-
-;;;###autoload
-(defun +backward-word-no-wrap-point ()
-  (max (beginning-of-indentation-position) (save-excursion (backward-word) (point))))
-
-;;;###autoload
-(defun +drag-stuff-word-left (&optional arg)
-  (interactive "p")
-  (+drag-stuff--word arg t))
-
-;;;###autoload
-(defun +drag-stuff-word-right (&optional arg)
-  (interactive "p")
-  (+drag-stuff--word arg nil))
+  (if (and (region-active-p) (bolp))
+      (progn
+        (backward-char 1)
+        (call-interactively #'drag-stuff-down)
+        (forward-char 1))
+    (call-interactively #'drag-stuff-down)))

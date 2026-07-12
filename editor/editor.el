@@ -14,16 +14,11 @@
      ;; (+window-find-file-new-largest-action . nil)
      ;; (+window-switch-to-buffer-new . nil)
      ;; (+window-switch-to-buffer-new-action . nil)
-     (t . nil)))
+     (t . t)))
   :bind
-  (:map +normal-mode-map
-        ("C-." . #'embark-act)
-        ("M-'" . #'embark-dwim))
-  (:map +insert-mode-map
-        ("C-." . #'embark-act)
-        ("M-'" . #'embark-dwim))
+  ("C-." . #'embark-act)
+  ("M-'" . #'embark-dwim)
   (:map minibuffer-mode-map
-        ("C-." . #'embark-act)
         ("M-," . #'+embark-select)
         ("M-a" . #'embark-act-all)
         ("M-m" . #'embark-become)
@@ -31,11 +26,8 @@
         ("C-c C-c" . #'embark-collect))
   (:map embark-symbol-map
         ("h" . #'helpful-symbol))
-  (:map +motion-mode-map
-        ("C-." . #'embark-act)
-        ("M-'" . #'embark-dwim))
   (:map embark-become-file+buffer-map
-        ("k" . #'project-switch-project)
+        ("p" . #'+project-tab-switch-project-command)
         ("f" . #'project-find-file)
         ("d" . #'project-find-dir)
         ("g" . #'consult-ripgrep)
@@ -48,7 +40,7 @@
         ("e" . #'eshell)
         ("o" . #'+window-ace-switch-to-buffer)
         ("N" . #'+window-switch-to-buffer-new-action)
-        ("TAB k" . #'+tabspace-kill-or-remove-buffer))
+        ("k" . #'+tabspace-kill-or-remove-buffer))
   (:map embark-file-map
         ("e" . #'eshell)
         ("o" . #'+window-ace-find-file)
@@ -95,6 +87,7 @@
     :doc "Embark bindings that take precedence over target-specific maps.")
   (keymap-set embark-buffer-map "p" project-prefix-map)
   (keymap-set embark-file-map "p" project-prefix-map)
+  (keymap-set embark-become-file+buffer-map "a" +llm-map)
   (keymap-set +embark-priority-map "s" search-map)
 
   (advice-remove #'embark--action-keymap #'+embark-apply-priority-map)

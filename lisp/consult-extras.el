@@ -86,22 +86,6 @@ Otherwise, just call consult-yank-pop."
     (call-interactively #'consult-yank-pop)))
 
 ;;;###autoload
-(defun +consult-line ()
-  (interactive)
-  (call-interactively #'consult-line)
-  (let ((consult-search (car consult--line-history)))
-    (unless (string-match-p " " consult-search)
-      (+isearch-update-last-search consult-search))))
-
-;;;###autoload
-(defun +consult-line-multi ()
-  (interactive)
-  (call-interactively #'consult-line-multi)
-  (let ((consult-search (car consult--line-multi-history)))
-    (unless (string-match-p " " consult-search)
-      (+isearch-update-last-search consult-search))))
-
-;;;###autoload
 (defun +consult-ripgrep-here ()
   (interactive)
   (consult-ripgrep default-directory nil))

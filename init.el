@@ -233,6 +233,8 @@
 
 (defvar +global-map (make-sparse-keymap))
 
+(defvar +llm-map (make-sparse-keymap))
+
 (define-minor-mode +keybinding-overrides-mode
   "Mode for global keybindings."
   :global t

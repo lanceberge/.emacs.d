@@ -1,5 +1,12 @@
 ;;; consult-buffer-extras.el --- Consult buffer commands -*- lexical-binding: t -*-
 
+;; Utils for navigating frequently used groups of buffers -- for example eshell
+;; Commands have dwim behavior -- with a prefix argument, create a buffer. otherwise,
+;; switch to a matching buffer if there's only one. If there are more than one, open
+;; a consult buffer menu
+
+;; TODO integrate with tabspace setup
+
 (require 'consult-extras)
 (require 'modal)
 (require 'project)

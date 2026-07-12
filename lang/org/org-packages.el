@@ -61,7 +61,7 @@
   :bind
   (:map org-capture-mode-map
         ([remap delete-window] . #'org-capture-kill)
-        ([remap +project-kill-buffer] . #'org-capture-kill)
+        ([remap +tabspace-kill-buffer-dwim] . #'org-capture-kill)
         ([remap save-buffer] . org-capture-finalize))
   (:map +leader-map
         ("oc" . #'org-capture)))

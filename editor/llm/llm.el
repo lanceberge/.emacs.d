@@ -12,10 +12,8 @@
         ([remap org-insert-heading-respect-content] . #'+gptel-send)
         ([remap gptel-send] . #'+gptel-send)
         ("S-<return>" . #'newline))
-  (:map +leader-map
-        ("ag" . #'+gptel-project))
-  (:map project-prefix-map
-        ("ag" . #'gptel))
+  (:map +llm-map
+        ("g" . #'+gptel-project))
   :config
   (setq
    gptel-backend (gptel-make-anthropic "Claude"
@@ -98,5 +96,5 @@
   :custom
   (eca-chat-use-side-window nil)
   :bind
-  (:map +leader-map
-        ("ae" . #'eca)))
+  (:map +llm-map
+        ("e" . #'eca)))
