@@ -36,6 +36,11 @@ I use this to tab-complete in eat buffers with bash completions instead of `comp
   (eat-self-input 1 ?\t))
 
 ;;;###autoload
+(defun +eat-eshell-use-modal-cursor ()
+  (when (bound-and-true-p eat-terminal)
+    (eat-term-set-parameter eat-terminal 'set-cursor-function #'ignore)))
+
+;;;###autoload
 (defun +eat--record-shell-command-in-line-history (encoded-command)
   "Record Eat shell integration ENCODED-COMMAND in line input history."
   (when-let* ((command (ignore-errors
@@ -78,20 +83,54 @@ I use this to tab-complete in eat buffers with bash completions instead of `comp
   (add-to-list 'consult-mode-histories
                '(eat-mode eat--line-input-ring eat--line-input-ring-index)))
 
-;;;###autoload
-(defun +eat-eshell-use-modal-cursor ()
-  (when (bound-and-true-p eat-terminal)
-    (eat-term-set-parameter eat-terminal 'set-cursor-function #'ignore)))
+(use-package ghostel
+  :unless IS-WORK2
+  :hook
+  (ghostel-semi-char-mode . (lambda ()
+                              (+insert-mode 1)))
+  :custom
+  (ghostel-ignore-cursor-change t)
+  (ghostel-initial-input-mode 'line)
+  (ghostel-line-mode-bash-completion-prespawn t)
+  (ghostel-query-before-killing 'auto)
+  :bind
+  (:map +leader-map
+        ("nt" . #'ghostel))
+  (:map project-prefix-map
+        ("t" . #'ghostel-project)
+        ("T" . #'ghostel-project-list-buffers)))
 
-(use-package eshell-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/eshell-extras.el" :files ("eshell-extras.el"))
-  :after eshell
-  :demand t
+(use-package ghostel-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/ghostel-extras.el" :files ("ghostel-extras.el"))
+  :after key-chord
+  :hook
+  (ghostel-mode . +ghostel-override-insert-mode-key-chords)
+  :custom
+  (+ghostel-llm-command "claude")
+  (+ghostel-llm-buffer-base-name "Codex")
+  :bind
+  (:map ghostel-line-mode-map
+        ("<tab>" . #'+ghostel-semi-char-tab)
+        ("M-r" . #'+ghostel-consult-history)
+        ([remap +modal-end-of-buffer-insert] . #'+ghostel-reset-point)
+        ("C-c C-j" . #'+modal-ghostel-semi-char-mode-insert))
+  (:map ghostel-semi-char-mode-map
+        ("RET" . #'+ghostel-semi-char-return)
+        ("<return>" . #'+ghostel-semi-char-return)
+        ("M-r" . #'+ghostel-consult-history))
+  (:map +llm-map
+        ("c" . #'+ghostel-llm))
   :config
-  (require 'esh-mode)
-  (add-to-list 'eshell-expand-input-functions #'+eshell-expand-pipe-space)
-  (add-to-list 'eshell-expand-input-functions #'+eshell-expand-less-pipe)
-  (add-to-list 'eshell-expand-input-functions #'eshell-expand-history-references))
+  (setq +ghostel-llm-command "codexp")
+  (setq +ghostel-llm-buffer-base-name "Codex")
+  (+modal-create-insert-function ghostel-semi-char-mode)
+  (key-chord-define ghostel-semi-char-mode-map "jk" #'+ghostel-line-mode-normal)
+  (advice-add 'ghostel--line-mode-enter :after #'+ghostel-use-modal-cursor)
+  (add-to-list 'consult-mode-histories
+               '(ghostel-mode
+                 ghostel--line-mode-history
+                 ghostel--line-mode-history-index
+                 ghostel-beginning-of-input-or-line)))
 
 (use-package eshell
   :custom
@@ -110,6 +149,16 @@ I use this to tab-complete in eat buffers with bash completions instead of `comp
   (add-to-list 'eshell-modules-list 'eshell-elecslash)
   (add-to-list 'eshell-modules-list 'eshell-xtra)
   (add-hook 'eshell-mode-hook #'+eshell-outline-setup))
+
+(use-package eshell-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/eshell-extras.el" :files ("eshell-extras.el"))
+  :after eshell
+  :demand t
+  :config
+  (require 'esh-mode)
+  (add-to-list 'eshell-expand-input-functions #'+eshell-expand-pipe-space)
+  (add-to-list 'eshell-expand-input-functions #'+eshell-expand-less-pipe)
+  (add-to-list 'eshell-expand-input-functions #'eshell-expand-history-references))
 
 (use-package esh-mode
   :ensure nil

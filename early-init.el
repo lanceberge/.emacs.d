@@ -118,12 +118,13 @@
 (use-package display-line-numbers
   :ensure nil
   :demand t
+  :hook
+  ((prog-mode text-mode conf-mode) . display-line-numbers-mode)
   :config
   (setq display-line-numbers-type 'visual
         display-line-numbers-width-start t ; auto count number of lines to start numbers
-        display-line-numbers-grow-only t) ; don't shrink line number width
-
-  (global-display-line-numbers-mode))
+                                        ; don't shrink line number width
+        display-line-numbers-grow-only t))
 
 (setq-default mode-line-format
               '("%e"
