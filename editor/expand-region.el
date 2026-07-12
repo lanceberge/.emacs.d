@@ -2,30 +2,31 @@
 (use-package expand-region
   :bind
   ("C-=" . #'+expand-region)
-  :config
-  (setq er/try-expand-list
-        '(er/mark-inside-quotes
-          er/mark-outside-quotes
-          er/mark-inside-pairs
-          er/mark-outside-pairs
-          er/mark-ts-node))
+  :hook
+  (yaml-mode . er/add-yaml-mode-expansions)
+  (nxml-mode . er/add-nxml-mode-expansions)
+  (add-hook . er/add-org-mode-expansions)
+  (add-hook . er/add-text-mode-expansions)
+  :init
   (with-eval-after-load 'yaml-mode
     (require 'yaml-mode-expansions)
-    (require 'python)
-    ;; the yaml expansion for some reason use python functions
-    (add-hook 'yaml-mode-hook #'er/add-yaml-mode-expansions))
+    (require 'python))
 
   (with-eval-after-load 'org-mode
-    (require 'the-org-mode-expansions)
-    (add-hook 'org-mode-hook #'er/add-org-mode-expansions))
+    (require 'the-org-mode-expansions))
 
   (with-eval-after-load 'nxml-mode
-    (require 'nxml-mode-expansions)
-    (add-hook 'nxml-mode-hook #'er/add-nxml-mode-expansions))
+    (require 'nxml-mode-expansions))
 
   (with-eval-after-load 'text-mode
-    (require 'text-mode-expansions)
-    (add-hook 'text-mode-hook #'er/add-text-mode-expansions)))
+    (require 'text-mode-expansions))
+  :config
+  (setq-default er/try-expand-list
+                '(er/mark-inside-quotes
+                  er/mark-outside-quotes
+                  er/mark-inside-pairs
+                  er/mark-outside-pairs
+                  er/mark-ts-node)))
 
 ;;;###autoload
 (defun +expand-region (&optional arg)
