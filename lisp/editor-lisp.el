@@ -1,4 +1,7 @@
 ;;; -*- lexical-binding: t -*-
+(require 'yasnippet)
+(require 'project)
+
 ;;;###autoload
 (defun read-file-contents (file-path)
   "Read the contents of FILE-PATH and return it as a string."
@@ -190,12 +193,8 @@
   (require 'project)
   (project-root (project-current nil)))
 
-(defun +project--buffer-relative-path ()
-  "Return the buffer's path relative to the project-root"
-  (require 'project)
-  (when-let ((project (project-current t))
-             (root (project-root project))
-             (file (buffer-file-name)))
-    (file-relative-name file root)))
+;;;###autoload
+(defun +yas-expand-snippet (snippet-name)
+  (yas-expand-snippet (yas-lookup-snippet snippet-name)))
 
 (provide 'editor-lisp)
