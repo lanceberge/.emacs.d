@@ -1,4 +1,14 @@
 ;;; -*- lexical-binding: t -*-
+(require 'editor-lisp)
+
+;;;###autoload
+(defun balanced-parens-p ()
+  "Return `t' if parentheses are balanced; otherwise `nil'."
+  (condition-case nil
+      (progn
+        (check-parens)
+        t)
+    (error nil)))
 
 ;;;###autoload
 (define-minor-mode +user-lisp-mode

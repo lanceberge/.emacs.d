@@ -40,13 +40,6 @@
                ("]" . #'winner-redo)
                ("[" . #'winner-undo)))
 
-(use-package ace-link
-  :bind
-  (:map text-mode-map
-        ("M-i" . #'ace-link))
-  (:map helpful-mode-map
-        ("M-i" . #'ace-link)))
-
 (use-package beginend
   :disabled t
   :bind

@@ -114,6 +114,7 @@
       remote-file-name-inhibit-auto-save-visited t)
 
 (defvar IS-WORK nil)
+(defvar IS-WORK2 nil)
 
 ;; Path
 (when IS-MAC
@@ -126,6 +127,7 @@
 
 (dolist (path '("~/go/bin"
                 "~/dotfiles/bin/"
+                "~/.cargo/bin"
                 "~/.asdf/shims/"
                 "~/.config/composer/vendor/bin/"))
   (add-to-list 'exec-path path))

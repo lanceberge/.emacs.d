@@ -116,9 +116,7 @@
   (+ediff-conflicts-files-function #'+jj-conflicted-files))
 
 (use-package ediff
-  :defer t
   :ensure nil
-  :after ediff-conflicts
   :custom
   (ediff-window-setup-function 'ediff-setup-windows-plain)
   (ediff-split-window-function #'split-window-horizontally)
@@ -137,7 +135,6 @@
   :ensure nil
   :bind
   (:map grep-mode-map
-        (";" . #'compile-goto-error)
         ("q" . #'quit-window)))
 
 (use-package grep-extras
@@ -146,12 +143,6 @@
   :demand t
   :config
   (keymap-set grep-mode-map "d" #'+grep-export-dired))
-
-(use-package menu-bar
-  :ensure nil
-  :bind
-  (:map +leader-map
-        ("td" . #'toggle-debug-on-error)))
 
 (use-package occur
   :ensure nil
@@ -172,6 +163,7 @@
 (use-package indent
   :ensure nil
   :init
+  ;; i don't use the default bindings here so might as well start it over
   (setq indent-rigidly-map (make-sparse-keymap))
   :bind
   (:map indent-rigidly-map
@@ -180,6 +172,12 @@
         ("l" . #'indent-rigidly-right)
         ("L" . #'indent-rigidly-right-to-tab-stop)))
 
+;;;###autoload
+(defun +indent-rigidly-dwim ()
+  (interactive)
+  (unless (region-active-p)
+    (+mark-whole-lines 1))
+  (call-interactively #'indent-rigidly))
 
 (use-package compile
   :ensure nil
@@ -200,7 +198,7 @@
 (use-package subword-mode ;; enable `word' based commands to tread camel case text as separate words
   :ensure nil
   :hook
-  ((java-mode java-ts-mode yaml-mode yaml-ts-mode) . subword-mode))
+  ((java-mode java-ts-mode yaml-mode yaml-ts-mode yaml-gotmpl-mode) . subword-mode))
 
 (use-package view-mode
   :ensure nil
@@ -213,13 +211,6 @@
         ("n")
         ("<")
         (">")))
-
-;;;###autoload
-(defun +indent-rigidly-dwim ()
-  (interactive)
-  (unless (region-active-p)
-    (+mark-whole-lines 1))
-  (call-interactively #'indent-rigidly))
 
 (use-package rect
   :ensure nil

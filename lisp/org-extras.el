@@ -14,17 +14,17 @@
   :group '+org)
 
 ;;;###autoload
-(defun +org-up (&optional arg)
+(defun +org-up (_arg)
   "Fix for org going to the end of the ... w/ outline mode"
   (interactive "p")
-  (previous-line arg)
+  (call-interactively #'previous-line)
   (when (eolp)
     (org-end-of-line)))
 
 ;;;###autoload
-(defun +org-down (&optional arg)
+(defun +org-down (_arg)
   (interactive "p")
-  (next-line arg)
+  (call-interactively #'next-line)
   (when (eolp)
     (org-end-of-line)))
 
@@ -34,18 +34,6 @@
   (let* ((org-dir (expand-file-name +org-directory))
          (pr (cons 'transient org-dir)))
     (project-find-file-in nil (list org-dir) pr)))
-
-;;;###autoload
-(defun +org--has-filetag-p (tag)
-  (and (member tag (+org--get-filetags)) t))
-
-;;;###autoload
-(defun +org--get-filetags ()
-  "Return a list of filetags from the current buffer."
-  (and (eq major-mode 'org-mode)
-       (let ((filetags (car (org-collect-keywords '("FILETAGS")))))
-         (when filetags
-           (split-string (cadr filetags) ":" t "\\s-*")))))
 
 ;;;###autoload
 (defun +org-agenda-save-all-org-buffers ()

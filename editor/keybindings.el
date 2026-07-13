@@ -191,13 +191,6 @@
   (dolist (event '("<mouse-event>" "<mouse-movement>" "<mouse-2>" "<drag-mouse-1>" "<wheel-up>" "<wheel-down>" "<double-wheel-up>" "<double-wheel-down>" "<triple-wheel-up>" "<triple-wheel-down>" "<wheel-left>" "<wheel-right>" handle-select-window mouse-set-point  mouse-drag-region))
     (add-to-list 'keycast-substitute-alist `(,event nil nil))))
 
-;;;###autoload
-(defun +key-chord-define-keymap (keymap keys prefix-keymap)
-  "In KEYMAP, bind key chord KEYS as a prefix for PREFIX-KEYMAP."
-  (unless (keymapp prefix-keymap)
-    (user-error "Expected a keymap, got %S" prefix-keymap))
-  (key-chord-define keymap keys prefix-keymap))
-
 (use-package key-chord
   :custom
   (key-chord-two-keys-delay 0.2)

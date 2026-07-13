@@ -11,6 +11,12 @@
 (defvar embark-exporters-alist)
 
 ;;;###autoload
+(defun +consult-project-file-here ()
+  "Find a project file under `default-directory'."
+  (interactive)
+  (+consult--project-file-at-dir default-directory))
+
+;;;###autoload
 (defun +consult-project-file-source (dir &optional name)
   "Return a Consult project file source restricted to DIR."
   (let ((dir (file-name-as-directory (expand-file-name dir)))
@@ -48,24 +54,11 @@
        (list (+consult-project-file-source default-directory name))))))
 
 ;;;###autoload
-(defun +consult-project-file-here ()
-  "Find a project file under `default-directory'."
-  (interactive)
-  (+consult--project-file-at-dir default-directory))
-
-;;;###autoload
 (defun +consult-preview-tramp-excluded-p (buffer)
   "Return non-nil if BUFFER should be excluded from consult preview.
 Excludes Tramp buffers so preview never opens a remote connection."
   (when-let ((dir (buffer-local-value 'default-directory buffer)))
     (file-remote-p dir)))
-
-;;;###autoload
-(defun +consult--buffer-in-dir (dir)
-  (let ((project (project-current nil dir)))
-    (let ((default-directory (project-root project)))
-      (consult--with-project
-        (consult-buffer consult-project-buffer-sources)))))
 
 ;;;###autoload
 (defun +consult-yank-or-replace ()
@@ -118,31 +111,6 @@ Otherwise, just call consult-yank-pop."
                                                0 'face candidate)))
                            (substring-no-properties candidate 0 file-end)))))
       (expand-file-name file))))
-
-;;;###autoload
-(defun +consult--buffer (&optional sources initial-narrow initial)
-  "Run `consult-buffer' with SOURCES, INITIAL-NARROW, and INITIAL."
-  (let ((selected (consult--multi (or sources consult-buffer-sources)
-                                  :require-match
-                                  (confirm-nonexistent-file-or-buffer)
-                                  :prompt "Switch to: "
-                                  :history 'consult--buffer-history
-                                  :sort nil
-                                  :initial initial
-                                  :initial-narrow initial-narrow)))
-    ;; For non-matching candidates, fall back to buffer creation.
-    (unless (plist-get (cdr selected) :match)
-      (consult--buffer-action (car selected)))))
-
-;;;###autoload
-(defun +consult-project-buffer (&optional initial)
-  (interactive)
-  (if-let ((project (project-current nil)))
-      (if (project-buffers project)
-          (consult--with-project
-            (+consult--buffer consult-project-buffer-sources ?b initial))
-        (call-interactively #'project-find-file))
-    (call-interactively #'consult-buffer)))
 
 ;;;###autoload
 (defun +consult-find-todos ()

@@ -23,10 +23,13 @@
   :config
   (+modal-bind '+motion-mode-map 'dired-mode-hook
                '(("x" . dired-do-flagged-delete)
-                 ("g" . revert-buffer))))
+                 ("g" . revert-buffer)))
+  (bind-key "M-s" search-map dired-mode-map))
 
 ;;;###autoload
 (defun +dired-maybe-insert-subdir ()
+  "I'm not a fan of how dired moves point when you insert a subdir so
+I wrap it here in a save-excursion."
   (interactive)
   (save-excursion
     (call-interactively #'dired-maybe-insert-subdir)))

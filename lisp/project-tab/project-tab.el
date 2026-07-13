@@ -55,7 +55,7 @@ Nil means signal an error."
   "0" #'tab-bar-close-tab
   "o" #'+project-tab-other-project
   "p" #'project-prefix-or-any-command
-  "n" #'+project-tab-new-project-command)
+  "2" #'+project-tab-new-project-command)
 
 ;;;###autoload
 (defun +project-tab-new (&optional arg)
@@ -209,7 +209,7 @@ When CREATE is non-nil, create a new tab if no existing project tab is found."
   "Switch to DIR's project tab, creating one if needed, then dispatch a command."
   (project-remember-project (project-current t dir))
   (+project-tab-switch-to-project dir t)
-  (+project-call-project-command))
+  (+project-call-project-command dir))
 
 ;;;###autoload
 (defun +project-tab--pin-current-prefix (prefix)

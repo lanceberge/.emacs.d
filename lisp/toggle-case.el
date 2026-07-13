@@ -81,4 +81,4 @@ Version: 2024-06-17"
       (downcase-region xbeg xend)
       (put this-command 'state 0)))))
 
-(provide '+toggle-case)
+(provide 'toggle-case)

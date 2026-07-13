@@ -90,15 +90,6 @@
         ("p" . #'+consult-find-package)
         ("K" . #'+consult-find-bound-function)))
 
-(use-package consult-buffer-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/consult-buffer-extras.el" :files ("consult-buffer-extras.el"))
-  :after project
-  :bind
-  (:map project-prefix-map
-        ("e" . #'+consult-buffer-project-eshell))
-  (:map +leader-map
-        ("ba" . #'+consult-buffer-agent-shell)))
-
 (use-package consult-eglot
   :bind
   (:map search-map

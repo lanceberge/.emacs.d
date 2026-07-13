@@ -40,11 +40,13 @@
         ("e" . #'eshell)
         ("o" . #'+window-ace-switch-to-buffer)
         ("N" . #'+window-switch-to-buffer-new-action)
-        ("k" . #'+tabspace-kill-or-remove-buffer))
+        ("k" . #'+tabspace-kill-or-remove-buffer)
+        ("t" . #'eat))
   (:map embark-file-map
         ("e" . #'eshell)
         ("o" . #'+window-ace-find-file)
-        ("N" . #'+window-find-file-new-largest-action))
+        ("N" . #'+window-find-file-new-largest-action)
+        ("t" . #'eat))
   (:map embark-collect-mode-map
         ("F" . #'consult-focus-lines))
   (:map embark-identifier-map
@@ -84,10 +86,13 @@
   (advice-add 'embark-act :before #'force-keycast-update)
 
   (defvar-keymap +embark-priority-map
-    :doc "Embark bindings that take precedence over target-specific maps.")
+    :doc "Embark bindings that take precedence over target-specific maps."
+    "g" #'consult-ripgrep)
+
   (keymap-set embark-buffer-map "p" project-prefix-map)
   (keymap-set embark-file-map "p" project-prefix-map)
   (keymap-set embark-become-file+buffer-map "a" +llm-map)
+  (keymap-set embark-become-file+buffer-map "s" search-map)
   (keymap-set +embark-priority-map "s" search-map)
 
   (advice-remove #'embark--action-keymap #'+embark-apply-priority-map)
@@ -150,12 +155,6 @@
         ("v" . #'helpful-variable)
         ("f" . #'helpful-function)
         ("s" . #'helpful-symbol)))
-
-(add-hook 'after-init-hook
-          (lambda ()
-            (add-to-list 'exec-path "~/go/bin")
-            (add-to-list 'exec-path "~/.cargo/bin")))
-
 (when (version< emacs-version "29.1")
   (use-package exec-path-from-shell ; Use system $PATH variable for eshell, commands, etc.
     :custom
@@ -180,12 +179,13 @@
     (set-auto-mode)))
 
 (use-package jinx
+  :unless IS-WORK
   :hook ((prog-mode text-mode) . jinx-mode)
   :bind
   (:map jinx-mode-map
         ("M-=" . #'jinx-correct)))
 
-(use-package +toggle-case
+(use-package toggle-case
   :ensure (:type file :main "~/.emacs.d/lisp/toggle-case.el" :files ("toggle-case.el"))
   :bind
   (:map +normal-mode-map
@@ -193,7 +193,7 @@
   :config
   (put 'upcase-region 'disabled nil))
 
-(use-package +text-extras
+(use-package text-extras
   :ensure (:type file :main "~/.emacs.d/lisp/text-extras.el" :files ("text-extras.el"))
   :bind
   (:map embark-region-map

@@ -20,7 +20,6 @@
 
 (use-package agent-shell-extras
   :ensure (:type file :main "~/.emacs.d/lisp/agent-shell-extras.el" :files ("agent-shell-extras.el"))
-  ;; :defer 0.3
   :hook (agent-shell-mode . +agent-shell-auto-rename-mode)
   :config
   (+modal-bind '+normal-mode-map 'agent-shell-mode-hook

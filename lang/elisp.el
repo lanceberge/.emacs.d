@@ -3,7 +3,9 @@
   :ensure nil
   :bind
   (:map ctl-x-map
-        ("e" . #'eval-last-sexp)))
+        ("e" . #'eval-last-sexp))
+  (:map +leader-map
+        ("td" . #'toggle-debug-on-error)))
 
 (use-package emacs-lisp-extras
   :ensure (:type file :main "~/.emacs.d/lisp/emacs-lisp-extras.el" :files ("emacs-lisp-extras.el"))
@@ -13,14 +15,6 @@
   :bind
   (:map emacs-lisp-mode-map
         ([remap save-buffer] . +elisp-validate-balanced-parens)))
-
-(use-package debug
-  :ensure nil
-  :commands
-  (debug-on-entry))
-
-(use-package edebug
-  :ensure nil)
 
 (use-package elisp-demos ;; help menus for example usages of elisp functions
   :unless IS-WORK

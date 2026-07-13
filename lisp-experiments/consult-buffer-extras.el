@@ -13,6 +13,37 @@
 (require 'seq)
 
 ;;;###autoload
+(defun +consult-buffer-agent-shell (&optional arg)
+  "Switch to an agent shell buffer, or create one with ARG."
+  (interactive "P")
+  (+consult-buffer--project-dwim "Agent" #'agent-shell-openai-start-codex nil arg))
+
+;;;###autoload
+(defun +consult--buffer (&optional sources initial-narrow initial)
+  "Run `consult-buffer' with SOURCES, INITIAL-NARROW, and INITIAL."
+  (let ((selected (consult--multi (or sources consult-buffer-sources)
+                                  :require-match
+                                  (confirm-nonexistent-file-or-buffer)
+                                  :prompt "Switch to: "
+                                  :history 'consult--buffer-history
+                                  :sort nil
+                                  :initial initial
+                                  :initial-narrow initial-narrow)))
+    ;; For non-matching candidates, fall back to buffer creation.
+    (unless (plist-get (cdr selected) :match)
+      (consult--buffer-action (car selected)))))
+
+;;;###autoload
+(defun +consult-project-buffer (&optional initial)
+  (interactive)
+  (if-let ((project (project-current nil)))
+      (if (project-buffers project)
+          (consult--with-project
+            (+consult--buffer consult-project-buffer-sources ?b initial))
+        (call-interactively #'project-find-file))
+    (call-interactively #'consult-buffer)))
+
+;;;###autoload
 (defun +consult-buffer-project-eshell-new (&optional arg)
   (interactive "p")
   (dotimes (_ arg)

@@ -24,7 +24,9 @@
 
 ;;;###autoload
 (defun +wgrep-replace (regexp replace)
-  "Replace in wgrep without replacing the read-only 'file_name:line:' prefix."
+  "Replace in wgrep without replacing the read-only 'file_name:line:' prefix.
+This is because wgrep include file and line prefixes that are read only and doing
+regex replacements on all matches fails to modify the read only bits."
   (interactive (list (read-string "Replace: ")
                      (read-string "Replace With: ")))
   (save-excursion

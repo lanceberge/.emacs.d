@@ -9,15 +9,6 @@
     (insert-file-contents file-path)
     (buffer-string)))
 
-;;;###autoload
-(defun balanced-parens-p ()
-  "Return `t' if parentheses are balanced; otherwise `nil'."
-  (condition-case nil
-      (progn
-        (check-parens)
-        t)
-    (error nil)))
-
 ;; https://stackoverflow.com/questions/3393834/how-to-move-forward-and-backward-in-emacs-mark-ring
 ;;;###autoload
 (defun marker-is-point-p (marker)

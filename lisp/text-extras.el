@@ -78,4 +78,4 @@ for the pop up buffer."
       (while (re-search-forward matcher (or end (point-max)) t)
         (replace-match (cdr (assoc-string (match-string 0) alist)))))))
 
-(provide '+text-extras)
+(provide 'text-extras)

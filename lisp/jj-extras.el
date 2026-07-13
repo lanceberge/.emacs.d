@@ -202,5 +202,18 @@ URL defaults to the system clipboard contents."
           (split-string (buffer-string) "\n" t)
         nil))))
 
+;;;###autoload
+(defun +majutsu-forget-command (directory)
+  (let ((project-root (file-name-as-directory
+                       (expand-file-name directory))))
+    (when-let* (((and (fboundp 'project-current)
+                      (fboundp 'project-kill-buffers)))
+                (project (project-current nil project-root)))
+      (project-kill-buffers t project))
+    (when (fboundp 'project-forget-project)
+      (project-forget-project project-root))
+    (when (file-directory-p project-root)
+      (delete-directory project-root t))))
+
 (provide 'jj-extras)
 ;;; jj-extras.el ends here

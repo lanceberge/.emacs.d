@@ -20,22 +20,16 @@
   (org-return-follows-link t)
   (org-modules nil)
   (org-image-actual-width nil)
-  (org-export-backends '(html latex md))
+  (org-export-backends '(html md))
   (org-special-ctrl-a t)
-  (org-latex-listings 'minted) ; syntax-highlighted code blocks
   (org-todo-keywords '((sequence
                         "TODO"
-                        "IN PROGRESS(i!)"
+                        "IN PROGRESS(p!)"
                         "BLOCKED(b@)"
                         "|"
+                        "IN REVIEW(r)"
                         "DONE(d!)"
                         "CANCELED(c@)")))
-  ;; (org-latex-packages-alist '(("margin=0.5in" "geometry" nil) (nil "minted" "color")))
-  (org-latex-pdf-process ; required to use minted
-   '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-  (org-latex-minted-options '(("linenos" "true")
-                              ("frame" "lines")
-                              ("style" "emacs")))
   (org-pretty-entities t)
   (org-hide-emphasis-markers t)
   (org-confirm-elisp-link-function nil)
@@ -52,26 +46,8 @@
         ("M-l" . #'org-shiftmetaright)
         ("M-h" . #'org-shiftmetaleft))
   :config
-  (setq org-tag-alist '(("personal" . ?p)
-                        ("easy tasks" . ?t)
-                        ("hard tasks" . ?T)
-                        ("Work" . ?w)
-                        ("side projects" . ?s)
-                        ("health" . ?h)
-                        ("Emacs" . ?e)
-                        ("A" . ?a)
-                        ("B" . ?b)
-                        ("C" . ?c)
-                        ("Music" . ?m)
-                        ("drill" . ?d)))
-
   (+modal-create-insert-function org-meta-return)
-  (+modal-create-insert-function org-insert-todo-heading)
-
-  (add-to-list 'org-babel-default-header-args
-               '(:eval . "never-export"))
-  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
-  (plist-put org-format-latex-options :scale 1.75))
+  (+modal-create-insert-function org-insert-todo-heading))
 
 (use-package org-extras
   :ensure (:type file :main "~/.emacs.d/lisp/org-extras.el" :files ("org-extras.el"))

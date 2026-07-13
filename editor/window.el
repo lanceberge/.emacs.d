@@ -1,10 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(use-package window
-  :ensure nil
-  :bind
-  (:map ctl-x-map
-        ("6" . #'+window-new-prefix)))
-
 (use-package +other-window-scroll-repeat
   :ensure nil
   :bind
@@ -22,7 +16,10 @@
   :ensure (:type file :main "~/.emacs.d/lisp/window-extras.el" :files ("window-extras.el"))
   :config
   (advice-add 'other-window :before #'+window-split-if-single)
-  (setq other-window-scroll-default #'+window-switchy-other-window))
+  (setq other-window-scroll-default #'+window-switchy-other-window)
+  :bind
+  (:map ctl-x-map
+        ("6" . #'+window-new-prefix)))
 
 (use-package other-window
   :ensure nil
@@ -55,7 +52,6 @@
   :bind
   (:map ctl-x-map
         ("wf" . #'ace-window)))
-
 
 (use-package frame
   :ensure nil

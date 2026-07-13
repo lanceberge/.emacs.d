@@ -382,37 +382,19 @@ ARGS provides a `:name' atom."
   (forward-char arg))
 
 ;;;###autoload
-(defun +mark-whole-lines (arg)
+(defun +mark-whole-lines (_arg)
   "Select the current line."
   (interactive "p")
   (if (region-active-p)
       (progn
-        (forward-line arg)
+        (call-interactively #'next-line)
         (beginning-of-visual-line))
     (push (copy-marker (point)) mark-ring)
     (beginning-of-visual-line)
     (set-mark (point))
-    (forward-line arg)
+    (call-interactively #'next-line)
     (beginning-of-visual-line)
     (activate-mark)))
-
-;;;###autoload
-(defun +open-below (arg)
-  "Open a newline below and switch to insert mode."
-  (interactive "p")
-  (goto-char (line-end-position))
-  (newline arg)
-  (indent-according-to-mode)
-  (+insert-mode 1))
-
-;;;###autoload
-(defun +open-above ()
-  "Open a newline above and switch to insert mode."
-  (interactive)
-  (beginning-of-line)
-  (open-line 1)
-  (indent-according-to-mode)
-  (+insert-mode 1))
 
 ;;;###autoload
 (defun +cancel-selection ()
@@ -448,7 +430,7 @@ ARGS provides a `:name' atom."
            (save-excursion (beginning-of-line) (open-line arg))))
         ((eq (point) (save-excursion (end-of-line) (point)))
          (open-line (or arg 1))
-         (next-line)
+         (forward-line 1)
          (indent-according-to-mode)
          (+insert-mode 1))
         (t

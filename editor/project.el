@@ -28,7 +28,6 @@
   (:map project-prefix-map
         ("c" . #'+project-compile)))
 
-;; TODO remove some of this
 (use-package project-extras
   :ensure (:type file :main "~/.emacs.d/lisp/project-extras.el" :files ("project-extras.el"))
   :bind

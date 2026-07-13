@@ -2,17 +2,10 @@
 
 (require 'agent-shell)
 (require 'cl-lib)
-(require 'consult-buffer-extras)
 (require 'seq)
 (require 'subr-x)
 
 (defvar-local +agent-shell--sent-first-prompt nil)
-
-;;;###autoload
-(defun +consult-buffer-agent-shell (&optional arg)
-  "Switch to an agent shell buffer, or create one with ARG."
-  (interactive "P")
-  (+consult-buffer--project-dwim "Agent" #'agent-shell-openai-start-codex nil arg))
 
 ;;;###autoload
 (defun +agent-shell-accept ()

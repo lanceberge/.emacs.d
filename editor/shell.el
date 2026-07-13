@@ -1,6 +1,9 @@
 ;;; -*- lexical-binding: t -*-
 (use-package tramp ; access remote files within emacs
-  :ensure nil)
+  :ensure nil
+  :bind
+  (:map search-map
+        ("M-s" . #'+tramp-find-file)))
 
 ;;;###autoload
 (defun +tramp--list-ssh-hosts ()
@@ -135,6 +138,3 @@ I use this to tab-complete in eat buffers with bash completions instead of `comp
   (add-to-list 'auto-mode-alist
                (cons (concat "\\`" (regexp-quote eshell-aliases-file) "\\'")
                      #'+eshell-alias-mode)))
-
-(use-package eshell-syntax-highlighting ;; visually show unsupported commands
-  :hook (eshell-mode . eshell-syntax-highlighting-mode))

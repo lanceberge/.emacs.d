@@ -1,4 +1,5 @@
 ;;; Lisp code that i let ai agents evaluate using emacsclient -*- lexical-binding: t -*-
+(require 'helpful)
 
 (defvar +agent-lisp-max-lines 2000
   "Maximum number of lines returned by agent Lisp output helpers.")

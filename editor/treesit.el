@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package treesit
+  :unless IS-WORK2
   :ensure nil
   :after yasnippet
   :config

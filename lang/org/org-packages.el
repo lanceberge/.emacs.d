@@ -16,22 +16,6 @@
   (org-agenda-inhibit-startup t)
   (org-agenda-dim-blocked-tasks 'invisible)
   (org-enforce-todo-dependencies t)
-  (org-agenda-custom-commands
-   '(("w" "Work"
-      ((tags-todo "Work"))
-      ((org-agenda-sorting-strategy '(priority-down))))
-
-     ("p" "Projects"
-      ((tags-todo "Project"))
-      ((org-agenda-sorting-strategy '(priority-down))))
-
-     ("e" "Emacs"
-      ((tags-todo "Emacs"))
-      ((org-agenda-sorting-strategy '(priority-down))))
-
-     ("l" "Life"
-      ((tags-todo "-Work-Emacs-Programming"))
-      ((org-agenda-sorting-strategy '(priority-down))))))
   :bind
   (:map org-agenda-mode-map
         ([remap org-save-all-org-buffers] . #'+org-agenda-save-all-org-buffers))
@@ -53,32 +37,11 @@
 (use-package org-capture
   :ensure nil
   :hook (org-capture-mode . (lambda () (+insert-mode 1)))
-  :custom
-  (org-capture-templates
-   '(("t" "Todo"
-      entry (file+headline "~/org/todo.org" "Tasks")
-      "** TODO %?\n %i\n" :prepend t)))
   :bind
   (:map org-capture-mode-map
         ([remap delete-window] . #'org-capture-kill)
         ([remap +tabspace-kill-buffer-dwim] . #'org-capture-kill)
-        ([remap save-buffer] . org-capture-finalize))
-  (:map +leader-map
-        ("oc" . #'org-capture)))
-
-(use-package calendar
-  :ensure nil
-  :bind
-  (:map calendar-mode-map
-        (";" . exit-minibuffer)
-        ("M-l" . calendar-forward-day)
-        ("M-h" . calendar-backward-day)
-        ("M-j" . calendar-forward-week)
-        ("M-k" . calendar-backward-week)
-        ("M-H" . calendar-backward-month)
-        ("M-L" . calendar-forward-month)
-        ("M-K" . calendar-backward-year)
-        ("M-J" . calendar-forward-year)))
+        ([remap save-buffer] . org-capture-finalize)))
 
 (use-package org-src
   :ensure nil

@@ -40,7 +40,12 @@
 
          (cons ?x 'avy-action-kill-whole-lines)))
   :bind
-  (:map +normal-mode-map
-        ("M-j" . #'+avy-jump-dwim))
-  (:map +motion-mode-map
+  (:map +global-map
         ("M-j" . #'+avy-jump-dwim)))
+
+(use-package ace-link
+  :bind
+  (:map text-mode-map
+        ("M-i" . #'ace-link))
+  (:map helpful-mode-map
+        ("M-i" . #'ace-link)))

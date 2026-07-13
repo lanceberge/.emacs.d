@@ -92,8 +92,7 @@
   (insert ">")
   (condition-case nil
       (progn
-        (nxml-finish-element)
-        (+open-above))
+        (nxml-finish-element))
     (error nil)))
 
 (use-package rust-mode)
@@ -109,6 +108,7 @@
   (setenv "JAVA_HOME" "/usr/lib/jvm/java-17-openjdk-amd64"))
 
 (use-package typst-ts-mode
+  :unless IS-WORK
   :ensure (:host codeberg :repo "meow_king/typst-ts-mode")
   :config
   (add-to-list 'treesit-language-source-alist

@@ -133,26 +133,6 @@ unless a nonzero and non-negative prefix is provided."
 (defvar diff-hl-disable-on-remote)
 (defvar diff-hl-mode)
 
-(defun majutsu-diff-hl-post-refresh ()
-  "Refresh diff-hl in file buffers under the current jj repo.
-jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
-`majutsu-post-refresh-hook' and similar majutsu hooks."
-  (unless (and (bound-and-true-p diff-hl-disable-on-remote)
-               (file-remote-p default-directory))
-    (when-let* ((topdir (majutsu-toplevel)))
-      (dolist (buf (buffer-list))
-        (when (and (buffer-local-value 'diff-hl-mode buf)
-                   (not (buffer-modified-p buf))
-                   (buffer-file-name buf)
-                   (file-in-directory-p (buffer-file-name buf) topdir)
-                   (file-exists-p (buffer-file-name buf)))
-          (with-current-buffer buf
-            (let* ((file buffer-file-name)
-                   (backend (vc-backend file)))
-              (when backend
-                (vc-state-refresh file backend)
-                (diff-hl-update)))))))))
-
 (use-package diff-hl
   :disabled t
   :defer 5.0
@@ -160,8 +140,6 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
   (dired-mode . diff-hl-dired-mode)
   (magit-pre-refresh . diff-hl-magit-pre-refresh)
   (magit-post-refresh . diff-hl-magit-post-refresh)
-  ;; TODO fix this shit
-  ;; (majutsu-post-refresh . +majutsu-diff-hl-post-refresh)
   (+jj-post-new-hook . +majutsu-diff-hl-post-refresh)
   :bind
   (:map +backward-map
@@ -175,18 +153,6 @@ jj-aware analogue of `diff-hl-magit-post-refresh' suitable for
         ("vu" . #'diff-hl-revert-hunk))
   :config
   (global-diff-hl-mode))
-
-;;;###autoload
-(defun +diff-hl-previous-hunk ()
-  (interactive)
-  (push-mark)
-  (diff-hl-previous-hunk))
-
-;;;###autoload
-(defun +diff-hl-next-hunk ()
-  (interactive)
-  (push-mark)
-  (diff-hl-next-hunk))
 
 (use-package git-link
   :custom
