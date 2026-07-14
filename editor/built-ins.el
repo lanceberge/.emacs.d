@@ -188,6 +188,67 @@
   :hook
   (compilation-filter . ansi-color-compilation-filter))
 
+;;;###autoload
+(defun +calc-convert-unit-at-point (&optional _target)
+  "Convert the unit quantity at point, preserving compact formatting."
+  (interactive)
+  (require 'calc-units)
+  (require 'calc-embed)
+  (unless math-units-table
+    (math-build-units-table))
+  (unless (thing-at-point-looking-at calc-embedded-word-regexp 100)
+    (user-error "No unit quantity found at point"))
+  (let* ((beginning (match-beginning 0))
+         (end (match-end 0))
+         (quantity (match-string-no-properties 0))
+         (compact (not (string-match-p "[[:space:]]" quantity)))
+         (unit (completing-read "Convert to unit: "
+                                (mapcar (lambda (entry)
+                                          (symbol-name (car entry)))
+                                        math-units-table)
+                                nil t))
+         (result (math-format-value
+                  (math-convert-units (math-read-expr quantity)
+                                      (math-read-expr unit)))))
+    (when compact
+      (setq result
+            (replace-regexp-in-string
+             "[[:space:]]+\\([[:alpha:]]+\\)\\'" "\\1" result)))
+    (delete-region beginning end)
+    (goto-char beginning)
+    (insert result)))
+
+(use-package calc-units
+  :ensure nil
+  :custom
+  (math-additional-units
+   '((B nil "Byte")
+     (bit "B / 8" "Bit")
+     (KB "1000 B" "Kilobyte")
+     (MB "1000 KB" "Megabyte")
+     (GB "1000 MB" "Gigabyte")
+     (Ki "1024 B" "Kibibyte")
+     (Mi "1024 Ki" "Mebibyte")
+     (Gi "1024 Mi" "Gibibyte")
+     (CPU nil "CPU")
+     (mCPU "CPU / 1000" "Millicpu")))
+  :bind
+  (:map +leader-map
+        ("uc" . #'+calc-convert-unit-at-point))
+  :config
+  (setq math-units-table nil))
+
+(use-package calc-embed
+  :ensure nil
+  :custom
+  (calc-embedded-word-regexp
+   (rx (? (any "+-"))
+       (+ digit)
+       (? "." (* digit))
+       (? (any "eE") (? (any "+-")) (+ digit))
+       (? (* blank) (or "bit" "B" "KB" "MB" "GB"
+                        "Ki" "Mi" "Gi" "CPU" "mCPU" "m")))))
+
 (use-package ibuffer
   :ensure nil
   :after modal

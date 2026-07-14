@@ -200,10 +200,7 @@
   :ensure (:type file :main "~/.emacs.d/lisp/text-extras.el" :files ("text-extras.el"))
   :bind
   (:map embark-region-map
-        ("|" . #'pipe-region))
-
-  (:map +leader-map
-        ("u" . #'text-to-clipboard)))
+        ("|" . #'pipe-region)))
 
 (use-package newcomment
   :ensure nil
@@ -392,7 +389,7 @@
 (use-package operate-on-number
   :bind
   (:map +leader-map
-        ("`" . #'+operate-on-number)))
+        ("un" . #'+operate-on-number)))
 
 (use-package free-keys
   :commands free-keys)
