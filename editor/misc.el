@@ -16,3 +16,11 @@
         ("s" . fretboard-switch-to-scale)
         ("c" . fretboard-switch-to-chord)
         ("q" . fretboard-quit-all)))
+
+(use-package  know-your-http-well
+  :commands
+  (http-header
+   http-method
+   http-relation
+   http-status-code
+   media-type))

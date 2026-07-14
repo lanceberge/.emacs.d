@@ -31,6 +31,7 @@
   :ensure (:host github :repo "lanceberge/majutsu")
   :init
   (autoload 'majutsu-git-fetch "majutsu-git" nil t)
+  (autoload 'majutsu-git-push "majutsu-git" nil t)
   :bind
   (:map +normal-mode-map
         ("j SPC c" . #'majutsu-commit)

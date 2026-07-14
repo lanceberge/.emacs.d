@@ -29,7 +29,4 @@
         ("c" . #'+project-compile)))
 
 (use-package project-extras
-  :ensure (:type file :main "~/.emacs.d/lisp/project-extras.el" :files ("project-extras.el"))
-  :bind
-  (:map +leader-map
-        ("rp" . #'+project-reload-project-prefix-command)))
+  :ensure (:type file :main "~/.emacs.d/lisp/project-extras.el" :files ("project-extras.el")))

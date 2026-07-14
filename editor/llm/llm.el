@@ -12,7 +12,6 @@
 
 (use-package gptel-extras
   :ensure (:type file :main "~/.emacs.d/lisp/gptel-extras.el" :files ("gptel-extras.el"))
-  :after gptel
   :demand t
   :bind
   (:map gptel-mode-map

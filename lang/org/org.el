@@ -1,16 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package org
   :defer 4.0
-  :init
-  (+modal-bind '+leader-map 'org-mode-hook
-               '(("i TAB" . outline-toggle-children)
-                 ("in" . org-next-visible-heading)
-                 ("ip" . org-previous-visible-heading)
-                 ("ir" . outline-show-all)
-                 ("im" . outline-hide-sublevels)
-                 ("il" . org-toggle-link-display)))
-  (+modal-bind '+normal-mode-map 'org-mode-hook
-               '(([remap +puni-kill-line-dwim] . org-kill-line)))
   :custom
   (org-directory "~/org")
   (org-list-allow-alphabetical t)
@@ -39,12 +29,16 @@
         ([remap +drag-stuff-down] . #'org-metadown)
         ([remap newline] . #'org-return)
         ([remap +drag-stuff-up] . #'org-metaup)
+        ([remap +puni-kill-line-dwim] . #'org-kill-line)
         ("C-j" . #'org-insert-heading-respect-content)
         ("C-S-j" . #'org-insert-todo-heading-respect-content)
         ("M-<return>" . #'+modal-org-meta-return-insert)
         ("M-S-<return>" . #'+modal-org-insert-todo-heading-insert)
         ("M-l" . #'org-shiftmetaright)
-        ("M-h" . #'org-shiftmetaleft))
+        ("M-h" . #'org-shiftmetaleft)
+        ("C-c TAB" . #'outline-toggle-children)
+        ("C-c m" . #'outline-toggle-sublevels)
+        ("C-c r" . #'outline-show-all))
   :config
   (+modal-create-insert-function org-meta-return)
   (+modal-create-insert-function org-insert-todo-heading))

@@ -9,12 +9,20 @@
   (embark-confirm-act-all nil)
   (embark-quit-after-action
    '(
+     (embark-insert . t)
      ;; (+window-find-file-new . nil)
      ;; (+window-find-file-new-largest . nil)
      ;; (+window-find-file-new-largest-action . nil)
      ;; (+window-switch-to-buffer-new . nil)
      ;; (+window-switch-to-buffer-new-action . nil)
-     (t . t)))
+     (embark-export . t)
+     (embark-collect . t)
+     (embark-dired-jump . t)
+     (t . nil)))
+  :init
+  (defvar-keymap +embark-priority-map
+    :doc "Embark bindings that take precedence over target-specific maps."
+    "g" #'consult-ripgrep)
   :bind
   ("C-." . #'embark-act)
   ("M-'" . #'embark-dwim)
@@ -87,10 +95,6 @@
   (defun force-keycast-update (&rest _) (keycast--update))
 
   (advice-add 'embark-act :before #'force-keycast-update)
-
-  (defvar-keymap +embark-priority-map
-    :doc "Embark bindings that take precedence over target-specific maps."
-    "g" #'consult-ripgrep)
 
   (keymap-set embark-buffer-map "p" project-prefix-map)
   (keymap-set embark-file-map "p" project-prefix-map)
@@ -391,11 +395,10 @@
   (:map +leader-map
         ("un" . #'+operate-on-number)))
 
-(use-package free-keys
+(use-package free-keys ;; display unbound keys
   :commands free-keys)
 
-;; toggle region or number dwim
-(use-package selected
+(use-package selected ;; provide keymap for when a region is active
   :hook (emacs-startup . selected-global-mode)
   :bind
   (:map selected-keymap
@@ -436,3 +439,19 @@
    ("t" . rxt-toggle-elisp-rx)))
 
 (advice-add 'kill-new :around #'+kill-whitespace-ignore)
+
+(use-package copy-as-format ;; copy regions to things like markdown/org code blocks
+  :bind
+  (:map selected-keymap
+        ("Wm" . #'copy-as-format-markdown)
+        ("Ws" . #'copy-as-format-slack)
+        ("Wg" . #'copy-as-format-github)
+        ("Wo" . #'copy-as-format-org-mode))
+  :config
+  (defun copy-as-format--org-mode (text _multiline)
+    (format "#+begin_src %s\n%s\n#+end_src\n"
+            (replace-regexp-in-string "-mode\\'" "" (symbol-name major-mode))
+            text)))
+
+(use-package inhibit-mouse
+  :hook (emacs-startup . inhibit-mouse-mode))

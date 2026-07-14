@@ -174,3 +174,8 @@ With a prefix argument, refresh file tags before prompting."
             org-drill-scope)))
          (tag (completing-read "Drill group: " tags nil t)))
     (org-drill nil tag)))
+
+(use-package org-rich-yank
+  :bind
+  (:map org-mode-map
+        ("C-c yy" . org-rich-yank)))

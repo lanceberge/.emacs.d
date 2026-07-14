@@ -40,7 +40,8 @@
         ("tn" . #'+project-tab-new-project-command)
         ("to" . #'+project-tab-other-project-command))
   (:map +leader-map
-        ("k" . #'+project-tab-switch-project-command)
+        ("rp" . #'+project-tab-reload-and-switch-project)
+        ("p" . #'+project-tab-switch-project-command)
         ("j" . #'+project-tab-switch-other-project-command))
   (:map +forward-map
         ("t" . #'+project-tab-next))
@@ -57,6 +58,7 @@
 (use-package tabspaces
   :demand t
   :custom
+  (tabspaces-keymap-prefix nil)
   (tabspaces-session-auto-restore t)
   :hook
   (tab-bar-mode . tabspaces-mode))

@@ -7,6 +7,7 @@
   (avy-case-fold-search nil)
   :bind
   ("C-;" . #'avy-goto-char-2)
+  ("C-'" . #'avy-goto-word-0)
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)
@@ -40,6 +41,12 @@
 (use-package ace-link
   :bind
   (:map text-mode-map
-        ("M-i" . #'ace-link))
+        ("M-i" . #'+ace-link))
   (:map helpful-mode-map
-        ("M-i" . #'ace-link)))
+        ("M-i" . #'+ace-link)))
+
+;;;###autoload
+(defun +ace-link ()
+  (interactive)
+  (let ((avy-single-candidate-jump t))
+    (call-interactively #'ace-link)))

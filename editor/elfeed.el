@@ -58,7 +58,7 @@
   (cl-pushnew '(org-element org-element-parser) warning-suppress-types :test #'equal)
   :bind
   (:map elfeed-show-mode-map
-        ("M-i" . #'ace-link))
+        ("M-i" . #'+ace-link))
   (:map elfeed-search-mode-map
         ("l" . #'recenter-top-bottom))
   (:map +leader-map

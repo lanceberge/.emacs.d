@@ -32,6 +32,7 @@
                 unread-command-events)))
 
 (use-package +keybindings
+  :no-require t
   :ensure nil
   :bind
   ("M-T" . #'transpose-paragraphs)
@@ -52,6 +53,7 @@
   (:map +insert-mode-map
         ("C-\\" . #'+sexp-mode)
         ("C-g" . #'+keyboard-quit-normal)
+        ("M-z" . #'zap-up-to-char)
         ;; ("<escape>" . #'+normal-mode)
         ("C-x C-s" . #'+save-buffer-normal))
   (:map +motion-mode-map
