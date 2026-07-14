@@ -147,3 +147,30 @@
   (require 'org-habit)
   (unless org-super-agenda-mode
     (org-super-agenda-mode 1)))
+
+(use-package org-drill
+  :after org
+  :custom
+  (org-drill-scope
+   (append (directory-files-recursively "~/org/drill" "\\.org\\'")
+           (directory-files-recursively "~/code/long_term_learning/days" "\\.org\\'")))
+  :bind
+  (:map +leader-map
+        ("od" . #'+org-drill-filetag)))
+
+;;;###autoload
+(defun +org-drill-filetag (&optional refresh)
+  "Run Org Drill for a selected file tag.
+With a prefix argument, refresh file tags before prompting."
+  (interactive "P")
+  (let* ((tags
+          (delete-dups
+           (mapcan
+            (lambda (file)
+              (with-current-buffer (find-file-noselect file)
+                (when refresh
+                  (org-set-regexps-and-options t))
+                (mapcar #'substring-no-properties org-file-tags)))
+            org-drill-scope)))
+         (tag (completing-read "Drill group: " tags nil t)))
+    (org-drill nil tag)))
