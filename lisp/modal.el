@@ -244,12 +244,12 @@ ARGS provides a `:name' atom."
                   (apply orig args)))))
 
 ;;; Global Activation
-
 (defun +modal--desired-state ()
   "Determine what modal state the current buffer should be in."
   (cond
    (+modal-desired-state +modal-desired-state)
-   ((or (minibufferp) (derived-mode-p 'eshell-mode 'eat-mode 'ghostel-mode 'agent-shell-mode)) 'insert)
+   ((or (minibufferp) (derived-mode-p 'eshell-mode 'eat-mode 'ghostel-mode 'agent-shell-mode 'opencode-session-mode))
+    'insert)
    ((derived-mode-p 'special-mode 'dired-mode 'magit-mode 'org-agenda-mode
                     'help-mode 'Info-mode 'compilation-mode
                     'diff-mode 'package-menu-mode

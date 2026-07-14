@@ -1,4 +1,5 @@
 *.elc
+.cache/
 .agent-shell/
 auto-save-list
 custom.el
