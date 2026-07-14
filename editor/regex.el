@@ -16,10 +16,9 @@
         (call-interactively #'vr/replace)))))
 
 (use-package visual-regexp-steroids
-  :after visual-regexp
-  :config
-  (setq vr/command-python
-        (replace-regexp-in-string "python " "python3 " vr/command-python)))
+  :after (visual-regexp pcre2el)
+  :custom
+  (vr/engine 'pcre2el))
 
 ;;;###autoload
 (defun +range-has-read-only-p (beg end)

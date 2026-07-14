@@ -406,4 +406,36 @@
         ("M-y" . #'+consult-yank-replace-region)
         ("g" . #'keyboard-quit)))
 
+(use-package pcre2el
+  :bind
+  (:prefix-map
+   pcre2el-map
+   :prefix "C-c /"
+   ;; a"Do-what-I-mean" commands:
+   ("/" . rxt-explain)
+   ("c" . rxt-convert-syntax)
+   ("x" . rxt-convert-to-rx)
+   (")" . rxt-convert-to-strings)
+   ("%" . pcre-query-replace-regexp)
+   ("t" . rxt-toggle-elisp-rx)
+
+   ;; Commands that work on a PCRE regexp:
+   :prefix-map
+   pcre2el-pcre-map
+   :prefix "C-c / p"
+   ("e" . rxt-pcre-to-elisp)
+   ("x" . rxt-pcre-to-rx)
+   (")" . rxt-pcre-to-strings)
+   ("/" . rxt-explain-pcre)
+
+   ;; Commands that work on an Emacs regexp:
+   :prefix-map
+   pcre2el-elisp-map
+   :prefix "C-c / e"
+   ("/" . rxt-explain-elisp)
+   ("p" . rxt-elisp-to-pcre)
+   ("x" . rxt-elisp-to-rx)
+   (")" . rxt-elisp-to-strings)
+   ("t" . rxt-toggle-elisp-rx)))
+
 (advice-add 'kill-new :around #'+kill-whitespace-ignore)
