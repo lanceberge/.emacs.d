@@ -13,7 +13,7 @@
 (defun +grep-wgrep-replace ()
   (interactive)
   (wgrep-change-to-wgrep-mode)
-  (call-interactively #'+wgrep-replace))
+  (call-interactively #'+replace))
 
 ;;;###autoload
 (defun +wgrep-finish-edit ()
@@ -21,20 +21,3 @@
   (wgrep-finish-edit)
   (project-save-some-buffers t)
   (+motion-mode 1))
-
-;;;###autoload
-(defun +wgrep-replace (regexp replace)
-  "Replace in wgrep without replacing the read-only 'file_name:line:' prefix.
-This is because wgrep include file and line prefixes that are read only and doing
-regex replacements on all matches fails to modify the read only bits."
-  (interactive (list (read-string "Replace: ")
-                     (read-string "Replace With: ")))
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward "^\\([^:]*:[0-9]+:\\)" nil t)
-      (let ((prefix-end (point))
-            (line-end (line-end-position)))
-        (while (re-search-forward regexp (line-end-position) t)
-          (replace-match replace t nil))
-        (forward-line)
-        (beginning-of-line)))))
