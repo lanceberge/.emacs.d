@@ -8,13 +8,16 @@
   :bind
   ("C-;" . #'avy-goto-char-2)
   ("C-'" . #'avy-goto-word-0)
+  (:map +normal-mode-map
+        (";" . #'avy-goto-char-2)
+        ("'" . #'avy-goto-word-0))
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)
                            (avy-goto-char-2-above . avy-order-closest))))
 
-(use-package avy-actions
-  :ensure (:type file :main "~/.emacs.d/lisp/avy-actions.el" :files ("avy-actions.el"))
+(use-package avy-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/avy-extras.el" :files ("avy-extras.el"))
   :init
   (setq avy-dispatch-alist
         (list

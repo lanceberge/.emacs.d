@@ -128,7 +128,6 @@
         ("o" . #'+open-line)
         ("=" . #'+expand-region)
         ("m" . #'back-to-indentation)
-        (";" . #'avy-goto-char-2)
         ("t" . #'transpose-chars)
         ("T" . #'transpose-words)
         ("?" . #'undo-redo)
