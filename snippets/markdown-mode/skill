@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: skill
+# key: skill
+# --
+---
+name: $1
+description: $2
+disable-model-invocation: true
+---
+
+$0

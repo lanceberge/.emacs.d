@@ -136,9 +136,6 @@ MATCH is as in `org-map-entries'."
 
 (keymap-set embark-org-heading-map "x" #'+org-project-consult-mark-heading-done)
 
-(setf (alist-get 'org-heading embark-default-action-overrides)
-      #'+org-project-consult-mark-heading-done)
-
 ;;;###autoload
 (defun +org-project-consult--prompt-file ()
   "Prompt for an Org project file using Consult."

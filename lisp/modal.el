@@ -424,20 +424,23 @@ ARGS provides a `:name' atom."
 ;;;###autoload
 (defun +open-line (arg)
   (interactive "P")
-  (cond (arg
-         (if (eq (point) (save-excursion (end-of-line) (point)))
-             (open-line arg)
-           (save-excursion (beginning-of-line) (open-line arg))))
-        ((eq (point) (save-excursion (end-of-line) (point)))
-         (open-line (or arg 1))
-         (forward-line 1)
-         (indent-according-to-mode)
-         (+insert-mode 1))
-        (t
-         (beginning-of-visual-line)
-         (open-line (or arg 1))
-         (indent-according-to-mode)
-         (+insert-mode 1))))
+  (cond
+   (arg
+    (if (eq (point) (save-excursion (end-of-line) (point)))
+        (open-line arg)
+      (save-excursion (beginning-of-line) (open-line arg))))
+   ;; if at the end of a non-empty line, insert above
+   ((and (not (bolp)) (eolp))
+    (open-line (or arg 1))
+    (forward-line 1)
+    (indent-according-to-mode)
+    (+insert-mode 1))
+   ;; insert below
+   (t
+    (beginning-of-visual-line)
+    (open-line (or arg 1))
+    (indent-according-to-mode)
+    (+insert-mode 1))))
 
 ;;;###autoload
 (defun +backward-kill-sexp ()

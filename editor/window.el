@@ -1,4 +1,7 @@
 ;;; -*- lexical-binding: t -*-
+(setq split-width-threshold 100
+      switch-to-buffer-obey-display-actions t)
+
 (use-package +other-window-scroll-repeat
   :ensure nil
   :bind

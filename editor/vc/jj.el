@@ -29,6 +29,8 @@
 
 (use-package majutsu
   :ensure (:host github :repo "lanceberge/majutsu")
+  :init
+  (autoload 'majutsu-git-fetch "majutsu-git" nil t)
   :bind
   (:map +normal-mode-map
         ("j SPC c" . #'majutsu-commit)
@@ -52,8 +54,6 @@
         ("P" . #'majutsu-git-push)
         ("m" . #'majutsu-describe))
   (:map majutsu-diff-mode-map
-        ("P" . #'majutsu-git-push))
-  :config
-  (require 'majutsu-git))
+        ("P" . #'majutsu-git-push)))
 
 (use-package vc-jj)

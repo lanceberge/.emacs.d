@@ -40,7 +40,6 @@
         ("tn" . #'+project-tab-new-project-command)
         ("to" . #'+project-tab-other-project-command))
   (:map +leader-map
-        ("rp" . #'+project-tab-reload-and-switch-project)
         ("k" . #'+project-tab-switch-project-command)
         ("j" . #'+project-tab-switch-other-project-command))
   (:map +forward-map

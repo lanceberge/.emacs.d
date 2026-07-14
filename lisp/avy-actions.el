@@ -102,7 +102,14 @@
 ;;;###autoload
 (defun +avy-jump-dwim ()
   (interactive)
-  (call-interactively #'avy-goto-char-2)
-  (embark-dwim))
+  (let ((avy-single-candidate-jump t))
+    (call-interactively #'avy-goto-char-2)
+    (embark-dwim)))
+
+;;;###autoload
+(defun +avy-isearch ()
+  (interactive)
+  (let ((avy-single-candidate-jump t))
+    (avy-isearch)))
 
 (provide 'avy-actions)

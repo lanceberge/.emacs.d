@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package eglot
+  :unless IS-WORK2
   :defer 3.0
   :commands (eglot-shutdown)
   :hook
@@ -257,6 +258,7 @@
       overlay)))
 
 (use-package flyover
+  :unless IS-WORK2
   :hook ((flymake-mode . +modal-flyover-mode))
   :custom
   ;; Checker settings

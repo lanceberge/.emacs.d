@@ -7,7 +7,7 @@
   (:map wgrep-mode-map
         ([remap save-buffer] . +wgrep-finish-edit)
         ([remap quit-window] . #'+wgrep-finish-edit)
-        ("%" . #'+wgrep-replace)))
+        ("%" . #'+replace)))
 
 ;;;###autoload
 (defun +grep-wgrep-replace ()

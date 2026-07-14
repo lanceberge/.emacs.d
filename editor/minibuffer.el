@@ -77,7 +77,7 @@
   (:map +insert-mode-map
         ("M-q" . #'+consult-kmacro))
   (:map consult-narrow-map
-        ("C-h" . #'+consult-narrow-help))
+        ("C-h C-h" . #'+consult-narrow-help))
   (:map vertico-map
         ("M-D" . #'+consult-grep-export-dired))
   (:map search-map

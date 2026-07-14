@@ -52,7 +52,7 @@
   (:map +insert-mode-map
         ("C-\\" . #'+sexp-mode)
         ("C-g" . #'+keyboard-quit-normal)
-        ("<escape>" . #'+normal-mode)
+        ;; ("<escape>" . #'+normal-mode)
         ("C-x C-s" . #'+save-buffer-normal))
   (:map +motion-mode-map
         ("q" . #'quit-window)
@@ -133,7 +133,7 @@
         ("w" . #'kill-region)
         ("}" . #'forward-paragraph)
         ("{" . #'backward-paragraph)
-        ("<escape>" . #'keyboard-quit)
+        ;; ("<escape>" . #'keyboard-quit)
         ("\\f" . #'forward-sexp)
         ("\\b" . #'backward-sexp)
         ("\\k" . #'kill-sexp)

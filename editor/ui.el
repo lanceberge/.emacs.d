@@ -21,7 +21,7 @@
   :hook (find-file . highlight-numbers-mode))
 
 (use-package hl-todo
-  :hook (prog-mode . hl-todo-mode))
+  :hook ((prog-mode conf-mode yaml-mode yaml-ts-mode yaml-gotmpl-mode) . hl-todo-mode))
 
 (use-package highlight-escape-sequences
   :hook (prog-mode . hes-mode))

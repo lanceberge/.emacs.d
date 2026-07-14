@@ -34,6 +34,7 @@
 (use-package eca
   :custom
   (eca-chat-use-side-window nil)
+  (eca-custom-command (list eca-server-install-path "server"))
   :bind
   (:map +llm-map
         ("e" . #'eca)))

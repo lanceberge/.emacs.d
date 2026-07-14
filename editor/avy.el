@@ -7,18 +7,10 @@
   (avy-case-fold-search nil)
   :bind
   ("C-;" . #'avy-goto-char-2)
-  (:map isearch-mode-map
-        ("C-;" . #'+avy-isearch))
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)
                            (avy-goto-char-2-above . avy-order-closest))))
-
-;;;###autoload
-(defun +avy-isearch ()
-  (interactive)
-  (let ((avy-single-candidate-jump t))
-    (avy-isearch)))
 
 (use-package avy-actions
   :ensure (:type file :main "~/.emacs.d/lisp/avy-actions.el" :files ("avy-actions.el"))
@@ -41,7 +33,9 @@
          (cons ?x 'avy-action-kill-whole-lines)))
   :bind
   (:map +global-map
-        ("M-j" . #'+avy-jump-dwim)))
+        ("M-j" . #'+avy-jump-dwim))
+  (:map isearch-mode-map
+        ("C-;" . #'+avy-isearch)))
 
 (use-package ace-link
   :bind

@@ -50,12 +50,16 @@
      ("https://herbsutter.com/feed/" cpp)
      ("https://quuxplusone.github.io/blog/feed.xml" cpp)
 
-     ("https://hnrss.org/frontpage" tech news)
      ("http://feeds.bbci.co.uk/news/world/rss.xml" news)
      ("https://www.aljazeera.com/xml/rss/all.xml" news)
      ("https://www.npr.org/rss/rss.php?id=1001" news)))
+  :config
+  ;; suppress warnings from using ace-link in elfeed
+  (cl-pushnew '(org-element org-element-parser) warning-suppress-types :test #'equal)
   :bind
   (:map elfeed-show-mode-map
         ("M-i" . #'ace-link))
+  (:map elfeed-search-mode-map
+        ("l" . #'recenter-top-bottom))
   (:map +leader-map
         ("nr" . #'elfeed)))

@@ -83,8 +83,13 @@ The following commands are available:
 
 ;;;###autoload
 (defun +project-tab-switch-project-command (dir)
-  "Switch to DIR's most recent project tab, then read and run a project command."
-  (interactive (list (funcall project-prompter)))
+  "Switch to DIR's most recent project tab, then read and run a project command.
+With a prefix argument, call `+project-load-projects' before prompting."
+  (interactive
+   (progn
+     (when current-prefix-arg
+       (+project-load-projects))
+     (list (funcall project-prompter))))
   (+project-tab--switch-to-project-and-command dir))
 
 ;;;###autoload
