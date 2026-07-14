@@ -233,17 +233,7 @@
 (defvar +forward-map (make-sparse-keymap))
 (defvar +backward-map (make-sparse-keymap))
 
-(defvar +global-map (make-sparse-keymap))
-
 (defvar +llm-map (make-sparse-keymap))
-
-(define-minor-mode +keybinding-overrides-mode
-  "Mode for global keybindings."
-  :global t
-  :init-value nil
-  :keymap +global-map)
-
-(add-hook 'after-init-hook #'+keybinding-overrides-mode)
 
 ;; read modal before doing loading else
 (elpaca-wait)

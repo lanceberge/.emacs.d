@@ -27,7 +27,7 @@
 (use-package other-window
   :ensure nil
   :bind
-  (:map +global-map
+  (:map override-global-map
         ("M-o" . #'other-window)
         ("M-O" . #'+window-other-previous)))
 

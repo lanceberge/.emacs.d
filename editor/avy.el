@@ -32,7 +32,7 @@
 
          (cons ?x 'avy-action-kill-whole-lines)))
   :bind
-  (:map +global-map
+  (:map override-global-map
         ("M-j" . #'+avy-jump-dwim))
   (:map isearch-mode-map
         ("C-;" . #'+avy-isearch)))
