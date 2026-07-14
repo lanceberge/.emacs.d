@@ -1,4 +1,11 @@
 ;;; -*- lexical-binding: t -*-
+(use-package increment-number
+  :ensure (:type file :main "~/.emacs.d/lisp/increment-number.el" :files ("increment-number.el"))
+  :bind
+  (:map +normal-mode-map
+        ("M-`" . #'+increment-number-increment)
+        ("M-~" . #'+increment-number-decrement)))
+
 ;;;###autoload
 (defun +increment-number--number-at-point-bounds ()
   (save-excursion

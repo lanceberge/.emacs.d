@@ -204,13 +204,6 @@
   (:map +leader-map
         ("u" . #'text-to-clipboard)))
 
-(use-package increment-number
-  :ensure (:type file :main "~/.emacs.d/lisp/increment-number.el" :files ("increment-number.el"))
-  :bind
-  (:map +normal-mode-map
-        ("M-`" . #'+increment-number-increment)
-        ("M-~" . #'+increment-number-decrement)))
-
 (use-package newcomment
   :ensure nil
   :bind
@@ -375,5 +368,29 @@
       (apply orig-fn string args))
      (t
       (message "skipped whitespace kill")))))
+
+;;;###autoload
+(defun +operate-on-number (&optional arg)
+  "Operate on the number at point or the next number on the line."
+  (interactive "*p")
+  (condition-case err
+      (operate-on-number-at-point arg)
+    (error
+     (if (not (string= (error-message-string err)
+                       "No number found at point"))
+         (signal (car err) (cdr err))
+       (let ((orig-point (point)))
+         (if (re-search-forward "\\([-]?[0-9]+\\(?:\\.[0-9]*\\)?\\)"
+                                (line-end-position) t)
+             (progn
+               (goto-char (match-beginning 0))
+               (operate-on-number-at-point arg))
+           (goto-char orig-point)
+           (user-error "No number found")))))))
+
+(use-package operate-on-number
+  :bind
+  (:map +leader-map
+        ("`" . #'+operate-on-number)))
 
 (advice-add 'kill-new :around #'+kill-whitespace-ignore)
