@@ -1,8 +1,13 @@
 ;;; Lisp code that i let ai agents evaluate using emacsclient -*- lexical-binding: t -*-
+(require 'cl-lib)
 (require 'helpful)
+(require 'flymake)
 
 (defvar +agent-lisp-max-lines 2000
   "Maximum number of lines returned by agent Lisp output helpers.")
+
+(defvar +agent-lisp-flymake-timeout 10
+  "Seconds to wait for Flymake backends to report diagnostics.")
 
 ;;;###autoload
 (defun +agent-lisp-eval-buffer (file-name)
@@ -13,6 +18,53 @@
     (when (fboundp 'elpaca-wait)
       (elpaca-wait))
     "ok"))
+
+;;;###autoload
+(defun +agent-lisp-flymake-diagnostics (file-name)
+  "Run Flymake and return diagnostics for FILE-NAME as plists.
+
+Line and column numbers are 1-indexed.  End positions are exclusive."
+  (unless (file-exists-p file-name)
+    (user-error "File does not exist: %s" file-name))
+  (with-current-buffer (or (get-file-buffer file-name)
+                           (find-file-noselect file-name))
+    (unless flymake-mode
+      (user-error "Flymake mode is not enabled in %s" file-name))
+    (flymake-start)
+    (+agent-lisp--wait-for-flymake)
+    (save-restriction
+      (widen)
+      (mapcar
+       (lambda (diagnostic)
+         (let ((beg (flymake-diagnostic-beg diagnostic))
+               (end (flymake-diagnostic-end diagnostic)))
+           (list :file (or buffer-file-name file-name)
+                 :line (line-number-at-pos beg t)
+                 :column (save-excursion
+                           (goto-char beg)
+                           (1+ (current-column)))
+                 :end-line (line-number-at-pos end t)
+                 :end-column (save-excursion
+                               (goto-char end)
+                               (1+ (current-column)))
+                 :type (flymake-diagnostic-type diagnostic)
+                 :text (flymake-diagnostic-text diagnostic '(message)))))
+       (flymake-diagnostics)))))
+
+;;;###autoload
+(defun +agent-lisp--wait-for-flymake ()
+  "Wait for the current buffer's running Flymake backends to report."
+  (cl-labels
+      ((pending-p ()
+         (let ((reporting (flymake-reporting-backends)))
+           (cl-some (lambda (backend)
+                      (not (memq backend reporting)))
+                    (flymake-running-backends)))))
+    (let ((deadline (+ (float-time) +agent-lisp-flymake-timeout)))
+      (while (and (pending-p) (< (float-time) deadline))
+        (accept-process-output nil 0.05))
+      (when (pending-p)
+        (user-error "Timed out waiting for Flymake diagnostics")))))
 
 ;;;###autoload
 (defun +agent-lisp--truncate-lines (text)
