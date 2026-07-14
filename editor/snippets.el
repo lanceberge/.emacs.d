@@ -47,3 +47,14 @@ the user to save the buffer"
         (rename-buffer default-file-name t)
         (save-buffer)))
     (quit-window t)))
+
+(use-package auto-yasnippet
+  :custom
+  (aya-case-fold t)
+  :bind
+  ("C-c yn" . #'aya-create)
+  ("C-c ys" . #'aya-persist-snippet)
+  ("C-c yi" . #'aya-expand)
+  ("C-c yf" . #'aya-expand-from-history)
+  :config
+  (advice-add #'aya-expand :after #'+modal-insert-advice))

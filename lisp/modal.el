@@ -236,6 +236,16 @@ ARGS provides a `:name' atom."
       (+motion-mode -1))
     (setq-local cursor-type 'box)))
 
+;;;###autoload
+(defun +modal-insert-advice (&rest _)
+  "Enter insert mode after an advised command."
+  (+insert-mode 1))
+
+;;;###autoload
+(defun +modal-normal-advice (&rest _)
+  "Enter normal mode after an advised command."
+  (+normal-mode 1))
+
 ;; Suppress "enabled/disabled in current buffer" messages
 (dolist (mode '(+normal-mode +insert-mode +motion-mode +sexp-mode))
   (advice-add mode :around
