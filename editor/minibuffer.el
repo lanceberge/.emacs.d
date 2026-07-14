@@ -96,6 +96,12 @@
   (:map search-map
         ("s" . #'consult-eglot-symbols)))
 
+(use-package consult-eglot-embark
+  :after consult-eglot
+  :demand t
+  :config
+  (consult-eglot-embark-mode))
+
 (use-package vertico
   :demand t
   :custom
@@ -107,11 +113,18 @@
         ("C-k" . #'kill-line))
   (:map vertico-map
         ("C-;" . #'vertico-quick-exit)
+        ("C-<return>" . #'vertico-quick-embark)
+        ("S-<return>" . #'vertico-quick-exit)
         ("M-h" . #'vertico-directory-up)
         ("M-P" . #'+consult-toggle-preview)
         ("M-l" . #'vertico-directory-enter))
   :config
-  ;; https://emacsredux.com/blog/2022/06/12/auto-create-missing-directories/
+  (defun vertico-quick-embark (&optional arg)
+    "Embark on candidate using quick keys."
+    (interactive)
+    (when (vertico-quick-jump)
+      (embark-act arg)))
+
   (cl-loop for idx from 0 to 9
            do
            (define-key vertico-map (kbd (format "M-%d" idx))

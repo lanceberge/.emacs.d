@@ -66,6 +66,7 @@
   (add-to-list 'embark-target-injection-hooks
                '(pipe-region embark--ignore-target))
 
+  (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
   ;; Noconform embark actions
   (setq embark-pre-action-hooks
         (cl-remove-if (lambda (hook)

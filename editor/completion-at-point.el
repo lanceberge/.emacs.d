@@ -5,6 +5,7 @@
   ((prog-mode text-mode agent-shell-mode eshell-mode) . corfu-mode)
   (+normal-mode . corfu-quit)
   (corfu-mode . corfu-indexed-mode)
+  (corfu-mode . corfu-history-mode)
   :custom
   (corfu-cycle t)
   (corfu-auto t)
