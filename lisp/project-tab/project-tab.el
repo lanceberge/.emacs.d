@@ -347,6 +347,7 @@ ROOT defaults to the current project root metadata."
               (+project-tab--project-root (project-root project)))))
          (root (or metadata-root project-root))
          (project-prefix (and root
+                              (not metadata-prefix)
                               (+project-tab-project-prefix root)))
          (prefix (or metadata-prefix project-prefix)))
     (when (and tab root)

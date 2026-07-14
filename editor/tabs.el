@@ -55,12 +55,14 @@
         ("tf" . #'+consult-project-tab-find)))
 
 (use-package tabspaces
+  :demand t
+  :custom
+  (tabspaces-session-auto-restore t)
   :hook
   (tab-bar-mode . tabspaces-mode))
 
 (use-package tabspace-extras
   :ensure (:type file :main "~/.emacs.d/lisp/tabspace-extras.el" :files ("tabspace-extras.el"))
-  :after tabspaces
   :demand t
   :bind
   (:map ctl-x-map
