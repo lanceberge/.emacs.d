@@ -196,7 +196,38 @@
   (:map goto-map
         ("d" . #'consult-dir)))
 
+(use-package ctrlf)
+
 ;; TODO integrate with consult-vc
 (use-package consult-git-log-grep
   :custom
   (consult-git-log-grep-open-function #'magit-show-commit))
+
+(use-package consult-omni
+  :unless IS-WORK2
+  :ensure (:host github :repo "armindarvish/consult-omni"
+                 :files (:defaults "sources/*.el"))
+  :after (consult)
+  :config
+  (require 'consult-omni-sources)
+  (require 'consult-omni-embark)
+
+  (setq consult-omni-sources-modules-to-load
+        '(consult-omni-duckduckgo
+          consult-omni-wikipedia
+          consult-omni-dict
+          consult-omni-elfeed
+          consult-omni-gptel))
+
+  (consult-omni-sources-load-modules)
+
+  (setq consult-omni-multi-sources
+        '("DuckDuckGo API"
+          "Wikipedia"
+          "Dictionary"
+          "elfeed"))
+
+  (setq consult-omni-default-interactive-command #'consult-omni-multi)
+
+  (setq consult-omni-show-preview t)
+  (setq consult-omni-preview-key "C-o"))

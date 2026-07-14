@@ -11,6 +11,22 @@
 (defvar embark-exporters-alist)
 
 ;;;###autoload
+(defun +consult-buffer-with-initial (initial &optional sources)
+  "Like `consult-buffer', but start with INITIAL as the search query.
+SOURCES defaults to `consult-buffer-sources'."
+  (interactive "sInitial query: ")
+  (let ((selected (consult--multi (or sources consult-buffer-sources)
+                                  :require-match
+                                  (confirm-nonexistent-file-or-buffer)
+                                  :prompt "Switch to: "
+                                  :initial initial
+                                  :history 'consult--buffer-history
+                                  :sort nil)))
+    ;; For non-matching candidates, fall back to buffer creation.
+    (unless (plist-get (cdr selected) :match)
+      (consult--buffer-action (car selected)))))
+
+;;;###autoload
 (defun +consult-project-file-here ()
   "Find a project file under `default-directory'."
   (interactive)

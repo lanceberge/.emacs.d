@@ -57,4 +57,11 @@
   (:map majutsu-diff-mode-map
         ("P" . #'majutsu-git-push)))
 
+(use-package consult-vc
+  :disabled t
+
+  :load-path "~/code/consult-vc"
+  :custom
+  (consult-vc-provider 'jj))
+
 (use-package vc-jj)

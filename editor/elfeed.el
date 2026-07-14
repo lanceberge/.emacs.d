@@ -1,6 +1,8 @@
 ;;; -*- lexical-binding: t -*-
 
 (use-package elfeed
+  :hook
+  (elfeed-search-mode . scroll-lock-mode)
   :custom
   (elfeed-db-directory (expand-file-name "var/elfeed/db/" user-emacs-directory))
   (elfeed-enclosure-default-dir
