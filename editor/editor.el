@@ -393,4 +393,16 @@
   (:map +leader-map
         ("`" . #'+operate-on-number)))
 
+(use-package free-keys
+  :commands free-keys)
+
+;; toggle region or number dwim
+(use-package selected
+  :hook (emacs-startup . selected-global-mode)
+  :bind
+  (:map selected-keymap
+        ("S" . #'sort-lines)
+        ("M-y" . #'+consult-yank-replace-region)
+        ("g" . #'keyboard-quit)))
+
 (advice-add 'kill-new :around #'+kill-whitespace-ignore)

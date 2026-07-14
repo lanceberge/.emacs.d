@@ -61,22 +61,22 @@ Excludes Tramp buffers so preview never opens a remote connection."
     (file-remote-p dir)))
 
 ;;;###autoload
-(defun +consult-yank-or-replace ()
-  "If region is active, replace it with selected text from kill ring using consult-yank-pop.
-Otherwise, just call consult-yank-pop."
-  (interactive)
-  (if (region-active-p)
-      (let ((region-start (region-beginning))
-            (region-end (region-end)))
-        (defun +consult-yank-replace-region (&rest _)
-          (when (region-active-p)
-            (delete-region region-start region-end)))
-        (unwind-protect
-            (progn
-              (add-function :after (symbol-function 'consult-yank-pop) #'+consult-yank-replace-region)
-              (call-interactively #'consult-yank-pop))
-          (remove-function (symbol-function 'consult-yank-pop) #'+consult-yank-replace-region)))
-    (call-interactively #'consult-yank-pop)))
+(defun +consult-yank-replace-region (&optional kill)
+  "Replace the active region with a kill-ring entry selected by Consult.
+With prefix argument KILL, save the replaced text in the kill ring.
+If selection is aborted, restore the original region text."
+  (interactive "P")
+  (unless (use-region-p)
+    (user-error "No active region"))
+  (let ((replaced-text (when kill
+                         (filter-buffer-substring (region-beginning)
+                                                  (region-end)))))
+    (atomic-change-group
+      (delete-active-region)
+      (let ((current-prefix-arg nil))
+        (call-interactively #'consult-yank-pop))
+      (when kill
+        (kill-new replaced-text)))))
 
 ;;;###autoload
 (defun +consult-ripgrep-here ()

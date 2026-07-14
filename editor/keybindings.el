@@ -11,6 +11,7 @@
 (bind-key "h" help-map +leader-map)
 ;; use the default M-s everywhere else
 (bind-key "s" search-map +normal-mode-map)
+(bind-key "g" goto-map +normal-mode-map)
 (bind-key "a" +llm-map +leader-map)
 
 (bind-key "[" +backward-map +normal-mode-map)
@@ -43,8 +44,7 @@
   (:map +leader-map
         ("bs" . #'+scratch-buffer)
         ("d" . #'duplicate-dwim)
-        ("ri" . #'+source-init-file)
-        ("c" . #'+keybindings-C-c))
+        ("ri" . #'+source-init-file))
   (:map prog-mode-map
         ("C-g" . #'+keyboard-quit))
   (:map text-mode-map
@@ -61,6 +61,7 @@
         ("}" . #'forward-paragraph))
   (:map +normal-mode-map
         ("i" . #'+insert-mode)
+        ("c" . #'+keybindings-C-c)
 
         ("RET" . #'newline)
         ("S-<return>" . #'insert-newline-above-dwim)
@@ -109,7 +110,7 @@
 
         ("@" . #'mark-sexp)
         ;; ("r" . #'isearch-backward)
-        ("g" . #'+keyboard-quit)
+        ;; ("g" . #'+keyboard-quit)
         ("/" . #'undo)
         ("h" . #'backward-char)
         ("H" . #'+left-expand)

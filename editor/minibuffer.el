@@ -26,6 +26,8 @@
   (consult-project-buffer-sources '(consult-source-project-buffer
                                     consult-source-project-recent-file))
   :bind
+  (:map +normal-mode-map
+        ("M-y" . #'consult-yank-pop))
   (:map goto-map
         ("g" . #'consult-goto-line)
         ("M-g" . #'consult-goto-line)
@@ -72,8 +74,7 @@
   (consult-preview-excluded-buffers #'+consult-preview-tramp-excluded-p)
   :bind
   (:map +normal-mode-map
-        ("M-q" . #'+consult-kmacro)
-        ("M-y" . #'+consult-yank-or-replace))
+        ("M-q" . #'+consult-kmacro))
   (:map +insert-mode-map
         ("M-q" . #'+consult-kmacro))
   (:map consult-narrow-map
