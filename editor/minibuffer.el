@@ -129,12 +129,27 @@
            do
            (define-key vertico-map (kbd (format "M-%d" idx))
                        `(lambda () (interactive)
-                          (let ((vertico--index ,idx))
+                          (let ((vertico--index ,idx)
+                                (this-command #'vertico-exit))
                             (call-interactively #'vertico-exit)))))
 
   (vertico-mode)
   (vertico-multiform-mode)
   (vertico-indexed-mode))
+
+(use-package prescient
+  :config
+  (prescient-persist-mode))
+
+(use-package vertico-prescient
+  :ensure nil
+  :after (vertico prescient)
+  :custom
+  (vertico-prescient-enable-filtering nil)
+  (vertico-prescient-enable-sorting t)
+  (vertico-prescient-override-sorting nil)
+  :config
+  (vertico-prescient-mode))
 
 (use-package vertico-extras
   :ensure (:type file :main "~/.emacs.d/lisp/vertico-extras.el" :files ("vertico-extras.el"))
@@ -172,3 +187,16 @@
   (vertico-posframe-fallback-mode #'vertico-buffer-mode)
   :init
   (vertico-posframe-mode))
+
+(use-package consult-dir
+  :custom
+  (consult-dir-sort-candidates t)
+  (consult-dir-default-command #'project-find-file)
+  :bind
+  (:map goto-map
+        ("d" . #'consult-dir)))
+
+;; TODO integrate with consult-vc
+(use-package consult-git-log-grep
+  :custom
+  (consult-git-log-grep-open-function #'magit-show-commit))

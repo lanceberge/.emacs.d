@@ -9,8 +9,9 @@
 (defun +vertico-exit (&optional arg)
   "Exit Vertico, applying the pending window prefix first."
   (interactive "P")
-  (+vertico-apply-window-exit-prefix)
-  (vertico-exit arg))
+  (let ((this-command #'vertico-exit))
+    (+vertico-apply-window-exit-prefix)
+    (vertico-exit arg)))
 
 ;;;###autoload
 (defun +vertico-toggle-other-window-exit ()

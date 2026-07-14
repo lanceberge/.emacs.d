@@ -48,6 +48,15 @@
                           (let ((corfu--index ,idx))
                             (call-interactively #'corfu-complete))))))
 
+(use-package corfu-prescient
+  :after (corfu prescient)
+  :custom
+  (corfu-prescient-enable-filtering nil)
+  (corfu-prescient-enable-sorting t)
+  (corfu-prescient-override-sorting nil)
+  :config
+  (corfu-prescient-mode))
+
 ;;;###autoload
 (defun +corfu-minibuffer-mode ()
   "Enable `corfu-mode' in minibuffers where no completion UI is active."
