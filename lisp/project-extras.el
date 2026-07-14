@@ -3,7 +3,7 @@
 
 ;;;###autoload
 (defun +project-call-project-command (&optional dir)
-  "Read and run a project command for DIR or the selected tab's project."
+  "Read and run a project command for DIR or the current buffer's project."
   (let* ((dir (or dir (project-root (project-current t))))
          (default-directory (file-name-as-directory dir))
          (project-current-directory-override dir)
@@ -13,15 +13,18 @@
     (call-interactively command)))
 
 ;;;###autoload
-(defun +project-last-opened-other-project-root ()
-  "Return the most recently remembered project root other than the current one."
-  (let* ((current (when-let ((project (project-current nil)))
-                    (expand-file-name (project-root project))))
+(defun +project-last-opened-other-project-root (current-root)
+  "Return the most recent project root other than CURRENT-ROOT."
+  (let* ((current (and current-root
+                       (file-name-as-directory
+                        (expand-file-name current-root))))
          ;; TODO short-circuit early
          (dir (seq-find
                (lambda (root)
                  (or (not current)
-                     (not (string= (expand-file-name root) current))))
+                     (not (string=
+                           (file-name-as-directory (expand-file-name root))
+                           current))))
                (project-known-project-roots))))
     (or dir
         (funcall project-prompter))))

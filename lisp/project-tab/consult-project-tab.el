@@ -77,7 +77,7 @@
   "Select a tab in the current project with completion.
 With no current project, fall back to `+consult-tab'."
   (interactive)
-  (if (+project-tab--current-prefix)
+  (if (+project-tab--current-root)
       (if-let ((tabs (+consult-project-tab--tabs)))
           (tab-bar-select-tab
            (consult--read (+consult-project-tab--candidates tabs)
@@ -97,10 +97,10 @@ With no current project, fall back to `+consult-tab'."
 
 ;;;###autoload
 (defun +consult-project-tab--tabs ()
-  "Return recent tabs whose names belong to the current project."
-  (when-let ((prefix (+project-tab--current-prefix)))
+  "Return recent tabs belonging to the current project."
+  (when-let ((root (+project-tab--current-root)))
     (seq-filter (lambda (tab)
-                  (+project-tab--tab-p tab prefix))
+                  (+project-tab--tab-p tab root))
                 (tab-bar--tabs-recent))))
 
 ;;;###autoload

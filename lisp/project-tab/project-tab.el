@@ -61,10 +61,10 @@ Nil means signal an error."
 (defun +project-tab-new (&optional arg)
   "Create a new tab using `tab-bar-new-tab'."
   (interactive "P")
-  (let ((prefix (+project-tab--current-prefix)))
+  (let ((root (+project-tab--current-project-root)))
     (tab-bar-new-tab arg)
-    (when prefix
-      (+project-tab--pin-current-prefix prefix))))
+    (when root
+      (+project-tab--pin-current-project root))))
 
 ;;;###autoload
 (defun +project-tab-new-project-command (&optional dir)
@@ -73,11 +73,13 @@ DIR defaults to the current project root.
 The following commands are available:
 \\{project-prefix-map}"
   (interactive)
-  (let* ((dir (or dir (project-root (project-current t))))
-         (prefix (+project-tab-project-prefix dir)))
+  (let ((root (+project-tab--project-root
+               (or dir
+                   (+project-tab--current-project-root)
+                   (project-root (project-current t))))))
     (tab-bar-new-tab)
-    (+project-tab--pin-current-prefix prefix)
-    (+project-call-project-command dir)))
+    (+project-tab--pin-current-project root)
+    (+project-call-project-command root)))
 
 ;;;###autoload
 (defun +project-tab-switch-project-command (dir)
@@ -88,31 +90,31 @@ The following commands are available:
 ;;;###autoload
 (defun +project-tab-switch-other-project-command (dir)
   "Switch to the other project's most recent tab, then read and run a command."
-  (interactive (list (+project-last-opened-other-project-root)))
+  (interactive
+   (list (+project-last-opened-other-project-root
+          (+project-tab--current-root))))
   (+project-tab--switch-to-project-and-command dir))
 
 ;;;###autoload
 (defun +project-tab-other-project-command ()
   "Switch to the most recently used other project tab and read a project command."
   (interactive)
-  (let ((dir (when (project-current nil)
-               (project-root (project-current t)))))
-    (when (+project-tab--select-other)
-      (+project-call-project-command dir))))
+  (when (+project-tab--select-other)
+    (+project-call-project-command (+project-tab--current-root))))
 
 ;;;###autoload
 (defun +project-tab-next-project-command (&optional arg)
   "Switch to the next project tab, then read a project command."
   (interactive "p")
   (+project-tab-next arg)
-  (+project-call-project-command))
+  (+project-call-project-command (+project-tab--current-root)))
 
 ;;;###autoload
 (defun +project-tab-prev-project-command (&optional arg)
   "Switch to the previous project tab, then read a project command."
   (interactive "p")
   (+project-tab-prev arg)
-  (+project-call-project-command))
+  (+project-call-project-command (+project-tab--current-root)))
 
 ;;;###autoload
 (defun +project-tab-next (&optional arg)
@@ -145,14 +147,14 @@ With no current project, fall back to `tab-bar-switch-to-recent-tab'."
 (defun +project-tab-switch-to-project (dir &optional create)
   "Switch to the most recently used tab for project DIR.
 When CREATE is non-nil, create a new tab if no existing project tab is found."
-  (let ((prefix (+project-tab-project-prefix dir)))
+  (let ((root (+project-tab--project-root dir)))
     (if-let ((tab (seq-find (lambda (tab)
-                              (+project-tab--tab-p tab prefix))
+                              (+project-tab--tab-p tab root))
                             (tab-bar--tabs-recent))))
         (tab-bar-select-tab (1+ (tab-bar--tab-index tab)))
       (when create
         (tab-bar-new-tab)
-        (+project-tab--pin-current-prefix prefix)))))
+        (+project-tab--pin-current-project root)))))
 
 ;;;###autoload
 (defun +project-tab-project-prefix (dir)
@@ -186,7 +188,7 @@ When CREATE is non-nil, create a new tab if no existing project tab is found."
 ;;;###autoload
 (defun +project-tab--select-other ()
   "Switch to the most recently used other tab in the current project."
-  (if (+project-tab--current-prefix)
+  (if (+project-tab--current-root)
       (if-let ((tab (seq-find #'+project-tab--tab-p
                               (tab-bar--tabs-recent))))
           (progn
@@ -212,11 +214,15 @@ When CREATE is non-nil, create a new tab if no existing project tab is found."
   (+project-call-project-command dir))
 
 ;;;###autoload
-(defun +project-tab--pin-current-prefix (prefix)
-  "Pin the current tab to PREFIX."
-  (when-let ((tab (tab-bar--current-tab-find)))
-    (setf (alist-get '+project-tab-prefix tab) prefix
-          (alist-get 'explicit-name tab) nil)
+(defun +project-tab--pin-current-project (dir)
+  "Pin the current tab to the project containing DIR."
+  (let* ((root (+project-tab--project-root dir))
+         (prefix (+project-tab-project-prefix root))
+         (tabs (funcall tab-bar-tabs-function))
+         (tab (tab-bar--current-tab-find tabs)))
+    (setf (alist-get '+project-tab-root (cdr tab)) root
+          (alist-get '+project-tab-prefix (cdr tab)) prefix)
+    (tab-bar-tabs-set tabs)
     (force-mode-line-update)))
 
 ;;;###autoload
@@ -225,8 +231,8 @@ When CREATE is non-nil, create a new tab if no existing project tab is found."
 Positive ARG moves forward.  Negative ARG moves backward.
 CREATE controls whether to create a tab when there is no other project tab.
 CREATE-COMMAND is called when creating a tab."
-  (let ((prefix (+project-tab--current-prefix)))
-    (if (not prefix)
+  (let ((root (+project-tab--current-root)))
+    (if (not root)
         (if (< arg 0)
             (tab-bar-switch-to-prev-tab (- arg))
           (tab-bar-switch-to-next-tab arg))
@@ -244,12 +250,12 @@ CREATE-COMMAND is called when creating a tab."
 ;;;###autoload
 (defun +project-tab--maybe-create (create create-command)
   "Create a project tab according to CREATE using CREATE-COMMAND."
-  (let ((prefix (+project-tab--current-prefix)))
+  (let ((root (+project-tab--current-root)))
     (pcase create
       ('auto
        (funcall create-command)
-       (when prefix
-         (+project-tab--pin-current-prefix prefix))
+       (when root
+         (+project-tab--pin-current-project root))
        (setq repeat-map (make-sparse-keymap))
        create-command)
       ('prompt
@@ -264,8 +270,8 @@ CREATE-COMMAND is called when creating a tab."
          (if (y-or-n-p "Create new tab for current project? ")
              (progn
                (funcall create-command)
-               (when prefix
-                 (+project-tab--pin-current-prefix prefix))
+               (when root
+                 (+project-tab--pin-current-project root))
                (setq repeat-map (make-sparse-keymap))
                create-command)
            (user-error "No other tabs for current project"))))
@@ -273,46 +279,44 @@ CREATE-COMMAND is called when creating a tab."
 
 ;;;###autoload
 (defun +project-tab--tabs ()
-  "Return tabs whose names belong to the current project, or nil."
-  (when (+project-tab--current-prefix)
+  "Return tabs belonging to the current project, or nil."
+  (when (+project-tab--current-root)
     (seq-filter (lambda (tab)
                   (+project-tab--tab-p tab))
                 (funcall tab-bar-tabs-function))))
 
 ;;;###autoload
-(defun +project-tab--tab-p (tab &optional prefix)
-  "Return non-nil when TAB belongs to PREFIX.
-PREFIX defaults to the current project prefix."
-  (when-let ((prefix (or prefix (+project-tab--current-prefix)))
-             (tab-prefix (+project-tab--tab-prefix tab)))
-    (equal prefix tab-prefix)))
+(defun +project-tab--tab-p (tab &optional root)
+  "Return non-nil when TAB belongs to ROOT.
+ROOT defaults to the current project root metadata."
+  (when-let ((root (or root (+project-tab--current-root)))
+             (tab-root (+project-tab--tab-root tab)))
+    (equal root tab-root)))
 
 ;;;###autoload
-(defun +project-tab--tab-prefix (tab)
-  "Return TAB's pinned or inferred project prefix."
-  (or (alist-get '+project-tab-prefix tab)
-      (when-let* ((name (alist-get 'name tab))
-                  (index (string-search ":" name))
-                  ((not (zerop index))))
-        (substring name 0 (1+ index)))))
+(defun +project-tab--tab-root (tab)
+  "Return TAB's project root metadata."
+  (alist-get '+project-tab-root tab))
 
 ;;;###autoload
-(defun +project-tab--current-prefix ()
-  "Return the tab name prefix for the current project tab, or nil."
-  (or (when-let ((tab (tab-bar--current-tab-find)))
-        (alist-get '+project-tab-prefix tab))
+(defun +project-tab--current-root ()
+  "Return the current tab's project root metadata, or nil."
+  (when-let ((tab (tab-bar--current-tab-find)))
+    (+project-tab--tab-root tab)))
+
+;;;###autoload
+(defun +project-tab--current-project-root ()
+  "Return the current tab or selected buffer's project root, or nil."
+  (or (+project-tab--current-root)
       (when-let ((project (project-current nil)))
-        (+project-tab-project-prefix (project-root project)))
-      (+project-tab--current-tab-prefix)))
+        (+project-tab--project-root (project-root project)))))
 
 ;;;###autoload
-(defun +project-tab--current-tab-prefix ()
-  "Return the project prefix from the current tab name, or nil."
-  (when-let* ((tab (tab-bar--current-tab-find))
-              (name (alist-get 'name tab))
-              (index (string-search ":" name))
-              ((not (zerop index))))
-    (substring name 0 (1+ index))))
+(defun +project-tab--project-root (dir)
+  "Return the normalized project root containing DIR."
+  (file-name-as-directory
+   (expand-file-name
+    (project-root (project-current t dir)))))
 
 ;;;###autoload
 (defun +project-tab--current-tab-p (tab)
@@ -321,17 +325,30 @@ PREFIX defaults to the current project prefix."
 
 ;;;###autoload
 (defun +project-tab-name-tab-function ()
-  "Generate tab name as pinned PROJECT:BUFFER from the selected window's buffer."
+  "Generate a PROJECT:BUFFER tab name and pin new project metadata."
   (let* ((win (or (minibuffer-selected-window)
                   (and (window-minibuffer-p) (get-mru-window))))
          (buf (window-buffer win))
          (name (buffer-name buf))
-         (prefix (or (when-let ((tab (assq 'current-tab
-                                           (frame-parameter nil 'tabs))))
-                       (alist-get '+project-tab-prefix tab))
-                     (when-let ((project (with-current-buffer buf
-                                           (project-current))))
-                       (+project-tab-project-prefix (project-root project))))))
+         (tab (assq 'current-tab (frame-parameter nil 'tabs)))
+         (metadata-root (and tab
+                             (alist-get '+project-tab-root tab)))
+         (metadata-prefix (and tab
+                               (alist-get '+project-tab-prefix tab)))
+         (project-root
+          (unless metadata-root
+            (when-let ((project (with-current-buffer buf
+                                  (project-current))))
+              (+project-tab--project-root (project-root project)))))
+         (root (or metadata-root project-root))
+         (project-prefix (and root
+                              (+project-tab-project-prefix root)))
+         (prefix (or metadata-prefix project-prefix)))
+    (when (and tab root)
+      (unless metadata-root
+        (setf (alist-get '+project-tab-root (cdr tab)) root))
+      (unless metadata-prefix
+        (setf (alist-get '+project-tab-prefix (cdr tab)) project-prefix)))
     (if prefix
         (format "%s%s" prefix name)
       name)))

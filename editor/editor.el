@@ -55,6 +55,8 @@
   (:map help-map
         ("b" . #'embark-bindings))
   :config
+  (setf (alist-get 'buffer embark-default-action-overrides)
+        #'tabspaces-switch-buffer-and-tab)
   (add-to-list 'embark-around-action-hooks
                '(pipe-region embark--mark-target))
   (add-to-list 'embark-around-action-hooks

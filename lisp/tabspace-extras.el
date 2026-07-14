@@ -86,13 +86,13 @@ When called interactively, use the current buffer."
   (or (member (buffer-name buffer) tabspaces-include-buffers)
       (let* ((tabs (funcall tab-bar-tabs-function))
              (current-index (tab-bar--current-tab-index tabs))
-             (prefix (+project-tab--current-prefix)))
+             (root (+project-tab--current-root)))
         (cl-loop for tab in tabs
                  for index from 0
                  unless (= index current-index)
                  thereis
-                 (and (or (not prefix)
-                          (+project-tab--tab-p tab prefix))
+                 (and (or (not root)
+                          (+project-tab--tab-p tab root))
                       (cl-loop for tab-buffer in (tabspaces--buffer-list nil index)
                                thereis (eq tab-buffer buffer)))))))
 
