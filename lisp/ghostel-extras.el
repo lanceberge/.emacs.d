@@ -7,8 +7,20 @@
 (defvar-local +ghostel-completion-handoff-p nil
   "Non-nil while Bash owns input for completion in semi-char mode.")
 
+(defvar-local +ghostel-command-running nil)
+
 (defvar +ghostel-llm-command "codex")
 (defvar +ghostel-llm-buffer-base-name "Codex")
+
+;;;###autoload
+(defun +ghostel-auto-semi-char-mode (buffer)
+  "Enter semi-char mode in BUFFER when a shell command starts."
+  (run-at-time 0 nil #'+ghostel-cmd-start buffer))
+
+;;;###autoload
+(defun +ghostel-auto-line-mode (buffer _status)
+  "Enter line mode in BUFFER when a shell command finishes."
+  (run-at-time 0 nil #'+ghostel-cmd-end buffer))
 
 ;;;###autoload
 (defun +ghostel-semi-char-tab ()
@@ -21,25 +33,48 @@
 
 ;;;###autoload
 (defun +ghostel-llm (&optional arg)
-  "Start Ghostel and run codexp.
-ARG is passed through to `ghostel'."
+  "Start the LLM command in a project-specific Ghostel buffer.
+With numeric prefix ARG, use the correspondingly numbered buffer.
+With a non-numeric prefix ARG, create the next available buffer."
   (interactive "P")
-  (let ((buffer (ghostel-project arg)))
-    (with-current-buffer buffer
-      (let ((name (+ghostel-llm--buffer-name)))
-        (unless (equal name (buffer-name))
+  (let* ((root (project-root (project-current t)))
+         (default-directory root)
+         (name (+ghostel-llm--buffer-name root arg))
+         (buffer (get-buffer name))
+         (ghostel-initial-input-mode nil))
+    (if buffer
+        (let ((switch-to-buffer-obey-display-actions nil))
+          (switch-to-buffer buffer nil t))
+      (let ((ghostel-buffer-name (format "*ghostel-llm: %s*" name)))
+        (setq buffer (ghostel '(4)))
+        (with-current-buffer buffer
           (rename-buffer name)
-          (ghostel-send-string (format "%s\n" +ghostel-llm-command)))))
-    (ghostel-semi-char-mode)
-    (+insert-mode 1)
+          (ghostel-send-string (format "%s\n" +ghostel-llm-command))
+          (setq-local +ghostel-command-running t))))
     buffer))
 
 ;;;###autoload
-(defun +ghostel-llm--buffer-name ()
-  (let ((base (format "%s: %s" +ghostel-llm-buffer-base-name (+ghostel-llm--project-name))))
-    (if (+ghostel-llm--buffer-name-available-p base)
-        base
-      (+ghostel-llm--deduped-buffer-name base 1))))
+(defun +ghostel-llm--buffer-name (root &optional arg)
+  "Return the LLM buffer name for project ROOT and prefix ARG."
+  (let* ((default-directory root)
+         (base (format "%s: %s"
+                       +ghostel-llm-buffer-base-name
+                       (+ghostel-llm--project-name)))
+         (base (if-let* ((remote (file-remote-p root)))
+                   (format "%s@%s" base (string-trim remote "/" ":"))
+                 base)))
+    (cond
+     ((numberp arg) (format "%s<%d>" base arg))
+     (arg (+ghostel-llm--next-available-buffer-name base 0))
+     (t base))))
+
+;;;###autoload
+(defun +ghostel-llm--next-available-buffer-name (base n)
+  "Return the first available buffer name derived from BASE and N."
+  (let ((name (if (zerop n) base (format "%s<%d>" base n))))
+    (if (get-buffer name)
+        (+ghostel-llm--next-available-buffer-name base (1+ n))
+      name)))
 
 ;;;###autoload
 (defun +ghostel-llm--project-name ()
@@ -48,21 +83,6 @@ ARG is passed through to `ghostel'."
       (project-name project)
     (file-name-nondirectory
      (directory-file-name default-directory))))
-
-;;;###autoload
-(defun +ghostel-llm--deduped-buffer-name (base n)
-  "Return the first available buffer name derived from BASE and N."
-  (let ((name (format "%s<%d>" base n)))
-    (if (+ghostel-llm--buffer-name-available-p name)
-        name
-      (+ghostel-llm--deduped-buffer-name base (1+ n)))))
-
-;;;###autoload
-(defun +ghostel-llm--buffer-name-available-p (name)
-  "Return non-nil when NAME is unused or names the current buffer."
-  (let ((buffer (get-buffer name)))
-    (or (not buffer)
-        (eq buffer (current-buffer)))))
 
 ;;;###autoload
 (defun +ghostel-semi-char-return ()
@@ -99,6 +119,14 @@ ARG is passed through to `ghostel'."
   (+normal-mode 1))
 
 ;;;###autoload
+(defun +ghostel-tramp-initial-input-mode ()
+  "Force semi-char as the initial input mode on TRAMP hosts.
+Meant for `ghostel-mode-hook'; runs before
+`ghostel--apply-initial-input-mode' so the buffer-local override
+takes effect for the freshly created terminal."
+  (when (file-remote-p default-directory)
+    (setq-local ghostel-initial-input-mode 'semi-char)))
+
 ;;;###autoload
 (defun +ghostel-override-insert-mode-key-chords ()
   "Override insert-mode key chords in the current Ghostel buffer."
@@ -116,5 +144,31 @@ ARG is passed through to `ghostel'."
   (ghostel-semi-char-mode)
   (ghostel-line-mode)
   (+insert-mode 1))
+
+;;;###autoload
+(defun +ghostel-cmd-start (buffer)
+  "Enter semi-char mode in live Ghostel BUFFER."
+  (when (buffer-live-p buffer)
+    (with-current-buffer buffer
+      (setq-local +ghostel-command-running t)
+      (ghostel-semi-char-mode))))
+
+;;;###autoload
+(defun +ghostel-cmd-end (buffer)
+  "Enter line mode in live Ghostel BUFFER."
+  (when (buffer-live-p buffer)
+    (with-current-buffer buffer
+      (setq-local +ghostel-command-running nil)
+      (ghostel-line-mode))))
+
+;;;###autoload
+(defun +ghostel-insert-mode-reevaluate ()
+  "Leave `eat-line-mode' for semi-char mode if a shell command is running.
+Intended for `+insert-mode-hook', so that entering insert mode in
+line mode drops into semi-char mode when the shell is busy."
+  (when (and +insert-mode
+             (eq ghostel--input-mode 'line)
+             +ghostel-command-running)
+    (ghostel-semi-char-mode)))
 
 (provide 'ghostel-extras)
