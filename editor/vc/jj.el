@@ -57,11 +57,57 @@
   (:map majutsu-diff-mode-map
         ("P" . #'majutsu-git-push)))
 
-(use-package consult-vc
-  :disabled t
+;; in development. This config unloads and reloads the whole package when evaluated
+(use-package consult-jj
+  :after consult
+  :unless IS-WORK
+  :load-path ("~/code/consult-jj"
+              "~/code/consult-jj/extensions")
+  :demand t
+  :preface
+  (dolist (feature '(consult-jj
+                     consult-jj-jj
+                     consult-jj-diff
+                     consult-jj-hunk
+                     consult-jj-commit))
+    (when (featurep feature)
+      (unload-feature feature t)))
+  :bind
+  (:map ctl-x-map
+        ("v=" . #'consult-jj-modified-hunks)
+        ("vf" . #'consult-jj-modified-files)
+        ("vl" . #'consult-jj-log)))
 
-  :load-path "~/code/consult-vc"
-  :custom
-  (consult-vc-provider 'jj))
+(use-package consult-jj-embark
+  :load-path ("~/code/consult-jj/extensions")
+  :unless IS-WORK
+  :after consult-jj
+  :demand t
+
+  :bind
+  (:map consult-jj-modified-file-map
+        ("c" . #'consult-jj-split)
+        ("a" . #'consult-jj-squash))
+  :config
+  (when (featurep 'consult-jj-embark)
+    (consult-jj-embark-mode -1)
+    (unload-feature 'consult-jj-embark t))
+  (require 'consult-jj-embark)
+  (consult-jj-embark-mode 1))
+
+(when IS-WORK
+  (use-package consult-jj
+    :ensure (:host github :repo "lanceberge/consult-gh" :files "extensions/*.el")
+    :bind
+    (:map ctl-x-map
+          ("v=" . #'consult-jj-modified-hunks)
+          ("vf" . #'consult-jj-modified-files)
+          ("vl" . #'consult-jj-log))
+    (:map consult-jj-modified-file-map
+          ("c" . #'consult-jj-split)
+          ("a" . #'consult-jj-squash))
+    :config
+    (require 'consult-jj-embark)
+    (consult-jj-embark-mode 1)))
 
 (use-package vc-jj)
