@@ -38,11 +38,23 @@
      ("https://ffmpeg.org/index.xml" media systems official)
      ("https://www.tailscale.com/blog/index.xml" networking systems company)
 
+     ("https://defensetechnewsletter.curated.co/issues.rss" defense technology)
+
+     ("https://feeds.aps.org/rss/recent/physics.xml" physics official)
+     ("https://www.miniphysics.com/rss-blog.xml" physics learning)
+
+     ("https://www.johndcook.com/blog/feed/" math)
+     ("https://www.math3ma.com/blog/rss.xml" math learning)
+
+     ("https://www.electronics-tutorials.ws/feed" electronics learning beginner)
+     ("https://www.baldengineer.com/feed" electronics practical)
+
      ("https://developer.nvidia.com/blog/feed/" gpu company)
      ("https://developer.nvidia.com/blog/tag/cuda/feed/" gpu cuda company)
 
      ("https://projectf.io/posts/index.xml" systems fpga)
      ("https://blog.yosyshq.com/feed.xml" systems fpga open-source)
+     ("https://mitchellh.com/feed.xml" open-source)
 
      ("https://blog.rust-lang.org/feed.xml" rust official)
      ("https://blog.rust-lang.org/inside-rust/feed.xml" rust official)
@@ -61,8 +73,7 @@
      ("https://pmarca.substack.com/feed" entrepreneur)
 
      ("http://feeds.bbci.co.uk/news/world/rss.xml" news)
-     ("https://www.aljazeera.com/xml/rss/all.xml" news)
-     ("https://www.npr.org/rss/rss.php?id=1001" news)))
+     ("https://www.aljazeera.com/xml/rss/all.xml" news)))
   :config
   ;; suppress warnings from using ace-link in elfeed
   (cl-pushnew '(org-element org-element-parser) warning-suppress-types :test #'equal)
