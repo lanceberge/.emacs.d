@@ -148,15 +148,22 @@
   (unless org-super-agenda-mode
     (org-super-agenda-mode 1)))
 
-(use-package org-drill
+(use-package org-srs
   :after org
+  :hook (org-mode . org-srs-embed-overlay-mode))
+
+(use-package org-srs-review-extras
+  :ensure (:type file :main "~/.emacs.d/lisp/org-srs-review-extras.el" :files ("org-srs-review-extras.el"))
+  :bind
+  (:map +leader-map
+        ("od" . #'+org-srs-review-start)))
+
+(use-package org-drill
+  :ensure nil
   :custom
   (org-drill-scope
    (append (directory-files-recursively "~/org/drill" "\\.org\\'")
-           (directory-files-recursively "~/code/long_term_learning/days" "\\.org\\'")))
-  :bind
-  (:map +leader-map
-        ("od" . #'+org-drill-filetag)))
+           (directory-files-recursively "~/code/long_term_learning/days" "\\.org\\'"))))
 
 ;;;###autoload
 (defun +org-drill-filetag (&optional refresh)
