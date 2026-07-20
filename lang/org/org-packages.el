@@ -154,9 +154,13 @@
 
 (use-package org-srs-review-extras
   :ensure (:type file :main "~/.emacs.d/lisp/org-srs-review-extras.el" :files ("org-srs-review-extras.el"))
+  :custom
+  (+org-srs-review-scope
+   '("~/org/drill"
+     "~/code/long_term_learning/days"))
   :bind
   (:map +leader-map
-        ("od" . #'+org-srs-review-start)))
+        ("od" . #'+org-srs-review-filetag)))
 
 (use-package org-drill
   :ensure nil

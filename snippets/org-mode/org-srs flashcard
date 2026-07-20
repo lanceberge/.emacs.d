@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: org-srs flashcard
+# key: srs
+# expand-env: ((yas-after-exit-snippet-hook (lambda () (save-excursion (goto-char yas-snippet-beg) (org-id-get-create) (org-srs-item-new-interactively 'card)))))
+# --
+* ${1:Heading}
+
+** Back
+
+${2:Description}
+$0
