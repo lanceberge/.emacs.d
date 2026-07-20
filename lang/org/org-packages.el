@@ -34,10 +34,36 @@
   (org-habit-following-days 7)
   (org-habit-show-habits-only-for-today nil))
 
+;;;###autoload
+(defun +org-srs-add-flashcard (file heading description)
+  "Add a flashcard with HEADING and DESCRIPTION to FILE."
+  (interactive
+   (list (let ((default-directory (expand-file-name "~/org/")))
+           (buffer-file-name (call-interactively #'project-find-file)))
+         (read-string "Heading: ")
+         (read-string "Description: ")))
+  (with-current-buffer (find-file-noselect file)
+    (goto-char (point-max))
+    (unless (bolp)
+      (insert "\n"))
+    (unless (or (bobp) (looking-back "\n\n" nil))
+      (insert "\n"))
+    (let ((heading-marker (point-marker)))
+      (insert "* " heading "\n\n" heading "\n\n** Back\n\n" description "\n")
+      (save-excursion
+        (goto-char heading-marker)
+        (org-id-get-create)
+        (org-srs-item-new-interactively 'card))
+      (set-marker heading-marker nil))
+    (save-buffer)))
+
 (use-package org-capture
   :ensure nil
   :hook (org-capture-mode . (lambda () (+insert-mode 1)))
   :bind
+  (:map +leader-map
+        ("oc" . #'org-capture)
+        ("nf" . #'+org-srs-add-flashcard))
   (:map org-capture-mode-map
         ([remap delete-window] . #'org-capture-kill)
         ([remap +tabspace-kill-buffer-dwim] . #'org-capture-kill)
