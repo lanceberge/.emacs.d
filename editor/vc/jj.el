@@ -36,17 +36,17 @@
   (:map +normal-mode-map
         ("j SPC c" . #'majutsu-commit)
         ("jN" . #'majutsu-new-dwim)
-        ("jr" . #'majutsu-rebase)
-        ("jd" . #'majutsu-diff-dwim)
+        ;; ("jr" . #'majutsu-rebase)
+        ;; ("jd" . #'majutsu-diff-dwim)
         ("jE" . #'+ediff-conflicts)
-        ("jl" . #'majutsu-log)
-        ("ju" . #'majutsu-undo)
-        ("jp" . #'majutsu-git-push)
-        ("jf" . #'majutsu-git-fetch)
+        ;; ("jl" . #'majutsu-log)
+        ;; ("ju" . #'majutsu-undo)
+        ;; ("jp" . #'majutsu-git-push)
+        ;; ("jf" . #'majutsu-git-fetch)
         ("ja" . #'majutsu-absorb)
         ("jbs" . #'majutsu-bookmark-set)
         ("jbt" . #'majutsu-bookmark-track)
-        ("jba" . #'majutsu-bookmark-advance)
+        ;; ("jba" . #'majutsu-bookmark-advance)
         ("jbn" . #'majutsu-bookmark-create)
         ("jw" . #'majutsu-workspace)
         ("jh" . #'majutsu-list-commits-for-file-dwim)
@@ -57,11 +57,82 @@
   (:map majutsu-diff-mode-map
         ("P" . #'majutsu-git-push)))
 
-(use-package consult-vc
-  :disabled t
+;; in development. This config unloads and reloads the whole package when evaluated
+(use-package consult-jj
+  :after consult
+  :unless IS-WORK
+  :load-path ("~/code/consult-jj"
+              "~/code/consult-jj/extensions")
+  :demand t
+  :preface
+  (dolist (feature '(consult-jj
+                     consult-jj-jj
+                     consult-jj-diff
+                     consult-jj-hunk
+                     consult-jj-commit))
+    (when (featurep feature)
+      (unload-feature feature t)))
+  :bind
+  (:map +normal-mode-map
+        ("jl" . #'consult-jj-log)
+        ("jo" . #'consult-jj-op-log)
+        ("ju" . #'consult-jj-undo)
+        ("jn" . #'consult-jj-new-here)
+        ("jd" . #'consult-jj-modified-files)
+        ("jf" . #'consult-jj-git-fetch)
+        ("jro" . #'consult-jj-rebase-onto)
+        ("jba" . #'consult-jj-bookmark-advance)
+        ("jrb" . #'consult-jj-rebase-before)
+        ("jra" . #'consult-jj-rebase-after)
+        ("jp" . #'consult-jj-git-push))
+  (:map ctl-x-map
+        ("v=" . #'consult-jj-modified-hunks)
+        ("vf" . #'consult-jj-modified-files)
+        ("vl" . #'consult-jj-log)))
 
-  :load-path "~/code/consult-vc"
-  :custom
-  (consult-vc-provider 'jj))
+(use-package consult-jj-embark
+  :load-path ("~/code/consult-jj/extensions")
+  :unless IS-WORK
+  :after consult-jj
+  :demand t
+  :bind
+  (:map consult-jj-modified-file-map
+        ("c" . #'consult-jj-split)
+        ("a" . #'consult-jj-squash))
+  :config
+  ;; (when (featurep 'consult-jj-embark)
+  ;;   (consult-jj-embark-mode -1)
+  ;;   (unload-feature 'consult-jj-embark t))
+  (consult-jj-embark-mode 1)
+  (require 'consult-jj-diff-hl)
+  (consult-jj-diff-hl-mode 1))
 
-(use-package vc-jj)
+(when IS-WORK
+  (use-package consult-jj
+    :ensure (:host github :repo "lanceberge/consult-gh" :files "extensions/*.el")
+    :bind
+    (:map +normal-mode-map
+          ("jl" . #'consult-jj-log)
+          ("jo" . #'consult-jj-op-log)
+          ("ju" . #'consult-jj-undo)
+          ("jn" . #'consult-jj-new-here)
+          ("jd" . #'consult-jj-modified-files)
+          ("jba" . #'consult-jj-bookmark-advance)
+          ("jf" . #'consult-jj-git-fetch)
+          ("jro" . #'consult-jj-rebase-onto)
+          ("jra" . #'consult-jj-rebase-after)
+          ("jp" . #'consult-jj-git-push))
+    (:map consult-jj-modified-file-map
+          ("c" . #'consult-jj-split)
+          ("a" . #'consult-jj-squash))
+    :config
+    (require 'consult-jj-embark)
+    (consult-jj-embark-mode 1)
+    (require 'consult-jj-diff-hl)
+    (consult-jj-diff-hl-mode 1)))
+
+(use-package vc-jj
+  :after project
+  :demand t
+  :config
+  (require 'project-jj))
