@@ -7,10 +7,10 @@
   (avy-case-fold-search nil)
   :bind
   ("C-;" . #'avy-goto-char-2)
-  ("C-'" . #'avy-goto-word-0)
+  ("C-'" . #'avy-goto-subword-1)
   (:map +normal-mode-map
         (";" . #'avy-goto-char-2)
-        ("'" . #'avy-goto-word-0))
+        ("'" . #'avy-goto-subword-1))
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)

@@ -103,7 +103,7 @@
 (defun +avy-jump-dwim ()
   (interactive)
   (let ((avy-single-candidate-jump t))
-    (call-interactively #'avy-goto-word-0)
+    (call-interactively #'avy-goto-word-1)
     (embark-dwim)))
 
 ;;;###autoload

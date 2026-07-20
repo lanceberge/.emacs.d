@@ -66,12 +66,14 @@
       (mc/freeze-fake-cursors-dwim)
     (call-interactively #'self-insert-command)))
 
+;; TODO these functions don't need to depend on lasgun
 ;;;###autoload
-(defun +lasgun-mark-word-0-cursor ()
+(defun +lasgun-mark-subword-1-cursor ()
   "Select a word with Lasgun and immediately add a cursor there."
   (interactive)
   (let ((lasgun-pop-before-make-multiple-cursors nil))
-    (call-interactively #'lasgun-mark-word-0)
+    (mc--reset-read-prompts)
+    (call-interactively #'lasgun-mark-subword-1)
     (lasgun-make-multiple-cursors nil)))
 
 ;;;###autoload
@@ -79,6 +81,7 @@
   "Select two characters with Lasgun and immediately add a cursor there."
   (interactive)
   (let ((lasgun-pop-before-make-multiple-cursors nil))
+    (mc--reset-read-prompts)
     (call-interactively #'lasgun-mark-char-2)
     (lasgun-make-multiple-cursors nil)))
 
@@ -90,18 +93,18 @@
   (dolist (command '(lasgun-mark-word-0
                      lasgun-mark-char-2
                      lasgun-embark-act-all
-                     +lasgun-mark-word-0-cursor
+                     +lasgun-mark-subword-1-cursor
                      +lasgun-mark-char-2-cursor))
     (add-to-list 'mc/cmds-to-run-once command))
   :bind
   (:repeat-map +lasgun-repeat-map
-               ("'" . #'+lasgun-mark-word-0-cursor)
+               ("'" . #'+lasgun-mark-subword-1-cursor)
                (";" . #'+lasgun-mark-char-2-cursor))
   (:map +leader-map
-        ("m'" . #'+lasgun-mark-word-0-cursor)
+        ("m'" . #'+lasgun-mark-subword-1-cursor)
         ("m;" . #'+lasgun-mark-char-2-cursor)
         ("me" . #'lasgun-make-multiple-cursors))
   (:map mc/keymap
         ("A" . #'lasgun-embark-act-all)
-        ("'" . #'+lasgun-mark-word-0-cursor)
+        ("'" . #'+lasgun-mark-subword-1-cursor)
         (";" . #'+lasgun-mark-char-2-cursor)))
