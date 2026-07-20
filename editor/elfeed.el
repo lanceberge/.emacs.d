@@ -50,6 +50,14 @@
      ("https://herbsutter.com/feed/" cpp)
      ("https://quuxplusone.github.io/blog/feed.xml" cpp)
 
+     ("https://levels.io/rss" entrepreneur)
+     ("https://world.hey.com/dhh/feed.atom" entrepreneur)
+     ("https://world.hey.com/jason/feed.atom" entrepreneur)
+     ("https://blog.samaltman.com/posts.atom" entrepreneur)
+     ("https://nav.al/feed" entrepreneur)
+     ("https://www.reidhoffman.org/feed/" entrepreneur)
+     ("https://pmarca.substack.com/feed" entrepreneur)
+
      ("http://feeds.bbci.co.uk/news/world/rss.xml" news)
      ("https://www.aljazeera.com/xml/rss/all.xml" news)
      ("https://www.npr.org/rss/rss.php?id=1001" news)))
