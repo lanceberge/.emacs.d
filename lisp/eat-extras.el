@@ -50,6 +50,15 @@ line mode drops into semi-char mode when the shell is busy."
     (eat-semi-char-mode)))
 
 ;;;###autoload
+(defun +eat-eshell-insert-mode-reevaluate ()
+  "Enter Eat Eshell char mode when inserting during a running command.
+Intended for `+insert-mode-hook' in Eshell buffers."
+  (when (and +insert-mode
+             (bound-and-true-p eat--eshell-local-mode)
+             (bound-and-true-p eat--eshell-process-running-mode))
+    (eat-eshell-char-mode)))
+
+;;;###autoload
 (defun +eat--command-started (&rest _)
   "Record that the shell started running a command."
   (setq-local +eat--command-running t))
@@ -90,6 +99,13 @@ line mode drops into semi-char mode when the shell is busy."
 (defun +eat-line-mode-normal ()
   (interactive)
   (eat-line-mode)
+  (+normal-mode))
+
+;;;###autoload
+(defun +eat-eshell-emacs-mode-normal ()
+  "Switch to Eat Eshell Emacs mode and enter modal normal mode."
+  (interactive)
+  (eat-eshell-emacs-mode)
   (+normal-mode))
 
 (provide 'eat-extras)

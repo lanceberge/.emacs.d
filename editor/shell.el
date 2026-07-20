@@ -62,14 +62,21 @@
   (add-hook 'eat-mode-hook
             (lambda ()
               (add-hook '+insert-mode-hook '+eat-insert-mode-reevaluate nil t)))
+  (add-hook 'eshell-mode-hook
+            (lambda ()
+              (add-hook '+insert-mode-hook '+eat-eshell-insert-mode-reevaluate nil t)))
   (key-chord-define eat-semi-char-mode-map "jk" #'+eat-line-mode-normal)
+  (key-chord-define eat-eshell-semi-char-mode-map
+                    "jk" #'+eat-eshell-emacs-mode-normal)
+  (key-chord-define eat-eshell-char-mode-map
+                    "jk" #'+eat-eshell-emacs-mode-normal)
   (advice-add 'eat--set-cmd
               :before #'+eat--record-shell-command-in-line-history)
   (advice-add 'eat--pre-cmd :after #'+eat--command-started)
   (advice-add 'eat--post-prompt :after #'+eat--command-finished)
   (+modal-create-insert-function eat-semi-char-mode)
-  (setq +ghostel-llm-command (if IS-WORK "claude" "pi"))
-  (setq +ghostel-llm-buffer-base-name (if IS-WORK "Claude" "Pi")))
+  (setq +ghostel-llm-command (if IS-WORK "claude" "codexp"))
+  (setq +ghostel-llm-buffer-base-name (if IS-WORK "Claude" "codexp")))
 
 (use-package ghostel
   :unless IS-WORK2
@@ -108,8 +115,8 @@
   (add-hook 'ghostel-mode-hook
             (lambda ()
               (add-hook '+insert-mode-hook '+ghostel-insert-mode-reevaluate nil t)))
-  (setq +ghostel-llm-command (if IS-WORK "claude" "pi"))
-  (setq +ghostel-llm-buffer-base-name (if IS-WORK "Claude" "Pi"))
+  (setq +ghostel-llm-command (if IS-WORK "claude" "codexp"))
+  (setq +ghostel-llm-buffer-base-name (if IS-WORK "Claude" "Codex"))
   (+modal-create-insert-function ghostel-semi-char-mode)
   (key-chord-define ghostel-semi-char-mode-map "jk" #'+ghostel-line-mode-normal)
 
