@@ -38,6 +38,17 @@
      ("https://ffmpeg.org/index.xml" media systems official)
      ("https://www.tailscale.com/blog/index.xml" networking systems company)
 
+     ("https://defensetechnewsletter.curated.co/issues.rss" defense technology)
+
+     ("https://feeds.aps.org/rss/recent/physics.xml" physics official)
+     ("https://www.miniphysics.com/rss-blog.xml" physics learning)
+
+     ("https://www.johndcook.com/blog/feed/" math)
+     ("https://www.math3ma.com/blog/rss.xml" math learning)
+
+     ("https://www.electronics-tutorials.ws/feed" electronics learning beginner)
+     ("https://www.baldengineer.com/feed" electronics practical)
+
      ("https://developer.nvidia.com/blog/feed/" gpu company)
      ("https://developer.nvidia.com/blog/tag/cuda/feed/" gpu cuda company)
 
