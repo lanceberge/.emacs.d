@@ -35,6 +35,14 @@
   (call-interactively #'org-srs-review-start))
 
 ;;;###autoload
+(defun +org-srs-review-refresh-filetags ()
+  "Refresh file-tag metadata for files in `+org-srs-review-scope'."
+  (interactive)
+  (let ((files (+org-srs-review--scope-files)))
+    (+org-srs-review--file-tags files t)
+    (message "Refreshed file tags for %d review files" (length files))))
+
+;;;###autoload
 (defun +org-srs-review-filetag (&optional refresh)
   "Review cards from scoped files sharing a selected file tag.
 Select All to review every file in `+org-srs-review-scope'.  With a
@@ -119,14 +127,18 @@ prefix argument REFRESH, refresh Org's file-tag metadata first."
 
 ;;;###autoload
 (defun +org-srs-review--file-tags (files refresh)
-  "Return the file tags in FILES, refreshing Org metadata when REFRESH is non-nil."
+  "Return file tags in FILES.
+When REFRESH is non-nil, refresh Org metadata and invalidate Org-ql caches."
   (sort
    (delete-dups
     (cl-mapcan
      (lambda (file)
        (with-current-buffer (find-file-noselect file)
          (when refresh
-           (org-set-regexps-and-options t))
+           (org-set-regexps-and-options t)
+           (remhash (current-buffer) org-ql-cache)
+           (remhash (current-buffer) org-ql-tags-cache)
+           (remhash (current-buffer) org-ql-node-value-cache))
          (mapcar #'substring-no-properties org-file-tags)))
      files))
    #'string-lessp))

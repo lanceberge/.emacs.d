@@ -93,12 +93,14 @@ With a prefix argument, call `+project-load-projects' before prompting."
   (+project-tab--switch-to-project-and-command dir))
 
 ;;;###autoload
-(defun +project-tab-switch-other-project-command (dir)
-  "Switch to the other project's most recent tab, then read and run a command."
-  (interactive
-   (list (+project-last-opened-other-project-root
-          (+project-tab--current-root))))
-  (+project-tab--switch-to-project-and-command dir))
+(defun +project-tab-switch-other-project-command (&optional n)
+  "Switch to the Nth most recent other project and read a command.
+N defaults to 1."
+  (interactive "p")
+  (+project-tab--switch-to-project-and-command
+   (+project-last-opened-other-project-root
+    (+project-tab--current-root)
+    n)))
 
 ;;;###autoload
 (defun +project-tab-other-project-command ()

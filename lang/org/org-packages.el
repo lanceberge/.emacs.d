@@ -182,8 +182,7 @@
   :ensure (:type file :main "~/.emacs.d/lisp/org-srs-review-extras.el" :files ("org-srs-review-extras.el"))
   :custom
   (+org-srs-review-scope
-   '("~/org/drill"
-     "~/code/long_term_learning/days"))
+   '("~/org/drill"))
   :bind
   (:map +leader-map
         ("od" . #'+org-srs-review-filetag)))

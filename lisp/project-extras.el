@@ -13,19 +13,21 @@
     (call-interactively command)))
 
 ;;;###autoload
-(defun +project-last-opened-other-project-root (current-root)
-  "Return the most recent project root other than CURRENT-ROOT."
+(defun +project-last-opened-other-project-root (current-root &optional n)
+  "Return the Nth most recent project root other than CURRENT-ROOT.
+N defaults to 1."
   (let* ((current (and current-root
                        (file-name-as-directory
                         (expand-file-name current-root))))
          ;; TODO short-circuit early
-         (dir (seq-find
-               (lambda (root)
-                 (or (not current)
-                     (not (string=
-                           (file-name-as-directory (expand-file-name root))
-                           current))))
-               (project-known-project-roots))))
+         (roots (seq-filter
+                 (lambda (root)
+                   (or (not current)
+                       (not (string=
+                             (file-name-as-directory (expand-file-name root))
+                             current))))
+                 (project-known-project-roots)))
+         (dir (nth (1- (or n 1)) roots)))
     (or dir
         (funcall project-prompter))))
 

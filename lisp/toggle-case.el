@@ -1,8 +1,8 @@
 ;;; -*- lexical-binding: t -*-
-(require 'increment-number)
+(require 'operate-on-number)
 
 ;;;###autoload
-(defun +toggle-region-or-number-dwim (&optional arg)
+(defun +toggle-region-case-dwim (&optional arg)
   (interactive "p")
   (if (region-active-p)
       (xah-toggle-letter-case)
@@ -24,18 +24,17 @@ toggle the case. Otherwise, increment the number."
     (if (or (looking-at "[0-9]")
             (looking-at "-[1-9]"))
         (progn
-          (call-interactively #'+increment-number-increment))
-      (+toggle--letter-case arg))))
+          (+toggle-number arg))
+      (+toggle-letter-case arg))))
 
 ;;;###autoload
-(defun +toggle-region-case-dwim ()
-  (interactive)
-  (if (region-active-p)
-      (xah-toggle-letter-case)
-    (+toggle--letter-case)))
+(defun +toggle-number (&optional arg)
+  "Add ARG to the number at point, defaulting to 1."
+  (interactive "p")
+  (apply-to-number-at-point #'+ (list (or arg 1))))
 
 ;;;###autoload
-(defun +toggle--letter-case (arg)
+(defun +toggle-letter-case (arg)
   (if (region-active-p)
       (user-error "Region should not be active"))
   (let ((line-end (line-end-position)))

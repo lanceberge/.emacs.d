@@ -3,6 +3,7 @@
 (use-package elfeed
   :hook
   (elfeed-search-mode . scroll-lock-mode)
+  (elfeed-show-mode . scroll-lock-mode)
   :custom
   (elfeed-db-directory (expand-file-name "var/elfeed/db/" user-emacs-directory))
   (elfeed-enclosure-default-dir
@@ -79,7 +80,11 @@
   (cl-pushnew '(org-element org-element-parser) warning-suppress-types :test #'equal)
   :bind
   (:map elfeed-show-mode-map
-        ("M-i" . #'+ace-link))
+        ("M-i" . #'+ace-link)
+        ("n" . #'next-line)
+        ("p" . #'next-line)
+        ("N" . #'elfeed-show-next)
+        ("P" . #'elfeed-show-prev))
   (:map elfeed-search-mode-map
         ("l" . #'recenter-top-bottom))
   (:map +leader-map

@@ -45,7 +45,11 @@
 
 (use-package markdown-mode
   :custom
-  (markdown-fontify-code-blocks-natively t))
+  (markdown-fontify-code-blocks-natively t)
+  :bind
+  (:map markdown-mode-map
+        ("M-n" . nil)
+        ("M-p" . nil)))
 
 (use-package text-mode
   :ensure nil

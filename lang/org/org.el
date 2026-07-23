@@ -37,7 +37,7 @@
         ("M-l" . #'org-shiftmetaright)
         ("M-h" . #'org-shiftmetaleft)
         ("C-c TAB" . #'outline-toggle-children)
-        ("C-c m" . #'outline-toggle-sublevels)
+        ("C-c m" . #'outline-hide-sublevels)
         ("C-c r" . #'outline-show-all))
   :config
   (+modal-create-insert-function org-meta-return)

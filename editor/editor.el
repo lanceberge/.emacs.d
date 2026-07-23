@@ -196,7 +196,7 @@
   :ensure (:type file :main "~/.emacs.d/lisp/toggle-case.el" :files ("toggle-case.el"))
   :bind
   (:map +normal-mode-map
-        ("~" . #'+toggle-region-or-number-dwim))
+        ("~" . #'+toggle-region-case-dwim))
   :config
   (put 'upcase-region 'disabled nil))
 

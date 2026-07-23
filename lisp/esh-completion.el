@@ -1,5 +1,8 @@
 ;;; esh-completion.el --- Bash completions for Eshell -*- lexical-binding: t -*-
 
+(require 'cape)
+(require 'pcomplete)
+
 (defgroup esh-completion nil
   "Bash completions for Eshell."
   :group 'eshell)
@@ -12,6 +15,11 @@
 ;;;###autoload
 (defun +esh-completion-mode ()
   "Enable Bash completion candidates in Eshell."
+  (setq-local completion-at-point-functions
+              (list
+               (cape-capf-super #'pcomplete-completions-at-point #'cape-dabbrev)
+               t))
+
   (add-hook 'completion-at-point-functions #'+esh-completion-capf 50 t))
 
 ;;;###autoload

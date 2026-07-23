@@ -6,8 +6,9 @@
   (avy-single-candidate-jump nil)
   (avy-case-fold-search nil)
   :bind
-  ("C-;" . #'avy-goto-char-2)
-  ("C-'" . #'avy-goto-subword-1)
+  (:map override-global-map
+        ("C-;" . #'avy-goto-char-2)
+        ("C-'" . #'avy-goto-subword-1))
   (:map +normal-mode-map
         (";" . #'avy-goto-char-2)
         ("'" . #'avy-goto-subword-1))

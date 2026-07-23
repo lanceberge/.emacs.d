@@ -187,7 +187,7 @@
   (keycast-mode-line-insert-after 'mode-line-format-right-align)
   (keycast-mode-line-format "%k%c%r")
   :config
-  (dolist (input '(self-insert-command org-self-insert-command))
+  (dolist (input '(self-insert-command org-self-insert-command ghostel--self-insert ghostel--send-event))
     (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 
   (dolist (event '("<mouse-event>" "<mouse-movement>" "<mouse-2>" "<drag-mouse-1>" "<wheel-up>" "<wheel-down>" "<double-wheel-up>" "<double-wheel-down>" "<triple-wheel-up>" "<triple-wheel-down>" "<wheel-left>" "<wheel-right>" handle-select-window mouse-set-point  mouse-drag-region))

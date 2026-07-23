@@ -69,4 +69,30 @@
   (let ((decrement (or decrement 1)))
     (+increment-number-increment (- decrement))))
 
+;;;###autoload
+(defun +toggle-region-or-number-dwim (&optional arg)
+  (interactive "p")
+  (if (region-active-p)
+      (xah-toggle-letter-case)
+    (+toggle-number-or-char arg)))
+
+;;;###autoload
+(defun +toggle-number-or-char (&optional arg)
+  "Search to the first char or positive/negative number. If it's a char,
+toggle the case. Otherwise, increment the number."
+  (interactive "p")
+  (if (region-active-p)
+      (user-error "Region should not be active"))
+  (let ((line-end (line-end-position)))
+    (while (and (< (point) line-end)
+                (not (or (looking-at "[a-zA-Z0-9]")
+                         (looking-at "-[1-9]"))))
+      (forward-char 1)))
+  (let ((case-fold-search nil))
+    (if (or (looking-at "[0-9]")
+            (looking-at "-[1-9]"))
+        (progn
+          (call-interactively #'+increment-number-increment))
+      (+toggle--letter-case arg))))
+
 (provide 'increment-number)

@@ -16,9 +16,13 @@
         (call-interactively #'vr/replace)))))
 
 (use-package visual-regexp-steroids
-  :after (visual-regexp pcre2el)
+  :after visual-regexp
   :custom
-  (vr/engine 'pcre2el))
+  (vr/engine 'pcre2el)
+  :config
+  (require 'pcre2el)
+  (setq isearch-search-fun-function
+        #'vr--isearch-search-fun-function))
 
 ;;;###autoload
 (defun +range-has-read-only-p (beg end)
