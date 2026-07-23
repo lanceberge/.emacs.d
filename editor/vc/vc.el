@@ -13,6 +13,8 @@
   (magit-save-repository-buffers nil)
   (magit-no-confirm '(stage-all-changes amend-published))
   (magit-diff-visit-prefer-worktree t)
+  :init
+  (+modal-define-intersection-mode magit-status-mode +motion-mode)
   :hook
   (git-commit-mode . (lambda () (+insert-mode 1)))
   :bind
@@ -46,10 +48,9 @@
         ("gh" . #'+magit-diff-head-n)
         ("gs" . #'+magit-diff-source)
         ("ge" . #'+magit-ediff-source))
+  (:map +modal-magit-status-motion-mode-map
+        ("c" . #'magit-commit))
   :config
-  (+modal-bind '+motion-mode '+motion-mode-map 'magit-status-mode-hook
-               '(("c" . magit-commit)))
-
   (cl-loop for n from 1 to 9
            do (let ((key (number-to-string n))
                     (desc (format "Diff HEAD~%d" n)))
@@ -116,13 +117,16 @@ unless a nonzero and non-negative prefix is provided."
 (use-package git-timemachine
   :after modal
   :commands (git-timemachine)
+  :init
+  (+modal-define-intersection-mode git-timemachine-mode +motion-mode)
   :hook (git-timemachine-mode . +git-timemachine-setup)
   :bind
   (:map +leader-map
         ("gt" . #'git-timemachine))
-  :config
-  (+modal-bind '+motion-mode '+motion-mode-map 'git-timemachine-mode-hook
-               '(("q" . git-timemachine-quit))))
+  (:map git-timemachine-mode-map
+        ("M" . #'+mark-whole-lines))
+  (:map +modal-git-timemachine-motion-mode-map
+        ("q" . #'git-timemachine-quit)))
 
 (defun +git-timemachine-setup ()
   "Set up motion mode for git-timemachine."
@@ -134,8 +138,7 @@ unless a nonzero and non-negative prefix is provided."
 (defvar diff-hl-mode)
 
 (use-package diff-hl
-  :disabled t
-  :defer 5.0
+  :defer 3.0
   :hook
   (dired-mode . diff-hl-dired-mode)
   (magit-pre-refresh . diff-hl-magit-pre-refresh)

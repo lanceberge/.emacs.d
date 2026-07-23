@@ -4,14 +4,16 @@
 (use-package elixir-web
   :after modal
   :ensure (:type file :main "~/.emacs.d/lisp/elixir-web.el" :files ("elixir-web.el"))
+  :init
+  (+modal-define-intersection-mode elixir-web-mode +insert-mode)
   :hook
   ((elixir-ts-mode elixir-mode) . +elixir-web-maybe-enable)
   ((elixir-ts-mode elixir-mode) . +elixir--maybe-setup-new-file)
-  :config
-  (+modal-bind '+insert-mode '+insert-mode-map 'elixir-web-mode-hook
-               '((">" . +elixir-web-maybe-close-tag)
-                 ([remap newline] . +elixir-web-newline)
-                 ([remap +comment-dwim] . +elixir-web-comment))))
+  :bind
+  (:map +modal-elixir-web-insert-mode-map
+        (">" . #'+elixir-web-maybe-close-tag)
+        ([remap newline] . #'+elixir-web-newline)
+        ([remap +comment-dwim] . #'+elixir-web-comment)))
 
 (use-package elixir-utils
   :ensure (:type file :main "~/.emacs.d/lisp/elixir-utils.el" :files ("elixir-utils.el"))

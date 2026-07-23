@@ -18,6 +18,7 @@
      (embark-export . t)
      (embark-collect . t)
      (embark-dired-jump . t)
+     (embark-copy-as-kill . t)
      (t . nil)))
   :init
   (defvar-keymap +embark-priority-map
@@ -399,6 +400,9 @@
   :commands free-keys)
 
 (use-package selected ;; provide keymap for when a region is active
+  :after modal
+  :init
+  (+modal-define-intersection-mode selected-region-active-mode +normal-mode)
   :hook (emacs-startup . selected-global-mode)
   :bind
   (:map selected-keymap

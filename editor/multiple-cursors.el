@@ -33,7 +33,7 @@
   :demand t
   :after (multiple-cursors selected)
   :bind
-  (:map selected-keymap
+  (:map +modal-selected-region-active-normal-mode-map
         ("c" . #'mc/edit-lines)
 
         ("]" . #'mc/mark-next-like-this)
@@ -71,10 +71,12 @@
 (defun +lasgun-mark-subword-1-cursor ()
   "Select a word with Lasgun and immediately add a cursor there."
   (interactive)
-  (let ((lasgun-pop-before-make-multiple-cursors nil))
-    (mc--reset-read-prompts)
-    (call-interactively #'lasgun-mark-subword-1)
-    (lasgun-make-multiple-cursors nil)))
+  (if +insert-mode
+      (call-interactively #'self-insert-command)
+    (let ((lasgun-pop-before-make-multiple-cursors nil))
+      (mc--reset-read-prompts)
+      (call-interactively #'lasgun-mark-subword-1)
+      (lasgun-make-multiple-cursors nil))))
 
 ;;;###autoload
 (defun +lasgun-mark-char-2-cursor ()

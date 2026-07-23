@@ -10,6 +10,8 @@
   (dired-use-ls-dired nil)
   (dired-kill-when-opening-new-dired-buffer t)
   (dired-vc-rename-file t)
+  :init
+  (+modal-define-intersection-mode dired-mode +motion-mode)
   :hook (dired-mode . dired-hide-details-mode)
   :bind
   (:map search-map
@@ -20,10 +22,10 @@
         ("e" . #'dired-toggle-read-only)
         ("!" . #'dired-do-eshell-command)
         ("-" . #'dired-up-directory))
+  (:map +modal-dired-motion-mode-map
+        ("x" . #'dired-do-flagged-delete)
+        ("g" . #'revert-buffer))
   :config
-  (+modal-bind '+motion-mode-map 'dired-mode-hook
-               '(("x" . dired-do-flagged-delete)
-                 ("g" . revert-buffer)))
   (bind-key "M-s" search-map dired-mode-map))
 
 ;;;###autoload

@@ -1,4 +1,6 @@
 ;;; -*- lexical-binding: t -*-
+(require 'subr-x)
+
 (defvar +leader-map (make-sparse-keymap))
 (defvar +leader2-map (make-sparse-keymap))
 (defvar +leader3-map (make-sparse-keymap))
@@ -25,103 +27,52 @@ Can be 'normal, 'insert, 'motion, or 'sexp.")
 ;;; Mode-specific overrides
 
 ;;;###autoload
-(defun +modal-bind (target keymap-or-hook hook-or-bindings &optional bindings)
-  "Override TARGET keys in buffers where HOOK runs.
-TARGET is either a modal mode map, modal minor mode command, or prefix map symbol.
-BINDINGS are alist entries of the form (KEY . DEF)."
-  (let ((mode (+modal--mode-for-map target)))
-    (cond
-     (mode
-      (+modal--command-bind mode target keymap-or-hook hook-or-bindings))
-     ((and (boundp target)
-           (keymapp (symbol-value target)))
-      (+modal--prefix-bind target keymap-or-hook hook-or-bindings))
-     ((commandp target)
-      (+modal--command-bind target keymap-or-hook hook-or-bindings bindings))
-     (t
-      (error "Expected modal mode map, modal command, or prefix map symbol: %S"
-             target)))))
+(defmacro +modal-define-intersection-mode (&rest modes)
+  "Define a minor mode active in the intersection of MODES."
+  (let* ((parts
+          (mapcar
+           (lambda (mode)
+             (string-remove-suffix
+              "-mode"
+              (string-remove-prefix "+" (symbol-name mode))))
+           modes))
+         (name (intern (format "+modal-%s-mode" (string-join parts "-"))))
+         (sync (intern (format "%s--sync" name)))
+         (active-major-modes
+          (intern (format "%s--active-major-modes" name))))
+    `(progn
+       (defvar-local ,active-major-modes nil
+         ,(format "Active major modes for `%s'." name))
 
-;;;###autoload
-(defun +modal--command-bind (mode keymap hook bindings)
-  "Override MODE keys from KEYMAP in buffers where HOOK runs.
-BINDINGS are alist entries of the form (KEY . DEF)."
-  (unless (and (boundp keymap)
-               (keymapp (symbol-value keymap)))
-    (error "Expected keymap symbol: %S" keymap))
-  (add-hook hook
-            (lambda ()
-              (let ((map (make-sparse-keymap)))
-                (set-keymap-parent
-                 map
-                 (or (cdr (assq mode minor-mode-overriding-map-alist))
-                     (symbol-value keymap)))
-                (+modal--define-bindings map bindings)
-                (setq-local minor-mode-overriding-map-alist
-                            (cons
-                             (cons mode map)
-                             (assq-delete-all
-                              mode
-                              minor-mode-overriding-map-alist)))))
-            t))
+       (define-minor-mode ,name
+         ,(format "Keybindings for the intersection of %s."
+                  (mapconcat #'symbol-name modes ", "))
+         :lighter nil
+         :keymap (make-sparse-keymap))
 
-;;;###autoload
-(defun +modal--prefix-bind (prefix-map hook bindings)
-  "Override PREFIX-MAP keys in modal maps for buffers where HOOK runs.
-BINDINGS are alist entries of the form (KEY . DEF)."
-  (add-hook hook
-            (lambda ()
-              (let ((prefix-map-value (symbol-value prefix-map))
-                    (map (make-sparse-keymap)))
-                (set-keymap-parent map (symbol-value prefix-map))
-                (+modal--define-bindings map bindings)
-                (dolist (entry minor-mode-map-alist)
-                  (let ((mode (car entry))
-                        (mode-map (cdr entry))
-                        keys)
-                    (when (keymapp mode-map)
-                      (map-keymap
-                       (lambda (key definition)
-                         (when (eq definition prefix-map-value)
-                           (push key keys)))
-                       mode-map)
-                      (when keys
-                        (let ((mode-map-copy
-                               (copy-keymap
-                                (or (cdr (assq mode minor-mode-overriding-map-alist))
-                                    mode-map))))
-                          (dolist (key keys)
-                            (define-key mode-map-copy (vector key) map))
-                          (setq-local minor-mode-overriding-map-alist
-                                      (cons
-                                       (cons mode mode-map-copy)
-                                       (assq-delete-all
-                                        mode
-                                        minor-mode-overriding-map-alist))))))))))
-            t))
+       ;;;###autoload
+       (defun ,sync ()
+         (,name
+          (if (and
+               ,@(mapcar
+                  (lambda (mode)
+                    `(if (memq ',mode minor-mode-list)
+                         (symbol-value ',mode)
+                       (memq ',mode ,active-major-modes)))
+                  modes))
+              1
+            -1)))
 
-;;;###autoload
-(defun +modal--mode-for-map (keymap)
-  "Return the modal command derived from KEYMAP, or nil."
-  (when (and (symbolp keymap)
-             (boundp keymap)
-             (keymapp (symbol-value keymap)))
-    (let* ((name (symbol-name keymap))
-           (mode-name (and (string-suffix-p "-map" name)
-                           (substring name 0 (- (length "-map")))))
-           (mode (and mode-name (intern-soft mode-name))))
-      (and (commandp mode) mode))))
-
-;;;###autoload
-(defun +modal--define-bindings (map bindings)
-  "Define BINDINGS in MAP.
-BINDINGS are alist entries of the form (KEY . DEF)."
-  (dolist (binding bindings)
-    (define-key map
-                (if (stringp (car binding))
-                    (kbd (car binding))
-                  (car binding))
-                (cdr binding))))
+       ,@(mapcar
+          (lambda (mode)
+            `(add-hook
+              ',(intern (format "%s-hook" mode))
+              (lambda ()
+                (unless (or (memq ',mode minor-mode-list)
+                            (memq ',mode ,active-major-modes))
+                  (push ',mode ,active-major-modes))
+                (,sync))))
+          modes))))
 
 (defmacro +modal-create-mode-switching-function (function &rest args)
   "Create a command wrapping FUNCTION and switching modes afterward.

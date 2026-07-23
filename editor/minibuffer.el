@@ -12,7 +12,6 @@
   (:map minibuffer-inactive-mode-map
         ([remap save-buffer] . #'kill-current-buffer))
   (:map minibuffer-mode-map
-        ([remap newline] . #'exit-minibuffer)
         ([remap minibuffer-keyboard-quit] . #'abort-minibuffers)
         ([remap +keyboard-quit-normal] . #'abort-minibuffers)
         ("C-g" . #'abort-minibuffers)))
@@ -134,7 +133,8 @@
                             (call-interactively #'vertico-exit)))))
 
   (vertico-mode)
-  (vertico-multiform-mode)
+  (unless vertico-multiform-mode
+    (vertico-multiform-mode 1))
   (vertico-indexed-mode))
 
 (use-package prescient
@@ -156,6 +156,7 @@
   :after vertico
   :bind
   (:map vertico-map
+        ([remap newline] . #'+vertico-exit)
         ("RET" . #'+vertico-exit)
         ("M-O" . #'+vertico-toggle-other-window-exit)
         ("M-N" . #'+vertico-toggle-new-window-exit)))

@@ -20,11 +20,14 @@
 
 (use-package agent-shell-extras
   :ensure (:type file :main "~/.emacs.d/lisp/agent-shell-extras.el" :files ("agent-shell-extras.el"))
+  :init
+  (+modal-define-intersection-mode agent-shell-mode +normal-mode)
   :hook (agent-shell-mode . +agent-shell-auto-rename-mode)
+  :bind
+  (:map +modal-agent-shell-normal-mode-map
+        ("Y" . #'+agent-shell-accept)
+        ("N" . #'+agent-shell-decline))
   :config
-  (+modal-bind '+normal-mode-map 'agent-shell-mode-hook
-               '(("Y" . +agent-shell-accept)
-                 ("N" . +agent-shell-decline)))
   (setq agent-shell-permission-responder-function
         (+agent-shell-make-permission
          '((allow
