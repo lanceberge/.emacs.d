@@ -1,4 +1,11 @@
 ;;; -*- lexical-binding: t -*-
+
+;;;###autoload
+(defun +project-try-subproject (dir)
+  "Return a project rooted at the nearest .subproject above DIR."
+  (when-let ((root (locate-dominating-file dir ".subproject")))
+    (cons 'transient root)))
+
 (use-package project
   :demand t
   :commands
@@ -17,6 +24,7 @@
         ("d" . #'project-find-dir)
         ("M-f" . #'project-root-find-file))
   :config
+  (add-hook 'project-find-functions #'+project-try-subproject)
   (bind-key "a" +llm-map project-prefix-map))
 
 ;; save project-local compile histories
