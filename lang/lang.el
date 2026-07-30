@@ -105,6 +105,36 @@
 
 (use-package nix-mode)
 
+;;;###autoload
+(defun +java-maven-test-at-point ()
+  "Run the Maven test method containing point in a compilation buffer."
+  (interactive)
+  (unless (treesit-language-available-p 'java)
+    (user-error "The Java tree-sitter grammar is not available"))
+  (unless buffer-file-name
+    (user-error "The current buffer is not visiting a file"))
+  (let* ((method-node
+          (treesit-parent-until
+           (treesit-node-at (point) (treesit-parser-create 'java))
+           "method_declaration"
+           t))
+         (method-name-node
+          (treesit-node-child-by-field-name method-node "name"))
+         (project-directory
+          (locate-dominating-file buffer-file-name "pom.xml")))
+    (unless method-name-node
+      (user-error "Point is not inside a Java method"))
+    (unless project-directory
+      (user-error "Could not find a pom.xml"))
+    (let ((default-directory project-directory)
+          (selector
+           (format "%s#%s"
+                   (file-name-base buffer-file-name)
+                   (treesit-node-text method-name-node t))))
+      (compile
+       (format "mvn %s test"
+               (shell-quote-argument (concat "-Dtest=" selector)))))))
+
 (use-package java-mode
   :ensure nil
   :hook
