@@ -191,6 +191,7 @@
      (consult-jj-rebase buffer (:not posframe indexed))
      (consult-jj-squash buffer (:not posframe indexed))
      (consult-jj-commit-squash buffer (:not posframe indexed))
+     (consult-jj-revision buffer (:not posframe indexed))
      (consult-git-grep buffer (:not posframe))
      (consult-grep buffer (:not posframe))))
   (vertico-posframe-fallback-mode #'vertico-buffer-mode)

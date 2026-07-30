@@ -38,6 +38,8 @@ I wrap it here in a save-excursion."
 
 (use-package wdired
   :ensure nil
+  :custom
+  (wdired-search-replace-filenames nil)
   :bind
   (:map wdired-mode-map
         ([remap save-buffer] . +wdired-finish-edit)))

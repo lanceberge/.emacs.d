@@ -1,6 +1,7 @@
 ;;; -*- lexical-binding: t -*-
 
 (require 'consult)
+(require 'bookmark)
 (require 'cl-lib)
 (require 'project)
 (require 'isearch-extras)
@@ -9,6 +10,86 @@
 (declare-function embark-export "embark")
 (declare-function embark-export-dired "embark")
 (defvar embark-exporters-alist)
+
+;;;###autoload
+(defun +consult-bookmark ()
+  "Select a bookmark, with project bookmarks available under narrowing key p."
+  (interactive)
+  (+consult--bookmark
+   (when-let* ((project (project-current nil)))
+     (project-root project))))
+
+;;;###autoload
+(defun +consult-project-bookmark ()
+  "Select a bookmark in a project, initially narrowed to that project."
+  (interactive)
+  (+consult--bookmark (project-root (project-current t)) ?p))
+
+;;;###autoload
+(defun +consult--bookmark (project-root &optional initial-narrow)
+  "Select a bookmark, classifying bookmarks under PROJECT-ROOT as project-local.
+
+When INITIAL-NARROW is non-nil, initially narrow to that bookmark type."
+  (let* ((types (+consult--bookmark-narrow-types))
+         (name
+          (consult--read
+           (+consult--bookmark-candidates project-root types)
+           :prompt "Bookmark: "
+           :state (consult--bookmark-preview)
+           :category 'bookmark
+           :history 'bookmark-history
+           :add-history
+           (ignore-errors
+             (bookmark-prop-get (bookmark-make-record) 'defaults))
+           :group (consult--type-group
+                   (cl-loop for (key name . _) in types
+                            collect (cons key name)))
+           :narrow (consult--type-narrow
+                    (cl-loop for (key name . _) in types
+                             collect (cons key name)))
+           :initial-narrow initial-narrow)))
+    (if (assoc name bookmark-alist)
+        (bookmark-jump name)
+      (bookmark-set name))))
+
+;;;###autoload
+(defun +consult--bookmark-candidates (project-root types)
+  "Return bookmark candidates, using type p for bookmarks under PROJECT-ROOT.
+
+TYPES is the bookmark narrowing configuration."
+  (bookmark-maybe-load-default-file)
+  (let ((handler-types
+         (cl-loop for (key _ . handlers) in types
+                  nconc (cl-loop for handler in handlers
+                                 collect (cons handler key))))
+        (root (and project-root
+                   (file-name-as-directory
+                    (expand-file-name project-root)))))
+    (cl-loop
+     for bookmark in bookmark-alist
+     for file = (ignore-errors (bookmark-get-filename bookmark))
+     for project-local = (and root file
+                              (ignore-errors
+                                (file-in-directory-p file root)))
+     for handler = (or (bookmark-get-handler bookmark)
+                       #'bookmark-default-handler)
+     collect
+     (propertize
+      (car bookmark)
+      'consult--type
+      (if project-local
+          ?p
+        (alist-get handler handler-types))))))
+
+;;;###autoload
+(defun +consult--bookmark-narrow-types ()
+  "Return bookmark narrowing types with p for Project and P for Picture."
+  (cons '(?p "Project")
+        (cl-loop for type in consult-bookmark-narrow
+                 collect
+                 (if (eq (car type) ?p)
+                     (cons ?P (cdr type))
+                   type))))
 
 ;;;###autoload
 (defun +consult-buffer-with-initial (initial &optional sources)
@@ -25,6 +106,11 @@ SOURCES defaults to `consult-buffer-sources'."
     ;; For non-matching candidates, fall back to buffer creation.
     (unless (plist-get (cdr selected) :match)
       (consult--buffer-action (car selected)))))
+
+;;;###autoload
+(defun +consult-buffer-codex ()
+  (interactive)
+  (+consult-buffer-with-initial "Codex"))
 
 ;;;###autoload
 (defun +consult-project-file-here ()
@@ -238,5 +324,8 @@ MATCH is as in `org-map-entries'."
                  (vconcat (consult--key-parse consult-narrow-key)
                           (kbd "C-h")))
                 unread-command-events)))
+
+(keymap-global-set "<remap> <consult-bookmark>" #'+consult-bookmark)
+(keymap-set project-prefix-map "B" #'+consult-project-bookmark)
 
 (provide 'consult-extras)

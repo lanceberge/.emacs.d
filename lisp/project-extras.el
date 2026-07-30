@@ -70,7 +70,7 @@ N defaults to 1."
   (interactive)
   (project-forget-zombie-projects)
   ;; dirs to remember
-  (dolist (dir '("~/.emacs.d/" "~/.config/nixos" "~/dotfiles/" ))
+  (dolist (dir '("~/.emacs.d/" "~/.config/nixos" "~/dotfiles/" "~/org" "~/org-public/"))
     (when (file-directory-p dir)
       (project--remember-dir dir)))
 

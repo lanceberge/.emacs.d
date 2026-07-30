@@ -36,6 +36,7 @@
         ("M-S-<return>" . #'+modal-org-insert-todo-heading-insert)
         ("M-l" . #'org-shiftmetaright)
         ("M-h" . #'org-shiftmetaleft)
+        ("C-c s" . #'org-schedule)
         ("C-c TAB" . #'outline-toggle-children)
         ("C-c m" . #'outline-hide-sublevels)
         ("C-c r" . #'outline-show-all))
