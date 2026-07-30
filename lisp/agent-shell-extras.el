@@ -96,7 +96,7 @@ an existing shell."
   "Toggle the viewport for SHELL-BUFFER."
   (let ((viewport-buffer (agent-shell-viewport--buffer
                           :shell-buffer shell-buffer)))
-    (if-let ((window (get-buffer-window viewport-buffer)))
+    (if-let* ((window (get-buffer-window viewport-buffer)))
         (quit-restore-window window 'bury)
       (agent-shell-viewport--show-buffer :shell-buffer shell-buffer))))
 
@@ -245,10 +245,10 @@ The returned function is suitable for
        ((or (null rule-kind) (null subject)) nil)
        ((funcall matcher subject ask-patterns) nil)
        ((funcall matcher subject allow-patterns)
-        (when-let ((option (seq-find
-                            (lambda (opt)
-                              (equal (map-elt opt :kind) "allow_once"))
-                            (map-elt permission :options))))
+        (when-let* ((option (seq-find
+                             (lambda (opt)
+                               (equal (map-elt opt :kind) "allow_once"))
+                             (map-elt permission :options))))
           (funcall (map-elt permission :respond)
                    (map-elt option :option-id))
           t))))))

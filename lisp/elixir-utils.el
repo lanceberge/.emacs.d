@@ -65,7 +65,7 @@ to project lib/ directory."
 ;;;###autoload
 (defun +compilation-setup-mix-error-regexp (process)
   "Use Mix-specific compilation parsing in PROCESS' buffer."
-  (when-let ((buffer (process-buffer process)))
+  (when-let* ((buffer (process-buffer process)))
     (with-current-buffer buffer
       (when (+compilation-mix-command-p)
         (setq-local compilation-error-regexp-alist-alist
@@ -88,7 +88,7 @@ to project lib/ directory."
 ;;;###autoload
 (defun +compilation-mix-command-p ()
   "Return non-nil when the current compilation command invokes Mix."
-  (when-let ((command (car-safe compilation-arguments)))
+  (when-let* ((command (car-safe compilation-arguments)))
     (string-match-p (rx (or string-start (not (any alnum "_" "-")))
                         "mix"
                         (or string-end (not (any alnum "_" "-"))))
@@ -97,9 +97,9 @@ to project lib/ directory."
 (defun +project--buffer-relative-path ()
   "Return the buffer's path relative to the project-root"
   (require 'project)
-  (when-let ((project (project-current t))
-             (root (project-root project))
-             (file (buffer-file-name)))
+  (when-let* ((project (project-current t))
+              (root (project-root project))
+              (file (buffer-file-name)))
     (file-relative-name file root)))
 
 ;;;###autoload

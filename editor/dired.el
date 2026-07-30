@@ -20,6 +20,8 @@
         ("i" . +dired-maybe-insert-subdir)
         ("g" . #'revert-buffer)
         ("e" . #'dired-toggle-read-only)
+        ("<" . #'beginning-of-buffer)
+        (">" . #'end-of-buffer)
         ("!" . #'dired-do-eshell-command)
         ("-" . #'dired-up-directory))
   (:map +modal-dired-motion-mode-map

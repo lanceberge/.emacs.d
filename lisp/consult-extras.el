@@ -159,7 +159,7 @@ SOURCES defaults to `consult-buffer-sources'."
 (defun +consult-preview-tramp-excluded-p (buffer)
   "Return non-nil if BUFFER should be excluded from consult preview.
 Excludes Tramp buffers so preview never opens a remote connection."
-  (when-let ((dir (buffer-local-value 'default-directory buffer)))
+  (when-let* ((dir (buffer-local-value 'default-directory buffer)))
     (file-remote-p dir)))
 
 ;;;###autoload
@@ -208,10 +208,10 @@ If selection is aborted, restore the original region text."
 (defun +consult-grep--candidate-file (candidate)
   "Return the file path from a Consult grep CANDIDATE."
   (when (stringp candidate)
-    (when-let ((file (or (get-text-property 0 'consult--prefix-group candidate)
-                         (when-let ((file-end (next-single-property-change
-                                               0 'face candidate)))
-                           (substring-no-properties candidate 0 file-end)))))
+    (when-let* ((file (or (get-text-property 0 'consult--prefix-group candidate)
+                          (when-let ((file-end (next-single-property-change
+                                                0 'face candidate)))
+                            (substring-no-properties candidate 0 file-end)))))
       (expand-file-name file))))
 
 ;;;###autoload

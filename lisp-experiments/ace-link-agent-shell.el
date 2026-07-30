@@ -22,7 +22,7 @@
                (avy--style-fn avy-style)))))
     (when (number-or-marker-p pt)
       (goto-char pt)
-      (when-let ((action (+ace-link-agent-shell--action-at pt)))
+      (when-let* ((action (+ace-link-agent-shell--action-at pt)))
         (call-interactively action)))))
 
 ;;;###autoload

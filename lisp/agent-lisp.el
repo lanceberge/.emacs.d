@@ -128,11 +128,11 @@ Line and column numbers are 1-indexed.  End positions are exclusive."
           (text ""))
       (progn
         (apropos pattern)
-        (when-let ((buffer (get-buffer buffer-name)))
+        (when-let* ((buffer (get-buffer buffer-name)))
           (with-current-buffer buffer
             (setq text (buffer-substring-no-properties
                         (point-min) (point-max))))))
-      (when-let ((buffer (get-buffer buffer-name)))
+      (when-let* ((buffer (get-buffer buffer-name)))
         (kill-buffer buffer))
       (+agent-lisp--truncate-lines text))))
 

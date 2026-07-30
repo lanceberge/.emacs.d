@@ -34,8 +34,8 @@
       (let ((next (or (next-single-property-change
                        pos 'compilation-message nil (point-max))
                       (point-max))))
-        (when-let ((file (+grep--message-file
-                          (get-text-property pos 'compilation-message))))
+        (when-let* ((file (+grep--message-file
+                           (get-text-property pos 'compilation-message))))
           (push file files))
         (setq pos next)))
     (delete-dups (nreverse files))))

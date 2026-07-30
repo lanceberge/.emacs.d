@@ -78,7 +78,7 @@
 With no current project, fall back to `+consult-tab'."
   (interactive)
   (if (+project-tab--current-root)
-      (if-let ((tabs (+consult-project-tab--tabs)))
+      (if-let* ((tabs (+consult-project-tab--tabs)))
           (tab-bar-select-tab
            (consult--read (+consult-project-tab--candidates tabs)
                           :prompt "Switch to project tab: "
@@ -98,7 +98,7 @@ With no current project, fall back to `+consult-tab'."
 ;;;###autoload
 (defun +consult-project-tab--tabs ()
   "Return recent tabs belonging to the current project."
-  (when-let ((root (+project-tab--current-root)))
+  (when-let* ((root (+project-tab--current-root)))
     (seq-filter (lambda (tab)
                   (+project-tab--tab-p tab root))
                 (tab-bar--tabs-recent))))
@@ -137,7 +137,7 @@ With no current project, fall back to `+consult-tab'."
 ;;;###autoload
 (defun +consult-project-tab--preview-tab (tab)
   "Preview the window configuration saved in TAB."
-  (when-let ((state (alist-get 'ws tab)))
+  (when-let* ((state (alist-get 'ws tab)))
     (delete-other-windows)
     (window-state-put (copy-tree state) (selected-window) 'safe)))
 

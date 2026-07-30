@@ -25,7 +25,7 @@
 ;;;###autoload
 (defun +tabspace-other-buffer-dwim (n)
   (interactive "p")
-  (if-let ((buffer (+tabspace-other-buffer n)))
+  (if-let* ((buffer (+tabspace-other-buffer n)))
       (switch-to-buffer buffer)
     (user-error "No other buffers in tabspace")))
 
@@ -43,7 +43,7 @@ exists."
 (defun +tabspace-other-special-buffer ()
   "Switch to the most recent special buffer in the current project tabspace."
   (interactive)
-  (if-let ((buffer (+tabspace-other-special-buffer-buffer)))
+  (if-let* ((buffer (+tabspace-other-special-buffer-buffer)))
       (switch-to-buffer buffer)
     (+tabspace-other-buffer-dwim 1)))
 
@@ -54,7 +54,7 @@ Kill the buffer when it only belongs to the current tabspace.  Otherwise remove
 it from the current tabspace."
   (interactive)
   (let* ((buffer (current-buffer)))
-    (if-let ((other-buffer (+tabspace-other-buffer 1)))
+    (if-let* ((other-buffer (+tabspace-other-buffer 1)))
         (switch-to-buffer other-buffer)
       (scratch-buffer))
     (+tabspace-kill-or-remove-buffer buffer)))
@@ -146,7 +146,7 @@ When called interactively, use the current buffer."
 (defun +tabspace-buffer-in-project-p (buffer project)
   "Return non-nil when BUFFER belongs to PROJECT."
   (when project
-    (when-let ((dir (buffer-local-value 'default-directory buffer)))
+    (when-let* ((dir (buffer-local-value 'default-directory buffer)))
       (string-prefix-p
        (expand-file-name (file-name-as-directory (project-root project)))
        (expand-file-name dir)))))

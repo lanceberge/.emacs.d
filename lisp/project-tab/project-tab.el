@@ -155,9 +155,9 @@ With no current project, fall back to `tab-bar-switch-to-recent-tab'."
   "Switch to the most recently used tab for project DIR.
 When CREATE is non-nil, create a new tab if no existing project tab is found."
   (let ((root (+project-tab--project-root dir)))
-    (if-let ((tab (seq-find (lambda (tab)
-                              (+project-tab--tab-p tab root))
-                            (tab-bar--tabs-recent))))
+    (if-let* ((tab (seq-find (lambda (tab)
+                               (+project-tab--tab-p tab root))
+                             (tab-bar--tabs-recent))))
         (tab-bar-select-tab (1+ (tab-bar--tab-index tab)))
       (when create
         (tab-bar-new-tab)
@@ -196,8 +196,8 @@ When CREATE is non-nil, create a new tab if no existing project tab is found."
 (defun +project-tab--select-other ()
   "Switch to the most recently used other tab in the current project."
   (if (+project-tab--current-root)
-      (if-let ((tab (seq-find #'+project-tab--tab-p
-                              (tab-bar--tabs-recent))))
+      (if-let* ((tab (seq-find #'+project-tab--tab-p
+                               (tab-bar--tabs-recent))))
           (progn
             (tab-bar-select-tab (1+ (tab-bar--tab-index tab)))
             t)
@@ -296,8 +296,8 @@ CREATE-COMMAND is called when creating a tab."
 (defun +project-tab--tab-p (tab &optional root)
   "Return non-nil when TAB belongs to ROOT.
 ROOT defaults to the current project root metadata."
-  (when-let ((root (or root (+project-tab--current-root)))
-             (tab-root (+project-tab--tab-root tab)))
+  (when-let* ((root (or root (+project-tab--current-root)))
+              (tab-root (+project-tab--tab-root tab)))
     (equal root tab-root)))
 
 ;;;###autoload
@@ -308,14 +308,14 @@ ROOT defaults to the current project root metadata."
 ;;;###autoload
 (defun +project-tab--current-root ()
   "Return the current tab's project root metadata, or nil."
-  (when-let ((tab (tab-bar--current-tab-find)))
+  (when-let* ((tab (tab-bar--current-tab-find)))
     (+project-tab--tab-root tab)))
 
 ;;;###autoload
 (defun +project-tab--current-project-root ()
   "Return the current tab or selected buffer's project root, or nil."
   (or (+project-tab--current-root)
-      (when-let ((project (project-current nil)))
+      (when-let* ((project (project-current nil)))
         (+project-tab--project-root (project-root project)))))
 
 ;;;###autoload
@@ -344,8 +344,8 @@ ROOT defaults to the current project root metadata."
                                (alist-get '+project-tab-prefix tab)))
          (project-root
           (unless metadata-root
-            (when-let ((project (with-current-buffer buf
-                                  (project-current))))
+            (when-let* ((project (with-current-buffer buf
+                                   (project-current))))
               (+project-tab--project-root (project-root project)))))
          (root (or metadata-root project-root))
          (project-prefix (and root

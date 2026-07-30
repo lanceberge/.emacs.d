@@ -104,7 +104,7 @@
 ;;;###autoload
 (defun +window-preserve-minibuffer-windows ()
   "Keep window changes made while reading from the active minibuffer."
-  (when-let ((window (active-minibuffer-window)))
+  (when-let* ((window (active-minibuffer-window)))
     (with-current-buffer (window-buffer window)
       (setq-local read-minibuffer-restore-windows nil)
       (setq-local +window--preserved-minibuffer-window-state
@@ -217,7 +217,7 @@ the selected window when no minibuffer is active."
 ;;;###autoload
 (defun +window--restore-preserved-minibuffer-windows ()
   "Restore `+window--preserved-minibuffer-window-state' after minibuffer exit."
-  (when-let ((state +window--preserved-minibuffer-window-state))
+  (when-let* ((state +window--preserved-minibuffer-window-state))
     (run-at-time 0 nil #'+window--restore-frame-window-state
                  (car state)
                  (cdr state))))

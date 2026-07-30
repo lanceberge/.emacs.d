@@ -81,7 +81,7 @@
            (lambda (buffer)
              (and (opencode--session-buffer-p buffer)
                   (with-current-buffer buffer
-                    (when-let ((session-project (project-current)))
+                    (when-let* ((session-project (project-current)))
                       (file-equal-p root (project-root session-project))))))
            (buffer-list))))
     (pcase buffers

@@ -88,24 +88,16 @@
 ;;;###autoload
 (defun +mark-forward-word ()
   (interactive)
-  (+mark-forward-backward-ring-push)
   (unless (region-active-p)
     (set-mark (point)))
-  (if (< (point) (mark))
-      (exchange-point-and-mark))
-  (forward-word)
-  (+mark-forward-backward-ring-push))
+  (forward-word))
 
 ;;;###autoload
 (defun +mark-backward-word ()
   (interactive)
-  (+mark-forward-backward-ring-push)
   (unless (region-active-p)
     (set-mark (point)))
-  (if (> (point) (mark))
-      (exchange-point-and-mark))
-  (backward-word)
-  (+mark-forward-backward-ring-push))
+  (backward-word))
 
 ;;;###autoload
 (defun +mark-forward-symbol ()

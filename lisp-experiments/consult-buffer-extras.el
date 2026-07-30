@@ -36,7 +36,7 @@
 ;;;###autoload
 (defun +consult-project-buffer (&optional initial)
   (interactive)
-  (if-let ((project (project-current nil)))
+  (if-let* ((project (project-current nil)))
       (if (project-buffers project)
           (consult--with-project
             (+consult--buffer consult-project-buffer-sources ?b initial))

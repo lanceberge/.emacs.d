@@ -238,7 +238,7 @@
      (?l line "\n")))
   :bind
   (:map easy-kill-base-map
-        ("SPC" . #'easy-kill-mark-region)
+        ;; ("SPC" . #'easy-kill-mark-region)
         ("w" . #'easy-kill-region)
         ([remap +modal-kill-region-insert] . #'+easy-kill-region-insert))
   (:map +normal-mode-map

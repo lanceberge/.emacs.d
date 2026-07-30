@@ -37,7 +37,7 @@
           (let ((kill-buffer-query-functions nil))
             (ignore-errors
               (org-capture-kill)))))
-      (when-let ((buffer (find-buffer-visiting file)))
+      (when-let* ((buffer (find-buffer-visiting file)))
         (with-current-buffer buffer
           (set-buffer-modified-p nil))
         (kill-buffer buffer))

@@ -31,7 +31,7 @@
 (defun +this-buffer-open-externally ()
   "Open the current buffer's file externally."
   (interactive)
-  (if-let ((file (buffer-file-name)))
+  (if-let* ((file (buffer-file-name)))
       (browse-url-of-file file)
     (user-error "Current buffer is not visiting a file")))
 

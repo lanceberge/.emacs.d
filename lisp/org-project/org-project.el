@@ -89,7 +89,7 @@ Prompt for and remember an Org project file when none is remembered."
 (defun +org-project--current-dir ()
   "Return the current project root or `default-directory'."
   (+org-project--normalize-dir
-   (or (when-let ((project (project-current nil)))
+   (or (when-let* ((project (project-current nil)))
          (project-root project))
        default-directory)))
 
@@ -115,7 +115,7 @@ Prompt for and remember an Org project file when none is remembered."
 ;;;###autoload
 (defun +org-project--current-org-project-file ()
   "Return the current file when it is an Org project file."
-  (when-let ((file (buffer-file-name)))
+  (when-let* ((file (buffer-file-name)))
     (let ((file (expand-file-name file))
           (project-dir (file-name-as-directory
                         (expand-file-name +org-project-directory))))

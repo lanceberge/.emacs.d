@@ -121,9 +121,9 @@ Without REGEXP, choose from recentf directories using `completing-read'."
   (delete-dups
    (delq nil
          (mapcar (lambda (file)
-                   (when-let ((dir (if (directory-name-p file)
-                                       file
-                                     (file-name-directory file))))
+                   (when-let* ((dir (if (directory-name-p file)
+                                        file
+                                      (file-name-directory file))))
                      (abbreviate-file-name
                       (file-name-as-directory dir))))
                  recentf-list))))

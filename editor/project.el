@@ -3,7 +3,7 @@
 ;;;###autoload
 (defun +project-try-subproject (dir)
   "Return a project rooted at the nearest .subproject above DIR."
-  (when-let ((root (locate-dominating-file dir ".subproject")))
+  (when-let* ((root (locate-dominating-file dir ".subproject")))
     (cons 'transient root)))
 
 (use-package project

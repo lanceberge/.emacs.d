@@ -159,7 +159,7 @@ This command is intentionally limited to `+normal-mode'."
 
 ;;;###autoload
 (defun +dot-repeat--record-insert-command (changed-p after-state)
-  (when-let ((keys (+dot-repeat--command-keys)))
+  (when-let* ((keys (+dot-repeat--command-keys)))
     (+dot-repeat--append-insert-keys keys))
   (when changed-p
     (plist-put +dot-repeat--pending-insert-episode :changed-p t))
