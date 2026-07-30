@@ -96,6 +96,7 @@
         ("jbl" . #'consult-jj-bookmark)
         ("jwl" . #'consult-jj-workspace-list)
         ("jwa" . #'consult-jj-workspace-add)
+        ("jwf" . #'consult-jj-workspace-forget)
         ("jwu" . #'consult-jj-workspace-update-stale)
         ("jba" . #'consult-jj-bookmark-advance)
         ("jrb" . #'consult-jj-rebase-before)

@@ -19,11 +19,6 @@
 (bind-key "[" +backward-map +motion-mode-map)
 (bind-key "]" +forward-map +motion-mode-map)
 
-;; (bind-key "C-'" +leader2-map)
-;; (bind-key "'" +leader2-map +normal-mode-map)
-;; (bind-key "'" +leader2-map +motion-mode-map)
-;; (bind-key "'" +leader2-map +sexp-mode-map)
-
 ;;;###autoload
 (defun +keybindings-C-c ()
   (interactive)
@@ -58,11 +53,9 @@
         ("C-\\" . #'+sexp-mode)
         ("C-g" . #'+keyboard-quit-normal)
         ("M-z" . #'zap-up-to-char)
-        ;; ("<escape>" . #'+normal-mode)
         ("C-x C-s" . #'+save-buffer-normal))
   (:map +motion-mode-map
         ("q" . #'quit-window)
-        ("g" . #'+keyboard-quit)
         ("{" . #'backward-paragraph)
         ("}" . #'forward-paragraph))
   (:map +normal-mode-map
@@ -115,13 +108,11 @@
         ("f" . #'forward-word)
 
         ("@" . #'mark-sexp)
-        ;; ("r" . #'isearch-backward)
-        ;; ("g" . #'+keyboard-quit)
+        ("r" . #'isearch-backward)
         ("/" . #'undo)
         ("h" . #'backward-char)
         ("H" . #'+left-expand)
         ("L" . #'+right-expand)
-        ;; ("SPC" . #'set-mark-command)
         ("n" . #'next-line)
         ("M" . #'+mark-whole-lines)
         ("E" . #'+modal-mark-end-of-line)
@@ -132,7 +123,6 @@
         ("o" . #'+open-line)
         ("=" . #'+expand-region)
         ("m" . #'back-to-indentation)
-        ;; ("t" . #'transpose-chars)
         ("T" . #'transpose-words)
         ("?" . #'undo-redo)
         ("D" . #'kill-word)

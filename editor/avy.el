@@ -68,5 +68,6 @@
 ;;;###autoload
 (defun +ace-link-eww ()
   (interactive)
+  (require 'eww)
   (let ((avy-single-candidate-jump t))
     (call-interactively #'ace-link-eww)))

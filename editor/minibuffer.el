@@ -90,7 +90,9 @@
         (".f" . #'+consult-project-file-here)
         ("k" . #'+consult-find-key-binding)
         ("p" . #'+consult-find-package)
-        ("K" . #'+consult-find-bound-function)))
+        ("K" . #'+consult-find-bound-function))
+  (:map +leader-map
+        ("afi" . #'+consult-buffer-codex)))
 
 (use-package consult-eglot
   :bind
@@ -238,3 +240,20 @@
 
   (setq consult-omni-show-preview t)
   (setq consult-omni-preview-key "C-o"))
+
+(use-package consult-gh
+  :config
+  (let ((encoded-token
+         (with-temp-buffer
+           (insert-file-contents-literally
+            (expand-file-name "~/secrets/gh_token"))
+           (string-trim (buffer-string)))))
+    (setenv "GH_TOKEN"
+            (string-trim
+             (base64-decode-string encoded-token)))))
+
+(use-package consult-gh-embark
+  :after consult-gh
+  :demand t
+  :config
+  (consult-gh-embark-mode 1))

@@ -78,7 +78,8 @@
   (history-length 500)
   (history-delete-duplicates t)
   (savehist-save-minibuffer-history t)
-  (savehist-additional-variables '(register-alist
+  (savehist-additional-variables '(kill-ring
+                                   register-alist
                                    mark-ring global-mark-ring
                                    search-ring regexp-search-ring)))
 
@@ -299,6 +300,34 @@
         ([remap +change] . #'replace-rectangle)))
 
 (use-package eww
+  :ensure nil
   :bind
   (:map eww-mode-map
         ("v" . #'scroll-down-command)))
+
+;;;###autoload
+(defun +viper-repeat-goto-char-forward (arg)
+  (interactive "P")
+  (forward-char)
+  (viper-repeat-find arg))
+
+;;;###autoload
+(defun +viper-repeat-goto-char-backward (arg)
+  (interactive "P")
+  (backward-char)
+  (viper-repeat-find-opposite arg))
+
+(use-package viper-cmd
+  :ensure nil
+  :bind
+  (:repeat-map +viper-repeat-map
+               ("," . #'+viper-repeat-goto-char-backward)
+               ("." . #'+viper-repeat-goto-char-forward))
+  (:map +normal-mode-map
+        ("t" . #'viper-goto-char-forward)))
+
+(use-package speedbar
+  :ensure nil
+  :custom
+  (speedbar-prefer-window t)
+  (speedbar-use-images nil))

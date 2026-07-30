@@ -211,8 +211,8 @@ ARGS provides a `:name' atom."
    (+modal-desired-state +modal-desired-state)
    ((or (minibufferp) (derived-mode-p 'eshell-mode 'eat-mode 'ghostel-mode 'agent-shell-mode 'opencode-session-mode))
     'insert)
-   ((derived-mode-p 'special-mode 'dired-mode 'magit-mode 'org-agenda-mode
-                    'help-mode 'Info-mode 'compilation-mode
+   ((derived-mode-p 'special-mode 'speedbar-mode 'dired-mode 'magit-mode
+                    'org-agenda-mode 'help-mode 'Info-mode 'compilation-mode
                     'diff-mode 'package-menu-mode
                     'Custom-mode 'messages-buffer-mode) 'motion)
    (t 'normal)))

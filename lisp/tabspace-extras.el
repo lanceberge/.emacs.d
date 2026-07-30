@@ -112,6 +112,7 @@ When called interactively, use the current buffer."
     (or buffer-file-name
         (derived-mode-p
          'agent-shell-mode
+         'compilation-mode
          'eat-mode
          'eca-chat-mode
          'elfeed-search-mode
