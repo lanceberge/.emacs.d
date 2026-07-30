@@ -86,16 +86,9 @@
 
   ;; support showing embark actions in the keycast modeline
   ;; https://github.com/oantolin/embark/wiki/Additional-Configuration#showing-embark-actions-keys-in-keycast-mode
-  (defun store-action-key+cmd (cmd)
-    (force-mode-line-update t)
-    (setq this-command cmd
-          keycast--this-command-keys (this-single-command-keys)
-          keycast--this-command-desc cmd))
-
   (advice-add 'embark-keymap-prompter :filter-return #'store-action-key+cmd)
 
   ;; version of keycast--update that accepts (and ignores) parameters
-  (defun force-keycast-update (&rest _) (keycast--update))
 
   (with-eval-after-load 'keycast
     (advice-add 'embark-act :before #'force-keycast-update))
@@ -108,6 +101,16 @@
 
   (advice-remove #'embark--action-keymap #'+embark-apply-priority-map)
   (advice-add #'embark--action-keymap :filter-return #'+embark-apply-priority-map))
+;;;###autoload
+(defun force-keycast-update (&rest _) (keycast--update))
+
+;;;###autoload
+(defun store-action-key+cmd (cmd)
+  (force-mode-line-update t)
+  (setq this-command cmd
+        keycast--this-command-keys (this-single-command-keys)
+        keycast--this-command-desc cmd))
+
 
 ;;;###autoload
 (defun +embark-apply-priority-map (keymap)
@@ -365,15 +368,17 @@
 ;;;###autoload
 (defun +kill-whitespace-ignore (orig-fn string &rest args)
   "https://stackoverflow.com/questions/12102554/emacs-skip-whitespace-kills"
-  (let* (
-         (string-raw (substring-no-properties string))
-         (space-p (not (string-match-p "[^ \t\n\r]" string-raw))))
+  (if (called-interactively-p 'any)
+      (let* (
+             (string-raw (substring-no-properties string))
+             (space-p (not (string-match-p "[^ \t\n\r]" string-raw))))
 
-    (cond
-     ((not space-p)
-      (apply orig-fn string args))
-     (t
-      (message "skipped whitespace kill")))))
+        (cond
+         ((not space-p)
+          (apply orig-fn string args))
+         (t
+          (message "skipped whitespace kill"))))
+    (apply orig-fn string args)))
 
 ;;;###autoload
 (defun +operate-on-number (&optional arg)

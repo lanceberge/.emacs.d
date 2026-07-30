@@ -15,6 +15,12 @@
      ("https://dashbit.co/blog/rss.xml" elixir)
      ("https://fly.io/blog/feed.xml" elixir systems)
 
+     ("https://go.dev/blog/feed.atom" go official must-read)
+     ("https://eli.thegreenplace.net/feeds/all.atom.xml" go systems must-read)
+     ("https://dave.cheney.net/feed" go)
+     ("https://www.ardanlabs.com/blog/index.xml" go systems company)
+     ("https://bitfieldconsulting.com/posts?format=rss" go rust)
+
      ("https://sachachua.com/blog/category/emacs-news/feed/" emacs news must-read)
      ("https://planet.emacslife.com/atom.xml" emacs)
      ("https://www.masteringemacs.org/feed" emacs)
