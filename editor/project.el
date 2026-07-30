@@ -17,6 +17,7 @@
   :bind
   (:map project-prefix-map
         ("C-g" . #'keyboard-quit)
+        ("$" . #'project-eshell)
         ("o" . #'keyboard-quit)
         ("s" . #'eat-project))
   (:map search-map

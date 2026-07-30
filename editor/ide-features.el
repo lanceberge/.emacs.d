@@ -184,6 +184,8 @@
   (:repeat-map flymake-repeat-map
                ("]" . #'flymake-goto-next-error)
                ("[" . #'flymake-goto-prev-error))
+  (:map project-prefix-map
+        "e" . #'flymake-show-project-diagnostics)
   (:map +forward-map
         ("e" . #'flymake-goto-next-error))
   (:map +backward-map

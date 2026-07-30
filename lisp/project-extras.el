@@ -125,5 +125,23 @@ If FILE-PATTERN is provided (e.g. \"*.ex\"), only match files with that pattern.
    str
    t))
 
+(cl-defmethod project-files :around ((project (head vc)) &optional dirs)
+  "Make `PROJECT-FIND-FILES' include files in the root-level
+ .user-local dir which I keep gitignored."
+  (let ((files (cl-call-next-method)))
+    (dolist (dir (or dirs (list (project-root project))) files)
+      (setq files (+project-add-user-local-files dir files)))))
+
+;;;###autoload
+(defun +project-add-user-local-files (dir files)
+  "Return FILES plus files inder DIR/.user-local."
+  (let* ((dir (file-name-as-directory (expand-file-name dir)))
+         (local (concat dir ".user-local"))
+         (extra (and (file-directory-p local)
+                     (directory-files-recursively local "" nil))))
+    (append files (if project-files-relative-names
+                      (mapcar (lambda (f) (file-relative-name f dir)) extra)
+                    extra))))
+
 (provide 'project-extras)
 ;;; project-extras.el ends here
