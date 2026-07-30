@@ -212,11 +212,20 @@
   (compile)
   :config
   (require 'ansi-color)
+  (add-to-list 'display-buffer-alist
+               '(+compilation-source-buffer-p
+                 (display-buffer-reuse-window display-buffer-use-some-window)
+                 (inhibit-same-window . t)))
   :hook
   (compilation-filter . ansi-color-compilation-filter)
   :bind
   (:map compilation-mode-map
         ("R" . #'recompile)))
+
+;;;###autoload
+(defun +compilation-source-buffer-p (buffer-or-name _action)
+  (and (derived-mode-p 'compilation-mode)
+       (buffer-file-name (get-buffer buffer-or-name))))
 
 ;;;###autoload
 (defun +calc-convert-unit-at-point (&optional _target)
@@ -341,7 +350,9 @@
                ("," . #'+viper-repeat-goto-char-backward)
                ("." . #'+viper-repeat-goto-char-forward))
   (:map +normal-mode-map
-        ("t" . #'viper-goto-char-forward)))
+        ("t" . #'viper-goto-char-forward))
+  :config
+  (require 'viper))
 
 (use-package speedbar
   :ensure nil
