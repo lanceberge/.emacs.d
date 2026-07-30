@@ -61,9 +61,20 @@
   :custom
   (save-place-limit 600))
 
+(require 'whitespace)
+
+;;;###autoload
+(defun +whitespace-cleanup ()
+  "Clean whitespace without changing Org indentation."
+  (let ((whitespace-style
+         (if (derived-mode-p 'org-mode)
+             '(trailing empty missing-newline-at-eof)
+           whitespace-style)))
+    (whitespace-cleanup)))
+
 (use-package whitespace
   :ensure nil
-  :hook (before-save . whitespace-cleanup)) ; clean unnecessary whitespace before save
+  :hook (before-save . +whitespace-cleanup)) ; clean unnecessary whitespace before save
 
 (use-package autorevert
   :ensure nil
@@ -202,7 +213,10 @@
   :config
   (require 'ansi-color)
   :hook
-  (compilation-filter . ansi-color-compilation-filter))
+  (compilation-filter . ansi-color-compilation-filter)
+  :bind
+  (:map compilation-mode-map
+        ("R" . #'recompile)))
 
 ;;;###autoload
 (defun +calc-convert-unit-at-point (&optional _target)

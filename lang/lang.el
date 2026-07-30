@@ -35,9 +35,14 @@
 (use-package json-mode
   :ensure nil)
 
-(use-package go-mode
-  :hook
-  (go-mode . (lambda () (setq-local use-tabs-mode t))))
+;; (use-package go-mode
+;; :hook
+;; (go-mode . (lambda () (setq-local use-tabs-mode t))))
+
+(use-package go-ts-mode
+  :ensure nil
+  :custom
+  (go-ts-mode-indent-offset 4))
 
 (use-package js2-mode
   :mode ("\\.js\\'" . js2-mode)

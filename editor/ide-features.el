@@ -4,21 +4,21 @@
   :defer 3.0
   :commands (eglot-shutdown)
   :hook
-  ((go-mode
-    java-mode java-ts-mode
-    c++-mode c++-ts-mode
-    elixir-mode elixir-ts-mode
-    typescript-mode typescript-ts-mode
-    nix-mode
-    tsx-ts-mode
-    js2-mode
-    python-base-mode
-    php-mode
-    rust-mode rust-ts-mode
-    sh-base-mode
-    scala-mode
-    svelte-mode
-    vue-mode) . eglot-ensure)
+  ((go-mode go-ts-mode
+            java-mode java-ts-mode
+            c++-mode c++-ts-mode
+            elixir-mode elixir-ts-mode
+            typescript-mode typescript-ts-mode
+            nix-mode
+            tsx-ts-mode
+            js2-mode
+            python-base-mode
+            php-mode
+            rust-mode rust-ts-mode
+            sh-base-mode
+            scala-mode
+            svelte-mode
+            vue-mode) . eglot-ensure)
   :custom
   (eglot-sync-connect nil)
   (eglot-report-progress nil)

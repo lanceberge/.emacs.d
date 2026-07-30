@@ -1,7 +1,9 @@
 ;;; -*- lexical-binding: t -*-
 (use-package apheleia ;; format on save
+  :config
+  (setf (alist-get 'go-ts-mode apheleia-mode-alist) 'goimports)
   :hook
-  ((emacs-lisp-mode bash-ts-mode elixir-ts-mode) . apheleia-mode))
+  ((emacs-lisp-mode bash-ts-mode elixir-ts-mode go-ts-mode) . apheleia-mode))
 
 (use-package embark
   :custom
