@@ -12,6 +12,9 @@
 (defvar +ghostel-llm-command "codex")
 (defvar +ghostel-llm-buffer-base-name "Codex")
 
+(defvar-local +ghostel-llm-buffer-p nil
+  "Non-nil when the current Ghostel buffer hosts an LLM session.")
+
 ;;;###autoload
 (defun +ghostel-auto-semi-char-mode (buffer)
   "Enter semi-char mode in BUFFER when a shell command starts."
@@ -51,6 +54,8 @@ With a non-numeric prefix ARG, create the next available buffer."
           (rename-buffer name)
           (ghostel-send-string (format "%s\n" +ghostel-llm-command))
           (setq-local +ghostel-command-running t))))
+    (with-current-buffer buffer
+      (setq-local +ghostel-llm-buffer-p t))
     buffer))
 
 ;;;###autoload
@@ -167,7 +172,8 @@ takes effect for the freshly created terminal."
 Intended for `+insert-mode-hook', so that entering insert mode in
 line mode drops into semi-char mode when the shell is busy."
   (when (and +insert-mode
-             (eq ghostel--input-mode 'line)
+             (or (eq ghostel--input-mode 'copy)
+                 (eq ghostel--input-mode 'line))
              +ghostel-command-running)
     (ghostel-semi-char-mode)))
 

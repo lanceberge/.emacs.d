@@ -93,10 +93,22 @@
         ("t" . #'ghostel-project)
         ("T" . #'ghostel-project-list-buffers)))
 
+(use-package ghostel-repeat
+  :ensure nil
+  :no-require t
+  :after (key-chord ghostel)
+  :demand t
+  :bind
+  (:repeat-map +ghostel-repeat-map
+               ("<tab>" . #'+ghostel-line-mode-normal)
+               :exit
+               ("c" . #'ghostel-copy-mode))
+  :config
+  (key-chord-define ghostel-semi-char-mode-map "jk" #'+ghostel-line-mode-normal))
+
 (use-package ghostel-extras
   :ensure (:type file :main "~/.emacs.d/lisp/ghostel-extras.el" :files ("ghostel-extras.el"))
   :unless IS-WORK2
-  :after key-chord
   :hook
   (ghostel-mode . +ghostel-override-insert-mode-key-chords)
   (ghostel-mode . +ghostel-tramp-initial-input-mode)
@@ -119,7 +131,6 @@
   (setq +ghostel-llm-command (if IS-WORK "claude" "codexp"))
   (setq +ghostel-llm-buffer-base-name (if IS-WORK "Claude" "Codex"))
   (+modal-create-insert-function ghostel-semi-char-mode)
-  (key-chord-define ghostel-semi-char-mode-map "jk" #'+ghostel-line-mode-normal)
 
   ;; better auto line -> semi char switching
   (add-hook 'ghostel-command-start-functions #'+ghostel-auto-semi-char-mode)
