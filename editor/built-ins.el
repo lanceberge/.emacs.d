@@ -288,14 +288,88 @@
        (? (* blank) (or "bit" "B" "KB" "MB" "GB"
                         "Ki" "Mi" "Gi" "CPU" "mCPU" "m")))))
 
+;;;###autoload
+(defun +ibuffer-group-ai-buffers-by-project ()
+  "Group all AI buffers by project in the current Ibuffer buffer."
+  (interactive)
+  (require 'ibuf-ext)
+  (setq ibuffer-filter-groups (+ibuffer-ai-filter-groups))
+  (ibuffer-update nil t))
+
+;;;###autoload
+(defun +ibuffer-ai-filter-groups ()
+  "Return one Ibuffer filter group per project containing AI buffers."
+  (let (other-buffer-p roots)
+    (dolist (buffer (buffer-list))
+      (when (+ibuffer-ai-buffer-p buffer)
+        (if-let* ((root (+ibuffer-ai-buffer-project-root buffer)))
+            (push root roots)
+          (setq other-buffer-p t))))
+    (setq roots (sort (delete-dups roots) #'string<))
+    (append
+     (mapcar
+      (lambda (root)
+        (list (+ibuffer-ai-project-label root)
+              `(predicate
+                . (equal (+ibuffer-ai-buffer-project-root (current-buffer))
+                         ,root))))
+      roots)
+     (when other-buffer-p
+       '(("AI · Other"
+          (predicate
+           . (and (+ibuffer-ai-buffer-p (current-buffer))
+                  (null (+ibuffer-ai-buffer-project-root
+                         (current-buffer)))))))))))
+
+;;;###autoload
+(defun +ibuffer-ai-buffer-p (&optional buffer)
+  "Return non-nil when BUFFER is a Ghostel LLM, gptel, or opencode buffer."
+  (with-current-buffer (or buffer (current-buffer))
+    (or (bound-and-true-p +ghostel-llm-buffer-p)
+        (and (derived-mode-p 'ghostel-mode)
+             (boundp 'ghostel--buffer-identity)
+             (stringp ghostel--buffer-identity)
+             (string-prefix-p "*ghostel-llm: "
+                              ghostel--buffer-identity))
+        (bound-and-true-p gptel-mode)
+        (memq major-mode
+              '(opencode-session-mode
+                opencode-session-control-mode)))))
+
+;;;###autoload
+(defun +ibuffer-ai-buffer-project-root (&optional buffer)
+  "Return the project root associated with AI BUFFER, or nil."
+  (with-current-buffer (or buffer (current-buffer))
+    (when (+ibuffer-ai-buffer-p)
+      (when-let* ((project (project-current nil default-directory)))
+        (file-name-as-directory
+         (expand-file-name (project-root project)))))))
+
+;;;###autoload
+(defun +ibuffer-ai-project-label (root)
+  "Return an Ibuffer AI group label for project ROOT."
+  (let ((project (project-current nil root)))
+    (format "AI · %s — %s"
+            (if project
+                (project-name project)
+              (file-name-nondirectory (directory-file-name root)))
+            (abbreviate-file-name (directory-file-name root)))))
+
 (use-package ibuffer
   :ensure nil
   :after modal
   :init
   (+modal-define-intersection-mode ibuffer-mode +motion-mode)
+  :hook
+  (ibuffer-mode . +ibuffer-group-ai-buffers-by-project)
   :bind
+  (:map ctl-x-map
+        ("C-b" . #'ibuffer))
   (:map +modal-ibuffer-motion-mode-map
-        ("x" . #'ibuffer-do-kill-on-deletion-marks)))
+        ("x" . #'ibuffer-do-kill-on-deletion-marks))
+  (:map ibuffer-mode-map
+        ("C-RET" . #'tabspaces-ibuffer-switch-buffer-and-tab)
+        ([remap ibuffer-update] . #'+ibuffer-group-ai-buffers-by-project)))
 
 (use-package subword-mode ;; enable `word' based commands to tread camel case text as separate words
   :ensure nil
