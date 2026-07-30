@@ -31,9 +31,8 @@
 ;;;###autoload
 (defun +org-find-file ()
   (interactive)
-  (let* ((org-dir (expand-file-name +org-directory))
-         (pr (cons 'transient org-dir)))
-    (project-find-file-in nil (list org-dir) pr)))
+  (+project-tab-switch-to-project +org-directory t)
+  (project-find-file))
 
 ;;;###autoload
 (defun +org-agenda-save-all-org-buffers ()

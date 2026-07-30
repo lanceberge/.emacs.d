@@ -160,3 +160,5 @@
   :mode ("\\.py\\'" . python-mode)
   :interpreter
   ("python" . python-mode))
+
+(use-package protobuf-mode)

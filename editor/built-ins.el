@@ -291,7 +291,10 @@
 (use-package subword-mode ;; enable `word' based commands to tread camel case text as separate words
   :ensure nil
   :hook
-  ((java-mode java-ts-mode yaml-mode yaml-ts-mode yaml-gotmpl-mode) . subword-mode))
+  ((java-mode java-ts-mode
+              go-mode go-ts-mode
+              yaml-mode yaml-ts-mode yaml-gotmpl-mode)
+   . subword-mode))
 
 (use-package view-mode
   :ensure nil
