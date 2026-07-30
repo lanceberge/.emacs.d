@@ -1,11 +1,4 @@
 ;;; -*- lexical-binding: t -*-
-(use-package consult-vc
-  :ensure (:type file :main "~/.emacs.d/lisp/consult-vc.el" :files ("consult-vc.el"))
-  :bind
-  (:map search-map
-        ("vf" . #'+vc-modified-files)
-        ("vh" . #'+vc-modified-hunks)))
-
 (use-package magit
   :after modal
   :defer 8.0

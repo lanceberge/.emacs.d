@@ -10,7 +10,7 @@
   (:map +normal-mode-map
         ("ji" . #'+jj-init)
         ("jc" . #'+jj-git-clone)
-        ("jn" . #'+jj-new)
+        ;; ("jn" . #'+jj-new)
         ("jm" . #'+jj-describe)
         ("js" . #'+jj-squash)))
 
@@ -35,7 +35,7 @@
   :bind
   (:map +normal-mode-map
         ("j SPC c" . #'majutsu-commit)
-        ("jN" . #'majutsu-new-dwim)
+        ;; ("jN" . #'majutsu-new-dwim)
         ;; ("jr" . #'majutsu-rebase)
         ;; ("jd" . #'majutsu-diff-dwim)
         ("jE" . #'+ediff-conflicts)
@@ -48,7 +48,7 @@
         ("jbt" . #'majutsu-bookmark-track)
         ;; ("jba" . #'majutsu-bookmark-advance)
         ("jbn" . #'majutsu-bookmark-create)
-        ("jw" . #'majutsu-workspace)
+        ;; ("jw" . #'majutsu-workspace)
         ("jh" . #'majutsu-list-commits-for-file-dwim)
         ("j SPC h" . #'majutsu-list-commits-for-file)) ;; TODO should be an embark file command
   (:map majutsu-log-mode-map
@@ -60,21 +60,31 @@
 ;; in development. This config unloads and reloads the whole package when evaluated
 (use-package consult-jj
   :after consult
-  :unless IS-WORK
   :load-path ("~/code/consult-jj"
               "~/code/consult-jj/extensions")
+  :ensure `(,@(when IS-WORK
+                '(:host github
+                        :repo "~/jj-workspaces/consult-jj/marginalia-annotations/"
+                        :files "extensions/*.el")))
   :demand t
   :preface
-  (dolist (feature '(consult-jj
-                     consult-jj-jj
-                     consult-jj-diff
-                     consult-jj-hunk
-                     consult-jj-commit))
-    (when (featurep feature)
-      (unload-feature feature t)))
+  (unless IS-WORK
+    (dolist (feature '(consult-jj
+                       consult-jj-jj
+                       consult-jj-diff
+                       consult-jj-hunk
+                       consult-jj-marginalia
+                       consult-jj-embark
+                       consult-jj-diff-hl
+                       consult-jj-tag
+                       consult-jj-workspace
+                       consult-jj-commit))
+      (when (featurep feature)
+        (unload-feature feature t))))
   :bind
   (:map +normal-mode-map
         ("jl" . #'consult-jj-log)
+        ("jt" . #'consult-jj-tag)
         ("jo" . #'consult-jj-op-log)
         ("ju" . #'consult-jj-undo)
         ("jn" . #'consult-jj-new-here)
@@ -84,6 +94,9 @@
         ("jbs" . #'consult-jj-bookmark-set)
         ("jbc" . #'consult-jj-bookmark-create)
         ("jbl" . #'consult-jj-bookmark)
+        ("jwl" . #'consult-jj-workspace-list)
+        ("jwa" . #'consult-jj-workspace-add)
+        ("jwu" . #'consult-jj-workspace-update-stale)
         ("jba" . #'consult-jj-bookmark-advance)
         ("jrb" . #'consult-jj-rebase-before)
         ("jra" . #'consult-jj-rebase-after)
@@ -91,51 +104,22 @@
   (:map ctl-x-map
         ("v=" . #'consult-jj-modified-hunks)
         ("vf" . #'consult-jj-modified-files)
-        ("vl" . #'consult-jj-log)))
-
-(use-package consult-jj-embark
-  :load-path ("~/code/consult-jj/extensions")
-  :unless IS-WORK
-  :after consult-jj
-  :demand t
-  :bind
+        ("vl" . #'consult-jj-log))
+  (:map consult-jj-commit-map
+        ("a" . #'consult-jj-commit-squash)
+        ("m" . #'consult-jj-commit-describe)
+        ("A" . #'consult-jj-commit-abandon))
   (:map consult-jj-modified-file-map
         ("c" . #'consult-jj-split)
         ("a" . #'consult-jj-squash))
   :config
-  ;; (when (featurep 'consult-jj-embark)
-  ;;   (consult-jj-embark-mode -1)
-  ;;   (unload-feature 'consult-jj-embark t))
+  (require 'consult-jj-embark)
   (consult-jj-embark-mode 1)
   (require 'consult-jj-diff-hl)
-  (consult-jj-diff-hl-mode 1))
-
-(when IS-WORK
-  (use-package consult-jj
-    :ensure (:host github :repo "lanceberge/consult-gh" :files "extensions/*.el")
-    :bind
-    (:map +normal-mode-map
-          ("jl" . #'consult-jj-log)
-          ("jo" . #'consult-jj-op-log)
-          ("ju" . #'consult-jj-undo)
-          ("jn" . #'consult-jj-new-here)
-          ("jd" . #'consult-jj-modified-files)
-          ("jbs" . #'consult-jj-bookmark-set)
-          ("jbc" . #'consult-jj-bookmark-create)
-          ("jbl" . #'consult-jj-bookmark)
-          ("jba" . #'consult-jj-bookmark-advance)
-          ("jf" . #'consult-jj-git-fetch)
-          ("jro" . #'consult-jj-rebase-onto)
-          ("jra" . #'consult-jj-rebase-after)
-          ("jp" . #'consult-jj-git-push))
-    (:map consult-jj-modified-file-map
-          ("c" . #'consult-jj-split)
-          ("a" . #'consult-jj-squash))
-    :config
-    (require 'consult-jj-embark)
-    (consult-jj-embark-mode 1)
-    (require 'consult-jj-diff-hl)
-    (consult-jj-diff-hl-mode 1)))
+  (consult-jj-diff-hl-mode 1)
+  (require 'consult-jj-marginalia)
+  (consult-jj-marginalia-mode 1)
+  (consult-jj-commit-two-line-mode 1))
 
 (use-package vc-jj
   :after project

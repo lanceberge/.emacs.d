@@ -185,6 +185,10 @@
   (vertico-multiform-commands
    '((consult-line buffer (:not posframe))
      (consult-ripgrep buffer (:not posframe))
+     (consult-jj-log buffer (:not posframe indexed))
+     (consult-jj-rebase buffer (:not posframe indexed))
+     (consult-jj-squash buffer (:not posframe indexed))
+     (consult-jj-commit-squash buffer (:not posframe indexed))
      (consult-git-grep buffer (:not posframe))
      (consult-grep buffer (:not posframe))))
   (vertico-posframe-fallback-mode #'vertico-buffer-mode)
