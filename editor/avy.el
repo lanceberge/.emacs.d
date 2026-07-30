@@ -8,10 +8,10 @@
   :bind
   (:map override-global-map
         ("C-;" . #'avy-goto-char-2)
-        ("C-'" . #'avy-goto-subword-1))
+        ("C-'" . #'avy-goto-word-or-subword-1))
   (:map +normal-mode-map
         (";" . #'avy-goto-char-2)
-        ("'" . #'avy-goto-subword-1))
+        ("'" . #'avy-goto-word-or-subword-1))
   :config
   (setq avy-orders-alist '((avy-goto-char . avy-order-closest)
                            (avy-goto-char-2-below . avy-order-closest)
@@ -49,8 +49,24 @@
   (:map helpful-mode-map
         ("M-i" . #'+ace-link)))
 
+(use-package ace-link-eww
+  :ensure nil
+  :no-require t
+  :bind
+  (:map eww-mode-map
+        ("M-i" . #'+ace-link-eww))
+  :config
+  (require 'eww)
+  (require 'ace-link))
+
 ;;;###autoload
 (defun +ace-link ()
   (interactive)
   (let ((avy-single-candidate-jump t))
     (call-interactively #'ace-link)))
+
+;;;###autoload
+(defun +ace-link-eww ()
+  (interactive)
+  (let ((avy-single-candidate-jump t))
+    (call-interactively #'ace-link-eww)))

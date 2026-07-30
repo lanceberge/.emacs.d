@@ -14,7 +14,9 @@
   (:map minibuffer-mode-map
         ([remap minibuffer-keyboard-quit] . #'abort-minibuffers)
         ([remap +keyboard-quit-normal] . #'abort-minibuffers)
-        ("C-g" . #'abort-minibuffers)))
+        ("C-g" . #'abort-minibuffers))
+  :config
+  (minibuffer-depth-indicate-mode))
 
 (use-package consult
   :defer 1.5

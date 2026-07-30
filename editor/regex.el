@@ -15,6 +15,24 @@
         (goto-char (point-min))
         (call-interactively #'vr/replace)))))
 
+;;;###autoload
+(defun +project-replace-regexp-as-diff (regexp to-string &optional delimited)
+  "Show replacements of REGEXP with TO-STRING across the project as a diff.
+DELIMITED has the same meaning as in `replace-regexp'."
+  (interactive
+   (let ((common
+          (query-replace-read-args
+           (concat "Replace"
+                   (if current-prefix-arg " word" "")
+                   " regexp as diff in project")
+           t t)))
+     (list (nth 0 common) (nth 1 common) (nth 2 common))))
+  (require 'misearch)
+  (require 'project)
+  (multi-file-replace-regexp-as-diff
+   (project-files (project-current t))
+   regexp to-string delimited))
+
 (use-package visual-regexp-steroids
   :after visual-regexp
   :custom

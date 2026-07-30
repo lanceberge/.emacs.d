@@ -6,7 +6,9 @@
   :custom
   (idle-update-delay 1.0) ; slow down how often emacs updates its ui
   (kill-do-not-save-duplicates t) ; no duplicates in kill ring
-  (indent-tabs-mode nil))
+  (indent-tabs-mode nil)
+  :config
+  (setq next-error-repeat-map nil))
 
 ;;;###autoload
 (defun +scratch-buffer ()
@@ -17,6 +19,19 @@
 (use-package advice
   :ensure nil
   :custom (ad-redefinition-action 'accept)) ; disable warnings from legacy advice system
+
+(use-package hideshow
+  :ensure nil
+  :hook
+  ((prog-mode text-mode conf-mode) . #'hs-minor-mode)
+  :bind
+  (:repeat-map +hs-repeat-map
+               ("<tab>" . #'hs-cycle))
+  (:map +leader-map
+        ("TAB" . #'hs-prefix-map))
+  (:map hs-prefix-map
+        ("m" . #'hs-hide-all)
+        ("r" . #'hs-show-all)))
 
 (use-package files
   :ensure nil
@@ -282,3 +297,8 @@
         ("w" . #'kill-rectangle)
         ("i" . #'string-insert-rectangle)
         ([remap +change] . #'replace-rectangle)))
+
+(use-package eww
+  :bind
+  (:map eww-mode-map
+        ("v" . #'scroll-down-command)))

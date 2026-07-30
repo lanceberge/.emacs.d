@@ -2,7 +2,7 @@
 
 (use-package elfeed
   :hook
-  (elfeed-search-mode . scroll-lock-mode)
+  ;; (elfeed-search-mode . scroll-lock-mode)
   (elfeed-show-mode . scroll-lock-mode)
   :custom
   (elfeed-db-directory (expand-file-name "var/elfeed/db/" user-emacs-directory))
@@ -43,6 +43,7 @@
 
      ("https://feeds.aps.org/rss/recent/physics.xml" physics official)
      ("https://www.miniphysics.com/rss-blog.xml" physics learning)
+     ("https://ciechanow.ski/atom.xml" learning)
 
      ("https://www.johndcook.com/blog/feed/" math)
      ("https://www.math3ma.com/blog/rss.xml" math learning)
@@ -82,8 +83,9 @@
   (:map elfeed-show-mode-map
         ("M-i" . #'+ace-link)
         ("n" . #'next-line)
-        ("p" . #'next-line)
+        ("p" . #'previous-line)
         ("N" . #'elfeed-show-next)
+        ("M-i" . #'+ace-link-eww)
         ("P" . #'elfeed-show-prev))
   (:map elfeed-search-mode-map
         ("l" . #'recenter-top-bottom))

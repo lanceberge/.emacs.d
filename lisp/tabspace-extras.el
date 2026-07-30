@@ -111,13 +111,14 @@ When called interactively, use the current buffer."
   (with-current-buffer buffer
     (or buffer-file-name
         (derived-mode-p
-         'eshell-mode
-         'eat-mode
-         'gptel-mode
          'agent-shell-mode
-         'ghostel-mode
+         'eat-mode
          'eca-chat-mode
          'elfeed-search-mode
+         'eshell-mode
+         'ghostel-mode
+         'gptel-mode
+         'ibuffer-mode
          'opencode-session-mode))))
 
 ;;;###autoload

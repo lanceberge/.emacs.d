@@ -171,7 +171,7 @@ MATCH is as in `org-map-entries'."
       (user-error "No command is bound to %s"
                   key-sequence))
      ((commandp sym t)
-      (consult-ripgrep "~/.emacs.d" (format "defun %s" (symbol-name sym))))
+      (find-function sym))
      (t
       (user-error "%s is bound to %s which is not a command"
                   (key-description key-sequence)

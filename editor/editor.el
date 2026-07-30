@@ -95,7 +95,8 @@
   ;; version of keycast--update that accepts (and ignores) parameters
   (defun force-keycast-update (&rest _) (keycast--update))
 
-  (advice-add 'embark-act :before #'force-keycast-update)
+  (with-eval-after-load 'keycast
+    (advice-add 'embark-act :before #'force-keycast-update))
 
   (keymap-set embark-buffer-map "p" project-prefix-map)
   (keymap-set embark-file-map "p" project-prefix-map)
@@ -411,6 +412,8 @@
         ("g" . #'keyboard-quit)))
 
 (use-package pcre2el
+  :hook
+  (emacs-startup . pcre-mode)
   :bind
   (:prefix-map
    pcre2el-map
