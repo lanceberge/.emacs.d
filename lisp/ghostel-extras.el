@@ -177,4 +177,16 @@ line mode drops into semi-char mode when the shell is busy."
              +ghostel-command-running)
     (ghostel-semi-char-mode)))
 
+;;;###autoload
+(defun +ghostel-goto-last-line ()
+  "Go to the end of the buffer unless point is on its last line."
+  (interactive)
+  (unless (= (pos-eol) (point-max))
+    (goto-char (point-max))))
+
+;;;###autoload
+(defun +ghostel-new ()
+  (interactive)
+  (ghostel '(4)))
+
 (provide 'ghostel-extras)

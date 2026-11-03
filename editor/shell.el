@@ -27,6 +27,7 @@
     (call-interactively #'find-file)))
 
 (use-package eat
+  :disabled t
   :custom
   (eat-enable-auto-line-mode t)
   (eat-enable-shell-prompt-annotation t)
@@ -81,14 +82,13 @@
 (use-package ghostel
   :unless IS-WORK2
   :custom
+  (ghostel-buffer-name-function #'ghostel-buffer-name-by-directory)
   (ghostel-ignore-cursor-change t)
   (ghostel-initial-input-mode 'line)
   (ghostel-line-mode-bash-completion-prespawn t)
   (ghostel-notification-function nil)
   (ghostel-query-before-killing 'auto)
   :bind
-  (:map +leader-map
-        ("nt" . #'ghostel))
   (:map project-prefix-map
         ("t" . #'ghostel-project)
         ("T" . #'ghostel-project-list-buffers)))
@@ -124,9 +124,12 @@
         ("M-r" . #'+ghostel-consult-history))
   (:map +llm-map
         ("i" . #'+ghostel-llm))
+  (:map +leader-map
+        ("nt" . #'+ghostel-new))
   :config
   (add-hook 'ghostel-mode-hook
             (lambda ()
+              (add-hook '+insert-mode-hook '+ghostel-goto-last-line nil t)
               (add-hook '+insert-mode-hook '+ghostel-insert-mode-reevaluate nil t)))
   (setq +ghostel-llm-command (if IS-WORK "claude" "codexp"))
   (setq +ghostel-llm-buffer-base-name (if IS-WORK "Claude" "Codex"))

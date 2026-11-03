@@ -22,6 +22,7 @@
      (embark-dired-jump . t)
      (consult-ripgrep . t)
      (embark-copy-as-kill . t)
+     (+ghostel-new . t)
      (t . nil)))
   :init
   (defvar-keymap +embark-priority-map
@@ -53,12 +54,12 @@
         ("o" . #'+window-ace-switch-to-buffer)
         ("N" . #'+window-switch-to-buffer-new-action)
         ("k" . #'+tabspace-kill-or-remove-buffer)
-        ("t" . #'eat))
+        ("t" . #'+ghostel-new))
   (:map embark-file-map
         ("e" . #'eshell)
         ("o" . #'+window-ace-find-file)
         ("N" . #'+window-find-file-new-largest-action)
-        ("t" . #'eat))
+        ("t" . #'+ghostel-new))
   (:map embark-collect-mode-map
         ("F" . #'consult-focus-lines))
   (:map embark-identifier-map
@@ -75,6 +76,8 @@
                '(eat embark--cd))
   (add-to-list 'embark-around-action-hooks
                '(eat-project embark--cd))
+  (add-to-list 'embark-around-action-hooks
+               '(+ghostel-new embark--cd))
   (add-to-list 'embark-target-injection-hooks
                '(pipe-region embark--ignore-target))
 
