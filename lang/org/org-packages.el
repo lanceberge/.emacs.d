@@ -15,6 +15,11 @@
   (org-agenda-todo-ignore-scheduled 'future)
   (org-agenda-inhibit-startup t)
   (org-agenda-dim-blocked-tasks 'invisible)
+  (org-agenda-sorting-strategy
+   '((agenda habit-down time-up urgency-down category-keep)
+     (todo priority-down urgency-down category-keep)
+     (tags urgency-down category-keep)
+     (search category-keep)))
   (org-enforce-todo-dependencies t)
   :bind
   (:map org-agenda-mode-map
@@ -166,7 +171,7 @@
             :order 5)
      (:name "Low Priority"
             :priority "C"
-            :order 90)
+            :order 100)
      (:auto-category t
                      :order 99)))
   :config

@@ -196,4 +196,18 @@ the region starts at `:line' and ends after `:mark'."
           nil)
       (y-or-n-p (format "[%d/%d] %s  Next? " index total description)))))
 
+;;;###autoload
+(defun +agent-lisp-expand-fisher-stock-template (file-name)
+  "Expand the Fisher stock analysis snippet in Org FILE-NAME and save it."
+  (let ((file (expand-file-name file-name)))
+    (make-directory (file-name-directory file) t)
+    (with-current-buffer (find-file-noselect file)
+      (unless (derived-mode-p 'org-mode)
+        (user-error "Stock analysis template requires an Org file: %s" file))
+      (when (save-excursion
+              (goto-char (point-min))
+              (re-search-forward "^\\* Fisher's 15 points$" nil t))
+        (user-error "Fisher stock analysis template already exists in %s" file))
+      (+yas-expand-snippet "Fisher 15 stock points"))))
+
 (provide 'agent-lisp)

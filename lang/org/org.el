@@ -47,10 +47,12 @@
 (use-package org-extras
   :ensure (:type file :main "~/.emacs.d/lisp/org-extras.el" :files ("org-extras.el"))
   :after org
+  :hook (org-mode . +org-enable-format-on-save)
   :custom
   (+org-directory "~/org/")
   :bind
   (:map org-mode-map
+        ([remap apheleia-format-buffer] . #'+format-org)
         ([remap next-line] . #'+org-down)
         ([remap previous-line] . #'+org-up))
   (:map +leader-map
