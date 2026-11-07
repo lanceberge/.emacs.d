@@ -1,6 +1,7 @@
 ;;; agent-shell-extras.el --- Extensions for agent-shell -*- lexical-binding: t -*-
 
 (require 'agent-shell)
+(require 'agent-lisp)
 (require 'cl-lib)
 (require 'seq)
 (require 'subr-x)
@@ -121,52 +122,11 @@ an existing shell."
 ;;;###autoload
 (defun +agent-shell--rename-from-first-prompt-async (prompt shell-buffer)
   "Use `claude -p' to title SHELL-BUFFER from PROMPT asynchronously."
-  (when (executable-find "claude")
-    (let* ((output-buffer (generate-new-buffer " *agent-shell-title*"))
-           (instruction
-            (concat
-             "Create a 1-4 word concise Title Case summary of this prompt to represent the title of this conversation. "
-             "Return only the title, with no quotes or punctuation.\n\n"
-             prompt))
-           (process-environment
-            (append (list (concat "ANTHROPIC_API_KEY=" (gptel-api-key))
-                          "TERM=dumb"
-                          "NO_COLOR=1")
-                    process-environment)))
-      (make-process
-       :name "agent-shell-title"
-       :buffer output-buffer
-       :command (list shell-file-name "-lc"
-                      (format "claude -p %s < /dev/null"
-                              (shell-quote-argument instruction)))
-       :connection-type 'pipe
-       :noquery t
-       :sentinel
-       (lambda (process _event)
-         (when (memq (process-status process) '(exit signal))
-           (unwind-protect
-               (let* ((status (process-exit-status process))
-                      (output (with-current-buffer (process-buffer process)
-                                (buffer-string)))
-                      (title (+agent-shell--clean-first-prompt-title output)))
-                 (cond
-                  ((not (= status 0))
-                   (message "agent-shell title failed, using fallback: %s"
-                            (string-trim output))
-                   (when (buffer-live-p shell-buffer)
-                     (+agent-shell--rename-shell-buffer
-                      (+agent-shell--fallback-first-prompt-title prompt)
-                      shell-buffer)))
-                  ((string-empty-p title)
-                   (message "agent-shell title failed, using fallback: empty title")
-                   (when (buffer-live-p shell-buffer)
-                     (+agent-shell--rename-shell-buffer
-                      (+agent-shell--fallback-first-prompt-title prompt)
-                      shell-buffer)))
-                  ((buffer-live-p shell-buffer)
-                   (+agent-shell--rename-shell-buffer title shell-buffer))))
-             (when (buffer-live-p (process-buffer process))
-               (kill-buffer (process-buffer process))))))))))
+  (+agent-lisp-title-from-prompt-async
+   prompt
+   (lambda (title)
+     (when (buffer-live-p shell-buffer)
+       (+agent-shell--rename-shell-buffer title shell-buffer)))))
 
 ;;;###autoload
 (defun +agent-shell--rename-shell-buffer (title shell-buffer)
@@ -184,20 +144,6 @@ an existing shell."
          (generate-new-buffer-name
           (concat (buffer-name shell-buffer) agent-shell-viewport--suffix))
          t)))))
-
-;;;###autoload
-(defun +agent-shell--clean-first-prompt-title (title)
-  "Clean TITLE returned by `claude -p'."
-  (string-trim (substring-no-properties title)))
-
-;;;###autoload
-(defun +agent-shell--fallback-first-prompt-title (prompt)
-  "Return a local fallback title for PROMPT."
-  (let* ((words (split-string prompt "[^[:alnum:]]+" t))
-         (words (seq-take words 4)))
-    (if words
-        (string-join (mapcar #'capitalize words) " ")
-      "Untitled Prompt")))
 
 ;;;###autoload
 (defun +agent-shell--buffer-prefix (buffer-name)

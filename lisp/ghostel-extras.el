@@ -1,8 +1,10 @@
 ;;; -*- lexical-binding: t -*-
 (require 'ghostel)
+(require 'agent-lisp)
 (require 'modal)
 (require 'consult)
 (require 'key-chord)
+(require 'seq)
 
 (defvar-local +ghostel-completion-handoff-p nil
   "Non-nil while Bash owns input for completion in semi-char mode.")
@@ -14,6 +16,21 @@
 
 (defvar-local +ghostel-llm-buffer-p nil
   "Non-nil when the current Ghostel buffer hosts an LLM session.")
+
+(defvar-local +ghostel-llm--first-prompt-seen nil
+  "Non-nil after the first LLM prompt is submitted in this buffer.")
+
+(defvar-local +ghostel-llm--name-prefix nil
+  "Buffer name prefix to retain when adding a prompt title.")
+
+(defvar-local +ghostel-llm--root nil
+  "Project root used to select this LLM buffer.")
+
+(defvar-local +ghostel-llm--slot nil
+  "Number used to select this LLM buffer within its project.")
+
+(defvar-local +ghostel-llm--provider nil
+  "Provider name used to select this LLM buffer.")
 
 ;;;###autoload
 (defun +ghostel-auto-semi-char-mode (buffer)
@@ -36,27 +53,80 @@
 
 ;;;###autoload
 (defun +ghostel-llm (&optional arg)
-  "Start the LLM command in a project-specific Ghostel buffer.
-With numeric prefix ARG, use the correspondingly numbered buffer.
-With a non-numeric prefix ARG, create the next available buffer."
+  "Switch to a numbered LLM buffer for the current project.
+With numeric prefix ARG, use slot ARG.  With a non-numeric prefix,
+create a buffer in the lowest free slot.  Without a prefix, use slot 1."
   (interactive "P")
   (let* ((root (project-root (project-current t)))
          (default-directory root)
-         (name (+ghostel-llm--buffer-name root arg))
-         (buffer (get-buffer name))
+         (slot (let ((slot (cond
+                            ((null arg) 1)
+                            ((numberp arg) arg)
+                            (t (+ghostel-llm--next-available-slot root)))))
+                 (unless (and (integerp slot) (> slot 0))
+                   (user-error "LLM buffer number must be a positive integer"))
+                 slot))
+         (name-prefix (format "%s <%d>"
+                              (+ghostel-llm--buffer-name root) slot))
+         (buffer (+ghostel-llm--buffer-for-slot root slot))
          (ghostel-initial-input-mode nil))
     (if buffer
         (let ((switch-to-buffer-obey-display-actions nil))
           (switch-to-buffer buffer nil t))
-      (let ((ghostel-buffer-name (format "*ghostel-llm: %s*" name)))
+      (let ((ghostel-buffer-name (format "*ghostel-llm: %s*" name-prefix)))
         (setq buffer (ghostel '(4)))
         (with-current-buffer buffer
-          (rename-buffer name)
-          (ghostel-send-string (format "%s\n" +ghostel-llm-command))
+          (rename-buffer name-prefix t)
+          (setq-local +ghostel-llm-buffer-p t
+                      +ghostel-llm--first-prompt-seen nil
+                      +ghostel-llm--name-prefix (buffer-name)
+                      +ghostel-llm--root root
+                      +ghostel-llm--slot slot
+                      +ghostel-llm--provider +ghostel-llm-buffer-base-name)
+          (ghostel-send-string
+           (format "GHOSTEL_LLM_BUFFER_NAME=%s %s\n"
+                   (shell-quote-argument ghostel--buffer-identity)
+                   +ghostel-llm-command))
           (setq-local +ghostel-command-running t))))
-    (with-current-buffer buffer
-      (setq-local +ghostel-llm-buffer-p t))
     buffer))
+
+;;;###autoload
+(defun +ghostel-llm--first-prompt (buffer prompt)
+  "Title BUFFER from its first submitted PROMPT."
+  (when (buffer-live-p buffer)
+    (with-current-buffer buffer
+      (unless +ghostel-llm--first-prompt-seen
+        (setq +ghostel-llm--first-prompt-seen t)
+        (let ((name-prefix +ghostel-llm--name-prefix))
+          (+agent-lisp-title-from-prompt-async
+           prompt
+           (lambda (title)
+             (when (buffer-live-p buffer)
+               (with-current-buffer buffer
+                 (rename-buffer
+                  (generate-new-buffer-name
+                   (format "%s %s" name-prefix title))))))))))))
+
+;;;###autoload
+(defun +ghostel-llm--buffer-for-slot (root slot)
+  "Return the current provider's LLM buffer in project ROOT and SLOT."
+  (seq-find
+   (lambda (buffer)
+     (with-current-buffer buffer
+       (and (bound-and-true-p +ghostel-llm-buffer-p)
+            (equal +ghostel-llm--root root)
+            (equal +ghostel-llm--slot slot)
+            (equal +ghostel-llm--provider
+                   +ghostel-llm-buffer-base-name))))
+   (buffer-list)))
+
+;;;###autoload
+(defun +ghostel-llm--next-available-slot (root)
+  "Return the lowest unused LLM buffer slot in project ROOT."
+  (let ((slot 1))
+    (while (+ghostel-llm--buffer-for-slot root slot)
+      (setq slot (1+ slot)))
+    slot))
 
 ;;;###autoload
 (defun +ghostel-llm--buffer-name (root &optional arg)

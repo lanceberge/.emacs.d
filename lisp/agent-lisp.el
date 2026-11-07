@@ -2,6 +2,9 @@
 (require 'cl-lib)
 (require 'helpful)
 (require 'flymake)
+(require 'seq)
+(require 'subr-x)
+(require 'emacs-lisp-extras)
 
 (defvar +agent-lisp-max-lines 2000
   "Maximum number of lines returned by agent Lisp output helpers.")
@@ -18,6 +21,77 @@
     (when (fboundp 'elpaca-wait)
       (elpaca-wait))
     "ok"))
+
+;;;###autoload
+(defun +agent-lisp-ghostel-first-prompt (payload-file)
+  "Forward the first Ghostel prompt in PAYLOAD-FILE to its buffer.
+Called by `emacsclient' from the Codex and Claude prompt hooks."
+  (when-let* ((payload (with-temp-buffer
+                         (insert-file-contents payload-file)
+                         (json-parse-buffer :object-type 'alist)))
+              (name (alist-get 'ghostel_buffer_name payload))
+              (buffer (and (stringp name)
+                           (seq-find
+                            (lambda (candidate)
+                              (with-current-buffer candidate
+                                (and (bound-and-true-p +ghostel-llm-buffer-p)
+                                     (boundp 'ghostel--buffer-identity)
+                                     (equal ghostel--buffer-identity name))))
+                            (buffer-list))))
+              (prompt (alist-get 'prompt payload)))
+    (when (and (stringp prompt)
+               (not (string-empty-p (string-trim prompt))))
+      (+ghostel-llm--first-prompt buffer prompt)))
+  "ok")
+
+;;;###autoload
+(defun +agent-lisp-title-from-prompt-async (prompt callback)
+  "Generate a concise title from PROMPT, then call CALLBACK with it.
+Use a local title when `claude -p' is unavailable or fails."
+  (if (not (executable-find "claude"))
+      (funcall callback (+agent-lisp--fallback-prompt-title prompt))
+    (let* ((output-buffer (generate-new-buffer " *agent-prompt-title*"))
+           (instruction
+            (concat
+             "Create a 1-4 word concise Title Case summary of this prompt to represent the title of this conversation. "
+             "Return only the title, with no quotes or punctuation.\n\n"
+             prompt))
+           (process-environment
+            (append (list (concat "ANTHROPIC_API_KEY=" (gptel-api-key))
+                          "TERM=dumb"
+                          "NO_COLOR=1")
+                    process-environment)))
+      (make-process
+       :name "agent-prompt-title"
+       :buffer output-buffer
+       :command (list shell-file-name "-lc"
+                      (format "claude -p %s < /dev/null 2>/dev/null"
+                              (shell-quote-argument instruction)))
+       :connection-type 'pipe
+       :noquery t
+       :sentinel
+       (lambda (process _event)
+         (when (memq (process-status process) '(exit signal))
+           (unwind-protect
+               (let* ((status (process-exit-status process))
+                      (output (with-current-buffer (process-buffer process)
+                                (buffer-string)))
+                      (title (string-trim (substring-no-properties output))))
+                 (if (and (= status 0) (not (string-empty-p title)))
+                     (funcall callback title)
+                   (message "Agent title failed, using fallback: %s"
+                            (if (= status 0) "empty title" (string-trim output)))
+                   (funcall callback (+agent-lisp--fallback-prompt-title prompt))))
+             (when (buffer-live-p (process-buffer process))
+               (kill-buffer (process-buffer process))))))))))
+
+;;;###autoload
+(defun +agent-lisp--fallback-prompt-title (prompt)
+  "Return a local fallback title for PROMPT."
+  (let ((words (seq-take (split-string prompt "[^[:alnum:]]+" t) 4)))
+    (if words
+        (string-join (mapcar #'capitalize words) " ")
+      "Untitled Prompt")))
 
 ;;;###autoload
 (defun +agent-lisp-flymake-diagnostics (file-name)
