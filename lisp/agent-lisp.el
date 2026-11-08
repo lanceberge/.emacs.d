@@ -23,25 +23,29 @@
     "ok"))
 
 ;;;###autoload
-(defun +agent-lisp-ghostel-first-prompt (payload-file)
-  "Forward the first Ghostel prompt in PAYLOAD-FILE to its buffer.
-Called by `emacsclient' from the Codex and Claude prompt hooks."
-  (when-let* ((payload (with-temp-buffer
-                         (insert-file-contents payload-file)
-                         (json-parse-buffer :object-type 'alist)))
-              (name (alist-get 'ghostel_buffer_name payload))
-              (buffer (and (stringp name)
-                           (seq-find
-                            (lambda (candidate)
-                              (with-current-buffer candidate
-                                (and (bound-and-true-p +ghostel-llm-mode)
-                                     (boundp 'ghostel--buffer-identity)
-                                     (equal ghostel--buffer-identity name))))
-                            (buffer-list))))
-              (prompt (alist-get 'prompt payload)))
-    (when (and (stringp prompt)
-               (not (string-empty-p (string-trim prompt))))
-      (+ghostel-llm--first-prompt buffer prompt)))
+(defun +agent-lisp-ghostel-update (name-file status &optional prompt-file)
+  "Update the Ghostel LLM buffer named in NAME-FILE to STATUS.
+PROMPT-FILE contains the first prompt as plain text when supplied."
+  (when-let* ((name (with-temp-buffer
+                     (insert-file-contents name-file)
+                     (buffer-string)))
+              (buffer (seq-find
+                       (lambda (candidate)
+                         (with-current-buffer candidate
+                           (and (bound-and-true-p +ghostel-llm-mode)
+                                (boundp 'ghostel--buffer-identity)
+                                (equal ghostel--buffer-identity name))))
+                       (buffer-list))))
+    (pcase status
+      ("running"
+       (+ghostel-llm--set-status buffer "Running")
+       (when-let* ((prompt (and prompt-file
+                               (with-temp-buffer
+                                 (insert-file-contents prompt-file)
+                                 (buffer-string)))))
+         (unless (string-empty-p (string-trim prompt))
+           (+ghostel-llm--first-prompt buffer prompt))))
+      ("ready" (+ghostel-llm--set-status buffer "Ready"))))
   "ok")
 
 ;;;###autoload

@@ -33,6 +33,13 @@
 (defvar-local +ghostel-llm--first-prompt-seen nil
   "Non-nil after the first LLM prompt is submitted in this buffer.")
 
+(defvar-local +ghostel-llm--name-prefix nil
+  "Project and slot portion of this LLM buffer's name.")
+(defvar-local +ghostel-llm--description nil
+  "Description generated from this LLM buffer's first prompt.")
+(defvar-local +ghostel-llm--status nil
+  "Current status of this LLM session.")
+
 ;;;###autoload
 (defun +ghostel-auto-semi-char-mode (buffer)
   "Enter semi-char mode in BUFFER when a shell command starts."
@@ -77,7 +84,9 @@ create a buffer in the lowest free slot.  Without a prefix, use slot 1."
       (let ((ghostel-buffer-name (format "*ghostel-llm: %s*" name-prefix)))
         (setq buffer (ghostel '(4)))
         (with-current-buffer buffer
-          (rename-buffer name-prefix t)
+          (setq-local +ghostel-llm--name-prefix name-prefix)
+          (setq-local +ghostel-llm--status "Ready")
+          (+ghostel-llm--update-buffer-name)
           (+ghostel-llm-mode 1)
           (setq-local +ghostel-llm--first-prompt-seen nil)
           (+ghostel-llm--register-buffer root slot buffer)
@@ -90,21 +99,38 @@ create a buffer in the lowest free slot.  Without a prefix, use slot 1."
 
 ;;;###autoload
 (defun +ghostel-llm--first-prompt (buffer prompt)
-  "Title BUFFER from its first submitted PROMPT."
+  "Describe BUFFER from its first submitted PROMPT."
   (when (buffer-live-p buffer)
     (with-current-buffer buffer
       (unless +ghostel-llm--first-prompt-seen
         (setq +ghostel-llm--first-prompt-seen t)
-        (let ((name-prefix (replace-regexp-in-string
-                            " <[0-9]+>\\'" "" (buffer-name))))
-          (+agent-lisp-title-from-prompt-async
-           prompt
-           (lambda (title)
-             (when (buffer-live-p buffer)
-               (with-current-buffer buffer
-                 (rename-buffer
-                  (generate-new-buffer-name
-                   (format "%s %s" name-prefix title))))))))))))
+        (+agent-lisp-title-from-prompt-async
+         prompt
+         (lambda (title)
+           (when (buffer-live-p buffer)
+             (with-current-buffer buffer
+               (setq-local +ghostel-llm--description title)
+               (+ghostel-llm--update-buffer-name)))))))))
+
+;;;###autoload
+(defun +ghostel-llm--set-status (buffer status)
+  "Set BUFFER's LLM STATUS and update its name."
+  (when (buffer-live-p buffer)
+    (with-current-buffer buffer
+      (setq-local +ghostel-llm--status status)
+      (+ghostel-llm--update-buffer-name))))
+
+;;;###autoload
+(defun +ghostel-llm--update-buffer-name ()
+  "Name the current LLM buffer from its project, description, and status."
+  (when +ghostel-llm--name-prefix
+    (rename-buffer
+     (string-join (delq nil (list +ghostel-llm--name-prefix
+                                  +ghostel-llm--description
+                                  (and +ghostel-llm--status
+                                       (format "[%s]" +ghostel-llm--status))))
+                  " ")
+     t)))
 
 ;;;###autoload
 (defun +ghostel-llm--buffer-for-slot (root slot)
