@@ -6,6 +6,7 @@
 (require 'project)
 (require 'isearch-extras)
 (require 'grep-extras)
+(require 'ghostel-extras)
 
 (declare-function embark-export "embark")
 (declare-function embark-export-dired "embark")
@@ -108,9 +109,9 @@ SOURCES defaults to `consult-buffer-sources'."
       (consult--buffer-action (car selected)))))
 
 ;;;###autoload
-(defun +consult-buffer-codex ()
+(defun +consult-ghostel-llm-buffer ()
   (interactive)
-  (+consult-buffer-with-initial "Codex"))
+  (+consult-buffer-with-initial (+ghostel-llm--buffer-name (project-root (project-current t)))))
 
 ;;;###autoload
 (defun +consult-project-file-here ()

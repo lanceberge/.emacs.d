@@ -92,7 +92,7 @@
         ("p" . #'+consult-find-package)
         ("K" . #'+consult-find-bound-function))
   (:map +leader-map
-        ("afi" . #'+consult-buffer-codex)))
+        ("afi" . #'+consult-ghostel-llm-buffer)))
 
 (use-package consult-eglot
   :bind

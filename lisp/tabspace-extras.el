@@ -22,12 +22,17 @@
   :type 'function
   :group '+tabspace)
 
+(defvar +tabspace-other-buffer-pre-hook nil
+  "Hook run before `+tabspace-other-buffer-dwim' switches buffers.")
+
+(defvar +tabspace-other-buffer-post-hook nil
+  "Hook run after `+tabspace-other-buffer-dwim' switches buffers.")
+
 ;;;###autoload
 (defun +tabspace-other-buffer-dwim (n)
   (interactive "p")
-  (if-let* ((buffer (+tabspace-other-buffer n)))
-      (switch-to-buffer buffer)
-    (user-error "No other buffers in tabspace")))
+  (or (+tabspace-other-buffer n t)
+      (user-error "No other buffers in tabspace")))
 
 ;;;###autoload
 (defun +tabspace-other-special-buffer-dwim (arg)
@@ -60,15 +65,22 @@ it from the current tabspace."
     (+tabspace-kill-or-remove-buffer buffer)))
 
 ;;;###autoload
-(defun +tabspace-other-buffer (n)
-  "Return the N'th most recent file-visiting buffer in PROJECT's tabspace."
-  (let ((index (max 0 (1- (abs n)))))
-    (cl-loop for buffer in (+tabspace-local-buffer-list)
-             unless (or (eq buffer (current-buffer))
-                        (not (funcall +tabspace-switch-buffer-predicate buffer)))
-             if (zerop index)
-             return buffer
-             else do (cl-decf index))))
+(defun +tabspace-other-buffer (n &optional switch)
+  "Return the N'th most recent file-visiting buffer in the current tabspace.
+When SWITCH is non-nil, switch to it and run the pre and post hooks."
+  (let* ((index (max 0 (1- (abs n))))
+         (buffer
+          (cl-loop for buffer in (+tabspace-local-buffer-list)
+                   unless (or (eq buffer (current-buffer))
+                              (not (funcall +tabspace-switch-buffer-predicate buffer)))
+                   if (zerop index)
+                   return buffer
+                   else do (cl-decf index))))
+    (when (and buffer switch)
+      (run-hooks '+tabspace-other-buffer-pre-hook)
+      (switch-to-buffer buffer)
+      (run-hooks '+tabspace-other-buffer-post-hook))
+    buffer))
 
 ;;;###autoload
 (defun +tabspace-kill-or-remove-buffer (buffer)

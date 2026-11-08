@@ -4,7 +4,6 @@
 (require 'modal)
 (require 'consult)
 (require 'key-chord)
-(require 'seq)
 
 (defvar-local +ghostel-completion-handoff-p nil
   "Non-nil while Bash owns input for completion in semi-char mode.")
@@ -13,24 +12,26 @@
 
 (defvar +ghostel-llm-command "codex")
 (defvar +ghostel-llm-buffer-base-name "Codex")
+(defvar +ghostel-llm--buffers (make-hash-table :test #'equal)
+  "Project roots mapped to tables of slot numbers and live buffers.")
 
-(defvar-local +ghostel-llm-buffer-p nil
-  "Non-nil when the current Ghostel buffer hosts an LLM session.")
+(defvar +ghostel-llm-mode-map (make-sparse-keymap))
+
+;;;###autoload
+(define-minor-mode +ghostel-llm-mode
+  "Mark this Ghostel buffer as an LLM session."
+  :lighter nil
+  :keymap +ghostel-llm-mode-map
+  (if +ghostel-llm-mode
+      (add-hook '+tabspace-other-buffer-pre-hook
+                #'+ghostel-copy-mode-normal nil t)
+    (remove-hook '+tabspace-other-buffer-pre-hook
+                 #'+ghostel-copy-mode-normal t))
+  (when (derived-mode-p 'ghostel-mode)
+    (+ghostel-override-insert-mode-key-chords)))
 
 (defvar-local +ghostel-llm--first-prompt-seen nil
   "Non-nil after the first LLM prompt is submitted in this buffer.")
-
-(defvar-local +ghostel-llm--name-prefix nil
-  "Buffer name prefix to retain when adding a prompt title.")
-
-(defvar-local +ghostel-llm--root nil
-  "Project root used to select this LLM buffer.")
-
-(defvar-local +ghostel-llm--slot nil
-  "Number used to select this LLM buffer within its project.")
-
-(defvar-local +ghostel-llm--provider nil
-  "Provider name used to select this LLM buffer.")
 
 ;;;###autoload
 (defun +ghostel-auto-semi-char-mode (buffer)
@@ -77,12 +78,9 @@ create a buffer in the lowest free slot.  Without a prefix, use slot 1."
         (setq buffer (ghostel '(4)))
         (with-current-buffer buffer
           (rename-buffer name-prefix t)
-          (setq-local +ghostel-llm-buffer-p t
-                      +ghostel-llm--first-prompt-seen nil
-                      +ghostel-llm--name-prefix (buffer-name)
-                      +ghostel-llm--root root
-                      +ghostel-llm--slot slot
-                      +ghostel-llm--provider +ghostel-llm-buffer-base-name)
+          (+ghostel-llm-mode 1)
+          (setq-local +ghostel-llm--first-prompt-seen nil)
+          (+ghostel-llm--register-buffer root slot buffer)
           (ghostel-send-string
            (format "GHOSTEL_LLM_BUFFER_NAME=%s %s\n"
                    (shell-quote-argument ghostel--buffer-identity)
@@ -97,7 +95,8 @@ create a buffer in the lowest free slot.  Without a prefix, use slot 1."
     (with-current-buffer buffer
       (unless +ghostel-llm--first-prompt-seen
         (setq +ghostel-llm--first-prompt-seen t)
-        (let ((name-prefix +ghostel-llm--name-prefix))
+        (let ((name-prefix (replace-regexp-in-string
+                            " <[0-9]+>\\'" "" (buffer-name))))
           (+agent-lisp-title-from-prompt-async
            prompt
            (lambda (title)
@@ -109,16 +108,11 @@ create a buffer in the lowest free slot.  Without a prefix, use slot 1."
 
 ;;;###autoload
 (defun +ghostel-llm--buffer-for-slot (root slot)
-  "Return the current provider's LLM buffer in project ROOT and SLOT."
-  (seq-find
-   (lambda (buffer)
-     (with-current-buffer buffer
-       (and (bound-and-true-p +ghostel-llm-buffer-p)
-            (equal +ghostel-llm--root root)
-            (equal +ghostel-llm--slot slot)
-            (equal +ghostel-llm--provider
-                   +ghostel-llm-buffer-base-name))))
-   (buffer-list)))
+  "Return the LLM buffer in project ROOT and SLOT."
+  (when-let* ((slots (gethash root +ghostel-llm--buffers))
+              (buffer (gethash slot slots)))
+    (when (buffer-live-p buffer)
+      buffer)))
 
 ;;;###autoload
 (defun +ghostel-llm--next-available-slot (root)
@@ -127,6 +121,22 @@ create a buffer in the lowest free slot.  Without a prefix, use slot 1."
     (while (+ghostel-llm--buffer-for-slot root slot)
       (setq slot (1+ slot)))
     slot))
+
+;;;###autoload
+(defun +ghostel-llm--register-buffer (root slot buffer)
+  "Register BUFFER in SLOT for project ROOT until the buffer is killed."
+  (let ((slots (or (gethash root +ghostel-llm--buffers)
+                   (puthash root (make-hash-table :test #'eql)
+                            +ghostel-llm--buffers))))
+    (puthash slot buffer slots)
+    (with-current-buffer buffer
+      (add-hook 'kill-buffer-hook
+                (lambda ()
+                  (when (eq (gethash slot slots) (current-buffer))
+                    (remhash slot slots)
+                    (when (zerop (hash-table-count slots))
+                      (remhash root +ghostel-llm--buffers))))
+                nil t))))
 
 ;;;###autoload
 (defun +ghostel-llm--buffer-name (root &optional arg)
@@ -186,6 +196,12 @@ create a buffer in the lowest free slot.  Without a prefix, use slot 1."
   (consult-history ghostel--line-mode-history
                    'ghostel--line-mode-history-index
                    #'ghostel-beginning-of-input-or-line))
+
+;;;###autoload
+(defun +ghostel-copy-mode-normal ()
+  (interactive)
+  (ghostel-copy-mode)
+  (+normal-mode 1))
 
 ;;;###autoload
 (defun +ghostel-line-mode-normal ()

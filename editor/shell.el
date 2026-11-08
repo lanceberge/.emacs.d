@@ -76,8 +76,7 @@
   (advice-add 'eat--pre-cmd :after #'+eat--command-started)
   (advice-add 'eat--post-prompt :after #'+eat--command-finished)
   (+modal-create-insert-function eat-semi-char-mode)
-  (setq +ghostel-llm-command (if IS-WORK "claude" "codexp"))
-  (setq +ghostel-llm-buffer-base-name (if IS-WORK "Claude" "codexp")))
+  (setq +ghostel-llm-command (if IS-WORK "claude" "codexp")))
 
 (use-package ghostel
   :unless IS-WORK2

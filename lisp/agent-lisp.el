@@ -34,7 +34,7 @@ Called by `emacsclient' from the Codex and Claude prompt hooks."
                            (seq-find
                             (lambda (candidate)
                               (with-current-buffer candidate
-                                (and (bound-and-true-p +ghostel-llm-buffer-p)
+                                (and (bound-and-true-p +ghostel-llm-mode)
                                      (boundp 'ghostel--buffer-identity)
                                      (equal ghostel--buffer-identity name))))
                             (buffer-list))))

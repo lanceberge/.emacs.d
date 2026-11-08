@@ -325,7 +325,7 @@
 (defun +ibuffer-ai-buffer-p (&optional buffer)
   "Return non-nil when BUFFER is a Ghostel LLM, gptel, or opencode buffer."
   (with-current-buffer (or buffer (current-buffer))
-    (or (bound-and-true-p +ghostel-llm-buffer-p)
+    (or (bound-and-true-p +ghostel-llm-mode)
         (and (derived-mode-p 'ghostel-mode)
              (boundp 'ghostel--buffer-identity)
              (stringp ghostel--buffer-identity)
