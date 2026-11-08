@@ -30,13 +30,10 @@
   (when (derived-mode-p 'ghostel-mode)
     (+ghostel-override-insert-mode-key-chords)))
 
-(defvar-local +ghostel-llm--first-prompt-seen nil
-  "Non-nil after the first LLM prompt is submitted in this buffer.")
-
 (defvar-local +ghostel-llm--name-prefix nil
   "Project and slot portion of this LLM buffer's name.")
 (defvar-local +ghostel-llm--description nil
-  "Description generated from this LLM buffer's first prompt.")
+  "Description reported by the LLM terminal title.")
 (defvar-local +ghostel-llm--status nil
   "Current status of this LLM session.")
 
@@ -80,37 +77,23 @@ create a buffer in the lowest free slot.  Without a prefix, use slot 1."
          (ghostel-initial-input-mode nil))
     (if buffer
         (let ((switch-to-buffer-obey-display-actions nil))
+          (with-current-buffer buffer
+            (+ghostel-llm--update-buffer-name))
           (switch-to-buffer buffer nil t))
-      (let ((ghostel-buffer-name (format "*ghostel-llm: %s*" name-prefix)))
+      (let ((ghostel-buffer-name (format "*ghostel-llm: %s <%d>*" root slot)))
         (setq buffer (ghostel '(4)))
         (with-current-buffer buffer
           (setq-local +ghostel-llm--name-prefix name-prefix)
           (setq-local +ghostel-llm--status "Ready")
           (+ghostel-llm--update-buffer-name)
           (+ghostel-llm-mode 1)
-          (setq-local +ghostel-llm--first-prompt-seen nil)
           (+ghostel-llm--register-buffer root slot buffer)
           (ghostel-send-string
            (format "GHOSTEL_LLM_BUFFER_NAME=%s %s\n"
-                   (shell-quote-argument ghostel--buffer-identity)
+                   (shell-quote-argument (alist-get 'name ghostel-identity))
                    +ghostel-llm-command))
           (setq-local +ghostel-command-running t))))
     buffer))
-
-;;;###autoload
-(defun +ghostel-llm--first-prompt (buffer prompt)
-  "Describe BUFFER from its first submitted PROMPT."
-  (when (buffer-live-p buffer)
-    (with-current-buffer buffer
-      (unless +ghostel-llm--first-prompt-seen
-        (setq +ghostel-llm--first-prompt-seen t)
-        (+agent-lisp-title-from-prompt-async
-         prompt
-         (lambda (title)
-           (when (buffer-live-p buffer)
-             (with-current-buffer buffer
-               (setq-local +ghostel-llm--description title)
-               (+ghostel-llm--update-buffer-name)))))))))
 
 ;;;###autoload
 (defun +ghostel-llm--set-status (buffer status)
@@ -124,13 +107,30 @@ create a buffer in the lowest free slot.  Without a prefix, use slot 1."
 (defun +ghostel-llm--update-buffer-name ()
   "Name the current LLM buffer from its project, description, and status."
   (when +ghostel-llm--name-prefix
-    (rename-buffer
-     (string-join (delq nil (list +ghostel-llm--name-prefix
-                                  +ghostel-llm--description
-                                  (and +ghostel-llm--status
-                                       (format "[%s]" +ghostel-llm--status))))
-                  " ")
-     t)))
+    (unless (eq ghostel-buffer-name-function #'+ghostel-llm--name-from-title)
+      (setq-local ghostel-buffer-name-function #'+ghostel-llm--name-from-title)
+      (setq-local ghostel--managed-buffer-name (buffer-name)))
+    (ghostel--rename-managed
+     (+ghostel-llm--name-from-title ghostel-title))))
+
+;;;###autoload
+(defun +ghostel-llm--name-from-title (title)
+  "Update the LLM description from TITLE and return its buffer name."
+  (when title
+    (let* ((description (string-trim
+                         (replace-regexp-in-string "\\`[⠀-⣿[:space:]]+" "" title)))
+           (description (string-remove-suffix
+                         (concat " | " (+ghostel-llm--project-name))
+                         description)))
+      (unless (or (string-empty-p description)
+                  (equal description (+ghostel-llm--project-name)))
+        (setq-local +ghostel-llm--description description))))
+  (when +ghostel-llm--name-prefix
+    (string-join (delq nil (list +ghostel-llm--name-prefix
+                                 +ghostel-llm--description
+                                 (and +ghostel-llm--status
+                                      (format "[%s]" +ghostel-llm--status))))
+                 " ")))
 
 ;;;###autoload
 (defun +ghostel-llm--buffer-for-slot (root slot)

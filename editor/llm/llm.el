@@ -31,6 +31,7 @@
   (+agent-lisp-trace +agent-lisp-apropos +agent-lisp-eval-buffer +agent-lisp-function-source))
 
 (use-package eca
+  :disabled t
   :custom
   (eca-chat-use-side-window nil)
   (eca-custom-command (list eca-server-install-path "server"))

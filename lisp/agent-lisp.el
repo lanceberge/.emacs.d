@@ -23,28 +23,17 @@
     "ok"))
 
 ;;;###autoload
-(defun +agent-lisp-ghostel-update (name-file status &optional prompt-file)
-  "Update the Ghostel LLM buffer named in NAME-FILE to STATUS.
-PROMPT-FILE contains the first prompt as plain text when supplied."
-  (when-let* ((name (with-temp-buffer
-                     (insert-file-contents name-file)
-                     (buffer-string)))
-              (buffer (seq-find
+(defun +agent-lisp-ghostel-update (name status)
+  "Update the Ghostel LLM buffer with identity NAME to STATUS. This is run by a claude/codex hook
+that uses emacsclient to send command status to emacs."
+  (when-let* ((buffer (seq-find
                        (lambda (candidate)
                          (with-current-buffer candidate
                            (and (bound-and-true-p +ghostel-llm-mode)
-                                (boundp 'ghostel--buffer-identity)
-                                (equal ghostel--buffer-identity name))))
+                                (equal (alist-get 'name ghostel-identity) name))))
                        (buffer-list))))
     (pcase status
-      ("running"
-       (+ghostel-llm--set-status buffer "Running")
-       (when-let* ((prompt (and prompt-file
-                               (with-temp-buffer
-                                 (insert-file-contents prompt-file)
-                                 (buffer-string)))))
-         (unless (string-empty-p (string-trim prompt))
-           (+ghostel-llm--first-prompt buffer prompt))))
+      ("running" (+ghostel-llm--set-status buffer "Running"))
       ("ready" (+ghostel-llm--set-status buffer "Ready"))))
   "ok")
 
