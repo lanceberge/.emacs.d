@@ -10,7 +10,7 @@
   (org-return-follows-link t)
   (org-modules nil)
   (org-image-actual-width nil)
-  (org-export-backends '(html md))
+  (org-export-backends '(html md latex))
   (org-special-ctrl-a t)
   (org-todo-keywords '((sequence
                         "TODO"

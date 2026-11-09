@@ -124,7 +124,7 @@
   (:map +llm-map
         ("i" . #'+ghostel-llm))
   (:map +leader-map
-        ("nt" . #'+ghostel-new))
+        ("nt" . #'ghostel-project))
   :config
   (add-hook 'ghostel-mode-hook
             (lambda ()

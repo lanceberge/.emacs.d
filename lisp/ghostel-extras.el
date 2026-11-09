@@ -226,8 +226,10 @@ create a buffer in the lowest free slot.  Without a prefix, use slot 1."
 ;;;###autoload
 (defun +ghostel-copy-mode-normal ()
   (interactive)
-  (ghostel-copy-mode)
-  (+normal-mode 1))
+  (unless (eq ghostel--input-mode 'copy)
+    (ghostel-copy-mode))
+  (unless +normal-mode
+    (+normal-mode 1)))
 
 ;;;###autoload
 (defun +ghostel-line-mode-normal ()

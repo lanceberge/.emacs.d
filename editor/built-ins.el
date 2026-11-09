@@ -403,6 +403,8 @@
   :ensure nil
   :bind
   (:map eww-mode-map
+        ("n" . #'next-line)
+        ("p" . #'previous-line)
         ("v" . #'scroll-down-command)))
 
 ;;;###autoload

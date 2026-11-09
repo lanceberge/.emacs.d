@@ -43,7 +43,7 @@
             ;; ripgrep only jj-tracked files for the conflict start marker
             (files (split-string
                     (shell-command-to-string
-                     (format "jj file list | xargs -d '\\n' rg --files-with-matches --no-messages -- %s"
+                     (format "jj file list | tr '\\n '\\0' xargs -0 | rg --files-with-matches --no-messages -- %s"
                              (shell-quote-argument "^<<<<<<<")))
                     "\n" t))
             ;; absolute paths, excluding the current file so we move forward
