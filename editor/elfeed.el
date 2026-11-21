@@ -132,6 +132,7 @@
         ("n" . #'next-line)
         ("p" . #'previous-line)
         ("N" . #'elfeed-show-next)
+        ("l" . #'recenter-top-bottom)
         ("M-i" . #'+ace-link-eww)
         ("P" . #'elfeed-show-prev))
   (:map elfeed-search-mode-map

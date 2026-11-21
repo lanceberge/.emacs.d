@@ -111,7 +111,12 @@ SOURCES defaults to `consult-buffer-sources'."
 ;;;###autoload
 (defun +consult-ghostel-llm-buffer ()
   (interactive)
-  (+consult-buffer-with-initial (+ghostel-llm--buffer-name (project-root (project-current t)))))
+  (+consult-buffer-with-initial (format "%s: " +ghostel-llm-buffer-base-name)))
+
+;;;###autoload
+(defun +consult-ghostel-project ()
+  (interactive)
+  (+consult-buffer-with-initial "ghostel: "))
 
 ;;;###autoload
 (defun +consult-project-file-here ()
@@ -210,8 +215,8 @@ If selection is aborted, restore the original region text."
   "Return the file path from a Consult grep CANDIDATE."
   (when (stringp candidate)
     (when-let* ((file (or (get-text-property 0 'consult--prefix-group candidate)
-                          (when-let ((file-end (next-single-property-change
-                                                0 'face candidate)))
+                          (when-let* ((file-end (next-single-property-change
+                                                 0 'face candidate)))
                             (substring-no-properties candidate 0 file-end)))))
       (expand-file-name file))))
 

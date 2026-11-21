@@ -91,6 +91,7 @@ I wrap it here in a save-excursion."
   (global-dired-collapse-mode))
 
 (use-package async
+  :disabled t
   :after dired
   :demand t
   :config

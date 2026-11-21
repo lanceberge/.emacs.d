@@ -11,6 +11,7 @@
       locale-coding-system 'utf-8
       message-log-max 5000 ; longer number of max messages
       ring-bell-function 'ignore
+      mac-command-modifier 'meta
 
       ;; startup.el settings
       inhibit-startup-screen t

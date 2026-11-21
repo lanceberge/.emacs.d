@@ -10,7 +10,8 @@
          (command (project--switch-project-command dir)))
     (when (memq command '(keyboard-quit keyboard-escape-quit))
       (keyboard-quit))
-    (call-interactively command)))
+    (let ((this-command command))
+      (call-interactively command))))
 
 ;;;###autoload
 (defun +project-last-opened-other-project-root (current-root &optional n)

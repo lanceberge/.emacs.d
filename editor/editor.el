@@ -470,6 +470,3 @@
     (format "#+begin_src %s\n%s\n#+end_src\n"
             (replace-regexp-in-string "-mode\\'" "" (symbol-name major-mode))
             text)))
-
-(use-package inhibit-mouse
-  :hook (emacs-startup . inhibit-mouse-mode))

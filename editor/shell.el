@@ -89,8 +89,13 @@
   (ghostel-query-before-killing 'auto)
   :bind
   (:map project-prefix-map
-        ("t" . #'ghostel-project)
+        ("t" . #'+ghostel-project)
         ("T" . #'ghostel-project-list-buffers)))
+
+(use-package consult-ghostel
+  :unless IS-WORK2
+  :after (ghostel consult)
+  :demand t)
 
 (use-package ghostel-repeat
   :ensure nil
@@ -114,17 +119,17 @@
   :bind
   (:map ghostel-line-mode-map
         ("<tab>" . #'+ghostel-semi-char-tab)
-        ("M-r" . #'+ghostel-consult-history)
+        ("M-r" . #'consult-ghostel-history)
         ([remap +modal-end-of-buffer-insert] . #'+ghostel-reset-point)
         ("C-c C-j" . #'+modal-ghostel-semi-char-mode-insert))
   (:map ghostel-semi-char-mode-map
         ("RET" . #'+ghostel-semi-char-return)
         ("<return>" . #'+ghostel-semi-char-return)
-        ("M-r" . #'+ghostel-consult-history))
+        ("M-r" . #'consult-ghostel-history))
   (:map +llm-map
         ("i" . #'+ghostel-llm))
   (:map +leader-map
-        ("nt" . #'ghostel-project))
+        ("nt" . #'+ghostel-project))
   :config
   (add-hook 'ghostel-mode-hook
             (lambda ()

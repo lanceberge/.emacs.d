@@ -18,6 +18,18 @@
 (defvar +ghostel-llm-mode-map (make-sparse-keymap))
 
 ;;;###autoload
+(defun +ghostel-project (&optional arg)
+  "Run `ghostel-project', entering insert mode if its buffer already exists.
+ARG is passed through to `ghostel-project'.  Return its buffer."
+  (interactive "P")
+  (let* ((buffers (buffer-list))
+         (buffer (ghostel-project arg)))
+    (when (memq buffer buffers)
+      (with-current-buffer buffer
+        (+insert-mode 1)))
+    buffer))
+
+;;;###autoload
 (define-minor-mode +ghostel-llm-mode
   "Mark this Ghostel buffer as an LLM session."
   :lighter nil

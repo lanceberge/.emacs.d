@@ -435,3 +435,13 @@
   :custom
   (speedbar-prefer-window t)
   (speedbar-use-images nil))
+
+(use-package proced
+  :ensure nil
+  :init
+  (+modal-define-intersection-mode proced-mode +motion-mode)
+  :bind
+  (:map +leader-map
+        ("np" . #'proced))
+  (:map +modal-proced-motion-mode-map
+        ("x" . #'proced-send-signal)))

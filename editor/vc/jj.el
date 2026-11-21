@@ -89,6 +89,10 @@
   (:map consult-jj-modified-file-map
         ("c" . #'consult-jj-split)
         ("a" . #'consult-jj-squash))
+  (:map project-prefix-map
+        ("vl" . #'consult-jj-log)
+        ("vo" . #'consult-jj-op-log)
+        ("vf" . #'consult-jj-modified-files))
   :config
   (require 'consult-jj-embark)
   (consult-jj-embark-mode 1)
