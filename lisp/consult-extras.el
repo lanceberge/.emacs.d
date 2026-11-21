@@ -6,7 +6,6 @@
 (require 'project)
 (require 'isearch-extras)
 (require 'grep-extras)
-(require 'ghostel-extras)
 
 (declare-function embark-export "embark")
 (declare-function embark-export-dired "embark")
@@ -107,11 +106,6 @@ SOURCES defaults to `consult-buffer-sources'."
     ;; For non-matching candidates, fall back to buffer creation.
     (unless (plist-get (cdr selected) :match)
       (consult--buffer-action (car selected)))))
-
-;;;###autoload
-(defun +consult-ghostel-llm-buffer ()
-  (interactive)
-  (+consult-buffer-with-initial (format "%s: " +ghostel-llm-buffer-base-name)))
 
 ;;;###autoload
 (defun +consult-ghostel-project ()

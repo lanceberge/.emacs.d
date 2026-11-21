@@ -405,6 +405,7 @@
   (:map eww-mode-map
         ("n" . #'next-line)
         ("p" . #'previous-line)
+        ("l" . #'recenter-top-bottom)
         ("v" . #'scroll-down-command)))
 
 ;;;###autoload

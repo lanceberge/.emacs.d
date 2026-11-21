@@ -2,7 +2,7 @@
 (require 'project)
 (require 'eat)
 (require 'modal)
-(require 'ghostel-extras)
+(require 'ghostel-llm)
 
 ;;;###autoload
 (defun +eat-llm (&optional arg)

@@ -75,8 +75,7 @@
               :before #'+eat--record-shell-command-in-line-history)
   (advice-add 'eat--pre-cmd :after #'+eat--command-started)
   (advice-add 'eat--post-prompt :after #'+eat--command-finished)
-  (+modal-create-insert-function eat-semi-char-mode)
-  (setq +ghostel-llm-command (if IS-WORK "claude" "codexp")))
+  (+modal-create-insert-function eat-semi-char-mode))
 
 (use-package ghostel
   :unless IS-WORK2
@@ -126,8 +125,6 @@
         ("RET" . #'+ghostel-semi-char-return)
         ("<return>" . #'+ghostel-semi-char-return)
         ("M-r" . #'consult-ghostel-history))
-  (:map +llm-map
-        ("i" . #'+ghostel-llm))
   (:map +leader-map
         ("nt" . #'+ghostel-project))
   :config
@@ -135,8 +132,6 @@
             (lambda ()
               (add-hook '+insert-mode-hook '+ghostel-goto-last-line nil t)
               (add-hook '+insert-mode-hook '+ghostel-insert-mode-reevaluate nil t)))
-  (setq +ghostel-llm-command (if IS-WORK "claude" "codexp"))
-  (setq +ghostel-llm-buffer-base-name (if IS-WORK "Claude" "Codex"))
   (+modal-create-insert-function ghostel-semi-char-mode)
 
   ;; better auto line -> semi char switching
@@ -148,6 +143,20 @@
                  ghostel--line-mode-history
                  ghostel--line-mode-history-index
                  ghostel-beginning-of-input-or-line)))
+
+(use-package ghostel-llm
+  :ensure (:type file :main "~/.emacs.d/lisp/ghostel-llm.el" :files ("ghostel-llm.el"))
+  :unless IS-WORK2
+  :after ghostel-extras
+  :demand t
+  :custom
+  (+ghostel-llm-command (if IS-WORK "claude" "codexp"))
+  (+ghostel-llm-buffer-base-name (if IS-WORK "Claude" "Codex"))
+  :bind
+  (:map +llm-map
+        ("i" . #'+ghostel-llm))
+  (:map +leader-map
+        ("fai" . #'+ghostel-llm-consult-buffer)))
 
 (use-package eshell
   :custom
