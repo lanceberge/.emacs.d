@@ -23,12 +23,42 @@
   :lighter nil
   :keymap +ghostel-llm-mode-map
   (if +ghostel-llm-mode
-      (add-hook '+tabspace-other-buffer-pre-hook
-                #'+ghostel-copy-mode-normal nil t)
+      (progn
+        (add-hook '+tabspace-other-buffer-pre-hook
+                  #'+ghostel-copy-mode-normal nil t)
+        (setq-local imenu-create-index-function #'+ghostel-llm--imenu-index)
+        (setq-local imenu-default-goto-function #'+ghostel-llm--imenu-goto))
     (remove-hook '+tabspace-other-buffer-pre-hook
-                 #'+ghostel-copy-mode-normal t))
+                 #'+ghostel-copy-mode-normal t)
+    (when (derived-mode-p 'ghostel-mode)
+      (ghostel-imenu-setup)))
   (when (derived-mode-p 'ghostel-mode)
     (+ghostel-override-insert-mode-key-chords)))
+
+;;;###autoload
+(defun +ghostel-llm--imenu-index ()
+  "Return user prompts in the current Claude or Codex session."
+  (let* ((marker (cond ((string-prefix-p "claude" +ghostel-llm-command) "❯")
+                       ((string-prefix-p "codex" +ghostel-llm-command) "›")))
+         (regexp (and marker (concat "^[ \t]*" marker "[ \t]+\\(.+\\)$")))
+         (index nil))
+    (when regexp
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward regexp nil t)
+          (let ((prompt (string-trim (match-string-no-properties 1))))
+            (unless (string-empty-p prompt)
+              (push (cons (truncate-string-to-width prompt 80 nil nil t)
+                          (line-beginning-position))
+                    index)))))
+      (nreverse index))))
+
+;;;###autoload
+(defun +ghostel-llm--imenu-goto (_name position &rest _)
+  "Jump to the user prompt at POSITION in a Ghostel buffer."
+  (unless (memq ghostel--input-mode '(emacs line copy))
+    (ghostel--enter-readonly-input-mode ghostel-prompt-navigation-input-mode))
+  (goto-char position))
 
 (defvar-local +ghostel-llm--name-prefix nil
   "Project and slot portion of this LLM buffer's name.")
