@@ -92,6 +92,9 @@
         ("T" . #'ghostel-project-list-buffers)))
 
 (use-package consult-ghostel
+  :ensure (:type file
+                 :main "~/.emacs.d/elpaca/sources/ghostel/extensions/consult-ghostel/consult-ghostel.el"
+                 :files ("consult-ghostel.el"))
   :unless IS-WORK2
   :after (ghostel consult)
   :demand t)
@@ -147,7 +150,6 @@
 (use-package ghostel-llm
   :ensure (:type file :main "~/.emacs.d/lisp/ghostel-llm.el" :files ("ghostel-llm.el"))
   :unless IS-WORK2
-  :after ghostel-extras
   :demand t
   :custom
   (+ghostel-llm-command (if IS-WORK "claude" "codexp"))
