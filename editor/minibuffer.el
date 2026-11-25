@@ -243,7 +243,10 @@
   (setq consult-omni-preview-key "C-o"))
 
 (use-package consult-gh
+  :custom
+  (consult-gh-prioritize-local-folder t)
   :config
+  (consult-gh-enable-default-keybindings)
   (let ((encoded-token
          (with-temp-buffer
            (insert-file-contents-literally

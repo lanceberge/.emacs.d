@@ -14,11 +14,21 @@
         ("js" . #'+jj-squash)))
 
 (use-package jj-pr
+  :disabled t
   :ensure (:type file :main "~/.emacs.d/lisp/jj-pr.el" :files ("jj-pr.el"))
   :bind
   (:map +normal-mode-map
         ("jP" . #'+jj-pr-create)
         ("jE" . #'+jj-pr-edit-description)))
+
+(use-package consult-gh-jj-pr
+  :after consult-gh
+  :ensure (:type file :main "~/.emacs.d/lisp/consult-gh-jj-pr.el" :files ("consult-gh-jj-pr.el"))
+  :bind
+  (:map +leader-map
+        ("gpc" . #'+consult-gh-jj-pr-create)
+        ("gpe" . #'+consult-gh-jj-pr-edit)
+        ("gpk" . #'+consult-gh-jj-pr-close)))
 
 ;;;###autoload
 (defun +majutsu-forget-command (directory)
