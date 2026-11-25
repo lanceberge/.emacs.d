@@ -51,12 +51,20 @@
   (js-mode . (lambda () (setq-local tab-width 2))))
 
 (use-package markdown-mode
+  :if IS-WORK2
   :custom
   (markdown-fontify-code-blocks-natively t)
   :bind
   (:map markdown-mode-map
         ("M-n" . nil)
         ("M-p" . nil)))
+
+(use-package markdown-ts-mode
+  :unless IS-WORK2
+  :ensure nil
+  :mode ("\\.md\\'" . markdown-ts-mode)
+  :custom
+  (markdown-ts-inline-images t))
 
 (use-package text-mode
   :ensure nil

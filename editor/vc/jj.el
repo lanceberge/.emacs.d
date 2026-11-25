@@ -13,6 +13,13 @@
         ("jm" . #'+jj-describe)
         ("js" . #'+jj-squash)))
 
+(use-package jj-pr
+  :ensure (:type file :main "~/.emacs.d/lisp/jj-pr.el" :files ("jj-pr.el"))
+  :bind
+  (:map +normal-mode-map
+        ("jP" . #'+jj-pr-create)
+        ("jE" . #'+jj-pr-edit-description)))
+
 ;;;###autoload
 (defun +majutsu-forget-command (directory)
   (let ((project-root (file-name-as-directory
