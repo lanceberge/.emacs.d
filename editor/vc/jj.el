@@ -22,7 +22,6 @@
         ("jE" . #'+jj-pr-edit-description)))
 
 (use-package consult-gh-jj-pr
-  :after consult-gh
   :ensure (:type file :main "~/.emacs.d/lisp/consult-gh-jj-pr.el" :files ("consult-gh-jj-pr.el"))
   :bind
   (:map +leader-map

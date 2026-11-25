@@ -1,5 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 (use-package magit
+  :disabled t
   :after modal
   :defer 8.0
   :custom

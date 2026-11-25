@@ -245,6 +245,7 @@
 (use-package consult-gh
   :custom
   (consult-gh-prioritize-local-folder t)
+  (consult-gh-dashboard-action #'consult-gh--dashboard-browse-url-action)
   :config
   (consult-gh-enable-default-keybindings)
   (let ((encoded-token
@@ -254,7 +255,10 @@
            (string-trim (buffer-string)))))
     (setenv "GH_TOKEN"
             (string-trim
-             (base64-decode-string encoded-token)))))
+             (base64-decode-string encoded-token))))
+  :bind
+  (:map +leader-map
+        ("gd" . #'consult-gh-dashboard)))
 
 (use-package consult-gh-embark
   :after consult-gh

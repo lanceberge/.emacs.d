@@ -239,14 +239,17 @@
      (?s sexp "\n")
      (?d defun "\n\n")
      (?D defun-name " ")
-     (?l line "\n")))
+     (?m line "\n")))
   :bind
   (:map easy-kill-base-map
-        ;; ("SPC" . #'easy-kill-mark-region)
+        ("SPC" . nil)
+        ("," . #'easy-kill-mark-region)
         ("w" . #'easy-kill-region)
+        ("g" . #'keyboard-quit)
         ([remap +modal-kill-region-insert] . #'+easy-kill-region-insert))
   (:map +normal-mode-map
-        ("," . #'easy-mark)
+        ("m" . #'easy-kill)
+        ;; ("," . #'easy-mark)
         ([remap kill-ring-save] . #'easy-kill)))
 
 ;;;###autoload

@@ -39,8 +39,8 @@
         ("]" . #'mc/mark-next-like-this)
         ("[" . #'mc/mark-previous-like-this)
 
-        ("," . #'mc/skip-to-previous-like-this)
-        ("." . #'mc/skip-to-next-like-this)
+        ;; ("," . #'mc/skip-to-previous-like-this)
+        ;; ("." . #'mc/skip-to-next-like-this)
 
         ("(" . #'mc/unmark-previous-like-this)
         (")" . #'mc/unmark-next-like-this)))

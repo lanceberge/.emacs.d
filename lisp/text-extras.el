@@ -21,14 +21,22 @@ pipe whole buffer."
           (message "[%d] %s" exit-status error-msg)))))))
 
 ;;;###autoload
-(defun +file-name-kill-ring-save ()
-  "Copy current buffer file name to the kill ring and system clipboard."
-  (interactive)
+(defun +file-name-kill-ring-save (&optional project-relative)
+  "Copy the current file name to the kill ring and system clipboard.
+With a prefix argument, copy the path relative to the project root."
+  (interactive "P")
   (unless buffer-file-name
     (user-error "Current buffer is not visiting a file"))
-  (kill-new buffer-file-name)
-  (gui-set-selection 'CLIPBOARD buffer-file-name)
-  (message "Copied file name: %s" buffer-file-name))
+  (let ((file-name
+         (if project-relative
+             (let ((project (project-current nil (file-name-directory buffer-file-name))))
+               (unless project
+                 (user-error "Current file is not in a project"))
+               (file-relative-name buffer-file-name (project-root project)))
+           buffer-file-name)))
+    (kill-new file-name)
+    (gui-set-selection 'CLIPBOARD file-name)
+    (message "Copied file name: %s" file-name)))
 
 (defun text-to-clipboard ()
   "Pop up a temporary buffer to collect text to send to the clipboard.

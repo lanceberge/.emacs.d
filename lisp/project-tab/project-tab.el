@@ -155,13 +155,14 @@ With no current project, fall back to `tab-bar-switch-to-recent-tab'."
   "Switch to the most recently used tab for project DIR.
 When CREATE is non-nil, create a new tab if no existing project tab is found."
   (let ((root (+project-tab--project-root dir)))
-    (if-let* ((tab (seq-find (lambda (tab)
-                               (+project-tab--tab-p tab root))
-                             (tab-bar--tabs-recent))))
-        (tab-bar-select-tab (1+ (tab-bar--tab-index tab)))
-      (when create
-        (tab-bar-new-tab)
-        (+project-tab--pin-current-project root)))))
+    (unless (equal root (+project-tab--current-project-root))
+      (if-let* ((tab (seq-find (lambda (tab)
+                                 (+project-tab--tab-p tab root))
+                               (tab-bar--tabs-recent))))
+          (tab-bar-select-tab (1+ (tab-bar--tab-index tab)))
+        (when create
+          (tab-bar-new-tab)
+          (+project-tab--pin-current-project root))))))
 
 ;;;###autoload
 (defun +project-tab-project-prefix (dir)

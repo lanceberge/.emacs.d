@@ -268,6 +268,7 @@ MATCH is as in `org-map-entries'."
   "Goto the key binding form for the command bound to KEY-SEQUENCE."
   (interactive
    (list (read-key-sequence "Press key: ")))
+  (+project-tab-switch-to-project "~/.emacs.d" t)
   (let ((sym (key-binding key-sequence))
         (last-key (substring (key-description key-sequence) -1)))
     (cond
@@ -305,6 +306,7 @@ MATCH is as in `org-map-entries'."
 ;;;###autoload
 (defun +consult-find-package ()
   (interactive)
+  (+project-tab-switch-to-project "~/.emacs.d" t)
   (consult-ripgrep "~/.emacs.d/" "use-package "))
 
 ;;;###autoload

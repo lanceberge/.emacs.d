@@ -131,6 +131,7 @@ When called interactively, use the current buffer."
          'eshell-mode
          'ghostel-mode
          'gptel-mode
+         'kubernetes-mode
          'ibuffer-mode
          'opencode-session-mode))))
 

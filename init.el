@@ -134,6 +134,9 @@
   (add-to-list 'exec-path path))
 (setenv "PATH" (mapconcat 'identity exec-path path-separator))
 
+(when (display-graphic-p)
+  (define-key input-decode-map [?\C-m] [C-m]))
+
 (setq-default
  tab-width 4
  require-final-newline t

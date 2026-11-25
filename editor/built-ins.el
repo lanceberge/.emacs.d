@@ -406,28 +406,78 @@
         ("n" . #'next-line)
         ("p" . #'previous-line)
         ("l" . #'recenter-top-bottom)
-        ("v" . #'scroll-down-command)))
+        ("v" . #'scroll-up-command)))
+
+(defvar-local +viper-last-search-char nil
+  "Last character searched by a Viper character command in this buffer.")
+
+;;;###autoload
+(defun +viper-goto-char (arg)
+  "Go up to a character on this line, backward when ARG is negative."
+  (interactive "P")
+  (let ((count (prefix-numeric-value arg)))
+    (if (< count 0)
+        (viper-goto-char-backward (- count))
+      (viper-goto-char-forward count))
+    (setq +viper-last-search-char viper-f-char)))
+
+;;;###autoload
+(defun +viper-find-char (arg)
+  "Find a character on this line, backward when ARG is negative."
+  (interactive "P")
+  (let ((count (prefix-numeric-value arg)))
+    (if (< count 0)
+        (viper-find-char-backward (- count))
+      (viper-find-char-forward count))
+    (setq +viper-last-search-char viper-f-char)))
+
+;;;###autoload
+(defun +viper-goto-char-avy ()
+  "Jump with Avy to the last character searched in this buffer."
+  (interactive)
+  (if +viper-last-search-char
+      (avy-goto-char +viper-last-search-char)
+    (call-interactively #'avy-goto-char-2)))
 
 ;;;###autoload
 (defun +viper-repeat-goto-char-forward (arg)
   (interactive "P")
-  (forward-char)
-  (viper-repeat-find arg))
+  (let (destination)
+    (save-mark-and-excursion
+      (forward-char)
+      (viper-find-char (prefix-numeric-value arg)
+                       viper-f-char viper-f-forward viper-f-offset)
+      (setq destination (point)))
+    (goto-char destination)))
 
 ;;;###autoload
 (defun +viper-repeat-goto-char-backward (arg)
   (interactive "P")
-  (backward-char)
-  (viper-repeat-find-opposite arg))
+  (let (destination)
+    (save-mark-and-excursion
+      (backward-char)
+      (viper-find-char (prefix-numeric-value arg)
+                       viper-f-char (not viper-f-forward) viper-f-offset)
+      (setq destination (point)))
+    (goto-char destination)))
 
 (use-package viper-cmd
   :ensure nil
+  :init
+  (autoload 'viper-goto-char-forward "viper-cmd" nil t)
+  (autoload 'viper-goto-char-backward "viper-cmd" nil t)
+  (autoload 'viper-find-char-forward "viper-cmd" nil t)
+  (autoload 'viper-find-char-backward "viper-cmd" nil t)
+  (autoload 'viper-find-char "viper-cmd" nil nil)
   :bind
   (:repeat-map +viper-repeat-map
                ("," . #'+viper-repeat-goto-char-backward)
+               (";" . #'+viper-goto-char-avy)
                ("." . #'+viper-repeat-goto-char-forward))
   (:map +normal-mode-map
-        ("t" . #'viper-goto-char-forward))
+        ("t" . #'+viper-find-char)
+        ;; ("." . #'+viper-find-char)
+        )
   :config
   (require 'viper))
 

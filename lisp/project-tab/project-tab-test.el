@@ -3,6 +3,40 @@
 (require 'ert)
 (require 'project-tab)
 
+(ert-deftest +project-tab-switch-to-project-keeps-current-tab ()
+  (let ((tab-bar-tabs-function
+         (lambda (&optional _frame)
+           '((current-tab (name . "org")
+                          (+project-tab-root . "/project/org/")))))
+        created selected)
+    (cl-letf (((symbol-function '+project-tab--project-root) #'identity)
+              ((symbol-function 'tab-bar-new-tab)
+               (lambda (&rest _) (setq created t)))
+              ((symbol-function 'tab-bar-select-tab)
+               (lambda (&rest _) (setq selected t))))
+      (+project-tab-switch-to-project "/project/org/" t)
+      (should-not created)
+      (should-not selected))))
+
+(ert-deftest +project-tab-switch-to-project-keeps-unpinned-current-project ()
+  (let* ((root (make-temp-file "project-tab-test-" t))
+         (default-directory root)
+         (tab-bar-tabs-function
+          (lambda (&optional _frame)
+            '((current-tab (name . "org")))))
+         created selected)
+    (unwind-protect
+        (progn
+          (make-directory (expand-file-name ".git" root))
+          (cl-letf (((symbol-function 'tab-bar-new-tab)
+                     (lambda (&rest _) (setq created t)))
+                    ((symbol-function 'tab-bar-select-tab)
+                     (lambda (&rest _) (setq selected t))))
+            (+project-tab-switch-to-project root t)
+            (should-not created)
+            (should-not selected)))
+      (delete-directory root t))))
+
 (ert-deftest +project-tab-navigation-survives-manual-rename ()
   (let* ((root (make-temp-file "project-tab-test-" t))
          (default-directory root)

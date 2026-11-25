@@ -71,6 +71,8 @@
      ("https://blog.cloudflare.com/tag/engineering/rss/" :user/priority 1 systems)
      ("https://engineering.fb.com/feed/" :user/priority 1 systems)
      ("https://discord.com/blog/rss.xml" :user/priority 1 systems company)
+     ("https://netflixtechblog.com/feed" :user/priority 1 systems company)
+     ("https://rssbridge.sciunto.org/?action=display&bridge=UberEngineering&format=Atom" :user/priority 1 systems company)
      ("https://www.postgresql.org/about/newsarchive/rss/" :user/priority 1 systems databases official)
      ("https://www.postgresql.org/about/press/rss/" :user/priority 1 systems databases official)
      ("https://duckdb.org/feed.xml" :user/priority 2 systems databases official)
