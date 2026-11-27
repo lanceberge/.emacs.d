@@ -338,6 +338,20 @@
   :ensure (:type file :main "~/.emacs.d/lisp/visiting-buffer.el" :files ("visiting-buffer.el"))
   :demand t)
 
+(use-package find-char
+  :ensure (:type file :main "~/.emacs.d/lisp/find-char.el" :files ("find-char.el"))
+  :init
+  (put '+find-char-goto 'repeat-map '+find-char-repeat-map)
+  (autoload 'avy-goto-char "avy" nil t)
+  (autoload 'avy-goto-char-2 "avy" nil t)
+  :bind
+  (:repeat-map +find-char-repeat-map
+               ("," . #'+find-char-repeat-opposite)
+               (";" . #'+find-char-avy)
+               ("." . #'+find-char-repeat))
+  (:map +normal-mode-map
+        ("t" . #'+find-char-find)))
+
 (use-package mark-forward-backward
   :ensure (:type file :main "~/.emacs.d/lisp/mark-forward-backward.el" :files ("mark-forward-backward.el"))
   :init
