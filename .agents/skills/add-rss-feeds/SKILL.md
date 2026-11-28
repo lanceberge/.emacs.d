@@ -12,3 +12,4 @@ disable-model-invocation: true
 4. Review recent posts; reject low-quality, stale, promotional, or misleading feeds.
 5. Report these feeds to the user. Await further input. *DO NOT* make any code changes.
 6. Only when authorized by the user, add the requested feeds to `editor/elfeed.el` with appropriate tags.
+7. After adding the new feeds, run `emacsclient -e '(+agent-lisp-eval-buffer "./editor/elfeed.el")'` then `emacsclient -e '(with-current-buffer "*elfeed-search*" (elfeed-search-update :force) t)'`

@@ -91,8 +91,8 @@
         ("k" . #'+consult-find-key-binding)
         ("p" . #'+consult-find-package)
         ("K" . #'+consult-find-bound-function))
-  (:map +leader-map
-        ("ft" . #'+consult-ghostel-project)))
+  (:map goto-map
+        ("t" . #'+consult-ghostel-project)))
 
 (use-package consult-eglot
   :bind
@@ -122,6 +122,7 @@
         ("M-P" . #'+consult-toggle-preview)
         ("M-l" . #'vertico-directory-enter))
   :config
+;;;###autoload
   (defun vertico-quick-embark (&optional arg)
     "Embark on candidate using quick keys."
     (interactive)

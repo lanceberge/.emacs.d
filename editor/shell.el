@@ -157,8 +157,8 @@
   :bind
   (:map +llm-map
         ("i" . #'+ghostel-llm))
-  (:map +leader-map
-        ("fai" . #'+ghostel-llm-consult-buffer)))
+  (:map goto-map
+        ("a" . #'+ghostel-llm-consult-buffer)))
 
 (use-package eshell
   :custom

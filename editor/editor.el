@@ -483,6 +483,7 @@
         ("Wg" . #'copy-as-format-github)
         ("Wo" . #'copy-as-format-org-mode))
   :config
+;;;###autoload
   (defun copy-as-format--org-mode (text _multiline)
     (format "#+begin_src %s\n%s\n#+end_src\n"
             (replace-regexp-in-string "-mode\\'" "" (symbol-name major-mode))
